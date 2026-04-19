@@ -95,24 +95,24 @@ export function SceneScreen({
           className={`scene-shell ${toneClassName} scene-pad lg:h-full`}
           {...sceneBindings}
         >
-          <div className="relative z-10 flex flex-col gap-4 overflow-visible lg:h-full lg:min-h-0 lg:gap-5">
+          <div className="relative z-10 flex flex-col gap-5 overflow-visible lg:h-full lg:min-h-0 lg:gap-5">
             <RevealGroup
-              className="grid gap-4 lg:grid-cols-[minmax(0,0.92fr)_auto] lg:items-end"
+              className="grid gap-5 lg:grid-cols-[minmax(0,0.92fr)_auto] lg:items-end"
               stagger={0.1}
               amount={0.25}
             >
               <RevealItem variant="hero">
-                <div className="max-w-[34rem] space-y-3">
+                <div className="max-w-[34rem] space-y-4 sm:space-y-3.5">
                   <span className="eyebrow">{eyebrow}</span>
                   <h1 className="page-heading headline-display">{title}</h1>
-                  <p className="max-w-[32rem] text-[0.98rem] leading-7 text-[var(--text-secondary)] sm:text-[1.02rem]">
+                  <p className="max-w-[32rem] text-[0.96rem] leading-7 text-[var(--text-secondary)] sm:text-[1.02rem]">
                     {description}
                   </p>
                 </div>
               </RevealItem>
 
               <RevealItem variant="card">
-                <div className="grid gap-2.5 sm:grid-cols-[auto_auto] lg:justify-end">
+                <div className="grid gap-3 sm:grid-cols-[auto_auto] lg:justify-end">
                   {primaryAction ? (
                     <TransitionLink className="button-primary" href={primaryAction.href}>
                       {primaryAction.label}

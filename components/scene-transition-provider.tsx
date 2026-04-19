@@ -18,6 +18,7 @@ import {
 } from "@/components/scene-transition-context";
 import { routeEnterTransition, routeExitTransition } from "@/components/motion-config";
 import { SceneTransitionOverlay } from "@/components/scene-transition-overlay";
+import { useCompactViewport } from "@/components/use-compact-viewport";
 
 type PendingNavigation = {
   href: string;
@@ -25,17 +26,17 @@ type PendingNavigation = {
   scroll: boolean;
 };
 
-const EXIT_DURATION_MS = Math.round(routeExitTransition.duration * 1000);
-const ENTER_DURATION_MS = Math.round(routeEnterTransition.duration * 1000);
-
 export function SceneTransitionProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
   const reduceMotion = useReducedMotion();
+  const isCompactViewport = useCompactViewport();
   const [phase, setPhase] = useState<TransitionPhase>("idle");
   const [pendingPath, setPendingPath] = useState<string | null>(null);
   const pendingRef = useRef<PendingNavigation | null>(null);
   const previousPathRef = useRef(pathname);
+  const exitDurationMs = Math.round((isCompactViewport ? 0.22 : routeExitTransition.duration) * 1000);
+  const enterDurationMs = Math.round((isCompactViewport ? 0.28 : routeEnterTransition.duration) * 1000);
 
   const navigate = useCallback(
     (href: string, options?: { replace?: boolean; scroll?: boolean }) => {
@@ -86,10 +87,10 @@ export function SceneTransitionProvider({ children }: { children: ReactNode }) {
       } else {
         router.push(next.href, { scroll: next.scroll });
       }
-    }, EXIT_DURATION_MS);
+    }, exitDurationMs);
 
     return () => window.clearTimeout(timeoutId);
-  }, [phase, router]);
+  }, [exitDurationMs, phase, router]);
 
   useEffect(() => {
     const pathnameChanged = previousPathRef.current !== pathname;
@@ -113,10 +114,10 @@ export function SceneTransitionProvider({ children }: { children: ReactNode }) {
       pendingRef.current = null;
       setPendingPath(null);
       setPhase("idle");
-    }, ENTER_DURATION_MS);
+    }, enterDurationMs);
 
     return () => window.clearTimeout(timeoutId);
-  }, [pathname, reduceMotion]);
+  }, [enterDurationMs, pathname, reduceMotion]);
 
   const value = useMemo(
     () => ({

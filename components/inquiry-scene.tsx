@@ -150,24 +150,24 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
           className="scene-shell scene-shell-warm scene-pad lg:h-full"
           {...sceneBindings}
         >
-          <div className="relative z-10 flex flex-col gap-4 overflow-visible lg:h-full lg:min-h-0 lg:gap-5">
+          <div className="relative z-10 flex flex-col gap-5 overflow-visible lg:h-full lg:min-h-0 lg:gap-5">
             <RevealGroup
-              className="grid gap-4 lg:grid-cols-[minmax(0,0.94fr)_minmax(0,0.86fr)] lg:items-end"
+              className="grid gap-5 lg:grid-cols-[minmax(0,0.94fr)_minmax(0,0.86fr)] lg:items-end"
               stagger={0.1}
               amount={0.25}
             >
               <RevealItem variant="hero">
-                <div className="max-w-[36rem] space-y-3">
+                <div className="max-w-[36rem] space-y-4 sm:space-y-3.5">
                   <span className="eyebrow">{sceneData.eyebrow}</span>
                   <h1 className="page-heading headline-display">{sceneData.title}</h1>
-                  <p className="max-w-[32rem] text-[0.98rem] leading-7 text-[var(--text-secondary)] sm:text-[1.02rem]">
+                  <p className="max-w-[32rem] text-[0.96rem] leading-7 text-[var(--text-secondary)] sm:text-[1.02rem]">
                     {sceneData.description}
                   </p>
                 </div>
               </RevealItem>
 
               <RevealItem variant="card">
-                <div className="grid gap-2 sm:grid-cols-3 lg:justify-self-end">
+                <div className="grid gap-2.5 sm:grid-cols-3 lg:justify-self-end">
                   {sceneData.trustPoints.map((point) => (
                     <div
                       key={point}
@@ -211,8 +211,8 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
                       </div>
                     </div>
                   ) : (
-                    <form className="flex flex-col gap-4 lg:h-full lg:min-h-0" onSubmit={handleSubmit}>
-                      <div className="grid gap-2 sm:grid-cols-3">
+                    <form className="flex flex-col gap-5 lg:h-full lg:min-h-0" onSubmit={handleSubmit}>
+                      <div className="grid gap-2.5 sm:grid-cols-3">
                         {sceneData.formSteps.map((step, index) => {
                           const isActive = index === activeIndex;
 
@@ -247,10 +247,10 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
                         <p className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">
                           {activeSupport.label}
                         </p>
-                        <h2 className="mt-2 text-[1.55rem] leading-[0.98] sm:text-[2.05rem]">
+                        <h2 className="mt-3 text-[1.55rem] leading-[0.98] sm:mt-2 sm:text-[2.05rem]">
                           {activeFormStep.title}
                         </h2>
-                        <p className="mt-2 max-w-[30rem] text-[0.94rem] leading-7 text-[var(--text-secondary)]">
+                        <p className="mt-3 max-w-[30rem] text-[0.94rem] leading-7 text-[var(--text-secondary)]">
                           {activeFormStep.description}
                         </p>
                       </div>

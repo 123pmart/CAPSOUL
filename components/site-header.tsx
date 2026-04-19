@@ -8,6 +8,7 @@ import { BrandMark } from "@/components/brand-mark";
 import { heroRevealTransition, measuredEase } from "@/components/motion-config";
 import { TransitionLink } from "@/components/transition-link";
 import { navigation } from "@/content/site";
+import { isSceneRouteActive } from "@/lib/scene-route-order";
 
 export function SiteHeader() {
   const pathname = usePathname();
@@ -19,8 +20,11 @@ export function SiteHeader() {
   }, [pathname]);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50">
-      <div className="shell pt-3">
+    <header
+      className="fixed inset-x-0 top-0 z-50"
+      style={{ paddingLeft: "var(--safe-left)", paddingRight: "var(--safe-right)" }}
+    >
+      <div className="shell pt-[calc(var(--safe-top)+0.65rem)] sm:pt-3">
         <motion.div
           initial={reduceMotion ? false : { y: -14, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
@@ -28,10 +32,10 @@ export function SiteHeader() {
             duration: reduceMotion ? 0 : heroRevealTransition.duration,
             ease: reduceMotion ? measuredEase : heroRevealTransition.ease,
           }}
-          className="scene-shell scene-shell-cool px-4 py-3 backdrop-blur-xl"
+          className="scene-shell scene-shell-cool w-full px-3 py-2.5 backdrop-blur-xl sm:px-4 sm:py-3"
         >
-          <div className="relative z-10 flex min-h-[3.5rem] items-center justify-between gap-4 lg:grid lg:grid-cols-[minmax(14rem,1fr)_auto_minmax(14rem,1fr)] lg:items-center lg:gap-6">
-            <div className="flex min-w-0 items-center lg:w-full lg:justify-self-start">
+          <div className="relative z-10 flex min-h-[3.2rem] min-w-0 items-center justify-between gap-3 sm:min-h-[3.5rem] sm:gap-4 lg:grid lg:grid-cols-[minmax(14rem,1fr)_auto_minmax(14rem,1fr)] lg:items-center lg:gap-6">
+            <div className="flex min-w-0 flex-1 items-center lg:w-full lg:justify-self-start">
               <TransitionLink href="/" aria-label="Go to CAPSOUL home page" className="shrink-0">
                 <BrandMark compact />
               </TransitionLink>
@@ -42,8 +46,7 @@ export function SiteHeader() {
               className="hidden items-center justify-self-center gap-1 rounded-full border border-white/80 bg-[linear-gradient(180deg,rgba(255,255,255,0.72),rgba(242,247,252,0.88))] px-1.5 py-1.5 shadow-[0_18px_42px_rgba(152,169,189,0.18)] backdrop-blur-xl lg:inline-flex"
             >
               {navigation.map((item) => {
-                const active =
-                  item.href === "/" ? pathname === item.href : pathname.startsWith(item.href);
+                const active = isSceneRouteActive(pathname, item.href);
 
                 return (
                   <TransitionLink
@@ -75,7 +78,7 @@ export function SiteHeader() {
               aria-label={isOpen ? "Close menu" : "Open menu"}
               aria-expanded={isOpen}
               aria-controls="mobile-navigation"
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-white/80 bg-[linear-gradient(180deg,rgba(255,255,255,0.76),rgba(241,246,251,0.9))] text-[var(--text-primary)] shadow-[0_14px_28px_rgba(154,170,190,0.16)] backdrop-blur-lg lg:hidden"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/80 bg-[linear-gradient(180deg,rgba(255,255,255,0.76),rgba(241,246,251,0.9))] text-[var(--text-primary)] shadow-[0_14px_28px_rgba(154,170,190,0.16)] backdrop-blur-lg lg:hidden"
               onClick={() => setIsOpen((value) => !value)}
             >
               <span className="relative block h-4 w-5">
@@ -106,8 +109,7 @@ export function SiteHeader() {
           >
             <div className="grid gap-2.5">
               {navigation.map((item) => {
-                const active =
-                  item.href === "/" ? pathname === item.href : pathname.startsWith(item.href);
+                const active = isSceneRouteActive(pathname, item.href);
 
                 return (
                   <TransitionLink

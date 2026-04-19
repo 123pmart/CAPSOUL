@@ -8,19 +8,49 @@ import {
   routeVeilTransition,
 } from "@/components/motion-config";
 import { useSceneTransition } from "@/components/scene-transition-context";
-import { navigation } from "@/content/site";
+import { useCompactViewport } from "@/components/use-compact-viewport";
+import { getSceneRouteLabel } from "@/lib/scene-route-order";
 
 export function SceneTransitionOverlay() {
   const { phase, pathname, pendingPath } = useSceneTransition();
   const reduceMotion = useReducedMotion();
+  const isCompactViewport = useCompactViewport();
 
   if (reduceMotion || phase === "idle") {
     return null;
   }
 
   const activePath = phase === "exiting" ? pendingPath ?? pathname : pathname;
-  const activeLabel =
-    navigation.find((item) => item.href === activePath)?.label ?? "CAPSOUL";
+  const activeLabel = getSceneRouteLabel(activePath);
+
+  if (isCompactViewport) {
+    return (
+      <AnimatePresence>
+        <motion.div
+          key={phase}
+          aria-hidden="true"
+          className="pointer-events-none fixed inset-0 z-[120]"
+          initial={{ opacity: phase === "exiting" ? 0 : 0.16 }}
+          animate={{ opacity: phase === "exiting" ? 0.34 : 0 }}
+          exit={{ opacity: 0 }}
+          transition={phase === "exiting" ? routeExitTransition : routeEnterTransition}
+        >
+          <div className="absolute inset-0 bg-[rgba(244,248,252,0.72)]" />
+          <motion.div
+            className="absolute inset-x-0 top-1/2 flex -translate-y-1/2 justify-center"
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: phase === "exiting" ? 1 : 0, y: phase === "exiting" ? 0 : -4 }}
+            exit={{ opacity: 0, y: -4 }}
+            transition={routeExitTransition}
+          >
+            <div className="archive-chip rounded-full px-4 py-2 text-[0.68rem] uppercase tracking-[0.18em] text-[var(--text-secondary)]">
+              {activeLabel}
+            </div>
+          </motion.div>
+        </motion.div>
+      </AnimatePresence>
+    );
+  }
 
   return (
     <AnimatePresence>

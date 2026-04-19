@@ -5,6 +5,7 @@ import { motion, useReducedMotion } from "framer-motion";
 
 import { routeEnterTransition, routeExitTransition } from "@/components/motion-config";
 import { useSceneTransition } from "@/components/scene-transition-context";
+import { useCompactViewport } from "@/components/use-compact-viewport";
 
 export function SceneViewport({
   children,
@@ -15,24 +16,34 @@ export function SceneViewport({
 }) {
   const { phase } = useSceneTransition();
   const reduceMotion = useReducedMotion();
+  const isCompactViewport = useCompactViewport();
 
   return (
     <motion.div
       initial={
         reduceMotion
           ? false
-          : {
-              opacity: 0.28,
-              y: 22,
-              scale: 1.01,
-              rotateX: 0,
-            }
+          : isCompactViewport
+            ? {
+                opacity: 0.56,
+                y: 10,
+                scale: 1,
+                rotateX: 0,
+              }
+            : {
+                opacity: 0.28,
+                y: 22,
+                scale: 1.01,
+                rotateX: 0,
+              }
       }
       animate={
         reduceMotion
           ? { opacity: 1, y: 0, scale: 1, rotateX: 0 }
           : phase === "exiting"
-            ? { opacity: 0.18, y: -10, scale: 0.988, rotateX: 0 }
+            ? isCompactViewport
+              ? { opacity: 0.36, y: -4, scale: 0.998, rotateX: 0 }
+              : { opacity: 0.18, y: -10, scale: 0.988, rotateX: 0 }
             : { opacity: 1, y: 0, scale: 1, rotateX: 0 }
       }
       transition={phase === "exiting" ? routeExitTransition : routeEnterTransition}

@@ -7,12 +7,12 @@ type BrandMarkProps = {
 export function BrandMark({ compact = false }: BrandMarkProps) {
   return (
     <div
-      className={`flex items-center text-[var(--foreground)] ${
+      className={`flex max-w-full items-center text-[var(--foreground)] ${
         compact ? "gap-2.25" : "gap-3"
       }`}
     >
       <div
-        className={`relative flex items-center justify-center overflow-hidden rounded-[1rem] border border-[rgba(255,255,255,0.84)] bg-[linear-gradient(160deg,rgba(255,255,255,0.98),rgba(228,236,244,0.92))] shadow-[0_16px_30px_rgba(154,170,190,0.14)] backdrop-blur-xl ${
+        className={`relative flex shrink-0 items-center justify-center overflow-hidden rounded-[1rem] border border-[rgba(255,255,255,0.84)] bg-[linear-gradient(160deg,rgba(255,255,255,0.98),rgba(228,236,244,0.92))] shadow-[0_16px_30px_rgba(154,170,190,0.14)] backdrop-blur-xl ${
           compact ? "h-[2.2rem] w-[2.2rem]" : "h-[2.7rem] w-[2.7rem]"
         }`}
       >
@@ -25,11 +25,11 @@ export function BrandMark({ compact = false }: BrandMarkProps) {
           C
         </span>
       </div>
-      <div className="flex flex-col">
+      <div className="flex min-w-0 flex-col">
         <span
-          className={`font-semibold uppercase text-[var(--foreground-soft)] ${
+          className={`truncate font-semibold uppercase text-[var(--foreground-soft)] ${
             compact
-              ? "text-[0.66rem] tracking-[0.22em] sm:text-[0.7rem]"
+              ? "text-[0.62rem] tracking-[0.16em] sm:text-[0.7rem] sm:tracking-[0.22em]"
               : "text-[0.8rem] tracking-[0.28em] sm:text-[0.86rem]"
           }`}
         >
