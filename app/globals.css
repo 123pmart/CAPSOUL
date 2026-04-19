@@ -608,6 +608,20 @@
   background: linear-gradient(90deg, transparent, rgba(181, 196, 211, 0.32), transparent);
 }
 
+.touch-step-rail {
+  scroll-snap-type: x proximity;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.touch-step-rail::-webkit-scrollbar {
+  display: none;
+}
+
+.touch-step-rail > * {
+  scroll-snap-align: start;
+}
+
 .depth-hover {
   transition:
     transform var(--motion-base) var(--ease-premium),
@@ -787,6 +801,10 @@
     font-size: 16px;
   }
 
+  .field-textarea {
+    min-height: 5.15rem;
+  }
+
   .scene-shell {
     backdrop-filter: blur(16px) saturate(142%);
   }
@@ -795,6 +813,10 @@
   .surface-note,
   .media-caption {
     max-width: 100%;
+  }
+
+  .touch-step-rail > * {
+    max-width: min(18.5rem, calc(100vw - (2 * var(--shell-gutter)) - 1.4rem));
   }
 }
 

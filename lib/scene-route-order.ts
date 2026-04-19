@@ -1,6 +1,7 @@
 import { navigation } from "@/content/site";
 
 export const sceneRouteOrder = navigation.map((item) => item.href);
+export const sceneRouteCount = navigation.length;
 
 export function normalizeSceneRoute(pathname: string | null | undefined) {
   if (!pathname) {
@@ -42,4 +43,21 @@ export function getSceneRouteLabel(pathname: string | null | undefined) {
   return (
     navigation.find((item) => isSceneRouteActive(pathname, item.href))?.label ?? "CAPSOUL"
   );
+}
+
+export function getSceneRouteEntry(pathname: string | null | undefined) {
+  return navigation.find((item) => isSceneRouteActive(pathname, item.href)) ?? null;
+}
+
+export function getSceneRouteProgress(pathname: string | null | undefined) {
+  const index = getSceneRouteIndex(pathname);
+
+  if (index === -1) {
+    return null;
+  }
+
+  return {
+    current: index + 1,
+    total: sceneRouteCount,
+  };
 }
