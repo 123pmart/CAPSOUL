@@ -1,0 +1,232 @@
+export type MediaSlotDefinition = {
+  id: string;
+  pageKey: "home" | "experience" | "process" | "preserve" | "inquire";
+  pageLabel: string;
+  label: string;
+  description: string;
+  fallbackSrc: string;
+  alt: string;
+};
+
+export const mediaSlotDefinitions: MediaSlotDefinition[] = [
+  {
+    id: "home.reflection",
+    pageKey: "home",
+    pageLabel: "Home",
+    label: "Reflection state",
+    description: "Opening state for stories gathered before filming.",
+    fallbackSrc: "/visuals/conversation-frame.svg",
+    alt: "Home reflection media slot.",
+  },
+  {
+    id: "home.presence",
+    pageKey: "home",
+    pageLabel: "Home",
+    label: "Presence state",
+    description: "Environment-led image for filming presence.",
+    fallbackSrc: "/visuals/hero-frame.svg",
+    alt: "Home presence media slot.",
+  },
+  {
+    id: "home.structure",
+    pageKey: "home",
+    pageLabel: "Home",
+    label: "Structure state",
+    description: "Editorial shaping image for the structure state.",
+    fallbackSrc: "/visuals/heirloom-frame.svg",
+    alt: "Home structure media slot.",
+  },
+  {
+    id: "home.heirloom",
+    pageKey: "home",
+    pageLabel: "Home",
+    label: "Heirloom state",
+    description: "Final archive image for the home scene.",
+    fallbackSrc: "/visuals/heirloom-frame.svg",
+    alt: "Home heirloom media slot.",
+  },
+  {
+    id: "experience.preparation",
+    pageKey: "experience",
+    pageLabel: "The Experience",
+    label: "Preparation state",
+    description: "Image used for the preparation state.",
+    fallbackSrc: "/visuals/conversation-frame.svg",
+    alt: "Experience preparation media slot.",
+  },
+  {
+    id: "experience.direction",
+    pageKey: "experience",
+    pageLabel: "The Experience",
+    label: "Direction state",
+    description: "Image used for the calm direction state.",
+    fallbackSrc: "/visuals/hero-frame.svg",
+    alt: "Experience direction media slot.",
+  },
+  {
+    id: "experience.edit",
+    pageKey: "experience",
+    pageLabel: "The Experience",
+    label: "Edit state",
+    description: "Editorial image for the edit state.",
+    fallbackSrc: "/visuals/heirloom-frame.svg",
+    alt: "Experience edit media slot.",
+  },
+  {
+    id: "experience.delivery",
+    pageKey: "experience",
+    pageLabel: "The Experience",
+    label: "Delivery state",
+    description: "Final delivery image for the experience scene.",
+    fallbackSrc: "/visuals/heirloom-frame.svg",
+    alt: "Experience delivery media slot.",
+  },
+  {
+    id: "process.inquiry",
+    pageKey: "process",
+    pageLabel: "How It Works",
+    label: "Inquiry step",
+    description: "Media slot for the inquiry step.",
+    fallbackSrc: "/visuals/conversation-frame.svg",
+    alt: "Process inquiry media slot.",
+  },
+  {
+    id: "process.discovery",
+    pageKey: "process",
+    pageLabel: "How It Works",
+    label: "Discovery step",
+    description: "Media slot for the discovery step.",
+    fallbackSrc: "/visuals/hero-frame.svg",
+    alt: "Process discovery media slot.",
+  },
+  {
+    id: "process.reflection",
+    pageKey: "process",
+    pageLabel: "How It Works",
+    label: "Reflection step",
+    description: "Media slot for the reflection step.",
+    fallbackSrc: "/visuals/conversation-frame.svg",
+    alt: "Process reflection media slot.",
+  },
+  {
+    id: "process.filming",
+    pageKey: "process",
+    pageLabel: "How It Works",
+    label: "Filming step",
+    description: "Media slot for the filming step.",
+    fallbackSrc: "/visuals/hero-frame.svg",
+    alt: "Process filming media slot.",
+  },
+  {
+    id: "process.delivery",
+    pageKey: "process",
+    pageLabel: "How It Works",
+    label: "Delivery step",
+    description: "Media slot for the delivery step.",
+    fallbackSrc: "/visuals/heirloom-frame.svg",
+    alt: "Process delivery media slot.",
+  },
+  {
+    id: "preserve.values",
+    pageKey: "preserve",
+    pageLabel: "What We Preserve",
+    label: "Values chapter",
+    description: "Media slot for the values chapter.",
+    fallbackSrc: "/visuals/hero-frame.svg",
+    alt: "Values chapter media slot.",
+  },
+  {
+    id: "preserve.roots",
+    pageKey: "preserve",
+    pageLabel: "What We Preserve",
+    label: "Roots chapter",
+    description: "Media slot for the roots chapter.",
+    fallbackSrc: "/visuals/conversation-frame.svg",
+    alt: "Roots chapter media slot.",
+  },
+  {
+    id: "preserve.love",
+    pageKey: "preserve",
+    pageLabel: "What We Preserve",
+    label: "Love chapter",
+    description: "Media slot for the love chapter.",
+    fallbackSrc: "/visuals/heirloom-frame.svg",
+    alt: "Love chapter media slot.",
+  },
+  {
+    id: "preserve.belief",
+    pageKey: "preserve",
+    pageLabel: "What We Preserve",
+    label: "Belief chapter",
+    description: "Media slot for the belief chapter.",
+    fallbackSrc: "/visuals/conversation-frame.svg",
+    alt: "Belief chapter media slot.",
+  },
+  {
+    id: "preserve.message",
+    pageKey: "preserve",
+    pageLabel: "What We Preserve",
+    label: "Message chapter",
+    description: "Media slot for the message chapter.",
+    fallbackSrc: "/visuals/heirloom-frame.svg",
+    alt: "Message chapter media slot.",
+  },
+  {
+    id: "inquire.contact",
+    pageKey: "inquire",
+    pageLabel: "Inquire",
+    label: "Contact state",
+    description: "Support image for the contact step.",
+    fallbackSrc: "/visuals/conversation-frame.svg",
+    alt: "Inquiry contact media slot.",
+  },
+  {
+    id: "inquire.story",
+    pageKey: "inquire",
+    pageLabel: "Inquire",
+    label: "Story state",
+    description: "Support image for the story step.",
+    fallbackSrc: "/visuals/hero-frame.svg",
+    alt: "Inquiry story media slot.",
+  },
+  {
+    id: "inquire.followup",
+    pageKey: "inquire",
+    pageLabel: "Inquire",
+    label: "Follow-up state",
+    description: "Support image for the follow-up step.",
+    fallbackSrc: "/visuals/heirloom-frame.svg",
+    alt: "Inquiry follow-up media slot.",
+  },
+];
+
+export const sceneSlotIds = {
+  home: ["home.reflection", "home.presence", "home.structure", "home.heirloom"],
+  experience: [
+    "experience.preparation",
+    "experience.direction",
+    "experience.edit",
+    "experience.delivery",
+  ],
+  process: [
+    "process.inquiry",
+    "process.discovery",
+    "process.reflection",
+    "process.filming",
+    "process.delivery",
+  ],
+  preserve: [
+    "preserve.values",
+    "preserve.roots",
+    "preserve.love",
+    "preserve.belief",
+    "preserve.message",
+  ],
+  inquire: ["inquire.contact", "inquire.story", "inquire.followup"],
+} as const;
+
+const slotDefinitionMap = new Map(mediaSlotDefinitions.map((slot) => [slot.id, slot]));
+
+export function getMediaSlotDefinition(slotId: string) {
+  return slotDefinitionMap.get(slotId);
+}

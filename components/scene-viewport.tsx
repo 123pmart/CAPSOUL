@@ -1,0 +1,45 @@
+"use client";
+
+import type { ReactNode } from "react";
+import { motion, useReducedMotion } from "framer-motion";
+
+import { routeEnterTransition, routeExitTransition } from "@/components/motion-config";
+import { useSceneTransition } from "@/components/scene-transition-context";
+
+export function SceneViewport({
+  children,
+  className = "",
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
+  const { phase } = useSceneTransition();
+  const reduceMotion = useReducedMotion();
+
+  return (
+    <motion.div
+      initial={
+        reduceMotion
+          ? false
+          : {
+              opacity: 0.28,
+              y: 22,
+              scale: 1.01,
+              rotateX: 0,
+            }
+      }
+      animate={
+        reduceMotion
+          ? { opacity: 1, y: 0, scale: 1, rotateX: 0 }
+          : phase === "exiting"
+            ? { opacity: 0.18, y: -10, scale: 0.988, rotateX: 0 }
+            : { opacity: 1, y: 0, scale: 1, rotateX: 0 }
+      }
+      transition={phase === "exiting" ? routeExitTransition : routeEnterTransition}
+      style={{ transformOrigin: "center center" }}
+      className={`h-full ${className}`.trim()}
+    >
+      {children}
+    </motion.div>
+  );
+}
