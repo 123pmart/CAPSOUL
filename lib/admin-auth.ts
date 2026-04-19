@@ -26,6 +26,13 @@ export type AdminProfileUpdateInput = {
   newPassword?: string;
 };
 
+export class AdminAuthConfigurationError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "AdminAuthConfigurationError";
+  }
+}
+
 const ADMIN_USERS_FILE = path.join(DATA_ROOT, "admin-users.json");
 export const ADMIN_SESSION_COOKIE = "capsoul_admin_session";
 export const ADMIN_SESSION_MAX_AGE = 60 * 60 * 24 * 7;
@@ -113,6 +120,32 @@ function createDefaultAdmins(): AdminUserRecord[] {
   ];
 }
 
+export function assertAdminLoginConfiguration() {
+  try {
+    getSessionSecret();
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "CAPSOUL_SESSION_SECRET is required.";
+    throw new AdminAuthConfigurationError(message);
+  }
+
+  // Production auth must use persistent storage on Vercel. We keep the legacy
+  // JSON fallback available only for local development workspaces.
+  if (hasPersistentDatabase()) {
+    return;
+  }
+
+  if (process.env.NODE_ENV === "production") {
+    throw new AdminAuthConfigurationError(
+      "Persistent database storage is required for admin login in production.",
+    );
+  }
+
+  if (!canUseLegacyMutableFallback()) {
+    throw new AdminAuthConfigurationError("Admin storage is not configured.");
+  }
+}
+
 async function listLegacyAdminUsers() {
   const existingUsers = await readJsonFile<AdminUserRecord[]>(ADMIN_USERS_FILE, []);
 
@@ -137,20 +170,26 @@ async function ensurePersistentAdminsSeeded() {
     globalState[persistentAdminSeedKey] = (async () => {
       await ensureDatabaseReady();
       const sql = getDatabaseClient();
-      const existingRows = await sql<PersistentAdminRow[]>`
-        SELECT id, username, password_hash, created_at, updated_at
+      const existingRows = await sql<{ id: string; username: string }[]>`
+        SELECT id, username
         FROM admins
-        LIMIT 1
       `;
-
-      if (existingRows.length > 0) {
-        return;
-      }
 
       const legacyUsers =
         (await readOptionalLegacyJson<AdminUserRecord[]>("admin-users.json")) ?? createDefaultAdmins();
+      const existingIds = new Set(existingRows.map((row) => row.id));
+      const existingUsernames = new Set(
+        existingRows.map((row) => row.username.trim().toLowerCase()),
+      );
 
       for (const user of legacyUsers) {
+        if (
+          existingIds.has(user.id) ||
+          existingUsernames.has(user.username.trim().toLowerCase())
+        ) {
+          continue;
+        }
+
         await sql`
           INSERT INTO admins (id, username, password_hash, created_at, updated_at)
           VALUES (${user.id}, ${user.username}, ${user.passwordHash}, ${user.createdAt}, ${user.updatedAt})
@@ -175,31 +214,33 @@ function mapPersistentAdmin(row: PersistentAdminRow): AdminUserRecord {
 
 export async function listAdminUsers() {
   if (hasPersistentDatabase()) {
-    try {
-      await ensurePersistentAdminsSeeded();
-      const sql = getDatabaseClient();
-      const rows = await sql<PersistentAdminRow[]>`
-        SELECT id, username, password_hash, created_at, updated_at
-        FROM admins
-        ORDER BY created_at ASC
-      `;
+    await ensurePersistentAdminsSeeded();
+    const sql = getDatabaseClient();
+    const rows = await sql<PersistentAdminRow[]>`
+      SELECT id, username, password_hash, created_at, updated_at
+      FROM admins
+      ORDER BY created_at ASC
+    `;
 
-      return rows.map(mapPersistentAdmin);
-    } catch {
-      return [];
-    }
+    return rows.map(mapPersistentAdmin);
   }
 
   if (canUseLegacyMutableFallback()) {
     return listLegacyAdminUsers();
   }
 
-  return [];
+  throw new AdminAuthConfigurationError("Admin storage is not configured.");
 }
 
 export async function authenticateAdmin(username: string, password: string) {
+  assertAdminLoginConfiguration();
   const normalizedUsername = normalizeUsername(username).toLowerCase();
   const users = await listAdminUsers();
+
+  if (users.length === 0) {
+    throw new AdminAuthConfigurationError("No admin accounts are available.");
+  }
+
   const match = users.find((user) => user.username.toLowerCase() === normalizedUsername);
 
   if (!match || !verifyPassword(password, match.passwordHash)) {

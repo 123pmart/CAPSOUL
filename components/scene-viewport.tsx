@@ -37,7 +37,7 @@ export function SceneViewport({
       }
       transition={phase === "exiting" ? routeExitTransition : routeEnterTransition}
       style={{ transformOrigin: "center center" }}
-      className={`h-full ${className}`.trim()}
+      className={className.trim()}
     >
       {children}
     </motion.div>

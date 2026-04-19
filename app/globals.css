@@ -1,6 +1,8 @@
 @import "tailwindcss";
 
 :root {
+  --header-offset-mobile: 4.95rem;
+  --header-offset-desktop: 5.45rem;
   --shell-max: 1560px;
   --shell-ultra: 1760px;
   --home-shell-max: 1660px;
@@ -738,6 +740,42 @@
   .film-frame,
   .media-caption {
     border-radius: 1.15rem;
+  }
+}
+
+@media (max-width: 1023px) {
+  :root {
+    --shell-gutter: clamp(0.9rem, 4.4vw, 1.35rem);
+    --scene-pad-x: clamp(0.85rem, 4vw, 1.15rem);
+    --scene-pad-y: clamp(0.85rem, 3.6vw, 1.05rem);
+    --section-gap-tight: clamp(1.8rem, 7vw, 2.7rem);
+    --section-gap-compact: clamp(1.35rem, 5.6vw, 2rem);
+    --stack-gap: clamp(0.82rem, 2.8vw, 1rem);
+  }
+
+  .scene-shell {
+    overscroll-behavior: auto;
+  }
+}
+
+@media (max-width: 767px) {
+  :root {
+    --shell-gutter: clamp(0.82rem, 5vw, 1.05rem);
+    --scene-pad-x: clamp(0.78rem, 4.8vw, 0.96rem);
+    --scene-pad-y: clamp(0.8rem, 4vw, 0.92rem);
+    --section-gap: clamp(2.1rem, 8vw, 3rem);
+    --section-gap-tight: clamp(1.45rem, 6.6vw, 2.1rem);
+    --section-gap-compact: clamp(1.15rem, 5.5vw, 1.65rem);
+  }
+
+  .field-input,
+  .field-textarea,
+  .field-select {
+    font-size: 16px;
+  }
+
+  .scene-shell {
+    backdrop-filter: blur(16px) saturate(142%);
   }
 }
 

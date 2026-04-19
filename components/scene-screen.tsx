@@ -39,7 +39,16 @@ export function SceneScreen({
   tone = "cool",
 }: SceneScreenProps) {
   const reduceMotion = useReducedMotion();
-  const { activeIndex, goNext, goPrev, goToStep, isFirst, isLast, sceneBindings } =
+  const {
+    activeIndex,
+    goNext,
+    goPrev,
+    goToStep,
+    isFirst,
+    isLast,
+    sceneBindings,
+    usesViewportProgression,
+  } =
     useSceneProgression({
       stepCount: steps.length,
     });
@@ -55,14 +64,38 @@ export function SceneScreen({
     return null;
   }
 
+  const mediaEnter = reduceMotion
+    ? { opacity: 1 }
+    : usesViewportProgression
+      ? { opacity: 0, y: 24, scale: 0.985 }
+      : { opacity: 0, y: 14, scale: 0.996 };
+  const mediaExit = reduceMotion
+    ? { opacity: 1 }
+    : usesViewportProgression
+      ? { opacity: 0, y: -20, scale: 0.992 }
+      : { opacity: 0, y: -10, scale: 0.998 };
+  const panelEnter = reduceMotion
+    ? { opacity: 1 }
+    : usesViewportProgression
+      ? { opacity: 0, y: 18 }
+      : { opacity: 0, y: 10 };
+  const panelExit = reduceMotion
+    ? { opacity: 1 }
+    : usesViewportProgression
+      ? { opacity: 0, y: -12 }
+      : { opacity: 0, y: -8 };
+  const progressionNote = usesViewportProgression
+    ? compactNote
+    : compactNote.replace(/^Scroll or tap/i, "Tap");
+
   return (
-    <section className="shell h-[calc(100dvh-4.95rem)] min-h-[calc(100svh-4.95rem)] py-3 sm:h-[calc(100dvh-5.45rem)] sm:min-h-[calc(100svh-5.45rem)] sm:py-4">
-      <SceneViewport className="h-full">
+    <section className="shell py-3 sm:py-4 lg:h-[calc(100dvh-var(--header-offset-desktop))] lg:min-h-[calc(100svh-var(--header-offset-desktop))]">
+      <SceneViewport className="lg:h-full">
         <div
-          className={`scene-shell ${toneClassName} scene-pad h-full`}
+          className={`scene-shell ${toneClassName} scene-pad lg:h-full`}
           {...sceneBindings}
         >
-          <div className="relative z-10 flex h-full min-h-0 flex-col gap-4 overflow-visible lg:gap-5 max-lg:overflow-y-auto">
+          <div className="relative z-10 flex flex-col gap-4 overflow-visible lg:h-full lg:min-h-0 lg:gap-5">
             <RevealGroup
               className="grid gap-4 lg:grid-cols-[minmax(0,0.92fr)_auto] lg:items-end"
               stagger={0.1}
@@ -94,20 +127,20 @@ export function SceneScreen({
               </RevealItem>
             </RevealGroup>
 
-            <div className="grid min-h-0 flex-1 gap-4 lg:grid-cols-[minmax(0,1.08fr)_minmax(20rem,0.92fr)] lg:gap-5">
-              <RevealGroup className="min-h-0" delay={80} stagger={0.08} amount={0.2}>
-                <RevealItem variant="media" className="h-full">
-                  <div className="scene-focus flex h-full min-h-[22rem] flex-col gap-3 p-3 sm:p-4">
+            <div className="grid gap-4 lg:min-h-0 lg:flex-1 lg:grid-cols-[minmax(0,1.08fr)_minmax(20rem,0.92fr)] lg:gap-5">
+              <RevealGroup className="lg:min-h-0" delay={80} stagger={0.08} amount={0.2}>
+                <RevealItem variant="media" className="lg:h-full">
+                  <div className="scene-focus flex min-h-[20rem] flex-col gap-3 p-3 sm:min-h-[22rem] sm:p-4 lg:h-full">
                     <AnimatePresence mode="wait">
                       <motion.div
                         key={active.title}
-                        initial={reduceMotion ? { opacity: 1 } : { opacity: 0, y: 24, scale: 0.985 }}
+                        initial={mediaEnter}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={reduceMotion ? { opacity: 1 } : { opacity: 0, y: -20, scale: 0.992 }}
+                        exit={mediaExit}
                         transition={contentSwapTransition}
-                        className="flex h-full min-h-0 flex-col gap-3"
+                        className="flex h-full flex-col gap-3 lg:min-h-0"
                       >
-                        <div className="film-frame relative min-h-[16rem] flex-1 overflow-hidden">
+                        <div className="film-frame relative min-h-[18rem] flex-1 overflow-hidden sm:min-h-[19rem] lg:min-h-[16rem]">
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
                             src={active.image}
@@ -115,13 +148,13 @@ export function SceneScreen({
                             className="h-full w-full object-cover"
                           />
                           <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.02),rgba(232,239,246,0.18))]" />
-                          <div className="surface-note absolute left-4 top-4 max-w-[14rem] rounded-[1rem] px-3 py-2.5 text-[0.78rem] leading-5 text-[var(--text-secondary)]">
+                          <div className="surface-note absolute left-3 top-3 max-w-[14rem] rounded-[1rem] px-3 py-2.5 text-[0.78rem] leading-5 text-[var(--text-secondary)] sm:left-4 sm:top-4">
                             <p className="text-[0.66rem] font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">
                               {active.mediaLabel}
                             </p>
                             <p className="mt-1.5">{active.mediaCaption}</p>
                           </div>
-                          <div className="media-caption absolute inset-x-4 bottom-4 rounded-[1.1rem] px-4 py-3.5">
+                          <div className="media-caption absolute inset-x-3 bottom-3 rounded-[1.1rem] px-4 py-3.5 sm:inset-x-4 sm:bottom-4">
                             <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-deep)]">
                               {stageLabel}
                             </p>
@@ -131,7 +164,7 @@ export function SceneScreen({
                           </div>
                         </div>
 
-                        <div className="grid gap-3 md:grid-cols-3">
+                        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
                           {active.bullets.map((bullet) => (
                             <div
                               key={bullet}
@@ -148,7 +181,7 @@ export function SceneScreen({
               </RevealGroup>
 
               <RevealGroup
-                className="grid min-h-0 gap-3 lg:grid-rows-[auto_minmax(0,1fr)_auto]"
+                className="grid gap-3 lg:min-h-0 lg:grid-rows-[auto_minmax(0,1fr)_auto]"
                 delay={140}
                 stagger={0.1}
                 amount={0.2}
@@ -156,7 +189,7 @@ export function SceneScreen({
                 <RevealItem variant="micro">
                   <div className="flex flex-wrap items-center justify-between gap-3">
                     <span className="archive-chip rounded-full px-3.5 py-1.5 text-[0.7rem] uppercase tracking-[0.18em] text-[var(--text-secondary)]">
-                      {compactNote}
+                      {progressionNote}
                     </span>
                     <span className="text-[0.75rem] uppercase tracking-[0.18em] text-[var(--text-tertiary)]">
                       {String(activeIndex + 1).padStart(2, "0")} / {String(steps.length).padStart(2, "0")}
@@ -165,7 +198,7 @@ export function SceneScreen({
                 </RevealItem>
 
                 <RevealItem variant="card" className="min-h-0">
-                  <div className="panel-strong flex h-full min-h-0 flex-col gap-3 rounded-[1.7rem] p-3.5 sm:p-4">
+                  <div className="panel-strong flex flex-col gap-3 rounded-[1.7rem] p-3.5 sm:p-4 lg:h-full lg:min-h-0">
                     <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-1">
                       {steps.map((step, index) => {
                         const isActive = index === activeIndex;
@@ -207,17 +240,17 @@ export function SceneScreen({
                     <AnimatePresence mode="wait">
                       <motion.div
                         key={`${active.label}-${activeIndex}`}
-                        initial={reduceMotion ? { opacity: 1 } : { opacity: 0, y: 18 }}
+                        initial={panelEnter}
                         animate={{ opacity: 1, y: 0 }}
-                        exit={reduceMotion ? { opacity: 1 } : { opacity: 0, y: -12 }}
+                        exit={panelExit}
                         transition={contentSwapTransition}
-                        className="flex min-h-0 flex-1 flex-col justify-between gap-4"
+                        className="flex flex-col justify-between gap-4 lg:min-h-0 lg:flex-1"
                       >
                         <div>
                           <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-deep)]">
                             Active state
                           </p>
-                          <h2 className="mt-2 text-[1.7rem] leading-[0.98] text-balance sm:text-[2.05rem]">
+                          <h2 className="mt-2 text-[1.55rem] leading-[0.98] text-balance sm:text-[2.05rem]">
                             {active.title}
                           </h2>
                           <p className="mt-3 max-w-[28rem] text-[0.95rem] leading-7 text-[var(--text-secondary)]">
@@ -241,7 +274,7 @@ export function SceneScreen({
                 </RevealItem>
 
                 <RevealItem variant="micro">
-                  <div className="flex items-center justify-between gap-3">
+                  <div className="grid gap-3 sm:grid-cols-2">
                     <button
                       type="button"
                       className="button-secondary px-4"

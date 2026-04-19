@@ -53,6 +53,7 @@ export function useSceneProgression({
   const [activeIndex, setActiveIndex] = useState(() =>
     stepCount > 0 ? clampIndex(initialIndex, stepCount) : 0,
   );
+  const [usesViewportProgression, setUsesViewportProgression] = useState(false);
   const wheelBufferRef = useRef(0);
   const touchStartYRef = useRef<number | null>(null);
   const lockRef = useRef(false);
@@ -152,9 +153,43 @@ export function useSceneProgression({
     [clearIdleTimer, clearLockTimer],
   );
 
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(min-width: 1025px) and (hover: hover) and (pointer: fine)");
+
+    const syncViewportProgression = () => {
+      setUsesViewportProgression(mediaQuery.matches);
+      wheelBufferRef.current = 0;
+      touchStartYRef.current = null;
+      lockRef.current = false;
+      clearIdleTimer();
+      clearLockTimer();
+    };
+
+    syncViewportProgression();
+
+    if (typeof mediaQuery.addEventListener === "function") {
+      mediaQuery.addEventListener("change", syncViewportProgression);
+
+      return () => {
+        mediaQuery.removeEventListener("change", syncViewportProgression);
+      };
+    }
+
+    mediaQuery.addListener(syncViewportProgression);
+
+    return () => {
+      mediaQuery.removeListener(syncViewportProgression);
+    };
+  }, [clearIdleTimer, clearLockTimer]);
+
   const handleWheelCapture = useCallback(
     (event: WheelEvent<HTMLElement>) => {
-      if (disabled || stepCount <= 1 || isSceneInteractiveTarget(event.target)) {
+      if (
+        disabled ||
+        !usesViewportProgression ||
+        stepCount <= 1 ||
+        isSceneInteractiveTarget(event.target)
+      ) {
         return;
       }
 
@@ -183,12 +218,12 @@ export function useSceneProgression({
       const direction: 1 | -1 = wheelBufferRef.current > 0 ? 1 : -1;
       moveStep(direction);
     },
-    [clearIdleTimer, disabled, idleResetMs, moveStep, stepCount, wheelThreshold],
+    [clearIdleTimer, disabled, idleResetMs, moveStep, stepCount, usesViewportProgression, wheelThreshold],
   );
 
   const handleKeyDown = useCallback(
     (event: KeyboardEvent<HTMLElement>) => {
-      if (disabled || isSceneInteractiveTarget(event.target)) {
+      if (disabled || !usesViewportProgression || isSceneInteractiveTarget(event.target)) {
         return;
       }
 
@@ -202,24 +237,24 @@ export function useSceneProgression({
         moveStep(-1);
       }
     },
-    [disabled, moveStep],
+    [disabled, moveStep, usesViewportProgression],
   );
 
   const handleTouchStart = useCallback(
     (event: TouchEvent<HTMLElement>) => {
-      if (disabled || isSceneInteractiveTarget(event.target)) {
+      if (disabled || !usesViewportProgression || isSceneInteractiveTarget(event.target)) {
         touchStartYRef.current = null;
         return;
       }
 
       touchStartYRef.current = event.touches[0]?.clientY ?? null;
     },
-    [disabled],
+    [disabled, usesViewportProgression],
   );
 
   const handleTouchEnd = useCallback(
     (event: TouchEvent<HTMLElement>) => {
-      if (disabled || touchStartYRef.current == null) {
+      if (disabled || !usesViewportProgression || touchStartYRef.current == null) {
         return;
       }
 
@@ -233,7 +268,7 @@ export function useSceneProgression({
 
       moveStep(delta > 0 ? 1 : -1);
     },
-    [disabled, moveStep, touchThreshold],
+    [disabled, moveStep, touchThreshold, usesViewportProgression],
   );
 
   const sceneBindings = useMemo(
@@ -242,15 +277,16 @@ export function useSceneProgression({
       onKeyDown: handleKeyDown,
       onTouchStart: handleTouchStart,
       onTouchEnd: handleTouchEnd,
-      tabIndex: 0,
+      tabIndex: usesViewportProgression ? 0 : -1,
     }),
-    [handleKeyDown, handleTouchEnd, handleTouchStart, handleWheelCapture],
+    [handleKeyDown, handleTouchEnd, handleTouchStart, handleWheelCapture, usesViewportProgression],
   );
 
   return {
     activeIndex,
     isFirst: activeIndex === 0,
     isLast: activeIndex === Math.max(stepCount - 1, 0),
+    usesViewportProgression,
     goToStep,
     resetToStep,
     goNext: () => moveStep(1),

@@ -59,7 +59,17 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
   const [formState, setFormState] = useState<InquiryFormState>(initialState);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
-  const { activeIndex, goNext, goPrev, goToStep, resetToStep, isFirst, isLast, sceneBindings } =
+  const {
+    activeIndex,
+    goNext,
+    goPrev,
+    goToStep,
+    resetToStep,
+    isFirst,
+    isLast,
+    sceneBindings,
+    usesViewportProgression,
+  } =
     useSceneProgression({
       stepCount: sceneData.formSteps.length,
       disabled: submitted || isSubmitting,
@@ -71,6 +81,27 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
   if (!activeSupport) {
     return null;
   }
+
+  const contentEnter = reduceMotion
+    ? { opacity: 1 }
+    : usesViewportProgression
+      ? { opacity: 0, y: 18 }
+      : { opacity: 0, y: 10 };
+  const contentExit = reduceMotion
+    ? { opacity: 1 }
+    : usesViewportProgression
+      ? { opacity: 0, y: -14 }
+      : { opacity: 0, y: -8 };
+  const supportEnter = reduceMotion
+    ? { opacity: 1 }
+    : usesViewportProgression
+      ? { opacity: 0, y: 24, scale: 0.985 }
+      : { opacity: 0, y: 14, scale: 0.996 };
+  const supportExit = reduceMotion
+    ? { opacity: 1 }
+    : usesViewportProgression
+      ? { opacity: 0, y: -18, scale: 0.992 }
+      : { opacity: 0, y: -10, scale: 0.998 };
 
   const handleChange = (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
@@ -113,13 +144,13 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
   };
 
   return (
-    <section className="shell h-[calc(100dvh-4.95rem)] min-h-[calc(100svh-4.95rem)] py-3 sm:h-[calc(100dvh-5.45rem)] sm:min-h-[calc(100svh-5.45rem)] sm:py-4">
-      <SceneViewport className="h-full">
+    <section className="shell py-3 sm:py-4 lg:h-[calc(100dvh-var(--header-offset-desktop))] lg:min-h-[calc(100svh-var(--header-offset-desktop))]">
+      <SceneViewport className="lg:h-full">
         <div
-          className="scene-shell scene-shell-warm scene-pad h-full"
+          className="scene-shell scene-shell-warm scene-pad lg:h-full"
           {...sceneBindings}
         >
-          <div className="relative z-10 flex h-full min-h-0 flex-col gap-4 overflow-visible lg:gap-5 max-lg:overflow-y-auto">
+          <div className="relative z-10 flex flex-col gap-4 overflow-visible lg:h-full lg:min-h-0 lg:gap-5">
             <RevealGroup
               className="grid gap-4 lg:grid-cols-[minmax(0,0.94fr)_minmax(0,0.86fr)] lg:items-end"
               stagger={0.1}
@@ -149,9 +180,9 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
               </RevealItem>
             </RevealGroup>
 
-            <div className="grid min-h-0 flex-1 gap-4 lg:grid-cols-[minmax(0,1.02fr)_minmax(20rem,0.98fr)] lg:gap-5">
+            <div className="grid gap-4 lg:min-h-0 lg:flex-1 lg:grid-cols-[minmax(0,1.02fr)_minmax(20rem,0.98fr)] lg:gap-5">
               <RevealItem variant="section" className="min-h-0">
-                <div className="panel-strong flex h-full min-h-0 flex-col rounded-[1.8rem] p-4 sm:p-5">
+                <div className="panel-strong flex flex-col rounded-[1.8rem] p-4 sm:p-5 lg:h-full lg:min-h-0">
                   {submitted ? (
                     <div className="flex h-full flex-col justify-between gap-5">
                       <div className="space-y-3">
@@ -180,7 +211,7 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
                       </div>
                     </div>
                   ) : (
-                    <form className="flex h-full min-h-0 flex-col gap-4" onSubmit={handleSubmit}>
+                    <form className="flex flex-col gap-4 lg:h-full lg:min-h-0" onSubmit={handleSubmit}>
                       <div className="grid gap-2 sm:grid-cols-3">
                         {sceneData.formSteps.map((step, index) => {
                           const isActive = index === activeIndex;
@@ -213,10 +244,10 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
                       </div>
 
                       <div>
-                          <p className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">
-                            {activeSupport.label}
-                          </p>
-                        <h2 className="mt-2 text-[1.7rem] leading-[0.98] sm:text-[2.05rem]">
+                        <p className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">
+                          {activeSupport.label}
+                        </p>
+                        <h2 className="mt-2 text-[1.55rem] leading-[0.98] sm:text-[2.05rem]">
                           {activeFormStep.title}
                         </h2>
                         <p className="mt-2 max-w-[30rem] text-[0.94rem] leading-7 text-[var(--text-secondary)]">
@@ -230,9 +261,9 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
                         <AnimatePresence mode="wait">
                           <motion.div
                             key={activeIndex}
-                            initial={reduceMotion ? { opacity: 1 } : { opacity: 0, y: 18 }}
+                            initial={contentEnter}
                             animate={{ opacity: 1, y: 0 }}
-                            exit={reduceMotion ? { opacity: 1 } : { opacity: 0, y: -14 }}
+                            exit={contentExit}
                             transition={contentSwapTransition}
                             className="grid gap-3 sm:gap-4"
                           >
@@ -470,23 +501,23 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
               </RevealItem>
 
               <RevealGroup
-                className="grid min-h-0 gap-3 lg:grid-rows-[minmax(0,1fr)_auto]"
+                className="grid gap-3 lg:min-h-0 lg:grid-rows-[minmax(0,1fr)_auto]"
                 delay={120}
                 stagger={0.1}
                 amount={0.2}
               >
                 <RevealItem variant="media" className="min-h-0">
-                  <div className="scene-focus flex h-full min-h-[22rem] flex-col gap-3 p-3 sm:p-4">
+                  <div className="scene-focus flex min-h-[20rem] flex-col gap-3 p-3 sm:min-h-[22rem] sm:p-4 lg:h-full">
                     <AnimatePresence mode="wait">
                       <motion.div
                         key={activeSupport.title}
-                        initial={reduceMotion ? { opacity: 1 } : { opacity: 0, y: 24, scale: 0.985 }}
+                        initial={supportEnter}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={reduceMotion ? { opacity: 1 } : { opacity: 0, y: -18, scale: 0.992 }}
+                        exit={supportExit}
                         transition={contentSwapTransition}
-                        className="flex h-full min-h-0 flex-col gap-3"
+                        className="flex h-full flex-col gap-3 lg:min-h-0"
                       >
-                        <div className="film-frame relative min-h-[16rem] flex-1 overflow-hidden">
+                        <div className="film-frame relative min-h-[18rem] flex-1 overflow-hidden sm:min-h-[19rem] lg:min-h-[16rem]">
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
                             src={activeSupport.image}
@@ -494,13 +525,13 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
                             className="h-full w-full object-cover"
                           />
                           <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.02),rgba(232,239,246,0.16))]" />
-                          <div className="surface-note absolute left-4 top-4 max-w-[14rem] rounded-[1rem] px-3 py-2.5 text-[0.78rem] leading-5 text-[var(--text-secondary)]">
+                          <div className="surface-note absolute left-3 top-3 max-w-[14rem] rounded-[1rem] px-3 py-2.5 text-[0.78rem] leading-5 text-[var(--text-secondary)] sm:left-4 sm:top-4">
                             <p className="text-[0.66rem] font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">
                               {activeSupport.label}
                             </p>
                             <p className="mt-1.5">{sceneData.mediaNote}</p>
                           </div>
-                          <div className="media-caption absolute inset-x-4 bottom-4 rounded-[1.1rem] px-4 py-3.5">
+                          <div className="media-caption absolute inset-x-3 bottom-3 rounded-[1.1rem] px-4 py-3.5 sm:inset-x-4 sm:bottom-4">
                             <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-deep)]">
                               {sceneData.progressionLabel}
                             </p>
@@ -524,7 +555,7 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
                 </RevealItem>
 
                 <RevealItem variant="card">
-                  <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
+                  <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
                     {sceneData.trustPoints.map((point) => (
                       <div
                         key={point}
