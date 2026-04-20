@@ -22,7 +22,7 @@ export function useMobileSceneCarousel({
   onIndexChange,
   enabled = true,
 }: UseMobileSceneCarouselOptions) {
-  const isPhoneViewport = useCompactViewport("(max-width: 767px)");
+  const isCompactViewport = useCompactViewport("(max-width: 1023px)");
   const reduceMotion = useReducedMotion();
   const containerRef = useRef<HTMLDivElement | null>(null);
   const scrollTimerRef = useRef<number | null>(null);
@@ -43,7 +43,7 @@ export function useMobileSceneCarousel({
   );
 
   useEffect(() => {
-    if (!enabled || !isPhoneViewport || slideCount <= 1) {
+    if (!enabled || !isCompactViewport || slideCount <= 1) {
       return;
     }
 
@@ -78,7 +78,7 @@ export function useMobileSceneCarousel({
     return () => {
       window.clearTimeout(syncTimer);
     };
-  }, [activeIndex, enabled, isPhoneViewport, reduceMotion, slideCount]);
+  }, [activeIndex, enabled, isCompactViewport, reduceMotion, slideCount]);
 
   const syncIndexFromScroll = useCallback(() => {
     const rail = containerRef.current;
@@ -93,7 +93,7 @@ export function useMobileSceneCarousel({
   }, [onIndexChange, slideCount]);
 
   const handleScroll = useCallback(() => {
-    if (!enabled || !isPhoneViewport || slideCount <= 1) {
+    if (!enabled || !isCompactViewport || slideCount <= 1) {
       return;
     }
 
@@ -104,13 +104,12 @@ export function useMobileSceneCarousel({
       isSyncingRef.current = false;
       scrollTimerRef.current = null;
     }, isSyncingRef.current ? 90 : 70);
-  }, [clearScrollTimer, enabled, isPhoneViewport, slideCount, syncIndexFromScroll]);
+  }, [clearScrollTimer, enabled, isCompactViewport, slideCount, syncIndexFromScroll]);
 
   return {
     containerRef,
-    isPhoneViewport,
     carouselBindings:
-      enabled && isPhoneViewport && slideCount > 1
+      enabled && isCompactViewport && slideCount > 1
         ? {
             onScroll: handleScroll,
           }

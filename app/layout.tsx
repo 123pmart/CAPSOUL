@@ -42,11 +42,11 @@ export default function RootLayout({
               className="relative min-h-[100svh] w-full max-w-full pt-[var(--header-offset-mobile)] sm:pt-[var(--header-offset-desktop)]"
             >
               {children}
-              <div className="lg:hidden">
+              <div className="min-[1025px]:hidden">
                 <AdminEntry inline />
               </div>
             </main>
-            <div className="hidden lg:block">
+            <div className="hidden min-[1025px]:block">
               <AdminEntry />
             </div>
           </SceneTransitionProvider>

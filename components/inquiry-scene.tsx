@@ -15,6 +15,7 @@ import {
   subtleTapPress,
 } from "@/components/motion-config";
 import { RevealGroup, RevealItem } from "@/components/reveal";
+import { SceneDetailModal } from "@/components/scene-detail-modal";
 import { SceneRoutePager } from "@/components/scene-route-pager";
 import { SceneViewport } from "@/components/scene-viewport";
 import { TransitionLink } from "@/components/transition-link";
@@ -59,7 +60,7 @@ type InquirySceneProps = {
 
 export function InquiryScene({ sceneData }: InquirySceneProps) {
   const reduceMotion = useReducedMotion();
-  const isPhoneViewport = useCompactViewport("(max-width: 767px)");
+  const isCompactViewport = useCompactViewport("(max-width: 1023px)");
   const [submitted, setSubmitted] = useState(false);
   const [formState, setFormState] = useState<InquiryFormState>(initialState);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -90,10 +91,8 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
   });
 
   useEffect(() => {
-    if (isPhoneViewport) {
-      setIsMobileSupportOpen(false);
-    }
-  }, [activeIndex, isPhoneViewport]);
+    setIsMobileSupportOpen(false);
+  }, [activeIndex, isCompactViewport]);
 
   if (!activeSupport || !activeFormStep) {
     return null;
@@ -436,15 +435,15 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
               {!submitted ? (
                 <>
                   <RevealItem variant="card">
-                  <div className="panel-strong rounded-[1.28rem] p-3.5">
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="min-w-0">
-                        <p className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">
-                          {sceneData.progressionLabel}
-                        </p>
-                      </div>
-                      <span className="text-[0.72rem] uppercase tracking-[0.18em] text-[var(--text-tertiary)]">
-                        {String(activeIndex + 1).padStart(2, "0")} / {String(sceneData.formSteps.length).padStart(2, "0")}
+                    <div className="panel-strong rounded-[1.28rem] p-3.5">
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="min-w-0">
+                          <p className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">
+                            {sceneData.progressionLabel}
+                          </p>
+                        </div>
+                        <span className="text-[0.72rem] uppercase tracking-[0.18em] text-[var(--text-tertiary)]">
+                          {String(activeIndex + 1).padStart(2, "0")} / {String(sceneData.formSteps.length).padStart(2, "0")}
                         </span>
                       </div>
 
@@ -453,10 +452,11 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
                           <article key={`${support.label}-slide`} className="mobile-scene-slide">
                             <button
                               type="button"
-                              aria-expanded={isPhoneViewport ? isMobileSupportOpen : undefined}
+                              aria-expanded={isCompactViewport ? isMobileSupportOpen : undefined}
                               onClick={() => {
-                                if (isPhoneViewport) {
-                                  setIsMobileSupportOpen((current) => !current);
+                                if (isCompactViewport) {
+                                  goToStep(index);
+                                  setIsMobileSupportOpen(true);
                                 }
                               }}
                               className="scene-focus flex h-full w-full flex-col gap-3 p-3 text-left"
@@ -514,25 +514,8 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
                       </div>
 
                       <p className="mt-3 text-[0.74rem] uppercase tracking-[0.14em] text-[var(--text-tertiary)]">
-                        Tap the scene to {isMobileSupportOpen ? "hide" : "reveal"} more.
+                        Tap the scene to open the active step detail.
                       </p>
-
-                      <AnimatePresence initial={false}>
-                        {isMobileSupportOpen ? (
-                          <motion.div
-                            key={`${activeSupport.label}-mobile-support-reveal`}
-                            initial={contentEnter}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={contentExit}
-                            transition={contentSwapTransition}
-                            className="panel mt-3 rounded-[1rem] px-3.5 py-3.5"
-                          >
-                            <p className="text-[0.88rem] leading-6 text-[var(--text-secondary)]">
-                              {activeSupport.body}
-                            </p>
-                          </motion.div>
-                        ) : null}
-                      </AnimatePresence>
                     </div>
                   </RevealItem>
 
@@ -604,30 +587,30 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
                           {sceneData.footerNote}
                         </p>
 
-                      <div className="flex items-center gap-2.5">
-                        <button
-                          type="button"
-                          className="button-secondary !min-h-0 !w-auto shrink-0 px-3 py-2 text-[0.74rem] opacity-80"
-                          disabled={isFirst}
-                          onClick={goPrev}
-                        >
-                          {sceneData.previousButtonLabel}
-                        </button>
-
-                        {!isLast ? (
+                        <div className="flex items-center gap-2.5">
                           <button
                             type="button"
-                            className="button-primary flex-1 px-4"
-                            disabled={isSubmitting}
-                            onClick={goNext}
+                            className="button-secondary !min-h-0 !w-auto shrink-0 px-3 py-2 text-[0.74rem] opacity-80"
+                            disabled={isFirst}
+                            onClick={goPrev}
                           >
-                            {sceneData.nextButtonLabel}
+                            {sceneData.previousButtonLabel}
                           </button>
-                        ) : (
-                          <button className="button-primary flex-1 px-4" disabled={isSubmitting} type="submit">
-                            {isSubmitting ? "Submitting..." : sceneData.submitButtonLabel}
-                          </button>
-                        )}
+
+                          {!isLast ? (
+                            <button
+                              type="button"
+                              className="button-primary flex-1 px-4"
+                              disabled={isSubmitting}
+                              onClick={goNext}
+                            >
+                              {sceneData.nextButtonLabel}
+                            </button>
+                          ) : (
+                            <button className="button-primary flex-1 px-4" disabled={isSubmitting} type="submit">
+                              {isSubmitting ? "Submitting..." : sceneData.submitButtonLabel}
+                            </button>
+                          )}
                         </div>
                       </form>
                     </div>
@@ -818,6 +801,35 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
           </div>
         </div>
       </SceneViewport>
+
+      <SceneDetailModal
+        open={isMobileSupportOpen}
+        onClose={() => setIsMobileSupportOpen(false)}
+        eyebrow={activeSupport.label}
+        title={activeSupport.title}
+        description={activeSupport.body}
+      >
+        <div className="panel px-3.5 py-3.5">
+          <p className="text-[0.66rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-deep)]">
+            {activeFormStep.chip}
+          </p>
+          <p className="mt-2 text-[0.96rem] leading-6 text-[var(--text-primary)]">
+            {activeFormStep.title}
+          </p>
+          <p className="mt-2 text-[0.86rem] leading-6 text-[var(--text-secondary)]">
+            {activeFormStep.description}
+          </p>
+        </div>
+
+        <div className="panel px-3.5 py-3.5">
+          <p className="text-[0.66rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-deep)]">
+            {sceneData.nextHeading}
+          </p>
+          <p className="mt-2 text-[0.88rem] leading-6 text-[var(--text-secondary)]">
+            {sceneData.nextBody}
+          </p>
+        </div>
+      </SceneDetailModal>
     </section>
   );
 }

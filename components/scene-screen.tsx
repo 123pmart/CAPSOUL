@@ -11,6 +11,7 @@ import {
 } from "@/components/motion-config";
 import { MobilePageNextLink } from "@/components/mobile-page-next-link";
 import { RevealGroup, RevealItem } from "@/components/reveal";
+import { SceneDetailModal } from "@/components/scene-detail-modal";
 import { SceneRoutePager } from "@/components/scene-route-pager";
 import { SceneViewport } from "@/components/scene-viewport";
 import { TransitionLink } from "@/components/transition-link";
@@ -43,7 +44,7 @@ export function SceneScreen({
   tone = "cool",
 }: SceneScreenProps) {
   const reduceMotion = useReducedMotion();
-  const isPhoneViewport = useCompactViewport("(max-width: 767px)");
+  const isCompactViewport = useCompactViewport("(max-width: 1023px)");
   const [isMobileSceneDetailOpen, setIsMobileSceneDetailOpen] = useState(false);
   const {
     activeIndex,
@@ -73,10 +74,8 @@ export function SceneScreen({
   });
 
   useEffect(() => {
-    if (isPhoneViewport) {
-      setIsMobileSceneDetailOpen(false);
-    }
-  }, [activeIndex, isPhoneViewport]);
+    setIsMobileSceneDetailOpen(false);
+  }, [activeIndex, isCompactViewport]);
 
   if (!active) {
     return null;
@@ -171,14 +170,15 @@ export function SceneScreen({
                     className="mobile-scene-rail mt-3"
                     {...carouselBindings}
                   >
-                    {steps.map((step) => (
+                    {steps.map((step, index) => (
                       <article key={`${step.label}-slide`} className="mobile-scene-slide">
                         <button
                           type="button"
-                          aria-expanded={isPhoneViewport ? isMobileSceneDetailOpen : undefined}
+                          aria-expanded={isCompactViewport ? isMobileSceneDetailOpen : undefined}
                           onClick={() => {
-                            if (isPhoneViewport) {
-                              setIsMobileSceneDetailOpen((current) => !current);
+                            if (isCompactViewport) {
+                              goToStep(index);
+                              setIsMobileSceneDetailOpen(true);
                             }
                           }}
                           className="scene-focus flex h-full w-full flex-col gap-3 p-3 text-left"
@@ -191,7 +191,7 @@ export function SceneScreen({
                               className="h-full w-full object-cover"
                             />
                             <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.02),rgba(232,239,246,0.16))]" />
-                              <div className="media-caption absolute inset-x-2.5 bottom-2.5 rounded-[1rem] px-3.5 py-3">
+                            <div className="media-caption absolute inset-x-2.5 bottom-2.5 rounded-[1rem] px-3.5 py-3">
                               <p className="text-[0.66rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-deep)]">
                                 {step.mediaLabel}
                               </p>
@@ -235,28 +235,8 @@ export function SceneScreen({
                   </div>
 
                   <p className="mt-3 text-[0.74rem] uppercase tracking-[0.14em] text-[var(--text-tertiary)]">
-                    Tap the scene to {isMobileSceneDetailOpen ? "hide" : "reveal"} more.
+                    Tap the scene to open the active state.
                   </p>
-
-                  <AnimatePresence initial={false}>
-                    {isMobileSceneDetailOpen ? (
-                      <motion.div
-                        key={`${active.label}-mobile-reveal`}
-                        initial={panelEnter}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={panelExit}
-                        transition={contentSwapTransition}
-                        className="panel mt-3 rounded-[1rem] px-3.5 py-3.5"
-                      >
-                        <h2 className="text-[1.12rem] leading-[1.06] text-[var(--text-primary)]">
-                          {active.title}
-                        </h2>
-                        <p className="mt-2 text-[0.88rem] leading-6 text-[var(--text-secondary)]">
-                          {active.detail}
-                        </p>
-                      </motion.div>
-                    ) : null}
-                  </AnimatePresence>
                 </div>
               </RevealItem>
 
@@ -436,6 +416,34 @@ export function SceneScreen({
           </div>
         </div>
       </SceneViewport>
+
+      <SceneDetailModal
+        open={isMobileSceneDetailOpen}
+        onClose={() => setIsMobileSceneDetailOpen(false)}
+        eyebrow={active.label}
+        title={active.title}
+        description={active.detail}
+      >
+        <div className="panel px-3.5 py-3.5">
+          <p className="text-[0.66rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-deep)]">
+            {stageLabel}
+          </p>
+          <p className="mt-2 text-[0.88rem] leading-6 text-[var(--text-secondary)]">
+            {active.summary}
+          </p>
+        </div>
+
+        <div className="grid gap-2">
+          {active.bullets.map((bullet) => (
+            <div
+              key={`${active.label}-mobile-modal-${bullet}`}
+              className="panel px-3.5 py-3 text-[0.84rem] leading-6 text-[var(--text-secondary)]"
+            >
+              {bullet}
+            </div>
+          ))}
+        </div>
+      </SceneDetailModal>
     </section>
   );
 }

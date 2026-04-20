@@ -13,7 +13,6 @@ import { useReducedMotion } from "framer-motion";
 
 import {
   SceneTransitionContext,
-  type SceneTransitionContextValue,
   type TransitionPhase,
 } from "@/components/scene-transition-context";
 import { routeEnterTransition, routeExitTransition } from "@/components/motion-config";
@@ -35,6 +34,7 @@ export function SceneTransitionProvider({ children }: { children: ReactNode }) {
   const [pendingPath, setPendingPath] = useState<string | null>(null);
   const pendingRef = useRef<PendingNavigation | null>(null);
   const previousPathRef = useRef(pathname);
+  const shouldResetScrollRef = useRef(false);
   const exitDurationMs = Math.round((isCompactViewport ? 0.22 : routeExitTransition.duration) * 1000);
   const enterDurationMs = Math.round((isCompactViewport ? 0.28 : routeEnterTransition.duration) * 1000);
 
@@ -47,10 +47,12 @@ export function SceneTransitionProvider({ children }: { children: ReactNode }) {
       }
 
       if (reduceMotion) {
+        shouldResetScrollRef.current = options?.scroll ?? true;
+
         if (options?.replace) {
-          router.replace(normalizedHref, { scroll: options?.scroll ?? false });
+          router.replace(normalizedHref, { scroll: shouldResetScrollRef.current });
         } else {
-          router.push(normalizedHref, { scroll: options?.scroll ?? false });
+          router.push(normalizedHref, { scroll: shouldResetScrollRef.current });
         }
         return;
       }
@@ -59,10 +61,11 @@ export function SceneTransitionProvider({ children }: { children: ReactNode }) {
         return;
       }
 
+      shouldResetScrollRef.current = options?.scroll ?? true;
       pendingRef.current = {
         href: normalizedHref,
         replace: options?.replace ?? false,
-        scroll: options?.scroll ?? false,
+        scroll: shouldResetScrollRef.current,
       };
       setPendingPath(normalizedHref);
       setPhase("exiting");
@@ -102,10 +105,23 @@ export function SceneTransitionProvider({ children }: { children: ReactNode }) {
     previousPathRef.current = pathname;
 
     if (reduceMotion) {
+      if (shouldResetScrollRef.current) {
+        window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+      }
       pendingRef.current = null;
       setPendingPath(null);
       setPhase("idle");
+      shouldResetScrollRef.current = false;
       return;
+    }
+
+    let rafId: number | null = null;
+
+    if (shouldResetScrollRef.current) {
+      window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+      rafId = window.requestAnimationFrame(() => {
+        window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+      });
     }
 
     setPhase("entering");
@@ -114,9 +130,16 @@ export function SceneTransitionProvider({ children }: { children: ReactNode }) {
       pendingRef.current = null;
       setPendingPath(null);
       setPhase("idle");
+      shouldResetScrollRef.current = false;
     }, enterDurationMs);
 
-    return () => window.clearTimeout(timeoutId);
+    return () => {
+      window.clearTimeout(timeoutId);
+
+      if (rafId != null) {
+        window.cancelAnimationFrame(rafId);
+      }
+    };
   }, [enterDurationMs, pathname, reduceMotion]);
 
   const value = useMemo(

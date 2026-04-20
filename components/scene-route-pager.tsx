@@ -20,7 +20,7 @@ export function SceneRoutePager({
   className = "",
 }: SceneRoutePagerProps) {
   const pathname = usePathname();
-  const isPhoneViewport = useCompactViewport("(max-width: 767px)");
+  const isCompactViewport = useCompactViewport("(max-width: 1023px)");
   const current = getSceneRouteEntry(pathname);
   const previous = getAdjacentSceneRoute(pathname, "previous");
   const next = getAdjacentSceneRoute(pathname, "next");
@@ -41,7 +41,7 @@ export function SceneRoutePager({
     ? "mt-1.5 text-[0.9rem] leading-5"
     : "mt-1.5 text-[0.94rem] leading-6";
 
-  if (compact && isPhoneViewport) {
+  if (compact && isCompactViewport) {
     return (
       <div className={`${wrapperClassName} ${className}`.trim()}>
         <div className="flex items-center justify-between gap-3">
