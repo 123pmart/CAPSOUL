@@ -430,57 +430,59 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
                 <>
                   <RevealItem variant="card">
                     <div className="panel-strong rounded-[1.28rem] p-3.5">
-                      <div className="flex items-start justify-between gap-3">
+                      <div className="flex flex-nowrap items-start justify-between gap-3">
                         <div className="min-w-0">
                           <p className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">
                             {sceneData.progressionLabel}
                           </p>
                         </div>
-                      <span className="text-[0.72rem] uppercase tracking-[0.18em] text-[var(--text-tertiary)]">
-                        {String(activeIndex + 1).padStart(2, "0")} / {String(sceneData.formSteps.length).padStart(2, "0")}
-                      </span>
-                    </div>
+                        <span className="scene-counter text-[0.72rem] uppercase tracking-[0.18em] text-[var(--text-tertiary)]">
+                          {String(activeIndex + 1).padStart(2, "0")} / {String(sceneData.formSteps.length).padStart(2, "0")}
+                        </span>
+                      </div>
 
-                      <AnimatePresence mode="wait">
-                        <motion.button
-                          key={`${activeSupport.label}-phone-scene`}
-                          type="button"
-                          aria-expanded={isPhoneViewport ? isMobileSupportOpen : undefined}
-                          onClick={() => {
-                            if (isPhoneViewport) {
-                              setIsMobileSupportOpen(true);
-                            }
-                          }}
-                          initial={supportEnter}
-                          animate={{ opacity: 1, y: 0, scale: 1 }}
-                          exit={supportExit}
-                          transition={contentSwapTransition}
-                          className="scene-focus mt-3 flex w-full flex-col gap-3 p-3 text-left"
-                        >
-                          <div className="film-frame relative min-h-[10.85rem] overflow-hidden">
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img
-                              src={activeSupport.image}
-                              alt={`${activeSupport.title} visual placeholder.`}
-                              className="h-full w-full object-cover"
-                            />
-                            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.02),rgba(232,239,246,0.16))]" />
-                            <div className="media-caption absolute inset-x-2.5 bottom-2.5 rounded-[1rem] px-3.5 py-3">
-                              <div className="flex items-center justify-between gap-2">
-                                <p className="text-[0.66rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-deep)]">
-                                  {activeSupport.label}
-                                </p>
-                                <p className="text-[0.62rem] uppercase tracking-[0.16em] text-[var(--text-tertiary)]">
-                                  {activeFormStep.chip}
-                                </p>
+                      <div className="scene-mobile-stage mt-3">
+                        <AnimatePresence initial={false} mode="wait">
+                          <motion.button
+                            key={`${activeSupport.label}-phone-scene`}
+                            type="button"
+                            aria-expanded={isPhoneViewport ? isMobileSupportOpen : undefined}
+                            onClick={() => {
+                              if (isPhoneViewport) {
+                                setIsMobileSupportOpen(true);
+                              }
+                            }}
+                            initial={supportEnter}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            exit={supportExit}
+                            transition={contentSwapTransition}
+                            className="scene-focus scene-mobile-card flex w-full flex-col gap-3 p-3 text-left"
+                          >
+                            <div className="film-frame relative min-h-[10.85rem] flex-1 overflow-hidden">
+                              {/* eslint-disable-next-line @next/next/no-img-element */}
+                              <img
+                                src={activeSupport.image}
+                                alt={`${activeSupport.title} visual placeholder.`}
+                                className="h-full w-full object-cover"
+                              />
+                              <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.02),rgba(232,239,246,0.16))]" />
+                              <div className="media-caption absolute inset-x-2.5 bottom-2.5 rounded-[1rem] px-3.5 py-3">
+                                <div className="flex items-center justify-between gap-2">
+                                  <p className="text-[0.66rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-deep)]">
+                                    {activeSupport.label}
+                                  </p>
+                                  <p className="text-[0.62rem] uppercase tracking-[0.16em] text-[var(--text-tertiary)]">
+                                    {activeFormStep.chip}
+                                  </p>
+                                </div>
+                                <h2 className="mt-2 line-clamp-2 text-[1.14rem] leading-[1.04] text-[var(--text-primary)]">
+                                  {activeSupport.title}
+                                </h2>
                               </div>
-                              <h2 className="mt-2 text-[1.14rem] leading-[1.04] text-[var(--text-primary)]">
-                                {activeSupport.title}
-                              </h2>
                             </div>
-                          </div>
-                        </motion.button>
-                      </AnimatePresence>
+                          </motion.button>
+                        </AnimatePresence>
+                      </div>
 
                       <CompactSceneControls
                         className="mt-3"
@@ -535,7 +537,7 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
                           })}
                         </div>
 
-                        <div>
+                        <div className="scene-mobile-form-summary">
                           <h2 className="text-[1.34rem] leading-[1.04] text-balance">
                             {activeFormStep.title}
                           </h2>
@@ -544,18 +546,20 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
                           </p>
                         </div>
 
-                        <AnimatePresence mode="wait">
-                          <motion.div
-                            key={`mobile-fields-${activeIndex}`}
-                            initial={contentEnter}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={contentExit}
-                            transition={contentSwapTransition}
-                            className="grid gap-3"
-                          >
-                            {renderFormFields()}
-                          </motion.div>
-                        </AnimatePresence>
+                        <div className="scene-mobile-field-stage">
+                          <AnimatePresence initial={false} mode="wait">
+                            <motion.div
+                              key={`mobile-fields-${activeIndex}`}
+                              initial={contentEnter}
+                              animate={{ opacity: 1, y: 0 }}
+                              exit={contentExit}
+                              transition={contentSwapTransition}
+                              className="grid gap-3"
+                            >
+                              {renderFormFields()}
+                            </motion.div>
+                          </AnimatePresence>
+                        </div>
 
                         {submitError ? (
                           <p className="rounded-[1rem] border border-[rgba(199,116,116,0.2)] bg-[rgba(255,255,255,0.52)] px-3.5 py-3 text-[0.84rem] leading-6 text-[var(--text-primary)]">

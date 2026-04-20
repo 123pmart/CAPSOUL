@@ -654,6 +654,17 @@
   background: linear-gradient(90deg, transparent, rgba(181, 196, 211, 0.32), transparent);
 }
 
+.scene-counter {
+  display: inline-flex;
+  min-width: 4.9rem;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: flex-end;
+  white-space: nowrap;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
 .scene-detail-modal {
   position: fixed;
   inset: 0;
@@ -716,6 +727,31 @@
   box-shadow:
     0 14px 28px rgba(150, 166, 186, 0.14),
     inset 0 1px 0 rgba(255, 255, 255, 0.98);
+}
+
+.scene-mobile-stage {
+  display: grid;
+  min-height: clamp(15.8rem, 54vw, 18.2rem);
+}
+
+.scene-mobile-card {
+  height: 100%;
+  min-height: 100%;
+}
+
+.scene-mobile-note {
+  display: block;
+  min-height: 2.75rem;
+}
+
+.scene-mobile-form-summary {
+  min-height: 5.9rem;
+}
+
+.scene-mobile-field-stage {
+  display: grid;
+  align-content: start;
+  min-height: 18.25rem;
 }
 
 .depth-hover {
@@ -920,6 +956,10 @@
 
   .scene-detail-panel {
     padding: 0.9rem;
+  }
+
+  .scene-counter {
+    min-width: 4.7rem;
   }
 }
 

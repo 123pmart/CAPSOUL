@@ -44,11 +44,11 @@ export function SceneRoutePager({
   if (compact && isCompactViewport) {
     return (
       <div className={`${wrapperClassName} ${className}`.trim()}>
-        <div className="flex items-center justify-between gap-3">
+        <div className="flex flex-nowrap items-center justify-between gap-3">
           <span className="archive-chip min-w-0 max-w-[72%] truncate rounded-full px-3 py-1.5 text-[0.64rem] uppercase tracking-[0.16em] text-[var(--text-secondary)]">
             {current.label}
           </span>
-          <span className="text-[0.68rem] uppercase tracking-[0.18em] text-[var(--text-tertiary)]">
+          <span className="scene-counter text-[0.68rem] uppercase tracking-[0.18em] text-[var(--text-tertiary)]">
             {String(progress.current).padStart(2, "0")} / {String(progress.total).padStart(2, "0")}
           </span>
         </div>
@@ -58,11 +58,11 @@ export function SceneRoutePager({
 
   return (
     <div className={`${wrapperClassName} ${className}`.trim()}>
-      <div className="flex items-center justify-between gap-3">
+      <div className="flex flex-nowrap items-center justify-between gap-3">
         <span className="archive-chip min-w-0 max-w-[72%] truncate rounded-full px-3 py-1.5 text-[0.64rem] uppercase tracking-[0.16em] text-[var(--text-secondary)]">
           {current.label}
         </span>
-        <span className="text-[0.68rem] uppercase tracking-[0.18em] text-[var(--text-tertiary)]">
+        <span className="scene-counter text-[0.68rem] uppercase tracking-[0.18em] text-[var(--text-tertiary)]">
           {String(progress.current).padStart(2, "0")} / {String(progress.total).padStart(2, "0")}
         </span>
       </div>

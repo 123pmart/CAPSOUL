@@ -3,7 +3,7 @@
 import { useEffect, type ReactNode } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 
-import { contentSwapTransition } from "@/components/motion-config";
+import { measuredEase, premiumEase } from "@/components/motion-config";
 
 type SceneDetailModalProps = {
   open: boolean;
@@ -42,43 +42,45 @@ export function SceneDetailModal({
     };
   }, [onClose, open]);
 
-  const overlayMotion = reduceMotion
-    ? { initial: { opacity: 1 }, animate: { opacity: 1 }, exit: { opacity: 1 } }
-    : {
-        initial: { opacity: 0 },
-        animate: { opacity: 1 },
-        exit: { opacity: 0 },
-      };
-  const panelMotion = reduceMotion
-    ? { initial: { opacity: 1 }, animate: { opacity: 1 }, exit: { opacity: 1 } }
-    : {
-        initial: { opacity: 0, y: 18, scale: 0.985 },
-        animate: { opacity: 1, y: 0, scale: 1 },
-        exit: { opacity: 0, y: 10, scale: 0.992 },
-      };
+  const backdropTransition = reduceMotion
+    ? { duration: 0 }
+    : { duration: 0.28, ease: measuredEase };
+  const panelTransition = reduceMotion
+    ? { duration: 0 }
+    : { duration: 0.34, ease: premiumEase };
 
   return (
-    <AnimatePresence initial={false}>
+    <AnimatePresence initial={false} mode="wait">
       {open ? (
-        <motion.div
-          {...overlayMotion}
-          transition={contentSwapTransition}
-          className="scene-detail-modal md:hidden"
-        >
-          <button
+        <div className="scene-detail-modal md:hidden">
+          <motion.button
             type="button"
             aria-label="Close scene detail"
             className="scene-detail-backdrop"
             onClick={onClose}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={backdropTransition}
           />
 
           <motion.div
-            {...panelMotion}
-            transition={contentSwapTransition}
             role="dialog"
             aria-modal="true"
             aria-label={title}
             className="scene-detail-panel panel-strong"
+            initial={
+              reduceMotion
+                ? { opacity: 1, scale: 1, y: 0 }
+                : { opacity: 0, scale: 0.974, y: 14 }
+            }
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={
+              reduceMotion
+                ? { opacity: 1, scale: 1, y: 0 }
+                : { opacity: 0, scale: 0.988, y: 8 }
+            }
+            transition={panelTransition}
           >
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
@@ -112,7 +114,7 @@ export function SceneDetailModal({
               {children ? <div className="grid gap-2.5">{children}</div> : null}
             </div>
           </motion.div>
-        </motion.div>
+        </div>
       ) : null}
     </AnimatePresence>
   );
