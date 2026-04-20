@@ -11,7 +11,7 @@
   --header-shell-pad-desktop: 0.75rem;
   --header-height-mobile: 3.2rem;
   --header-height-desktop: 3.5rem;
-  --page-top-gap-mobile: 0.7rem;
+  --page-top-gap-mobile: 0.85rem;
   --page-top-gap-desktop: 0.9rem;
   --header-offset-mobile: calc(
     var(--safe-top) + var(--header-shell-offset-mobile) + var(--header-height-mobile) +
@@ -645,36 +645,6 @@
   background: linear-gradient(90deg, transparent, rgba(181, 196, 211, 0.32), transparent);
 }
 
-.touch-step-rail {
-  scroll-snap-type: x mandatory;
-  scroll-padding-inline: 0.125rem;
-  overscroll-behavior-x: contain;
-  overscroll-behavior-y: auto;
-  -webkit-overflow-scrolling: touch;
-  touch-action: pan-x;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-.touch-step-rail::-webkit-scrollbar {
-  display: none;
-}
-
-.touch-step-rail > * {
-  scroll-snap-align: start;
-}
-
-.touch-step-card {
-  flex: 0 0 auto;
-  width: min(18rem, calc(100% - 0.25rem));
-  max-width: calc(100vw - (2 * var(--shell-gutter)) - 0.35rem);
-}
-
-.scene-swipe-surface {
-  touch-action: pan-x;
-  overscroll-behavior-x: contain;
-}
-
 .depth-hover {
   transition:
     transform var(--motion-base) var(--ease-premium),
@@ -831,7 +801,7 @@
     --section-gap-compact: clamp(1.35rem, 5.6vw, 2rem);
     --stack-gap: clamp(0.82rem, 2.8vw, 1rem);
     --admin-entry-clearance: calc(var(--safe-bottom) + 4.75rem);
-    --page-top-gap-mobile: 0.65rem;
+    --page-top-gap-mobile: 0.8rem;
   }
 
   .scene-shell {
@@ -872,10 +842,6 @@
   .surface-note,
   .media-caption {
     max-width: 100%;
-  }
-
-  .touch-step-rail > * {
-    max-width: calc(100vw - (2 * var(--shell-gutter)) - 0.35rem);
   }
 }
 

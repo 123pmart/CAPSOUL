@@ -39,11 +39,16 @@ export default function RootLayout({
             <SiteHeader />
             <main
               id="main-content"
-              className="relative min-h-[100svh] w-full max-w-full pb-[var(--admin-entry-clearance)] pt-[var(--header-offset-mobile)] sm:pt-[var(--header-offset-desktop)] lg:pb-0"
+              className="relative min-h-[100svh] w-full max-w-full pt-[var(--header-offset-mobile)] sm:pt-[var(--header-offset-desktop)]"
             >
               {children}
+              <div className="lg:hidden">
+                <AdminEntry inline />
+              </div>
             </main>
-            <AdminEntry />
+            <div className="hidden lg:block">
+              <AdminEntry />
+            </div>
           </SceneTransitionProvider>
         </div>
       </body>

@@ -1,7 +1,8 @@
 import { navigation } from "@/content/site";
 
-export const sceneRouteOrder = navigation.map((item) => item.href);
-export const sceneRouteCount = navigation.length;
+export const sceneRouteEntries = [...navigation];
+export const sceneRouteOrder = sceneRouteEntries.map((item) => item.href);
+export const sceneRouteCount = sceneRouteEntries.length;
 
 export function normalizeSceneRoute(pathname: string | null | undefined) {
   if (!pathname) {
@@ -36,17 +37,17 @@ export function getAdjacentSceneRoute(
   }
 
   const offset = direction === "next" ? 1 : -1;
-  return navigation[currentIndex + offset] ?? null;
+  return sceneRouteEntries[currentIndex + offset] ?? null;
 }
 
 export function getSceneRouteLabel(pathname: string | null | undefined) {
   return (
-    navigation.find((item) => isSceneRouteActive(pathname, item.href))?.label ?? "CAPSOUL"
+    sceneRouteEntries.find((item) => isSceneRouteActive(pathname, item.href))?.label ?? "CAPSOUL"
   );
 }
 
 export function getSceneRouteEntry(pathname: string | null | undefined) {
-  return navigation.find((item) => isSceneRouteActive(pathname, item.href)) ?? null;
+  return sceneRouteEntries.find((item) => isSceneRouteActive(pathname, item.href)) ?? null;
 }
 
 export function getSceneRouteProgress(pathname: string | null | undefined) {

@@ -17,7 +17,6 @@ import { RevealGroup, RevealItem } from "@/components/reveal";
 import { SceneRoutePager } from "@/components/scene-route-pager";
 import { SceneViewport } from "@/components/scene-viewport";
 import { TransitionLink } from "@/components/transition-link";
-import { useHorizontalStepSwipe } from "@/components/use-horizontal-step-swipe";
 import { useSceneProgression } from "@/components/use-scene-progression";
 import type { ResolvedInquiryContent } from "@/lib/site-content-schema";
 
@@ -78,11 +77,6 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
 
   const activeSupport = sceneData.supportStates[activeIndex] ?? sceneData.supportStates[0];
   const activeFormStep = sceneData.formSteps[activeIndex] ?? sceneData.formSteps[0];
-  const swipeBindings = useHorizontalStepSwipe({
-    onNext: goNext,
-    onPrevious: goPrev,
-    disabled: submitted || isSubmitting || usesViewportProgression || sceneData.formSteps.length <= 1,
-  });
 
   if (!activeSupport || !activeFormStep) {
     return null;
@@ -347,12 +341,12 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
 
   const renderSuccessContent = (compact: boolean) => (
     <div className="flex h-full flex-col justify-between gap-5">
-      <div className={compact ? "space-y-[var(--mobile-heading-body-gap)]" : "space-y-3"}>
+      <div className={compact ? "max-w-[30rem]" : "max-w-[30rem]"}>
         <span className="eyebrow">{sceneData.successEyebrow}</span>
-        <h2 className={compact ? "headline-support text-[1.45rem]" : "headline-support"}>
+        <h2 className={`${compact ? "text-[1.45rem]" : "headline-support"} mt-[var(--mobile-label-heading-gap)]`}>
           {sceneData.successTitle}
         </h2>
-        <p className="max-w-[30rem] text-[0.94rem] leading-6 text-[var(--text-secondary)] sm:text-[0.96rem] sm:leading-7">
+        <p className="mt-[var(--mobile-heading-body-gap)] text-[0.94rem] leading-6 text-[var(--text-secondary)] sm:text-[0.96rem] sm:leading-7">
           {sceneData.successBody}
         </p>
       </div>
@@ -376,52 +370,6 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
     </div>
   );
 
-  const stepRail = (
-    <div className="touch-step-rail flex gap-2 overflow-x-auto pb-1">
-      {sceneData.formSteps.map((step, index) => {
-        const isActive = index === activeIndex;
-
-        return (
-          <motion.button
-            key={step.chip}
-            type="button"
-            onClick={() => goToStep(index)}
-            animate={
-              reduceMotion
-                ? undefined
-                : isActive
-                  ? { y: -3, scale: 1.01 }
-                  : { y: 0, scale: 1 }
-            }
-            transition={cardStateTransition}
-            whileHover={reduceMotion || isActive ? undefined : subtleHoverLift}
-            whileTap={reduceMotion ? undefined : subtleTapPress}
-            className={`touch-step-card rounded-full border px-3 py-2 text-center text-[0.73rem] uppercase tracking-[0.16em] ${
-              isActive
-                ? "border-white/88 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(231,239,247,0.98))] text-[var(--text-primary)] shadow-[0_18px_34px_rgba(152,169,189,0.2)]"
-                : "border-[rgba(181,196,211,0.28)] bg-[linear-gradient(180deg,rgba(255,255,255,0.48),rgba(243,248,252,0.68))] text-[var(--text-secondary)]"
-            }`}
-          >
-            {step.chip}
-          </motion.button>
-        );
-      })}
-    </div>
-  );
-
-  const trustRail = (
-    <div className="touch-step-rail flex gap-2 overflow-x-auto pb-1">
-      {sceneData.trustPoints.map((point) => (
-        <div
-          key={point}
-          className="archive-chip shrink-0 rounded-full px-3.5 py-2 text-[0.7rem] uppercase tracking-[0.14em] text-[var(--text-secondary)]"
-        >
-          {point}
-        </div>
-      ))}
-    </div>
-  );
-
   return (
     <section className="shell py-2 sm:py-4 lg:h-[calc(100dvh-var(--header-offset-desktop))] lg:min-h-[calc(100svh-var(--header-offset-desktop))]">
       <SceneViewport className="lg:h-full">
@@ -433,14 +381,16 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
               amount={0.25}
             >
               <RevealItem variant="hero">
-                <div className="max-w-[36rem] space-y-[var(--mobile-heading-body-gap)] sm:space-y-4">
+                <div className="max-w-[36rem]">
                   <span className="eyebrow">{sceneData.eyebrow}</span>
-                  <h1 className="page-heading headline-display">{sceneData.title}</h1>
-                  <p className="max-w-[32rem] text-[0.94rem] leading-6 text-[var(--text-secondary)] sm:text-[1.02rem] sm:leading-7">
+                  <h1 className="page-heading headline-display mt-[var(--mobile-label-heading-gap)]">
+                    {sceneData.title}
+                  </h1>
+                  <p className="mt-[var(--mobile-heading-body-gap)] max-w-[32rem] text-[0.94rem] leading-6 text-[var(--text-secondary)] sm:text-[1.02rem] sm:leading-7">
                     {sceneData.description}
                   </p>
-                  <div className="hidden lg:block">
-                    <SceneRoutePager compact className="max-w-[28rem] pt-1" />
+                  <div className="mt-[var(--mobile-body-action-gap)] hidden lg:block">
+                    <SceneRoutePager compact className="max-w-[28rem]" />
                   </div>
                 </div>
               </RevealItem>
@@ -461,35 +411,76 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
               </RevealItem>
             </RevealGroup>
 
-            <RevealGroup className="grid gap-3 lg:hidden" delay={40} stagger={0.08} amount={0.2}>
+            <div className="grid gap-[var(--mobile-card-gap)] lg:hidden">
               <RevealItem variant="micro">
                 <SceneRoutePager compact />
               </RevealItem>
-              <RevealItem variant="micro">{trustRail}</RevealItem>
-            </RevealGroup>
+
+              <RevealItem variant="micro">
+                <div className="grid gap-2 sm:grid-cols-3">
+                  {sceneData.trustPoints.map((point) => (
+                    <div
+                      key={point}
+                      className="archive-chip rounded-[0.95rem] px-3 py-2.5 text-center text-[0.68rem] uppercase tracking-[0.14em] text-[var(--text-secondary)]"
+                    >
+                      {point}
+                    </div>
+                  ))}
+                </div>
+              </RevealItem>
+            </div>
 
             <div className="lg:hidden">
-              <RevealGroup className="grid gap-3.5" delay={100} stagger={0.08} amount={0.2}>
+              <RevealGroup className="grid gap-[var(--mobile-card-gap)]" delay={100} stagger={0.08} amount={0.2}>
                 <RevealItem variant="card">
-                <div className="panel-strong rounded-[1.35rem] p-4">
-                  {submitted ? (
-                    renderSuccessContent(true)
-                  ) : (
+                  <div className="panel-strong rounded-[1.35rem] p-4">
+                    {submitted ? (
+                      renderSuccessContent(true)
+                    ) : (
                       <form className="grid gap-[var(--mobile-card-gap)]" onSubmit={handleSubmit}>
-                        <div className="grid gap-[var(--mobile-card-gap)]">
-                          {stepRail}
+                        <div className="grid gap-2 sm:grid-cols-3">
+                          {sceneData.formSteps.map((step, index) => {
+                            const isActive = index === activeIndex;
 
-                          <div>
-                            <p className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">
-                              {activeSupport.label}
-                            </p>
-                            <h2 className="mt-2 text-[1.42rem] leading-[1.04] text-balance">
-                              {activeFormStep.title}
-                            </h2>
-                            <p className="mt-2.5 text-[0.92rem] leading-6 text-[var(--text-secondary)]">
-                              {activeFormStep.description}
-                            </p>
-                          </div>
+                            return (
+                              <motion.button
+                                key={step.chip}
+                                type="button"
+                                onClick={() => goToStep(index)}
+                                animate={
+                                  reduceMotion
+                                    ? undefined
+                                    : isActive
+                                      ? { y: -3, scale: 1.01 }
+                                      : { y: 0, scale: 1 }
+                                }
+                                transition={cardStateTransition}
+                                whileHover={reduceMotion || isActive ? undefined : subtleHoverLift}
+                                whileTap={reduceMotion ? undefined : subtleTapPress}
+                                className={`rounded-[0.95rem] border px-3 py-2.5 text-center ${
+                                  isActive
+                                    ? "border-white/88 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(231,239,247,0.98))] text-[var(--text-primary)] shadow-[0_18px_34px_rgba(152,169,189,0.2)]"
+                                    : "border-[rgba(181,196,211,0.28)] bg-[linear-gradient(180deg,rgba(255,255,255,0.48),rgba(243,248,252,0.68))] text-[var(--text-secondary)]"
+                                }`}
+                              >
+                                <p className="text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-[var(--accent-deep)]">
+                                  {step.chip}
+                                </p>
+                              </motion.button>
+                            );
+                          })}
+                        </div>
+
+                        <div>
+                          <p className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">
+                            {activeSupport.label}
+                          </p>
+                          <h2 className="mt-[var(--mobile-label-heading-gap)] text-[1.42rem] leading-[1.04] text-balance">
+                            {activeFormStep.title}
+                          </h2>
+                          <p className="mt-[var(--mobile-heading-body-gap)] text-[0.92rem] leading-6 text-[var(--text-secondary)]">
+                            {activeFormStep.description}
+                          </p>
                         </div>
 
                         <div className="home-divider" />
@@ -512,6 +503,18 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
                             {submitError}
                           </p>
                         ) : null}
+
+                        <div className="panel rounded-[1rem] p-3.5">
+                          <p className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">
+                            {sceneData.progressionLabel}
+                          </p>
+                          <p className="mt-2 text-[0.92rem] leading-6 text-[var(--text-primary)]">
+                            {activeSupport.body}
+                          </p>
+                          <p className="mt-2 text-[0.84rem] leading-6 text-[var(--text-secondary)]">
+                            {sceneData.mediaNote}
+                          </p>
+                        </div>
 
                         <p className="text-[0.82rem] leading-6 text-[var(--text-secondary)]">
                           {sceneData.footerNote}
@@ -546,59 +549,6 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
                     )}
                   </div>
                 </RevealItem>
-
-                {!submitted ? (
-                  <RevealItem variant="media">
-                    <AnimatePresence mode="wait">
-                      <motion.div
-                        key={`${activeSupport.title}-mobile-support`}
-                        initial={supportEnter}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={supportExit}
-                        transition={contentSwapTransition}
-                        className="scene-focus scene-swipe-surface flex flex-col gap-[var(--mobile-card-gap)] p-3"
-                        {...swipeBindings}
-                      >
-                        <div className="film-frame relative min-h-[12.75rem] overflow-hidden">
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img
-                            src={activeSupport.image}
-                            alt={`${activeSupport.title} visual placeholder.`}
-                            className="h-full w-full object-cover"
-                          />
-                          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.02),rgba(232,239,246,0.16))]" />
-                        </div>
-
-                        <div className="flex flex-wrap items-center justify-between gap-2">
-                          <span className="archive-chip rounded-full px-3 py-1.5 text-[0.66rem] uppercase tracking-[0.16em] text-[var(--accent-deep)]">
-                            {activeSupport.label}
-                          </span>
-                          <span className="text-[0.66rem] uppercase tracking-[0.18em] text-[var(--text-tertiary)]">
-                            {sceneData.progressionLabel}
-                          </span>
-                        </div>
-
-                        <div className="panel rounded-[1rem] p-3.5">
-                          <p className="text-[0.98rem] leading-6 text-[var(--text-primary)]">
-                            {activeSupport.body}
-                          </p>
-                          <p className="mt-2 text-[0.84rem] leading-6 text-[var(--text-secondary)]">
-                            {sceneData.mediaNote}
-                          </p>
-                        </div>
-
-                        <div className="panel rounded-[1rem] p-3.5">
-                          <p className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">
-                            {sceneData.nextHeading}
-                          </p>
-                          <p className="mt-2 text-[0.88rem] leading-6 text-[var(--text-secondary)]">
-                            {sceneData.nextBody}
-                          </p>
-                        </div>
-                      </motion.div>
-                    </AnimatePresence>
-                  </RevealItem>
-                ) : null}
               </RevealGroup>
             </div>
 
