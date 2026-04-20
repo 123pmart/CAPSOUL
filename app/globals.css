@@ -847,8 +847,8 @@
     --section-gap-compact: clamp(1.15rem, 5.5vw, 1.65rem);
     --mobile-section-gap: 0.92rem;
     --mobile-card-gap: 0.68rem;
-    --mobile-label-heading-gap: 0.52rem;
-    --mobile-heading-body-gap: 0.56rem;
+    --mobile-label-heading-gap: 0.78rem;
+    --mobile-heading-body-gap: 0.62rem;
     --mobile-body-action-gap: 0.78rem;
   }
 

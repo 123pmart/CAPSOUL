@@ -9,6 +9,7 @@ import {
   subtleHoverLift,
   subtleTapPress,
 } from "@/components/motion-config";
+import { MobilePageNextLink } from "@/components/mobile-page-next-link";
 import { RevealGroup, RevealItem } from "@/components/reveal";
 import { SceneRoutePager } from "@/components/scene-route-pager";
 import { SceneViewport } from "@/components/scene-viewport";
@@ -211,59 +212,15 @@ export function SceneScreen({
                       })}
                     </div>
                   </div>
+
+                  <p className="mt-3 text-[0.88rem] leading-6 text-[var(--text-secondary)]">
+                    {active.detail}
+                  </p>
                 </div>
               </RevealItem>
 
-              <RevealItem variant="card">
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={`${active.label}-mobile-detail`}
-                    initial={panelEnter}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={panelExit}
-                    transition={contentSwapTransition}
-                    className="panel-strong flex flex-col gap-[var(--mobile-card-gap)] rounded-[1.3rem] p-4"
-                  >
-                    <div>
-                      <h2 className="text-[1.42rem] leading-[1.02] text-balance">
-                        {active.title}
-                      </h2>
-                      <p className="mt-[var(--mobile-heading-body-gap)] text-[0.92rem] leading-6 text-[var(--text-secondary)]">
-                        {active.detail}
-                      </p>
-                    </div>
-
-                    <div className="flex flex-wrap gap-2">
-                      {active.bullets.map((bullet) => (
-                        <div
-                          key={`${active.label}-mobile-${bullet}`}
-                          className="archive-chip rounded-full px-3 py-2 text-[0.76rem] leading-5 text-[var(--text-secondary)]"
-                        >
-                          {bullet}
-                        </div>
-                      ))}
-                    </div>
-
-                    <div className="flex items-center gap-2.5">
-                      <button
-                        type="button"
-                        className="button-secondary !min-h-0 !w-auto shrink-0 px-3 py-2 text-[0.74rem] opacity-80"
-                        disabled={isFirst}
-                        onClick={goPrev}
-                      >
-                        Previous
-                      </button>
-                      <button
-                        type="button"
-                        className="button-primary flex-1 px-4"
-                        disabled={isLast}
-                        onClick={goNext}
-                      >
-                        Next
-                      </button>
-                    </div>
-                  </motion.div>
-                </AnimatePresence>
+              <RevealItem variant="micro">
+                <MobilePageNextLink />
               </RevealItem>
             </div>
 
