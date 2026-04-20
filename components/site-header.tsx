@@ -68,37 +68,47 @@ export function SiteHeader() {
               <span className="archive-chip rounded-full px-3 py-1.5 text-[0.68rem] uppercase tracking-[0.16em] text-[var(--text-secondary)]">
                 Private by design
               </span>
-              <TransitionLink className="button-primary px-4 py-2 text-[0.88rem]" href="/inquire">
+              <TransitionLink className="button-primary px-4 py-2 text-[0.88rem]" href="/inquire" scroll>
                 Inquire Now
               </TransitionLink>
             </div>
 
-            <button
-              type="button"
-              aria-label={isOpen ? "Close menu" : "Open menu"}
-              aria-expanded={isOpen}
-              aria-controls="mobile-navigation"
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/80 bg-[linear-gradient(180deg,rgba(255,255,255,0.76),rgba(241,246,251,0.9))] text-[var(--text-primary)] shadow-[0_14px_28px_rgba(154,170,190,0.16)] backdrop-blur-lg lg:hidden"
-              onClick={() => setIsOpen((value) => !value)}
-            >
-              <span className="relative block h-4 w-5">
-                <span
-                  className={`absolute left-0 top-0 h-0.5 w-5 rounded-full bg-current transition-transform duration-200 ease-out ${
-                    isOpen ? "translate-y-[7px] rotate-45" : ""
-                  }`}
-                />
-                <span
-                  className={`absolute left-0 top-[7px] h-0.5 w-5 rounded-full bg-current transition-opacity duration-150 ease-out ${
-                    isOpen ? "opacity-0" : ""
-                  }`}
-                />
-                <span
-                  className={`absolute left-0 top-[14px] h-0.5 w-5 rounded-full bg-current transition-transform duration-200 ease-out ${
-                    isOpen ? "-translate-y-[7px] -rotate-45" : ""
-                  }`}
-                />
-              </span>
-            </button>
+            <div className="flex shrink-0 items-center gap-2 lg:hidden">
+              <TransitionLink
+                className="button-primary !min-h-0 !w-auto shrink-0 px-3.5 py-2 text-[0.78rem] sm:px-4 sm:text-[0.84rem]"
+                href="/inquire"
+                scroll
+              >
+                Inquire
+              </TransitionLink>
+
+              <button
+                type="button"
+                aria-label={isOpen ? "Close menu" : "Open menu"}
+                aria-expanded={isOpen}
+                aria-controls="mobile-navigation"
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/80 bg-[linear-gradient(180deg,rgba(255,255,255,0.76),rgba(241,246,251,0.9))] text-[var(--text-primary)] shadow-[0_14px_28px_rgba(154,170,190,0.16)] backdrop-blur-lg"
+                onClick={() => setIsOpen((value) => !value)}
+              >
+                <span className="relative block h-4 w-5">
+                  <span
+                    className={`absolute left-0 top-0 h-0.5 w-5 rounded-full bg-current transition-transform duration-200 ease-out ${
+                      isOpen ? "translate-y-[7px] rotate-45" : ""
+                    }`}
+                  />
+                  <span
+                    className={`absolute left-0 top-[7px] h-0.5 w-5 rounded-full bg-current transition-opacity duration-150 ease-out ${
+                      isOpen ? "opacity-0" : ""
+                    }`}
+                  />
+                  <span
+                    className={`absolute left-0 top-[14px] h-0.5 w-5 rounded-full bg-current transition-transform duration-200 ease-out ${
+                      isOpen ? "-translate-y-[7px] -rotate-45" : ""
+                    }`}
+                  />
+                </span>
+              </button>
+            </div>
           </div>
 
           <div
@@ -126,7 +136,7 @@ export function SiteHeader() {
                 );
               })}
 
-              <TransitionLink className="button-primary" href="/inquire">
+              <TransitionLink className="button-primary" href="/inquire" scroll>
                 Inquire Now
               </TransitionLink>
             </div>

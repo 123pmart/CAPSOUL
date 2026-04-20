@@ -665,6 +665,33 @@
   font-variant-numeric: tabular-nums;
 }
 
+.scene-media-shell {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: flex-start;
+  flex: none;
+}
+
+.scene-media-frame {
+  width: 100%;
+  max-width: clamp(15.4rem, 78vw, 17.8rem);
+  aspect-ratio: 4 / 5;
+  min-height: 0;
+  flex: none;
+}
+
+.scene-state-detail {
+  display: grid;
+  align-content: start;
+  min-height: clamp(15.25rem, 28vw, 17.5rem);
+}
+
+.scene-mobile-title-lock {
+  display: block;
+  min-height: 2.45rem;
+}
+
 .scene-detail-modal {
   position: fixed;
   inset: 0;
@@ -677,6 +704,7 @@
     max(1rem, var(--safe-right))
     max(1rem, calc(var(--safe-bottom) + 0.9rem))
     max(1rem, var(--safe-left));
+  contain: layout paint;
 }
 
 .scene-detail-backdrop {
@@ -685,6 +713,7 @@
   border: 0;
   background: rgba(240, 246, 252, 0.58);
   backdrop-filter: blur(16px) saturate(138%);
+  will-change: opacity;
 }
 
 .scene-detail-panel {
@@ -698,6 +727,10 @@
   box-shadow:
     0 26px 64px rgba(145, 162, 183, 0.18),
     inset 0 1px 0 rgba(255, 255, 255, 0.98);
+  transform-origin: center;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  contain: layout paint;
 }
 
 .scene-detail-scroll {
@@ -960,6 +993,16 @@
 
   .scene-counter {
     min-width: 4.7rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .scene-media-frame {
+    max-width: clamp(18.5rem, 32vw, 27rem);
+  }
+
+  .scene-state-detail {
+    min-height: clamp(16rem, 22vw, 18rem);
   }
 }
 

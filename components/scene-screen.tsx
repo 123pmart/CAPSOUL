@@ -175,21 +175,23 @@ export function SceneScreen({
                         transition={contentSwapTransition}
                         className="scene-focus scene-mobile-card flex w-full flex-col gap-3 p-3 text-left"
                       >
-                        <div className="film-frame relative min-h-[11.4rem] flex-1 overflow-hidden">
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img
-                            src={active.image}
-                            alt={`${active.title} visual placeholder.`}
-                            className="h-full w-full object-cover"
-                          />
-                          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.02),rgba(232,239,246,0.16))]" />
-                          <div className="media-caption absolute inset-x-2.5 bottom-2.5 rounded-[1rem] px-3.5 py-3">
-                            <p className="text-[0.66rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-deep)]">
-                              {active.mediaLabel}
-                            </p>
-                            <p className="mt-2 line-clamp-2 text-[0.92rem] leading-6 text-[var(--text-primary)]">
-                              {active.summary}
-                            </p>
+                        <div className="scene-media-shell">
+                          <div className="scene-media-frame film-frame relative overflow-hidden">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                              src={active.image}
+                              alt={`${active.title} visual placeholder.`}
+                              className="h-full w-full object-cover"
+                            />
+                            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.02),rgba(232,239,246,0.16))]" />
+                            <div className="media-caption absolute inset-x-2.5 bottom-2.5 rounded-[1rem] px-3.5 py-3">
+                              <p className="text-[0.66rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-deep)]">
+                                {active.mediaLabel}
+                              </p>
+                              <p className="mt-2 line-clamp-2 text-[0.92rem] leading-6 text-[var(--text-primary)]">
+                                {active.summary}
+                              </p>
+                            </div>
                           </div>
                         </div>
 
@@ -235,27 +237,29 @@ export function SceneScreen({
                         transition={contentSwapTransition}
                         className="flex h-full flex-col gap-3 md:min-h-0"
                       >
-                        <div className="film-frame relative min-h-[18rem] flex-1 overflow-hidden sm:min-h-[19rem] md:min-h-[16rem]">
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img
-                            src={active.image}
-                            alt={`${active.title} visual placeholder.`}
-                            className="h-full w-full object-cover"
-                          />
-                          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.02),rgba(232,239,246,0.18))]" />
-                          <div className="surface-note absolute left-3 top-3 max-w-[14rem] rounded-[1rem] px-3 py-2.5 text-[0.78rem] leading-5 text-[var(--text-secondary)] sm:left-4 sm:top-4">
-                            <p className="text-[0.66rem] font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">
-                              {active.mediaLabel}
-                            </p>
-                            <p className="mt-1.5">{active.mediaCaption}</p>
-                          </div>
-                          <div className="media-caption absolute inset-x-3 bottom-3 rounded-[1.1rem] px-4 py-3.5 sm:inset-x-4 sm:bottom-4">
-                            <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-deep)]">
-                              {stageLabel}
-                            </p>
-                            <p className="mt-2 max-w-[28rem] text-[1.02rem] leading-7 text-[var(--text-primary)]">
-                              {active.summary}
-                            </p>
+                        <div className="scene-media-shell flex-1">
+                          <div className="scene-media-frame film-frame relative overflow-hidden">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                              src={active.image}
+                              alt={`${active.title} visual placeholder.`}
+                              className="h-full w-full object-cover"
+                            />
+                            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.02),rgba(232,239,246,0.18))]" />
+                            <div className="surface-note absolute left-3 top-3 max-w-[14rem] rounded-[1rem] px-3 py-2.5 text-[0.78rem] leading-5 text-[var(--text-secondary)] sm:left-4 sm:top-4">
+                              <p className="text-[0.66rem] font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">
+                                {active.mediaLabel}
+                              </p>
+                              <p className="mt-1.5">{active.mediaCaption}</p>
+                            </div>
+                            <div className="media-caption absolute inset-x-3 bottom-3 rounded-[1.1rem] px-4 py-3.5 sm:inset-x-4 sm:bottom-4">
+                              <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-deep)]">
+                                {stageLabel}
+                              </p>
+                              <p className="mt-2 max-w-[28rem] text-[1.02rem] leading-7 text-[var(--text-primary)]">
+                                {active.summary}
+                              </p>
+                            </div>
                           </div>
                         </div>
 
@@ -339,7 +343,7 @@ export function SceneScreen({
                         animate={{ opacity: 1, y: 0 }}
                         exit={panelExit}
                         transition={contentSwapTransition}
-                        className="flex flex-col justify-between gap-4 md:min-h-0 md:flex-1"
+                        className="scene-state-detail flex flex-col justify-between gap-4 md:min-h-0 md:flex-1"
                       >
                         <div>
                           <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-deep)]">

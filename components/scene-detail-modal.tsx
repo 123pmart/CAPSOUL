@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, type ReactNode } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 
 import { measuredEase, premiumEase } from "@/components/motion-config";
 
@@ -50,72 +50,71 @@ export function SceneDetailModal({
     : { duration: 0.34, ease: premiumEase };
 
   return (
-    <AnimatePresence initial={false} mode="wait">
-      {open ? (
-        <div className="scene-detail-modal md:hidden">
-          <motion.button
+    <div
+      aria-hidden={!open}
+      className="scene-detail-modal md:hidden"
+      style={{
+        pointerEvents: open ? "auto" : "none",
+        visibility: open ? "visible" : "hidden",
+      }}
+    >
+      <motion.button
+        type="button"
+        aria-label="Close scene detail"
+        className="scene-detail-backdrop"
+        onClick={onClose}
+        initial={false}
+        animate={open ? { opacity: 1 } : { opacity: 0 }}
+        transition={backdropTransition}
+      />
+
+      <motion.div
+        role="dialog"
+        aria-modal="true"
+        aria-label={title}
+        className="scene-detail-panel panel-strong"
+        initial={false}
+        animate={
+          open
+            ? { opacity: 1, scale: 1, y: 0 }
+            : reduceMotion
+              ? { opacity: 0, scale: 1, y: 0 }
+              : { opacity: 0, scale: 0.982, y: 10 }
+        }
+        transition={panelTransition}
+      >
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0">
+            {eyebrow ? (
+              <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-deep)]">
+                {eyebrow}
+              </p>
+            ) : null}
+            <h2 className="mt-2 text-[1.3rem] leading-[1.02] text-[var(--text-primary)] sm:text-[1.55rem]">
+              {title}
+            </h2>
+          </div>
+
+          <button
             type="button"
-            aria-label="Close scene detail"
-            className="scene-detail-backdrop"
+            aria-label="Close detail"
+            className="scene-detail-close"
             onClick={onClose}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={backdropTransition}
-          />
-
-          <motion.div
-            role="dialog"
-            aria-modal="true"
-            aria-label={title}
-            className="scene-detail-panel panel-strong"
-            initial={
-              reduceMotion
-                ? { opacity: 1, scale: 1, y: 0 }
-                : { opacity: 0, scale: 0.974, y: 14 }
-            }
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={
-              reduceMotion
-                ? { opacity: 1, scale: 1, y: 0 }
-                : { opacity: 0, scale: 0.988, y: 8 }
-            }
-            transition={panelTransition}
           >
-            <div className="flex items-start justify-between gap-3">
-              <div className="min-w-0">
-                {eyebrow ? (
-                  <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-deep)]">
-                    {eyebrow}
-                  </p>
-                ) : null}
-                <h2 className="mt-2 text-[1.3rem] leading-[1.02] text-[var(--text-primary)] sm:text-[1.55rem]">
-                  {title}
-                </h2>
-              </div>
-
-              <button
-                type="button"
-                aria-label="Close detail"
-                className="scene-detail-close"
-                onClick={onClose}
-              >
-                X
-              </button>
-            </div>
-
-            <div className="scene-detail-scroll">
-              {description ? (
-                <p className="text-[0.92rem] leading-6 text-[var(--text-secondary)] sm:text-[0.96rem] sm:leading-7">
-                  {description}
-                </p>
-              ) : null}
-
-              {children ? <div className="grid gap-2.5">{children}</div> : null}
-            </div>
-          </motion.div>
+            X
+          </button>
         </div>
-      ) : null}
-    </AnimatePresence>
+
+        <div className="scene-detail-scroll">
+          {description ? (
+            <p className="text-[0.92rem] leading-6 text-[var(--text-secondary)] sm:text-[0.96rem] sm:leading-7">
+              {description}
+            </p>
+          ) : null}
+
+          {children ? <div className="grid gap-2.5">{children}</div> : null}
+        </div>
+      </motion.div>
+    </div>
   );
 }
