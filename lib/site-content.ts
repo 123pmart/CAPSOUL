@@ -6,14 +6,21 @@ import { canUseLegacyMutableFallback, hasPersistentDatabase } from "@/lib/server
 import { DATA_ROOT, readJsonFile, writeJsonFile } from "@/lib/storage";
 import {
   cloneDefaultSiteContent,
+  cloneDefaultSiteContentDocument,
   defaultSiteContent,
+  defaultSiteContentDocument,
+  defaultSpanishSiteContent,
   type EditableInquiryContent,
   type EditableInquirySupportState,
   type EditableSceneAction,
   type EditableSceneContent,
   type EditableSceneStep,
+  type GlobalSiteContent,
+  type InquiryFieldCopy,
   type InquiryFormStepContent,
   type SiteContent,
+  type SiteContentDocument,
+  type SiteLocale,
 } from "@/lib/site-content-schema";
 
 const SITE_CONTENT_FILE = path.join(DATA_ROOT, "site-content.json");
@@ -106,6 +113,81 @@ function mergeFormStep(value: unknown, fallback: InquiryFormStepContent): Inquir
   };
 }
 
+function mergeInquiryFieldCopy(value: unknown, fallback: InquiryFieldCopy): InquiryFieldCopy {
+  const record = isRecord(value) ? value : {};
+
+  return {
+    fullNameLabel: normalizeText(record.fullNameLabel, fallback.fullNameLabel),
+    fullNamePlaceholder: normalizeText(record.fullNamePlaceholder, fallback.fullNamePlaceholder),
+    emailLabel: normalizeText(record.emailLabel, fallback.emailLabel),
+    emailPlaceholder: normalizeText(record.emailPlaceholder, fallback.emailPlaceholder),
+    phoneLabel: normalizeText(record.phoneLabel, fallback.phoneLabel),
+    phonePlaceholder: normalizeText(record.phonePlaceholder, fallback.phonePlaceholder),
+    regionLabel: normalizeText(record.regionLabel, fallback.regionLabel),
+    regionPlaceholder: normalizeText(record.regionPlaceholder, fallback.regionPlaceholder),
+    filmForLabel: normalizeText(record.filmForLabel, fallback.filmForLabel),
+    filmForPlaceholder: normalizeText(record.filmForPlaceholder, fallback.filmForPlaceholder),
+    relationshipLabel: normalizeText(record.relationshipLabel, fallback.relationshipLabel),
+    relationshipPlaceholder: normalizeText(
+      record.relationshipPlaceholder,
+      fallback.relationshipPlaceholder,
+    ),
+    stillLivingLabel: normalizeText(record.stillLivingLabel, fallback.stillLivingLabel),
+    stillLivingPlaceholder: normalizeText(
+      record.stillLivingPlaceholder,
+      fallback.stillLivingPlaceholder,
+    ),
+    stillLivingYes: normalizeText(record.stillLivingYes, fallback.stillLivingYes),
+    stillLivingNo: normalizeText(record.stillLivingNo, fallback.stillLivingNo),
+    stillLivingPreferNot: normalizeText(
+      record.stillLivingPreferNot,
+      fallback.stillLivingPreferNot,
+    ),
+    timelineLabel: normalizeText(record.timelineLabel, fallback.timelineLabel),
+    timelinePlaceholder: normalizeText(record.timelinePlaceholder, fallback.timelinePlaceholder),
+    storyImportanceLabel: normalizeText(
+      record.storyImportanceLabel,
+      fallback.storyImportanceLabel,
+    ),
+    storyImportancePlaceholder: normalizeText(
+      record.storyImportancePlaceholder,
+      fallback.storyImportancePlaceholder,
+    ),
+    filmingLocationLabel: normalizeText(
+      record.filmingLocationLabel,
+      fallback.filmingLocationLabel,
+    ),
+    filmingLocationPlaceholder: normalizeText(
+      record.filmingLocationPlaceholder,
+      fallback.filmingLocationPlaceholder,
+    ),
+    faithContextLabel: normalizeText(record.faithContextLabel, fallback.faithContextLabel),
+    faithContextPlaceholder: normalizeText(
+      record.faithContextPlaceholder,
+      fallback.faithContextPlaceholder,
+    ),
+    faithContextCentral: normalizeText(
+      record.faithContextCentral,
+      fallback.faithContextCentral,
+    ),
+    faithContextPresent: normalizeText(
+      record.faithContextPresent,
+      fallback.faithContextPresent,
+    ),
+    faithContextNotReally: normalizeText(
+      record.faithContextNotReally,
+      fallback.faithContextNotReally,
+    ),
+    faithContextNotSure: normalizeText(record.faithContextNotSure, fallback.faithContextNotSure),
+    extraNotesLabel: normalizeText(record.extraNotesLabel, fallback.extraNotesLabel),
+    extraNotesPlaceholder: normalizeText(
+      record.extraNotesPlaceholder,
+      fallback.extraNotesPlaceholder,
+    ),
+    submittingLabel: normalizeText(record.submittingLabel, fallback.submittingLabel),
+  };
+}
+
 function mergeInquiryContent(value: unknown, fallback: EditableInquiryContent): EditableInquiryContent {
   const record = isRecord(value) ? value : {};
   const supportStates = Array.isArray(record.supportStates) ? record.supportStates : [];
@@ -120,6 +202,7 @@ function mergeInquiryContent(value: unknown, fallback: EditableInquiryContent): 
       mergeSupportState(supportStates[index], state),
     ),
     formSteps: fallback.formSteps.map((step, index) => mergeFormStep(formSteps[index], step)),
+    fieldCopy: mergeInquiryFieldCopy(record.fieldCopy, fallback.fieldCopy),
     previousButtonLabel: normalizeText(record.previousButtonLabel, fallback.previousButtonLabel),
     nextButtonLabel: normalizeText(record.nextButtonLabel, fallback.nextButtonLabel),
     submitButtonLabel: normalizeText(record.submitButtonLabel, fallback.submitButtonLabel),
@@ -136,15 +219,86 @@ function mergeInquiryContent(value: unknown, fallback: EditableInquiryContent): 
   };
 }
 
-export function normalizeSiteContent(value: unknown): SiteContent {
+function mergeGlobalContent(value: unknown, fallback: GlobalSiteContent): GlobalSiteContent {
+  const record = isRecord(value) ? value : {};
+  const navigation = isRecord(record.navigation) ? record.navigation : {};
+  const routeLabels = isRecord(record.routeLabels) ? record.routeLabels : {};
+  const sceneLabels = isRecord(record.sceneLabels) ? record.sceneLabels : {};
+  const languageLabels = isRecord(record.languageLabels) ? record.languageLabels : {};
+
+  return {
+    brandDescriptor: normalizeText(record.brandDescriptor, fallback.brandDescriptor),
+    headerTagline: normalizeText(record.headerTagline, fallback.headerTagline),
+    headerInquireLabel: normalizeText(record.headerInquireLabel, fallback.headerInquireLabel),
+    mobileHeaderInquireLabel: normalizeText(
+      record.mobileHeaderInquireLabel,
+      fallback.mobileHeaderInquireLabel,
+    ),
+    adminEntryLabel: normalizeText(record.adminEntryLabel, fallback.adminEntryLabel),
+    navigation: {
+      home: normalizeText(navigation.home, fallback.navigation.home),
+      experience: normalizeText(navigation.experience, fallback.navigation.experience),
+      process: normalizeText(navigation.process, fallback.navigation.process),
+      preserve: normalizeText(navigation.preserve, fallback.navigation.preserve),
+      inquire: normalizeText(navigation.inquire, fallback.navigation.inquire),
+    },
+    routeLabels: {
+      previous: normalizeText(routeLabels.previous, fallback.routeLabels.previous),
+      next: normalizeText(routeLabels.next, fallback.routeLabels.next),
+      nextPagePrefix: normalizeText(
+        routeLabels.nextPagePrefix,
+        fallback.routeLabels.nextPagePrefix,
+      ),
+    },
+    sceneLabels: {
+      tapImageHint: normalizeText(sceneLabels.tapImageHint, fallback.sceneLabels.tapImageHint),
+      arrowInstruction: normalizeText(
+        sceneLabels.arrowInstruction,
+        fallback.sceneLabels.arrowInstruction,
+      ),
+      activeState: normalizeText(sceneLabels.activeState, fallback.sceneLabels.activeState),
+    },
+    languageLabels: {
+      en: normalizeText(languageLabels.en, fallback.languageLabels.en),
+      es: normalizeText(languageLabels.es, fallback.languageLabels.es),
+    },
+  };
+}
+
+export function normalizeSiteContent(
+  value: unknown,
+  fallback: SiteContent = defaultSiteContent,
+): SiteContent {
   const record = isRecord(value) ? value : {};
 
   return {
-    home: mergeSceneContent(record.home, defaultSiteContent.home),
-    experience: mergeSceneContent(record.experience, defaultSiteContent.experience),
-    process: mergeSceneContent(record.process, defaultSiteContent.process),
-    preserve: mergeSceneContent(record.preserve, defaultSiteContent.preserve),
-    inquire: mergeInquiryContent(record.inquire, defaultSiteContent.inquire),
+    global: mergeGlobalContent(record.global, fallback.global),
+    home: mergeSceneContent(record.home, fallback.home),
+    experience: mergeSceneContent(record.experience, fallback.experience),
+    process: mergeSceneContent(record.process, fallback.process),
+    preserve: mergeSceneContent(record.preserve, fallback.preserve),
+    inquire: mergeInquiryContent(record.inquire, fallback.inquire),
+  };
+}
+
+export function normalizeSiteContentDocument(value: unknown): SiteContentDocument {
+  const record = isRecord(value) ? value : {};
+  const locales = isRecord(record.locales) ? record.locales : null;
+
+  if (locales) {
+    return {
+      locales: {
+        en: normalizeSiteContent(locales.en, defaultSiteContent),
+        es: normalizeSiteContent(locales.es, defaultSpanishSiteContent),
+      },
+    };
+  }
+
+  return {
+    locales: {
+      en: normalizeSiteContent(record, defaultSiteContent),
+      es: cloneDefaultSiteContent("es"),
+    },
   };
 }
 
@@ -172,8 +326,9 @@ async function ensurePersistentSiteContentSeeded() {
       }
 
       const legacyContent =
-        (await readOptionalLegacyJson<unknown>("site-content.json")) ?? cloneDefaultSiteContent();
-      const normalizedContent = normalizeSiteContent(legacyContent);
+        (await readOptionalLegacyJson<unknown>("site-content.json")) ??
+        cloneDefaultSiteContentDocument();
+      const normalizedContent = normalizeSiteContentDocument(legacyContent);
 
       await sql`
         INSERT INTO site_content (content_key, content, updated_at)
@@ -186,7 +341,7 @@ async function ensurePersistentSiteContentSeeded() {
   await globalState[persistentContentSeedKey];
 }
 
-export async function getSiteContent(): Promise<SiteContent> {
+export async function getSiteContentDocument(): Promise<SiteContentDocument> {
   if (hasPersistentDatabase()) {
     try {
       await ensurePersistentSiteContentSeeded();
@@ -198,8 +353,8 @@ export async function getSiteContent(): Promise<SiteContent> {
         LIMIT 1
       `;
 
-      const storedContent = rows[0]?.content ?? cloneDefaultSiteContent();
-      const normalizedContent = normalizeSiteContent(
+      const storedContent = rows[0]?.content ?? cloneDefaultSiteContentDocument();
+      const normalizedContent = normalizeSiteContentDocument(
         typeof storedContent === "string" ? JSON.parse(storedContent) : storedContent,
       );
 
@@ -214,17 +369,17 @@ export async function getSiteContent(): Promise<SiteContent> {
 
       return normalizedContent;
     } catch {
-      return cloneDefaultSiteContent();
+      return cloneDefaultSiteContentDocument();
     }
   }
 
   if (!canUseLegacyMutableFallback()) {
-    return cloneDefaultSiteContent();
+    return cloneDefaultSiteContentDocument();
   }
 
-  const fallback = cloneDefaultSiteContent();
+  const fallback = cloneDefaultSiteContentDocument();
   const storedContent = await readJsonFile<unknown>(SITE_CONTENT_FILE, fallback);
-  const normalizedContent = normalizeSiteContent(storedContent);
+  const normalizedContent = normalizeSiteContentDocument(storedContent);
 
   if (JSON.stringify(storedContent) !== JSON.stringify(normalizedContent)) {
     await writeJsonFile(SITE_CONTENT_FILE, normalizedContent);
@@ -233,8 +388,13 @@ export async function getSiteContent(): Promise<SiteContent> {
   return normalizedContent;
 }
 
-export async function saveSiteContent(content: unknown): Promise<SiteContent> {
-  const normalizedContent = normalizeSiteContent(content);
+export async function getSiteContent(locale: SiteLocale = "en"): Promise<SiteContent> {
+  const document = await getSiteContentDocument();
+  return document.locales[locale] ?? document.locales.en ?? cloneDefaultSiteContent();
+}
+
+export async function saveSiteContentDocument(content: unknown): Promise<SiteContentDocument> {
+  const normalizedContent = normalizeSiteContentDocument(content);
 
   if (hasPersistentDatabase()) {
     await ensurePersistentSiteContentSeeded();
@@ -255,4 +415,8 @@ export async function saveSiteContent(content: unknown): Promise<SiteContent> {
 
   await writeJsonFile(SITE_CONTENT_FILE, normalizedContent);
   return normalizedContent;
+}
+
+export async function saveSiteContent(content: unknown): Promise<SiteContentDocument> {
+  return saveSiteContentDocument(content);
 }

@@ -1,10 +1,15 @@
+"use client";
+
 import { company } from "@/content/site";
+import { useSiteLocale } from "@/components/site-locale-provider";
 
 type BrandMarkProps = {
   compact?: boolean;
 };
 
 export function BrandMark({ compact = false }: BrandMarkProps) {
+  const { globalContent } = useSiteLocale();
+
   return (
     <div
       className={`flex max-w-full items-center text-[var(--foreground)] ${
@@ -37,7 +42,7 @@ export function BrandMark({ compact = false }: BrandMarkProps) {
         </span>
         {!compact ? (
           <span className="text-[0.66rem] uppercase tracking-[0.16em] text-[var(--muted)] sm:text-[0.7rem]">
-            {company.descriptor}
+            {globalContent.brandDescriptor}
           </span>
         ) : null}
       </div>

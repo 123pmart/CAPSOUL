@@ -4,7 +4,7 @@ import {
   getCurrentAdminFromSessionToken,
   getSessionTokenFromCookieHeader,
 } from "@/lib/admin-auth";
-import { getSiteContent, saveSiteContent } from "@/lib/site-content";
+import { getSiteContentDocument, saveSiteContentDocument } from "@/lib/site-content";
 
 async function getAuthorizedAdmin(request: Request) {
   return getCurrentAdminFromSessionToken(
@@ -19,7 +19,7 @@ export async function GET(request: Request) {
     return NextResponse.json({ ok: false, error: "Unauthorized." }, { status: 401 });
   }
 
-  return NextResponse.json({ ok: true, content: await getSiteContent() });
+  return NextResponse.json({ ok: true, content: await getSiteContentDocument() });
 }
 
 export async function POST(request: Request) {
@@ -31,7 +31,7 @@ export async function POST(request: Request) {
 
   try {
     const body = (await request.json()) as { content?: unknown };
-    const content = await saveSiteContent(body.content);
+    const content = await saveSiteContentDocument(body.content);
     return NextResponse.json({ ok: true, content });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unable to save site content.";

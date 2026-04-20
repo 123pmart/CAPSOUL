@@ -1,8 +1,58 @@
-import { navigation } from "@/content/site";
+import type { GlobalSiteContent } from "@/lib/site-content-schema";
 
-export const sceneRouteEntries = [...navigation];
+export type SceneRouteKey = "home" | "experience" | "process" | "preserve" | "inquire";
+
+type SceneRouteEntry = {
+  key: SceneRouteKey;
+  href: string;
+};
+
+type SceneRouteEntryWithLabel = SceneRouteEntry & {
+  label: string;
+};
+
+type SceneRouteLabels = GlobalSiteContent["navigation"];
+
+const defaultSceneRouteLabels: SceneRouteLabels = {
+  home: "Home",
+  experience: "The Experience",
+  process: "How It Works",
+  preserve: "What We Preserve",
+  inquire: "Inquire",
+};
+
+export const sceneRouteEntries: SceneRouteEntry[] = [
+  { key: "home", href: "/" },
+  { key: "experience", href: "/the-experience" },
+  { key: "process", href: "/how-it-works" },
+  { key: "preserve", href: "/what-we-preserve" },
+  { key: "inquire", href: "/inquire" },
+];
+
 export const sceneRouteOrder = sceneRouteEntries.map((item) => item.href);
 export const sceneRouteCount = sceneRouteEntries.length;
+
+function resolveSceneRouteLabels(labels?: Partial<SceneRouteLabels> | null): SceneRouteLabels {
+  return {
+    ...defaultSceneRouteLabels,
+    ...(labels ?? {}),
+  };
+}
+
+function withLabel(
+  entry: SceneRouteEntry | null,
+  labels?: Partial<SceneRouteLabels> | null,
+): SceneRouteEntryWithLabel | null {
+  if (!entry) {
+    return null;
+  }
+
+  const resolvedLabels = resolveSceneRouteLabels(labels);
+  return {
+    ...entry,
+    label: resolvedLabels[entry.key],
+  };
+}
 
 export function normalizeSceneRoute(pathname: string | null | undefined) {
   if (!pathname) {
@@ -29,6 +79,7 @@ export function getSceneRouteIndex(pathname: string | null | undefined) {
 export function getAdjacentSceneRoute(
   pathname: string | null | undefined,
   direction: "next" | "previous",
+  labels?: Partial<SceneRouteLabels> | null,
 ) {
   const currentIndex = getSceneRouteIndex(pathname);
 
@@ -37,17 +88,27 @@ export function getAdjacentSceneRoute(
   }
 
   const offset = direction === "next" ? 1 : -1;
-  return sceneRouteEntries[currentIndex + offset] ?? null;
+  return withLabel(sceneRouteEntries[currentIndex + offset] ?? null, labels);
 }
 
-export function getSceneRouteLabel(pathname: string | null | undefined) {
-  return (
-    sceneRouteEntries.find((item) => isSceneRouteActive(pathname, item.href))?.label ?? "CAPSOUL"
+export function getSceneRouteLabel(
+  pathname: string | null | undefined,
+  labels?: Partial<SceneRouteLabels> | null,
+) {
+  return withLabel(
+    sceneRouteEntries.find((item) => isSceneRouteActive(pathname, item.href)) ?? null,
+    labels,
+  )?.label ?? "CAPSOUL";
+}
+
+export function getSceneRouteEntry(
+  pathname: string | null | undefined,
+  labels?: Partial<SceneRouteLabels> | null,
+) {
+  return withLabel(
+    sceneRouteEntries.find((item) => isSceneRouteActive(pathname, item.href)) ?? null,
+    labels,
   );
-}
-
-export function getSceneRouteEntry(pathname: string | null | undefined) {
-  return sceneRouteEntries.find((item) => isSceneRouteActive(pathname, item.href)) ?? null;
 }
 
 export function getSceneRouteProgress(pathname: string | null | undefined) {

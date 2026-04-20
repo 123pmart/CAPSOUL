@@ -671,12 +671,13 @@
   justify-content: center;
   align-items: flex-start;
   flex: none;
+  min-width: 0;
 }
 
 .scene-media-frame {
   width: 100%;
   max-width: clamp(15.4rem, 78vw, 17.8rem);
-  aspect-ratio: 4 / 5;
+  aspect-ratio: 3 / 2;
   min-height: 0;
   flex: none;
   background: linear-gradient(180deg, rgba(247, 250, 253, 0.9), rgba(236, 243, 249, 0.94));
@@ -706,7 +707,13 @@
 
 .scene-mobile-caption-slot {
   position: relative;
-  min-height: 2.75rem;
+  min-height: 3.35rem;
+}
+
+.scene-mobile-caption-layer {
+  position: absolute;
+  inset: 0;
+  display: block;
 }
 
 .scene-detail-modal {
@@ -716,6 +723,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  isolation: isolate;
   padding:
     max(1rem, var(--safe-top))
     max(1rem, var(--safe-right))
@@ -730,7 +738,7 @@
   border: 0;
   background: rgba(240, 246, 252, 0.58);
   backdrop-filter: blur(16px) saturate(138%);
-  will-change: opacity;
+  will-change: opacity, backdrop-filter;
 }
 
 .scene-detail-panel {
@@ -747,6 +755,7 @@
   transform-origin: center;
   will-change: transform, opacity;
   backface-visibility: hidden;
+  isolation: isolate;
   contain: layout paint;
 }
 
@@ -791,11 +800,11 @@
 
 .scene-mobile-note {
   display: block;
-  min-height: 2.75rem;
+  min-height: 3.35rem;
 }
 
 .scene-mobile-form-summary {
-  min-height: 5.9rem;
+  min-height: 6.4rem;
 }
 
 .scene-mobile-field-stage {
@@ -1020,7 +1029,6 @@
 
   .scene-media-frame {
     max-width: 100%;
-    aspect-ratio: 3 / 2;
   }
 
   .scene-state-detail {

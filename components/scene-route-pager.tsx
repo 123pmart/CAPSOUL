@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 
+import { useSiteLocale } from "@/components/site-locale-provider";
 import { TransitionLink } from "@/components/transition-link";
 import { useCompactViewport } from "@/components/use-compact-viewport";
 import {
@@ -21,9 +22,11 @@ export function SceneRoutePager({
 }: SceneRoutePagerProps) {
   const pathname = usePathname();
   const isCompactViewport = useCompactViewport("(max-width: 767px)");
-  const current = getSceneRouteEntry(pathname);
-  const previous = getAdjacentSceneRoute(pathname, "previous");
-  const next = getAdjacentSceneRoute(pathname, "next");
+  const { globalContent } = useSiteLocale();
+  const labels = globalContent.navigation;
+  const current = getSceneRouteEntry(pathname, labels);
+  const previous = getAdjacentSceneRoute(pathname, "previous", labels);
+  const next = getAdjacentSceneRoute(pathname, "next", labels);
   const progress = getSceneRouteProgress(pathname);
 
   if (!progress || !current) {
@@ -44,7 +47,7 @@ export function SceneRoutePager({
   if (compact && isCompactViewport) {
     return (
       <div className={`${wrapperClassName} ${className}`.trim()}>
-        <div className="flex flex-nowrap items-center justify-between gap-3">
+        <div className="panel flex flex-nowrap items-center justify-between gap-3 rounded-[1rem] px-3.5 py-2.5">
           <span className="archive-chip min-w-0 max-w-[72%] truncate rounded-full px-3 py-1.5 text-[0.64rem] uppercase tracking-[0.16em] text-[var(--text-secondary)]">
             {current.label}
           </span>
@@ -58,7 +61,7 @@ export function SceneRoutePager({
 
   return (
     <div className={`${wrapperClassName} ${className}`.trim()}>
-      <div className="flex flex-nowrap items-center justify-between gap-3">
+      <div className="panel flex flex-nowrap items-center justify-between gap-3 rounded-[1rem] px-3.5 py-2.5">
         <span className="archive-chip min-w-0 max-w-[72%] truncate rounded-full px-3 py-1.5 text-[0.64rem] uppercase tracking-[0.16em] text-[var(--text-secondary)]">
           {current.label}
         </span>
@@ -71,7 +74,7 @@ export function SceneRoutePager({
         {previous ? (
           <TransitionLink href={previous.href} className={`block min-w-0 ${cardClassName}`}>
             <p className={`${labelClassName} font-semibold uppercase text-[var(--accent-deep)]`}>
-              Previous
+              {globalContent.routeLabels.previous}
             </p>
             <p className={`${titleClassName} text-[var(--text-primary)]`}>{previous.label}</p>
           </TransitionLink>
@@ -82,7 +85,7 @@ export function SceneRoutePager({
         {next ? (
           <TransitionLink href={next.href} className={`block min-w-0 ${cardClassName}`}>
             <p className={`${labelClassName} font-semibold uppercase text-[var(--accent-deep)]`}>
-              Next
+              {globalContent.routeLabels.next}
             </p>
             <p className={`${titleClassName} text-[var(--text-primary)]`}>{next.label}</p>
           </TransitionLink>

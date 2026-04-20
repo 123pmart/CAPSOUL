@@ -6,14 +6,14 @@ import { useRouter } from "next/navigation";
 import { AdminContentEditor } from "@/components/admin/admin-content-editor";
 import type { PublicAdminUser } from "@/lib/admin-auth";
 import type { LeadRecord, LeadStatus } from "@/lib/leads";
-import type { ResolvedMediaSlot } from "@/lib/media";
-import type { SiteContent } from "@/lib/site-content-schema";
+import { mediaObjectPositionOptions, type ResolvedMediaSlot } from "@/lib/media-shared";
+import type { SiteContentDocument } from "@/lib/site-content-schema";
 
 type AdminDashboardProps = {
   currentAdmin: PublicAdminUser;
   initialLeads: LeadRecord[];
   initialMediaSlots: ResolvedMediaSlot[];
-  initialSiteContent: SiteContent;
+  initialSiteContent: SiteContentDocument;
 };
 
 type DashboardTab = "leads" | "media" | "content" | "settings";
@@ -56,7 +56,14 @@ export function AdminDashboard({
   const [confirmPassword, setConfirmPassword] = useState("");
   const [uploadingSlotId, setUploadingSlotId] = useState<string | null>(null);
   const [removingSlotId, setRemovingSlotId] = useState<string | null>(null);
+  const [savingObjectPositionSlotId, setSavingObjectPositionSlotId] = useState<string | null>(null);
   const [uploadErrors, setUploadErrors] = useState<Record<string, string>>({});
+  const [mediaObjectPositions, setMediaObjectPositions] = useState<Record<string, string>>(
+    () =>
+      Object.fromEntries(
+        initialMediaSlots.map((slot) => [slot.id, slot.objectPosition]),
+      ) as Record<string, string>,
+  );
 
   const filteredLeads = useMemo(() => {
     const query = searchValue.trim().toLowerCase();
@@ -101,6 +108,18 @@ export function AdminDashboard({
       setSelectedLeadId(activeLead.id);
     }
   }, [activeLead, filteredLeads, selectedLeadId]);
+
+  useEffect(() => {
+    setMediaObjectPositions((current) => {
+      const next = { ...current };
+
+      for (const slot of mediaSlots) {
+        next[slot.id] = current[slot.id] ?? slot.objectPosition;
+      }
+
+      return next;
+    });
+  }, [mediaSlots]);
 
   async function handleLeadStatusChange(leadId: string, status: LeadStatus) {
     setLeadError("");
@@ -194,6 +213,12 @@ export function AdminDashboard({
       const formData = new FormData();
       formData.set("slotId", slotId);
       formData.set("file", file);
+      formData.set(
+        "objectPosition",
+        mediaObjectPositions[slotId] ??
+          mediaSlots.find((slot) => slot.id === slotId)?.objectPosition ??
+          "center center",
+      );
 
       const response = await fetch("/api/admin/media", {
         method: "POST",
@@ -214,9 +239,14 @@ export function AdminDashboard({
         return;
       }
 
+      const updatedSlot = payload.slot;
       setMediaSlots((current) =>
-        current.map((slot) => (slot.id === payload.slot?.id ? payload.slot : slot)),
+        current.map((slot) => (slot.id === updatedSlot.id ? updatedSlot : slot)),
       );
+      setMediaObjectPositions((current) => ({
+        ...current,
+        [slotId]: updatedSlot.objectPosition,
+      }));
     } catch {
       setUploadErrors((current) => ({
         ...current,
@@ -257,9 +287,14 @@ export function AdminDashboard({
         return;
       }
 
+      const updatedSlot = payload.slot;
       setMediaSlots((current) =>
-        current.map((slot) => (slot.id === payload.slot?.id ? payload.slot : slot)),
+        current.map((slot) => (slot.id === updatedSlot.id ? updatedSlot : slot)),
       );
+      setMediaObjectPositions((current) => ({
+        ...current,
+        [slotId]: updatedSlot.objectPosition,
+      }));
     } catch {
       setUploadErrors((current) => ({
         ...current,
@@ -267,6 +302,59 @@ export function AdminDashboard({
       }));
     } finally {
       setRemovingSlotId((current) => (current === slotId ? null : current));
+    }
+  }
+
+  async function handleMediaObjectPositionSave(slotId: string) {
+    const objectPosition =
+      mediaObjectPositions[slotId] ??
+      mediaSlots.find((slot) => slot.id === slotId)?.objectPosition ??
+      "center center";
+
+    setSavingObjectPositionSlotId(slotId);
+    setUploadErrors((current) => ({
+      ...current,
+      [slotId]: "",
+    }));
+
+    try {
+      const response = await fetch("/api/admin/media", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ slotId, objectPosition }),
+      });
+
+      const payload = (await response.json()) as {
+        ok: boolean;
+        error?: string;
+        slot?: ResolvedMediaSlot;
+      };
+
+      if (!response.ok || !payload.ok || !payload.slot) {
+        setUploadErrors((current) => ({
+          ...current,
+          [slotId]: payload.error ?? "Unable to save image framing.",
+        }));
+        return;
+      }
+
+      const updatedSlot = payload.slot;
+      setMediaSlots((current) =>
+        current.map((slot) => (slot.id === updatedSlot.id ? updatedSlot : slot)),
+      );
+      setMediaObjectPositions((current) => ({
+        ...current,
+        [slotId]: updatedSlot.objectPosition,
+      }));
+    } catch {
+      setUploadErrors((current) => ({
+        ...current,
+        [slotId]: "Unable to save image framing.",
+      }));
+    } finally {
+      setSavingObjectPositionSlotId((current) => (current === slotId ? null : current));
     }
   }
 
@@ -614,12 +702,16 @@ export function AdminDashboard({
                           handleMediaUpload(slot.id, fileInput?.files?.[0] ?? null);
                         }}
                       >
-                        <div className="film-frame relative min-h-[12rem] overflow-hidden">
+                          <div className="film-frame relative aspect-[3/2] w-full overflow-hidden">
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
                             src={slot.src}
                             alt={slot.alt}
                             className="h-full w-full object-cover"
+                            style={{
+                              objectPosition:
+                                mediaObjectPositions[slot.id] ?? slot.objectPosition,
+                            }}
                           />
                           <div className="media-caption absolute inset-x-3 bottom-3 rounded-[1rem] px-3.5 py-3">
                             <p className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">
@@ -666,6 +758,29 @@ export function AdminDashboard({
                             />
                           </div>
 
+                          <div className="space-y-1.5">
+                            <label className="field-label" htmlFor={`object-position-${slot.id}`}>
+                              Framing
+                            </label>
+                            <select
+                              id={`object-position-${slot.id}`}
+                              className="field-select"
+                              value={mediaObjectPositions[slot.id] ?? slot.objectPosition}
+                              onChange={(event) =>
+                                setMediaObjectPositions((current) => ({
+                                  ...current,
+                                  [slot.id]: event.target.value,
+                                }))
+                              }
+                            >
+                              {mediaObjectPositionOptions.map((option) => (
+                                <option key={option.value} value={option.value}>
+                                  {option.label}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+
                           {uploadErrors[slot.id] ? (
                             <p className="rounded-[1rem] border border-[rgba(199,116,116,0.2)] bg-[rgba(255,255,255,0.52)] px-3.5 py-3 text-[0.84rem] leading-6 text-[var(--text-primary)]">
                               {uploadErrors[slot.id]}
@@ -675,16 +790,40 @@ export function AdminDashboard({
                           <button
                             type="submit"
                             className="button-primary"
-                            disabled={uploadingSlotId === slot.id || removingSlotId === slot.id}
+                            disabled={
+                              uploadingSlotId === slot.id ||
+                              removingSlotId === slot.id ||
+                              savingObjectPositionSlotId === slot.id
+                            }
                           >
                             {uploadingSlotId === slot.id ? "Uploading..." : "Save image"}
+                          </button>
+
+                          <button
+                            type="button"
+                            className="button-secondary"
+                            disabled={
+                              !slot.isCustom ||
+                              savingObjectPositionSlotId === slot.id ||
+                              uploadingSlotId === slot.id ||
+                              removingSlotId === slot.id
+                            }
+                            onClick={() => handleMediaObjectPositionSave(slot.id)}
+                          >
+                            {savingObjectPositionSlotId === slot.id
+                              ? "Saving framing..."
+                              : "Save framing"}
                           </button>
 
                           {slot.isCustom ? (
                             <button
                               type="button"
                               className="button-secondary"
-                              disabled={removingSlotId === slot.id || uploadingSlotId === slot.id}
+                              disabled={
+                                removingSlotId === slot.id ||
+                                uploadingSlotId === slot.id ||
+                                savingObjectPositionSlotId === slot.id
+                              }
                               onClick={() => handleMediaRemove(slot.id)}
                             >
                               {removingSlotId === slot.id ? "Removing..." : "Remove photo"}
@@ -809,9 +948,9 @@ export function AdminDashboard({
                     Starter auth model
                   </p>
                   <p className="mt-2 text-[0.9rem] leading-7 text-[var(--text-secondary)]">
-                    Credentials are stored in an app-local data file, passwords are hashed, and the
-                    session is handled with an HTTP-only signed cookie so this can be upgraded later
-                    without rewriting the dashboard.
+                    Credentials are stored in the app's persistent storage layer, passwords are
+                    hashed, and the session is handled with an HTTP-only signed cookie so the
+                    dashboard can stay lightweight while remaining upgradeable.
                   </p>
                 </div>
               </div>

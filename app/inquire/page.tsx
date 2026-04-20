@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import { InquiryScene } from "@/components/inquiry-scene";
 import { getResolvedInquiryScene } from "@/lib/live-scenes";
+import { getRequestSiteLocale } from "@/lib/site-locale";
 
 export const metadata: Metadata = {
   title: "Inquire",
@@ -12,6 +13,7 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 export default async function InquirePage() {
-  const inquiryScene = await getResolvedInquiryScene();
+  const locale = await getRequestSiteLocale();
+  const inquiryScene = await getResolvedInquiryScene(locale);
   return <InquiryScene sceneData={inquiryScene} />;
 }

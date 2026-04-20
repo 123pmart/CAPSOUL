@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 
+import { useSiteLocale } from "@/components/site-locale-provider";
 import { TransitionLink } from "@/components/transition-link";
 import { getAdjacentSceneRoute } from "@/lib/scene-route-order";
 
@@ -11,7 +12,8 @@ type MobilePageNextLinkProps = {
 
 export function MobilePageNextLink({ className = "" }: MobilePageNextLinkProps) {
   const pathname = usePathname();
-  const next = getAdjacentSceneRoute(pathname, "next");
+  const { globalContent } = useSiteLocale();
+  const next = getAdjacentSceneRoute(pathname, "next", globalContent.navigation);
 
   if (!next) {
     return null;
@@ -23,7 +25,7 @@ export function MobilePageNextLink({ className = "" }: MobilePageNextLinkProps) 
       scroll
       className={`button-primary w-full px-4 ${className}`.trim()}
     >
-      {`Next Page: ${next.label}`}
+      {`${globalContent.routeLabels.nextPagePrefix}: ${next.label}`}
     </TransitionLink>
   );
 }

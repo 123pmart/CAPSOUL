@@ -15,16 +15,21 @@ import { MobilePageNextLink } from "@/components/mobile-page-next-link";
 import { RevealGroup, RevealItem } from "@/components/reveal";
 import { SceneDetailModal } from "@/components/scene-detail-modal";
 import { SceneRoutePager } from "@/components/scene-route-pager";
+import { useSiteLocale } from "@/components/site-locale-provider";
 import { SceneViewport } from "@/components/scene-viewport";
 import { useCompactViewport } from "@/components/use-compact-viewport";
 import { useSceneProgression } from "@/components/use-scene-progression";
 import type { ScreenAction, ScreenStep } from "@/content/screen-scenes";
 
+type SceneStepWithPresentation = ScreenStep & {
+  objectPosition?: string;
+};
+
 type SceneScreenProps = {
   eyebrow: string;
   title: string;
   description: string;
-  steps: ScreenStep[];
+  steps: SceneStepWithPresentation[];
   primaryAction?: ScreenAction;
   secondaryAction?: ScreenAction;
   stageLabel?: string;
@@ -45,6 +50,7 @@ export function SceneScreen({
 }: SceneScreenProps) {
   const reduceMotion = useReducedMotion();
   const isPhoneViewport = useCompactViewport("(max-width: 767px)");
+  const { globalContent } = useSiteLocale();
   const [isMobileSceneDetailOpen, setIsMobileSceneDetailOpen] = useState(false);
   const {
     activeIndex,
@@ -97,7 +103,7 @@ export function SceneScreen({
 
   const progressionNote = usesViewportProgression
     ? compactNote
-    : "Use the arrows to move through the scene.";
+    : globalContent.sceneLabels.arrowInstruction;
   const mobileSceneSwapTransition = reduceMotion
     ? { duration: 0 }
     : { duration: 0.24, ease: measuredEase };
@@ -177,6 +183,7 @@ export function SceneScreen({
                                   src={active.image}
                                   alt={`${active.title} visual placeholder.`}
                                   className="h-full w-full object-cover"
+                                  style={{ objectPosition: active.objectPosition ?? "center center" }}
                                 />
                                 <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.02),rgba(232,239,246,0.16))]" />
                                 <div className="media-caption absolute inset-x-2.5 bottom-2.5 rounded-[1rem] px-3.5 py-3">
@@ -195,16 +202,18 @@ export function SceneScreen({
 
                       <div className="scene-mobile-caption-slot">
                         <AnimatePresence initial={false} mode="sync">
-                          <motion.p
+                          <motion.div
                             key={`${active.label}-phone-note`}
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             transition={mobileSceneSwapTransition}
-                            className="scene-mobile-note line-clamp-2 text-[0.78rem] leading-5 text-[var(--text-secondary)]"
+                            className="scene-mobile-caption-layer"
                           >
-                            {active.mediaCaption}
-                          </motion.p>
+                            <p className="scene-mobile-note line-clamp-2 text-[0.78rem] leading-5 text-[var(--text-secondary)]">
+                              {active.mediaCaption}
+                            </p>
+                          </motion.div>
                         </AnimatePresence>
                       </div>
                     </motion.button>
@@ -222,7 +231,7 @@ export function SceneScreen({
                   />
 
                   <p className="mt-3 text-[0.74rem] uppercase tracking-[0.14em] text-[var(--text-tertiary)]">
-                    Tap image to view details.
+                    {globalContent.sceneLabels.tapImageHint}
                   </p>
                 </div>
               </RevealItem>
@@ -243,15 +252,16 @@ export function SceneScreen({
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={mediaExit}
                         transition={contentSwapTransition}
-                        className="flex h-full flex-col gap-3 md:min-h-0"
+                        className="grid h-full min-h-0 grid-rows-[minmax(0,1fr)_auto] gap-3"
                       >
-                        <div className="scene-media-shell flex-1">
+                        <div className="scene-media-shell min-h-0">
                           <div className="scene-media-frame film-frame relative overflow-hidden">
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
                               src={active.image}
                               alt={`${active.title} visual placeholder.`}
                               className="h-full w-full object-cover"
+                              style={{ objectPosition: active.objectPosition ?? "center center" }}
                             />
                             <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.02),rgba(232,239,246,0.18))]" />
                             <div className="surface-note absolute left-3 top-3 max-w-[14rem] rounded-[1rem] px-3 py-2.5 text-[0.78rem] leading-5 text-[var(--text-secondary)] sm:left-4 sm:top-4">
@@ -296,7 +306,7 @@ export function SceneScreen({
                 <RevealItem variant="micro">
                   <div className="flex flex-wrap items-center justify-between gap-3">
                     <span className="archive-chip rounded-full px-3.5 py-1.5 text-[0.7rem] uppercase tracking-[0.18em] text-[var(--text-secondary)]">
-                      {usesViewportProgression ? compactNote : "Tap through the step controls."}
+                      {usesViewportProgression ? compactNote : globalContent.sceneLabels.arrowInstruction}
                     </span>
                     <span className="scene-counter text-[0.75rem] uppercase tracking-[0.18em] text-[var(--text-tertiary)]">
                       {String(activeIndex + 1).padStart(2, "0")} / {String(steps.length).padStart(2, "0")}
@@ -355,7 +365,7 @@ export function SceneScreen({
                       >
                         <div>
                           <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-deep)]">
-                            Active state
+                            {globalContent.sceneLabels.activeState}
                           </p>
                           <h2 className="mt-2 text-[1.55rem] leading-[0.98] text-balance sm:text-[2.05rem]">
                             {active.title}

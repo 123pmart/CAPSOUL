@@ -94,12 +94,18 @@ async function initializeDatabase() {
       slot_id TEXT PRIMARY KEY,
       blob_url TEXT NOT NULL,
       blob_pathname TEXT,
+      object_position TEXT,
       content_type TEXT,
       size_bytes BIGINT,
       original_name TEXT,
       updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
       updated_by TEXT NOT NULL
     )
+  `;
+
+  await sql`
+    ALTER TABLE media_slots
+    ADD COLUMN IF NOT EXISTS object_position TEXT
   `;
 }
 
@@ -115,4 +121,3 @@ export async function ensureDatabaseReady() {
   await databaseInitPromise;
   return true;
 }
-

@@ -19,6 +19,7 @@ import { CompactSceneControls } from "@/components/compact-scene-controls";
 import { RevealGroup, RevealItem } from "@/components/reveal";
 import { SceneDetailModal } from "@/components/scene-detail-modal";
 import { SceneRoutePager } from "@/components/scene-route-pager";
+import { useSiteLocale } from "@/components/site-locale-provider";
 import { SceneViewport } from "@/components/scene-viewport";
 import { TransitionLink } from "@/components/transition-link";
 import { useCompactViewport } from "@/components/use-compact-viewport";
@@ -62,6 +63,7 @@ type InquirySceneProps = {
 export function InquiryScene({ sceneData }: InquirySceneProps) {
   const reduceMotion = useReducedMotion();
   const isPhoneViewport = useCompactViewport("(max-width: 767px)");
+  const { globalContent } = useSiteLocale();
   const [submitted, setSubmitted] = useState(false);
   const [formState, setFormState] = useState<InquiryFormState>(initialState);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -84,6 +86,7 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
 
   const activeSupport = sceneData.supportStates[activeIndex] ?? sceneData.supportStates[0];
   const activeFormStep = sceneData.formSteps[activeIndex] ?? sceneData.formSteps[0];
+  const fieldCopy = sceneData.fieldCopy;
 
   useEffect(() => {
     setIsMobileSupportOpen(false);
@@ -163,28 +166,28 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
         <div className="grid gap-3 sm:grid-cols-2 sm:gap-4">
           <div className="space-y-1.5">
             <label className="field-label" htmlFor="fullName">
-              Full Name
+              {fieldCopy.fullNameLabel}
             </label>
             <input
               className="field-input"
               id="fullName"
               name="fullName"
               onChange={handleChange}
-              placeholder="Your full name"
+              placeholder={fieldCopy.fullNamePlaceholder}
               required
               value={formState.fullName}
             />
           </div>
           <div className="space-y-1.5">
             <label className="field-label" htmlFor="email">
-              Email Address
+              {fieldCopy.emailLabel}
             </label>
             <input
               className="field-input"
               id="email"
               name="email"
               onChange={handleChange}
-              placeholder="name@email.com"
+              placeholder={fieldCopy.emailPlaceholder}
               required
               type="email"
               value={formState.email}
@@ -192,27 +195,27 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
           </div>
           <div className="space-y-1.5">
             <label className="field-label" htmlFor="phone">
-              Phone Number
+              {fieldCopy.phoneLabel}
             </label>
             <input
               className="field-input"
               id="phone"
               name="phone"
               onChange={handleChange}
-              placeholder="Best number to reach you"
+              placeholder={fieldCopy.phonePlaceholder}
               value={formState.phone}
             />
           </div>
           <div className="space-y-1.5">
             <label className="field-label" htmlFor="region">
-              Region
+              {fieldCopy.regionLabel}
             </label>
             <input
               className="field-input"
               id="region"
               name="region"
               onChange={handleChange}
-              placeholder="City, state, or region"
+              placeholder={fieldCopy.regionPlaceholder}
               value={formState.region}
             />
           </div>
@@ -225,35 +228,35 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
         <div className="grid gap-3 sm:grid-cols-2 sm:gap-4">
           <div className="space-y-1.5">
             <label className="field-label" htmlFor="filmFor">
-              Who is this film for?
+              {fieldCopy.filmForLabel}
             </label>
             <input
               className="field-input"
               id="filmFor"
               name="filmFor"
               onChange={handleChange}
-              placeholder="Parent, grandparent, spouse, loved one"
+              placeholder={fieldCopy.filmForPlaceholder}
               required
               value={formState.filmFor}
             />
           </div>
           <div className="space-y-1.5">
             <label className="field-label" htmlFor="relationship">
-              Relationship to you
+              {fieldCopy.relationshipLabel}
             </label>
             <input
               className="field-input"
               id="relationship"
               name="relationship"
               onChange={handleChange}
-              placeholder="Father, grandmother, husband"
+              placeholder={fieldCopy.relationshipPlaceholder}
               required
               value={formState.relationship}
             />
           </div>
           <div className="space-y-1.5">
             <label className="field-label" htmlFor="stillLiving">
-              Are they still living?
+              {fieldCopy.stillLivingLabel}
             </label>
             <select
               className="field-select"
@@ -263,35 +266,37 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
               required
               value={formState.stillLiving}
             >
-              <option value="">Select an option</option>
-              <option value="Yes">Yes</option>
-              <option value="No">No</option>
-              <option value="Prefer not to say">Prefer not to say</option>
+              <option value="">{fieldCopy.stillLivingPlaceholder}</option>
+              <option value={fieldCopy.stillLivingYes}>{fieldCopy.stillLivingYes}</option>
+              <option value={fieldCopy.stillLivingNo}>{fieldCopy.stillLivingNo}</option>
+              <option value={fieldCopy.stillLivingPreferNot}>
+                {fieldCopy.stillLivingPreferNot}
+              </option>
             </select>
           </div>
           <div className="space-y-1.5 sm:col-span-2">
             <label className="field-label" htmlFor="timeline">
-              Timing
+              {fieldCopy.timelineLabel}
             </label>
             <input
               className="field-input"
               id="timeline"
               name="timeline"
               onChange={handleChange}
-              placeholder="As soon as possible, this season, flexible"
+              placeholder={fieldCopy.timelinePlaceholder}
               value={formState.timeline}
             />
           </div>
           <div className="space-y-1.5 sm:col-span-2">
             <label className="field-label" htmlFor="storyImportance">
-              Why does this feel important now?
+              {fieldCopy.storyImportanceLabel}
             </label>
             <textarea
               className="field-textarea"
               id="storyImportance"
               name="storyImportance"
               onChange={handleChange}
-              placeholder="Share as much or as little as feels right."
+              placeholder={fieldCopy.storyImportancePlaceholder}
               required
               value={formState.storyImportance}
             />
@@ -305,20 +310,20 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
         <div className="grid gap-3 sm:grid-cols-2 sm:gap-4">
           <div className="space-y-1.5">
             <label className="field-label" htmlFor="filmingLocation">
-              Preferred filming location
+              {fieldCopy.filmingLocationLabel}
             </label>
             <input
               className="field-input"
               id="filmingLocation"
               name="filmingLocation"
               onChange={handleChange}
-              placeholder="Home, family property, meaningful place"
+              placeholder={fieldCopy.filmingLocationPlaceholder}
               value={formState.filmingLocation}
             />
           </div>
           <div className="space-y-1.5">
             <label className="field-label" htmlFor="faithContext">
-              Faith or family values
+              {fieldCopy.faithContextLabel}
             </label>
             <select
               className="field-select"
@@ -327,25 +332,25 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
               onChange={handleChange}
               value={formState.faithContext}
             >
-              <option value="">Select an option</option>
-              <option value="central">Central to the story</option>
-              <option value="present">Present, but not central</option>
-              <option value="not-really">Not especially</option>
-              <option value="not-sure">Not sure yet</option>
+              <option value="">{fieldCopy.faithContextPlaceholder}</option>
+              <option value="central">{fieldCopy.faithContextCentral}</option>
+              <option value="present">{fieldCopy.faithContextPresent}</option>
+              <option value="not-really">{fieldCopy.faithContextNotReally}</option>
+              <option value="not-sure">{fieldCopy.faithContextNotSure}</option>
             </select>
           </div>
         </div>
 
         <div className="space-y-1.5">
           <label className="field-label" htmlFor="extraNotes">
-            Anything else we should know?
+            {fieldCopy.extraNotesLabel}
           </label>
           <textarea
             className="field-textarea"
             id="extraNotes"
             name="extraNotes"
             onChange={handleChange}
-            placeholder="Sensitivities, hopes for the film, or any practical notes."
+            placeholder={fieldCopy.extraNotesPlaceholder}
             value={formState.extraNotes}
           />
         </div>
@@ -472,6 +477,7 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
                                       src={activeSupport.image}
                                       alt={`${activeSupport.title} visual placeholder.`}
                                       className="h-full w-full object-cover"
+                                      style={{ objectPosition: activeSupport.objectPosition }}
                                     />
                                     <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.02),rgba(232,239,246,0.16))]" />
                                     <div className="media-caption absolute inset-x-2.5 bottom-2.5 rounded-[1rem] px-3.5 py-3">
@@ -495,16 +501,18 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
 
                           <div className="scene-mobile-caption-slot">
                             <AnimatePresence initial={false} mode="sync">
-                              <motion.p
+                              <motion.div
                                 key={`${activeSupport.label}-phone-note`}
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 exit={{ opacity: 0 }}
                                 transition={mobileSceneSwapTransition}
-                                className="scene-mobile-note line-clamp-2 text-[0.78rem] leading-5 text-[var(--text-secondary)]"
+                                className="scene-mobile-caption-layer"
                               >
-                                {activeSupport.body}
-                              </motion.p>
+                                <p className="scene-mobile-note line-clamp-2 text-[0.78rem] leading-5 text-[var(--text-secondary)]">
+                                  {activeSupport.body}
+                                </p>
+                              </motion.div>
                             </AnimatePresence>
                           </div>
                         </motion.button>
@@ -522,7 +530,7 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
                       />
 
                       <p className="mt-3 text-[0.74rem] uppercase tracking-[0.14em] text-[var(--text-tertiary)]">
-                        Tap image to view details.
+                        {globalContent.sceneLabels.tapImageHint}
                       </p>
                     </div>
                   </RevealItem>
@@ -618,7 +626,7 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
                             </button>
                           ) : (
                             <button className="button-primary flex-1 px-4" disabled={isSubmitting} type="submit">
-                              {isSubmitting ? "Submitting..." : sceneData.submitButtonLabel}
+                              {isSubmitting ? fieldCopy.submittingLabel : sceneData.submitButtonLabel}
                             </button>
                           )}
                         </div>
@@ -725,11 +733,11 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
                           >
                             {sceneData.nextButtonLabel}
                           </button>
-                        ) : (
-                          <button className="button-primary px-4" disabled={isSubmitting} type="submit">
-                            {isSubmitting ? "Submitting..." : sceneData.submitButtonLabel}
-                          </button>
-                        )}
+                          ) : (
+                            <button className="button-primary px-4" disabled={isSubmitting} type="submit">
+                            {isSubmitting ? fieldCopy.submittingLabel : sceneData.submitButtonLabel}
+                            </button>
+                          )}
 
                         <p className="max-w-[24rem] text-[0.84rem] leading-6 text-[var(--text-secondary)] md:justify-self-end">
                           {sceneData.footerNote}
@@ -755,15 +763,16 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={supportExit}
                         transition={contentSwapTransition}
-                        className="flex h-full flex-col gap-3 md:min-h-0"
+                        className="grid h-full min-h-0 grid-rows-[minmax(0,1fr)_auto] gap-3"
                       >
-                        <div className="scene-media-shell flex-1">
+                        <div className="scene-media-shell min-h-0">
                           <div className="scene-media-frame film-frame relative overflow-hidden">
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
                               src={activeSupport.image}
                               alt={`${activeSupport.title} visual placeholder.`}
                               className="h-full w-full object-cover"
+                              style={{ objectPosition: activeSupport.objectPosition }}
                             />
                             <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.02),rgba(232,239,246,0.16))]" />
                             <div className="surface-note absolute left-3 top-3 max-w-[14rem] rounded-[1rem] px-3 py-2.5 text-[0.78rem] leading-5 text-[var(--text-secondary)] sm:left-4 sm:top-4">

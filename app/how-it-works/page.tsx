@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import { SceneScreen } from "@/components/scene-screen";
 import { getResolvedProcessScene } from "@/lib/live-scenes";
+import { getRequestSiteLocale } from "@/lib/site-locale";
 
 export const metadata: Metadata = {
   title: "How It Works",
@@ -12,6 +13,7 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 export default async function HowItWorksPage() {
-  const processScene = await getResolvedProcessScene();
+  const locale = await getRequestSiteLocale();
+  const processScene = await getResolvedProcessScene(locale);
   return <SceneScreen {...processScene} tone="cool" />;
 }

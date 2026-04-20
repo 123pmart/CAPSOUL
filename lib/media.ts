@@ -9,6 +9,11 @@ import {
   mediaSlotDefinitions,
   type MediaSlotDefinition,
 } from "@/lib/media-slots";
+import {
+  DEFAULT_MEDIA_OBJECT_POSITION,
+  type MediaObjectPosition,
+  type ResolvedMediaSlot,
+} from "@/lib/media-shared";
 import { ensureDatabaseReady, getDatabaseClient } from "@/lib/database";
 import {
   getFileNameFromPublicPath,
@@ -35,15 +40,9 @@ export type MediaAssignment = {
   slotId: string;
   src: string;
   fileName: string;
+  objectPosition?: string;
   updatedAt: string;
   updatedBy: string;
-};
-
-export type ResolvedMediaSlot = MediaSlotDefinition & {
-  src: string;
-  isCustom: boolean;
-  updatedAt: string | null;
-  updatedBy: string | null;
 };
 
 type MediaAssignmentRecord = Record<string, MediaAssignment>;
@@ -52,6 +51,7 @@ type PersistentMediaRow = {
   slot_id: string;
   blob_url: string;
   blob_pathname: string | null;
+  object_position: string | null;
   content_type: string | null;
   size_bytes: string | number | null;
   original_name: string | null;
@@ -61,6 +61,19 @@ type PersistentMediaRow = {
 
 const MEDIA_ASSIGNMENTS_FILE = path.join(DATA_ROOT, "media-slots.json");
 const persistentMediaSeedKey = Symbol.for("capsoul.persistent-media-seed");
+function normalizeMediaObjectPosition(value: unknown): MediaObjectPosition {
+  if (
+    value === "center center" ||
+    value === "center top" ||
+    value === "center bottom" ||
+    value === "left center" ||
+    value === "right center"
+  ) {
+    return value;
+  }
+
+  return DEFAULT_MEDIA_OBJECT_POSITION;
+}
 
 function getSafeExtension(fileName: string, mimeType: string) {
   const extensionFromName = path.extname(fileName).toLowerCase();
@@ -136,10 +149,12 @@ async function listLegacyResolvedMediaSlots(): Promise<ResolvedMediaSlot[]> {
   return Promise.all(
     mediaSlotDefinitions.map(async (slot) => {
       const customSource = await resolveLegacyCustomSource(assignments[slot.id]?.src);
+      const objectPosition = normalizeMediaObjectPosition(assignments[slot.id]?.objectPosition);
 
       return {
         ...slot,
         src: customSource ?? slot.fallbackSrc,
+        objectPosition,
         isCustom: Boolean(customSource),
         updatedAt: customSource ? assignments[slot.id]?.updatedAt ?? null : null,
         updatedBy: customSource ? assignments[slot.id]?.updatedBy ?? null : null,
@@ -154,6 +169,7 @@ async function saveLegacyMediaSlotUpload(input: {
   fileName: string;
   mimeType: string;
   updatedBy: string;
+  objectPosition?: string;
 }) {
   const slot = getMediaSlotDefinition(input.slotId);
 
@@ -172,6 +188,7 @@ async function saveLegacyMediaSlotUpload(input: {
     slotId: input.slotId,
     src: toPublicMediaPath(generatedFileName),
     fileName: generatedFileName,
+    objectPosition: normalizeMediaObjectPosition(input.objectPosition),
     updatedAt: new Date().toISOString(),
     updatedBy: input.updatedBy,
   };
@@ -183,6 +200,7 @@ async function saveLegacyMediaSlotUpload(input: {
     updatedSlots.find((entry) => entry.id === input.slotId) ?? {
       ...slot,
       src: assignments[input.slotId].src,
+      objectPosition: normalizeMediaObjectPosition(assignments[input.slotId].objectPosition),
       isCustom: true,
       updatedAt: assignments[input.slotId].updatedAt,
       updatedBy: assignments[input.slotId].updatedBy,
@@ -264,6 +282,7 @@ async function ensurePersistentMediaSeeded() {
             slot_id,
             blob_url,
             blob_pathname,
+            object_position,
             content_type,
             size_bytes,
             original_name,
@@ -274,6 +293,7 @@ async function ensurePersistentMediaSeeded() {
             ${slotId},
             ${blob.url},
             ${blob.pathname},
+            ${normalizeMediaObjectPosition(assignment.objectPosition)},
             ${mimeType || null},
             ${fileBuffer.length},
             ${originalName},
@@ -297,6 +317,7 @@ function toResolvedMediaSlot(slot: MediaSlotDefinition, row?: PersistentMediaRow
   return {
     ...slot,
     src: row?.blob_url ?? slot.fallbackSrc,
+    objectPosition: normalizeMediaObjectPosition(row?.object_position),
     isCustom: Boolean(row?.blob_url),
     updatedAt: row ? toIsoString(row.updated_at) : null,
     updatedBy: row?.updated_by ?? null,
@@ -311,6 +332,7 @@ async function listPersistentMediaRows() {
       slot_id,
       blob_url,
       blob_pathname,
+      object_position,
       content_type,
       size_bytes,
       original_name,
@@ -321,10 +343,17 @@ async function listPersistentMediaRows() {
 }
 
 export async function resolveMediaSlotSource(slotId: string) {
+  return (await resolveMediaSlotPresentation(slotId)).src;
+}
+
+export async function resolveMediaSlotPresentation(slotId: string) {
   const slot = getMediaSlotDefinition(slotId);
 
   if (!slot) {
-    return "/visuals/hero-frame.svg";
+    return {
+      src: "/visuals/hero-frame.svg",
+      objectPosition: DEFAULT_MEDIA_OBJECT_POSITION,
+    };
   }
 
   if (hasPersistentDatabase()) {
@@ -336,6 +365,7 @@ export async function resolveMediaSlotSource(slotId: string) {
           slot_id,
           blob_url,
           blob_pathname,
+          object_position,
           content_type,
           size_bytes,
           original_name,
@@ -346,17 +376,30 @@ export async function resolveMediaSlotSource(slotId: string) {
         LIMIT 1
       `;
 
-      return rows[0]?.blob_url ?? slot.fallbackSrc;
+      return {
+        src: rows[0]?.blob_url ?? slot.fallbackSrc,
+        objectPosition: normalizeMediaObjectPosition(rows[0]?.object_position),
+      };
     } catch {
-      return slot.fallbackSrc;
+      return {
+        src: slot.fallbackSrc,
+        objectPosition: DEFAULT_MEDIA_OBJECT_POSITION,
+      };
     }
   }
 
   if (canUseLegacyMutableFallback()) {
-    return resolveLegacyMediaSlotSource(slotId);
+    const assignments = await readLegacyAssignments();
+    return {
+      src: await resolveLegacyMediaSlotSource(slotId),
+      objectPosition: normalizeMediaObjectPosition(assignments[slotId]?.objectPosition),
+    };
   }
 
-  return slot.fallbackSrc;
+  return {
+    src: slot.fallbackSrc,
+    objectPosition: DEFAULT_MEDIA_OBJECT_POSITION,
+  };
 }
 
 export async function listResolvedMediaSlots(): Promise<ResolvedMediaSlot[]> {
@@ -370,6 +413,7 @@ export async function listResolvedMediaSlots(): Promise<ResolvedMediaSlot[]> {
       return mediaSlotDefinitions.map((slot) => ({
         ...slot,
         src: slot.fallbackSrc,
+        objectPosition: DEFAULT_MEDIA_OBJECT_POSITION,
         isCustom: false,
         updatedAt: null,
         updatedBy: null,
@@ -384,6 +428,7 @@ export async function listResolvedMediaSlots(): Promise<ResolvedMediaSlot[]> {
   return mediaSlotDefinitions.map((slot) => ({
     ...slot,
     src: slot.fallbackSrc,
+    objectPosition: DEFAULT_MEDIA_OBJECT_POSITION,
     isCustom: false,
     updatedAt: null,
     updatedBy: null,
@@ -396,6 +441,7 @@ export async function saveMediaSlotUpload(input: {
   fileName: string;
   mimeType: string;
   updatedBy: string;
+  objectPosition?: string;
 }) {
   const slot = getMediaSlotDefinition(input.slotId);
 
@@ -415,6 +461,7 @@ export async function saveMediaSlotUpload(input: {
         slot_id,
         blob_url,
         blob_pathname,
+        object_position,
         content_type,
         size_bytes,
         original_name,
@@ -433,12 +480,16 @@ export async function saveMediaSlotUpload(input: {
       contentType: input.mimeType || undefined,
     });
     const updatedAt = new Date().toISOString();
+    const objectPosition = normalizeMediaObjectPosition(
+      input.objectPosition ?? existingRows[0]?.object_position,
+    );
 
     const updatedRows = await sql<PersistentMediaRow[]>`
       INSERT INTO media_slots (
         slot_id,
         blob_url,
         blob_pathname,
+        object_position,
         content_type,
         size_bytes,
         original_name,
@@ -449,6 +500,7 @@ export async function saveMediaSlotUpload(input: {
         ${input.slotId},
         ${blob.url},
         ${blob.pathname},
+        ${objectPosition},
         ${input.mimeType || null},
         ${input.fileBuffer.length},
         ${input.fileName},
@@ -459,6 +511,7 @@ export async function saveMediaSlotUpload(input: {
       DO UPDATE SET
         blob_url = EXCLUDED.blob_url,
         blob_pathname = EXCLUDED.blob_pathname,
+        object_position = EXCLUDED.object_position,
         content_type = EXCLUDED.content_type,
         size_bytes = EXCLUDED.size_bytes,
         original_name = EXCLUDED.original_name,
@@ -468,6 +521,7 @@ export async function saveMediaSlotUpload(input: {
         slot_id,
         blob_url,
         blob_pathname,
+        object_position,
         content_type,
         size_bytes,
         original_name,
@@ -491,6 +545,90 @@ export async function saveMediaSlotUpload(input: {
   return saveLegacyMediaSlotUpload(input);
 }
 
+export async function saveMediaSlotObjectPosition(input: {
+  slotId: string;
+  objectPosition: string;
+  updatedBy: string;
+}) {
+  const slot = getMediaSlotDefinition(input.slotId);
+
+  if (!slot) {
+    throw new Error("Unknown media slot.");
+  }
+
+  const objectPosition = normalizeMediaObjectPosition(input.objectPosition);
+
+  if (hasPersistentDatabase()) {
+    await ensurePersistentMediaSeeded();
+    const sql = getDatabaseClient();
+    const existingRows = await sql<PersistentMediaRow[]>`
+      SELECT
+        slot_id,
+        blob_url,
+        blob_pathname,
+        object_position,
+        content_type,
+        size_bytes,
+        original_name,
+        updated_at,
+        updated_by
+      FROM media_slots
+      WHERE slot_id = ${input.slotId}
+      LIMIT 1
+    `;
+
+    if (!existingRows[0]?.blob_url) {
+      throw new Error("Upload an image before saving framing.");
+    }
+
+    const updatedRows = await sql<PersistentMediaRow[]>`
+      UPDATE media_slots
+      SET
+        object_position = ${objectPosition},
+        updated_at = NOW(),
+        updated_by = ${input.updatedBy}
+      WHERE slot_id = ${input.slotId}
+      RETURNING
+        slot_id,
+        blob_url,
+        blob_pathname,
+        object_position,
+        content_type,
+        size_bytes,
+        original_name,
+        updated_at,
+        updated_by
+    `;
+
+    return toResolvedMediaSlot(slot, updatedRows[0]);
+  }
+
+  if (!canUseLegacyMutableFallback()) {
+    throw new Error("Persistent media storage is not configured.");
+  }
+
+  const assignments = await readLegacyAssignments();
+  const existingAssignment = assignments[input.slotId];
+
+  if (!existingAssignment?.src) {
+    throw new Error("Upload an image before saving framing.");
+  }
+
+  assignments[input.slotId] = {
+    ...existingAssignment,
+    objectPosition,
+    updatedAt: new Date().toISOString(),
+    updatedBy: input.updatedBy,
+  };
+
+  await writeJsonFile(MEDIA_ASSIGNMENTS_FILE, assignments);
+
+  return (
+    (await listLegacyResolvedMediaSlots()).find((entry) => entry.id === input.slotId) ??
+    toResolvedMediaSlot(slot)
+  );
+}
+
 export async function removeMediaSlotAssignment(slotId: string) {
   const slot = getMediaSlotDefinition(slotId);
 
@@ -506,6 +644,7 @@ export async function removeMediaSlotAssignment(slotId: string) {
         slot_id,
         blob_url,
         blob_pathname,
+        object_position,
         content_type,
         size_bytes,
         original_name,

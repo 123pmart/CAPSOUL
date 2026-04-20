@@ -2,10 +2,12 @@
 
 import { usePathname } from "next/navigation";
 
+import { useSiteLocale } from "@/components/site-locale-provider";
 import { TransitionLink } from "@/components/transition-link";
 
 export function AdminEntry({ inline = false }: { inline?: boolean }) {
   const pathname = usePathname();
+  const { globalContent } = useSiteLocale();
 
   if (pathname?.startsWith("/admin")) {
     return null;
@@ -26,7 +28,7 @@ export function AdminEntry({ inline = false }: { inline?: boolean }) {
             href="/admin"
             className="archive-chip rounded-full px-3 py-1.25 text-[0.62rem] uppercase tracking-[0.18em] text-[var(--text-secondary)] shadow-[0_14px_30px_rgba(150,166,186,0.14)]"
           >
-            Admin
+            {globalContent.adminEntryLabel}
           </TransitionLink>
         </div>
       </div>
@@ -35,19 +37,20 @@ export function AdminEntry({ inline = false }: { inline?: boolean }) {
 
   return (
     <div
-      className="pointer-events-none fixed inset-x-0 z-40 flex justify-end px-3 sm:px-4"
+      className="pointer-events-none fixed inset-x-0 bottom-0 z-40 hidden md:block"
       style={{
-        bottom: "var(--admin-entry-offset)",
-        paddingLeft: "max(0.75rem, var(--safe-left))",
-        paddingRight: "max(0.75rem, var(--safe-right))",
+        paddingLeft: "var(--safe-left)",
+        paddingRight: "var(--safe-right)",
       }}
     >
-      <TransitionLink
-        href="/admin"
-        className="archive-chip pointer-events-auto rounded-full px-3 py-1.25 text-[0.62rem] uppercase tracking-[0.18em] text-[var(--text-secondary)] shadow-[0_14px_30px_rgba(150,166,186,0.14)] sm:px-3.5 sm:py-1.5 sm:text-[0.66rem]"
-      >
-        Admin
-      </TransitionLink>
+      <div className="shell flex justify-start pb-[var(--admin-entry-offset)]">
+        <TransitionLink
+          href="/admin"
+          className="archive-chip pointer-events-auto rounded-full px-3 py-1.25 text-[0.62rem] uppercase tracking-[0.18em] text-[var(--text-secondary)] shadow-[0_14px_30px_rgba(150,166,186,0.14)] sm:px-3.5 sm:py-1.5 sm:text-[0.66rem]"
+        >
+          {globalContent.adminEntryLabel}
+        </TransitionLink>
+      </div>
     </div>
   );
 }

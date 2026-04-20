@@ -5,17 +5,20 @@ import { useRouter } from "next/navigation";
 
 import {
   siteContentEditorPages,
+  siteLocales,
   type SiteContent,
+  type SiteContentDocument,
   type SiteContentFieldConfig,
   type SiteContentPageKey,
+  type SiteLocale,
 } from "@/lib/site-content-schema";
 
 type AdminContentEditorProps = {
-  initialContent: SiteContent;
+  initialContent: SiteContentDocument;
 };
 
-function cloneSiteContent(content: SiteContent) {
-  return JSON.parse(JSON.stringify(content)) as SiteContent;
+function cloneSiteContentDocument(content: SiteContentDocument) {
+  return JSON.parse(JSON.stringify(content)) as SiteContentDocument;
 }
 
 function getPathSegments(path: string) {
@@ -40,9 +43,15 @@ function getValueAtPath(source: unknown, path: string) {
   }, source);
 }
 
-function setValueAtPath(content: SiteContent, pageKey: SiteContentPageKey, path: string, value: unknown) {
-  const next = cloneSiteContent(content) as Record<string, unknown>;
-  const segments = [pageKey, ...getPathSegments(path)];
+function setValueAtPath(
+  content: SiteContentDocument,
+  locale: SiteLocale,
+  pageKey: SiteContentPageKey,
+  path: string,
+  value: unknown,
+) {
+  const next = cloneSiteContentDocument(content) as Record<string, unknown>;
+  const segments = ["locales", locale, pageKey, ...getPathSegments(path)];
   let current: Record<string, unknown> | unknown[] = next;
 
   for (let index = 0; index < segments.length - 1; index += 1) {
@@ -63,7 +72,7 @@ function setValueAtPath(content: SiteContent, pageKey: SiteContentPageKey, path:
     (current as Record<string, unknown>)[finalSegment] = value;
   }
 
-  return next as SiteContent;
+  return next as SiteContentDocument;
 }
 
 function toFieldDisplayValue(value: unknown, fieldType: SiteContentFieldConfig["type"]) {
@@ -87,7 +96,8 @@ function parseFieldValue(rawValue: string, fieldType: SiteContentFieldConfig["ty
 
 export function AdminContentEditor({ initialContent }: AdminContentEditorProps) {
   const router = useRouter();
-  const [activePage, setActivePage] = useState<SiteContentPageKey>("home");
+  const [activeLocale, setActiveLocale] = useState<SiteLocale>("en");
+  const [activePage, setActivePage] = useState<SiteContentPageKey>("global");
   const [draftContent, setDraftContent] = useState(initialContent);
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState("");
@@ -95,6 +105,7 @@ export function AdminContentEditor({ initialContent }: AdminContentEditorProps) 
 
   const activePageConfig =
     siteContentEditorPages.find((page) => page.key === activePage) ?? siteContentEditorPages[0];
+  const activeLocaleContent: SiteContent = draftContent.locales[activeLocale];
 
   async function handleSave() {
     setIsSaving(true);
@@ -113,7 +124,7 @@ export function AdminContentEditor({ initialContent }: AdminContentEditorProps) 
       const payload = (await response.json()) as {
         ok: boolean;
         error?: string;
-        content?: SiteContent;
+        content?: SiteContentDocument;
       };
 
       if (!response.ok || !payload.ok || !payload.content) {
@@ -139,10 +150,10 @@ export function AdminContentEditor({ initialContent }: AdminContentEditorProps) 
             <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-deep)]">
               Site content
             </p>
-            <h2 className="mt-2 text-[1.8rem] leading-[0.96]">Edit page copy.</h2>
+            <h2 className="mt-2 text-[1.8rem] leading-[0.96]">Edit bilingual copy.</h2>
             <p className="mt-3 max-w-[38rem] text-[0.94rem] leading-7 text-[var(--text-secondary)]">
-              Update headlines, support copy, CTA labels, process text, and inquiry language
-              without touching code.
+              Update English and Español headlines, navigation labels,
+              scene copy, inquiry language, and button text without touching code.
             </p>
           </div>
 
@@ -157,6 +168,28 @@ export function AdminContentEditor({ initialContent }: AdminContentEditorProps) 
         </div>
 
         <div className="mt-5 flex flex-wrap gap-2.5">
+          {siteLocales.map((locale) => {
+            const active = locale === activeLocale;
+            const label = locale === "en" ? "English" : "Español";
+
+            return (
+              <button
+                key={locale}
+                type="button"
+                className={`nav-pill rounded-full px-4 py-2.5 text-[0.84rem] font-medium tracking-[-0.01em] ${
+                  active
+                    ? "border border-white/84 bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(228,237,246,0.98))] text-[var(--text-primary)] shadow-[0_14px_28px_rgba(154,170,190,0.18)]"
+                    : "archive-chip text-[var(--text-secondary)]"
+                }`}
+                onClick={() => setActiveLocale(locale)}
+              >
+                {label}
+              </button>
+            );
+          })}
+        </div>
+
+        <div className="mt-4 flex flex-wrap gap-2.5">
           {siteContentEditorPages.map((page) => {
             const active = page.key === activePage;
 
@@ -193,11 +226,14 @@ export function AdminContentEditor({ initialContent }: AdminContentEditorProps) 
       <div className="grid gap-4 xl:grid-cols-[minmax(18rem,0.38fr)_minmax(0,1fr)]">
         <div className="panel rounded-[1.6rem] p-4 sm:p-5">
           <p className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">
-            Current page
+            Current view
           </p>
-          <h3 className="mt-2 text-[1.28rem] leading-[1.02]">{activePageConfig.label}</h3>
+          <h3 className="mt-2 text-[1.28rem] leading-[1.02]">
+            {activePageConfig.label} · {activeLocale === "en" ? "English" : "Español"}
+          </h3>
           <p className="mt-3 text-[0.9rem] leading-7 text-[var(--text-secondary)]">
-            Fields are grouped by section so copy updates stay organized and predictable.
+            Fields are grouped by section so copy updates stay organized and predictable across both
+            languages.
           </p>
         </div>
 
@@ -217,16 +253,19 @@ export function AdminContentEditor({ initialContent }: AdminContentEditorProps) 
 
               <div className="mt-4 grid gap-4 md:grid-cols-2">
                 {section.fields.map((field) => {
-                  const rawValue = getValueAtPath(draftContent[activePage], field.path);
+                  const rawValue = getValueAtPath(activeLocaleContent[activePage], field.path);
                   const displayValue = toFieldDisplayValue(rawValue, field.type);
                   const isTextarea = field.type === "textarea" || field.type === "list";
 
                   return (
                     <div
-                      key={field.path}
+                      key={`${activeLocale}-${activePage}-${field.path}`}
                       className={`space-y-1.5 ${isTextarea ? "md:col-span-2" : ""}`}
                     >
-                      <label className="field-label" htmlFor={`${activePage}-${field.path}`}>
+                      <label
+                        className="field-label"
+                        htmlFor={`${activeLocale}-${activePage}-${field.path}`}
+                      >
                         {field.label}
                       </label>
                       {field.description ? (
@@ -236,7 +275,7 @@ export function AdminContentEditor({ initialContent }: AdminContentEditorProps) 
                       ) : null}
                       {isTextarea ? (
                         <textarea
-                          id={`${activePage}-${field.path}`}
+                          id={`${activeLocale}-${activePage}-${field.path}`}
                           className="field-textarea"
                           rows={field.rows ?? (field.type === "list" ? 4 : 3)}
                           value={displayValue}
@@ -244,6 +283,7 @@ export function AdminContentEditor({ initialContent }: AdminContentEditorProps) 
                             setDraftContent((current) =>
                               setValueAtPath(
                                 current,
+                                activeLocale,
                                 activePage,
                                 field.path,
                                 parseFieldValue(event.target.value, field.type),
@@ -253,13 +293,14 @@ export function AdminContentEditor({ initialContent }: AdminContentEditorProps) 
                         />
                       ) : (
                         <input
-                          id={`${activePage}-${field.path}`}
+                          id={`${activeLocale}-${activePage}-${field.path}`}
                           className="field-input"
                           value={displayValue}
                           onChange={(event) =>
                             setDraftContent((current) =>
                               setValueAtPath(
                                 current,
+                                activeLocale,
                                 activePage,
                                 field.path,
                                 parseFieldValue(event.target.value, field.type),

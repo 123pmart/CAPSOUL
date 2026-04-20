@@ -5,7 +5,7 @@ import { AdminLoginForm } from "@/components/admin/admin-login-form";
 import { getCurrentAdminFromCookieStore } from "@/lib/admin-auth";
 import { listLeads } from "@/lib/leads";
 import { listResolvedMediaSlots } from "@/lib/media";
-import { getSiteContent } from "@/lib/site-content";
+import { getSiteContentDocument } from "@/lib/site-content";
 
 export const dynamic = "force-dynamic";
 
@@ -20,7 +20,7 @@ export default async function AdminPage() {
   const [leads, mediaSlots, siteContent] = await Promise.all([
     listLeads(),
     listResolvedMediaSlots(),
-    getSiteContent(),
+    getSiteContentDocument(),
   ]);
 
   return (

@@ -7,6 +7,7 @@ import {
 import {
   listResolvedMediaSlots,
   removeMediaSlotAssignment,
+  saveMediaSlotObjectPosition,
   saveMediaSlotUpload,
 } from "@/lib/media";
 
@@ -36,6 +37,7 @@ export async function POST(request: Request) {
   try {
     const formData = await request.formData();
     const slotId = String(formData.get("slotId") ?? "");
+    const objectPosition = String(formData.get("objectPosition") ?? "");
     const file = formData.get("file");
 
     if (!slotId) {
@@ -62,11 +64,41 @@ export async function POST(request: Request) {
       fileName: file.name,
       mimeType,
       updatedBy: admin.username,
+      objectPosition,
     });
 
     return NextResponse.json({ ok: true, slot: updatedSlot });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unable to save media.";
+    return NextResponse.json({ ok: false, error: message }, { status: 400 });
+  }
+}
+
+export async function PATCH(request: Request) {
+  const admin = await getAuthorizedAdmin(request);
+
+  if (!admin) {
+    return NextResponse.json({ ok: false, error: "Unauthorized." }, { status: 401 });
+  }
+
+  try {
+    const body = (await request.json()) as { slotId?: string; objectPosition?: string };
+    const slotId = String(body.slotId ?? "");
+    const objectPosition = String(body.objectPosition ?? "");
+
+    if (!slotId) {
+      return NextResponse.json({ ok: false, error: "A media slot is required." }, { status: 400 });
+    }
+
+    const updatedSlot = await saveMediaSlotObjectPosition({
+      slotId,
+      objectPosition,
+      updatedBy: admin.username,
+    });
+
+    return NextResponse.json({ ok: true, slot: updatedSlot });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unable to update framing.";
     return NextResponse.json({ ok: false, error: message }, { status: 400 });
   }
 }

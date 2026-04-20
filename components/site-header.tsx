@@ -2,18 +2,29 @@
 
 import { motion, useReducedMotion } from "framer-motion";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { BrandMark } from "@/components/brand-mark";
+import { LanguageToggle } from "@/components/language-toggle";
 import { heroRevealTransition, measuredEase } from "@/components/motion-config";
+import { useSiteLocale } from "@/components/site-locale-provider";
 import { TransitionLink } from "@/components/transition-link";
-import { navigation } from "@/content/site";
-import { isSceneRouteActive } from "@/lib/scene-route-order";
+import { isSceneRouteActive, sceneRouteEntries } from "@/lib/scene-route-order";
 
 export function SiteHeader() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const reduceMotion = useReducedMotion();
+  const { globalContent } = useSiteLocale();
+
+  const navigationItems = useMemo(
+    () =>
+      sceneRouteEntries.map((entry) => ({
+        href: entry.href,
+        label: globalContent.navigation[entry.key],
+      })),
+    [globalContent.navigation],
+  );
 
   useEffect(() => {
     setIsOpen(false);
@@ -45,7 +56,7 @@ export function SiteHeader() {
               aria-label="Primary navigation"
               className="hidden items-center justify-self-center gap-1 rounded-full border border-white/80 bg-[linear-gradient(180deg,rgba(255,255,255,0.72),rgba(242,247,252,0.88))] px-1.5 py-1.5 shadow-[0_18px_42px_rgba(152,169,189,0.18)] backdrop-blur-xl lg:inline-flex"
             >
-              {navigation.map((item) => {
+              {navigationItems.map((item) => {
                 const active = isSceneRouteActive(pathname, item.href);
 
                 return (
@@ -65,11 +76,12 @@ export function SiteHeader() {
             </nav>
 
             <div className="hidden min-w-0 items-center justify-end gap-3 lg:flex lg:w-full lg:justify-self-end">
+              <LanguageToggle className="w-auto min-w-[9.5rem]" />
               <span className="archive-chip rounded-full px-3 py-1.5 text-[0.68rem] uppercase tracking-[0.16em] text-[var(--text-secondary)]">
-                Private by design
+                {globalContent.headerTagline}
               </span>
               <TransitionLink className="button-primary px-4 py-2 text-[0.88rem]" href="/inquire" scroll>
-                Inquire Now
+                {globalContent.headerInquireLabel}
               </TransitionLink>
             </div>
 
@@ -79,7 +91,7 @@ export function SiteHeader() {
                 href="/inquire"
                 scroll
               >
-                Inquire
+                {globalContent.mobileHeaderInquireLabel}
               </TransitionLink>
 
               <button
@@ -118,7 +130,9 @@ export function SiteHeader() {
             }`}
           >
             <div className="grid gap-2.5">
-              {navigation.map((item) => {
+              <LanguageToggle />
+
+              {navigationItems.map((item) => {
                 const active = isSceneRouteActive(pathname, item.href);
 
                 return (
@@ -137,7 +151,7 @@ export function SiteHeader() {
               })}
 
               <TransitionLink className="button-primary" href="/inquire" scroll>
-                Inquire Now
+                {globalContent.headerInquireLabel}
               </TransitionLink>
             </div>
           </div>

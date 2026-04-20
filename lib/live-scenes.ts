@@ -1,4 +1,4 @@
-import { resolveMediaSlotSource } from "@/lib/media";
+import { resolveMediaSlotPresentation } from "@/lib/media";
 import { sceneSlotIds } from "@/lib/media-slots";
 import { getSiteContent } from "@/lib/site-content";
 import type {
@@ -6,6 +6,7 @@ import type {
   EditableSceneContent,
   ResolvedInquiryContent,
   ResolvedSceneContent,
+  SiteLocale,
 } from "@/lib/site-content-schema";
 
 async function resolveSceneSteps(
@@ -13,10 +14,15 @@ async function resolveSceneSteps(
   slotIds: readonly string[],
 ): Promise<ResolvedSceneContent["steps"]> {
   return Promise.all(
-    scene.steps.map(async (step, index) => ({
-      ...step,
-      image: await resolveMediaSlotSource(slotIds[index] ?? ""),
-    })),
+    scene.steps.map(async (step, index) => {
+      const media = await resolveMediaSlotPresentation(slotIds[index] ?? "");
+
+      return {
+        ...step,
+        image: media.src,
+        objectPosition: media.objectPosition,
+      };
+    }),
   );
 }
 
@@ -25,15 +31,20 @@ async function resolveInquirySupportStates(
   slotIds: readonly string[],
 ): Promise<ResolvedInquiryContent["supportStates"]> {
   return Promise.all(
-    scene.supportStates.map(async (state, index) => ({
-      ...state,
-      image: await resolveMediaSlotSource(slotIds[index] ?? ""),
-    })),
+    scene.supportStates.map(async (state, index) => {
+      const media = await resolveMediaSlotPresentation(slotIds[index] ?? "");
+
+      return {
+        ...state,
+        image: media.src,
+        objectPosition: media.objectPosition,
+      };
+    }),
   );
 }
 
-export async function getResolvedHomeScene(): Promise<ResolvedSceneContent> {
-  const content = await getSiteContent();
+export async function getResolvedHomeScene(locale: SiteLocale = "en"): Promise<ResolvedSceneContent> {
+  const content = await getSiteContent(locale);
 
   return {
     ...content.home,
@@ -41,8 +52,10 @@ export async function getResolvedHomeScene(): Promise<ResolvedSceneContent> {
   };
 }
 
-export async function getResolvedExperienceScene(): Promise<ResolvedSceneContent> {
-  const content = await getSiteContent();
+export async function getResolvedExperienceScene(
+  locale: SiteLocale = "en",
+): Promise<ResolvedSceneContent> {
+  const content = await getSiteContent(locale);
 
   return {
     ...content.experience,
@@ -50,8 +63,10 @@ export async function getResolvedExperienceScene(): Promise<ResolvedSceneContent
   };
 }
 
-export async function getResolvedProcessScene(): Promise<ResolvedSceneContent> {
-  const content = await getSiteContent();
+export async function getResolvedProcessScene(
+  locale: SiteLocale = "en",
+): Promise<ResolvedSceneContent> {
+  const content = await getSiteContent(locale);
 
   return {
     ...content.process,
@@ -59,8 +74,10 @@ export async function getResolvedProcessScene(): Promise<ResolvedSceneContent> {
   };
 }
 
-export async function getResolvedPreserveScene(): Promise<ResolvedSceneContent> {
-  const content = await getSiteContent();
+export async function getResolvedPreserveScene(
+  locale: SiteLocale = "en",
+): Promise<ResolvedSceneContent> {
+  const content = await getSiteContent(locale);
 
   return {
     ...content.preserve,
@@ -68,8 +85,10 @@ export async function getResolvedPreserveScene(): Promise<ResolvedSceneContent> 
   };
 }
 
-export async function getResolvedInquiryScene(): Promise<ResolvedInquiryContent> {
-  const content = await getSiteContent();
+export async function getResolvedInquiryScene(
+  locale: SiteLocale = "en",
+): Promise<ResolvedInquiryContent> {
+  const content = await getSiteContent(locale);
 
   return {
     ...content.inquire,
