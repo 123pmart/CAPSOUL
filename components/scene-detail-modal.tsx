@@ -63,7 +63,7 @@ export function SceneDetailModal({
         <motion.div
           {...overlayMotion}
           transition={contentSwapTransition}
-          className="scene-detail-modal lg:hidden"
+          className="scene-detail-modal md:hidden"
         >
           <button
             type="button"

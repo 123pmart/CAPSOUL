@@ -9,13 +9,13 @@ import {
   subtleHoverLift,
   subtleTapPress,
 } from "@/components/motion-config";
+import { CompactSceneControls } from "@/components/compact-scene-controls";
 import { MobilePageNextLink } from "@/components/mobile-page-next-link";
 import { RevealGroup, RevealItem } from "@/components/reveal";
 import { SceneDetailModal } from "@/components/scene-detail-modal";
 import { SceneRoutePager } from "@/components/scene-route-pager";
 import { SceneViewport } from "@/components/scene-viewport";
 import { TransitionLink } from "@/components/transition-link";
-import { useMobileSceneCarousel } from "@/components/use-mobile-scene-carousel";
 import { useCompactViewport } from "@/components/use-compact-viewport";
 import { useSceneProgression } from "@/components/use-scene-progression";
 import type { ScreenAction, ScreenStep } from "@/content/screen-scenes";
@@ -44,14 +44,13 @@ export function SceneScreen({
   tone = "cool",
 }: SceneScreenProps) {
   const reduceMotion = useReducedMotion();
-  const isCompactViewport = useCompactViewport("(max-width: 1023px)");
+  const isPhoneViewport = useCompactViewport("(max-width: 767px)");
   const [isMobileSceneDetailOpen, setIsMobileSceneDetailOpen] = useState(false);
   const {
     activeIndex,
     goNext,
     goPrev,
     goToStep,
-    resetToStep,
     isFirst,
     isLast,
     sceneBindings,
@@ -66,16 +65,10 @@ export function SceneScreen({
     if (tone === "deep") return "scene-shell-deep";
     return "scene-shell-cool";
   }, [tone]);
-  const { containerRef: mobileSceneRailRef, carouselBindings } = useMobileSceneCarousel({
-    activeIndex,
-    slideCount: steps.length,
-    onIndexChange: resetToStep,
-    enabled: !usesViewportProgression,
-  });
 
   useEffect(() => {
     setIsMobileSceneDetailOpen(false);
-  }, [activeIndex, isCompactViewport]);
+  }, [activeIndex, isPhoneViewport]);
 
   if (!active) {
     return null;
@@ -104,15 +97,15 @@ export function SceneScreen({
 
   const progressionNote = usesViewportProgression
     ? compactNote
-    : "Swipe through the scene states.";
+    : "Use the arrows to move through the scene.";
 
   return (
-    <section className="shell py-2 sm:py-4 lg:h-[calc(100dvh-var(--header-offset-desktop))] lg:min-h-[calc(100svh-var(--header-offset-desktop))]">
-      <SceneViewport className="lg:h-full">
-        <div className={`scene-shell ${toneClassName} scene-pad lg:h-full`} {...sceneBindings}>
-          <div className="relative z-10 flex flex-col gap-[var(--mobile-section-gap)] overflow-visible lg:h-full lg:min-h-0 lg:gap-5">
+    <section className="shell py-2 sm:py-4 md:h-[calc(100dvh-var(--header-offset-desktop))] md:min-h-[calc(100svh-var(--header-offset-desktop))]">
+      <SceneViewport className="md:h-full">
+        <div className={`scene-shell ${toneClassName} scene-pad md:h-full`} {...sceneBindings}>
+          <div className="relative z-10 flex flex-col gap-[var(--mobile-section-gap)] overflow-visible md:h-full md:min-h-0 md:gap-5">
             <RevealGroup
-              className="grid gap-[var(--mobile-section-gap)] lg:grid-cols-[minmax(0,0.92fr)_auto] lg:items-end lg:gap-5"
+              className="grid gap-[var(--mobile-section-gap)] md:grid-cols-[minmax(0,0.92fr)_auto] md:items-end md:gap-5"
               stagger={0.1}
               amount={0.25}
             >
@@ -125,14 +118,14 @@ export function SceneScreen({
                   <p className="mt-[var(--mobile-heading-body-gap)] max-w-[32rem] text-[0.94rem] leading-6 text-[var(--text-secondary)] sm:text-[1.02rem] sm:leading-7">
                     {description}
                   </p>
-                  <div className="mt-[var(--mobile-body-action-gap)] hidden lg:block">
+                  <div className="mt-[var(--mobile-body-action-gap)] hidden md:block">
                     <SceneRoutePager compact className="max-w-[28rem]" />
                   </div>
                 </div>
               </RevealItem>
 
-              <RevealItem variant="card" className="hidden lg:block">
-                <div className="grid gap-[var(--mobile-body-action-gap)] sm:grid-cols-[auto_auto] lg:justify-end">
+              <RevealItem variant="card" className="hidden md:block">
+                <div className="grid gap-[var(--mobile-body-action-gap)] sm:grid-cols-[auto_auto] md:justify-end">
                   {primaryAction ? (
                     <TransitionLink className="button-primary" href={primaryAction.href}>
                       {primaryAction.label}
@@ -147,7 +140,7 @@ export function SceneScreen({
               </RevealItem>
             </RevealGroup>
 
-            <div className="grid gap-[var(--mobile-card-gap)] lg:hidden">
+            <div className="grid gap-[var(--mobile-card-gap)] md:hidden">
               <RevealItem variant="micro">
                 <SceneRoutePager compact />
               </RevealItem>
@@ -165,77 +158,59 @@ export function SceneScreen({
                     </span>
                   </div>
 
-                  <div
-                    ref={mobileSceneRailRef}
-                    className="mobile-scene-rail mt-3"
-                    {...carouselBindings}
-                  >
-                    {steps.map((step, index) => (
-                      <article key={`${step.label}-slide`} className="mobile-scene-slide">
-                        <button
-                          type="button"
-                          aria-expanded={isCompactViewport ? isMobileSceneDetailOpen : undefined}
-                          onClick={() => {
-                            if (isCompactViewport) {
-                              goToStep(index);
-                              setIsMobileSceneDetailOpen(true);
-                            }
-                          }}
-                          className="scene-focus flex h-full w-full flex-col gap-3 p-3 text-left"
-                        >
-                          <div className="film-frame relative min-h-[11.4rem] overflow-hidden">
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img
-                              src={step.image}
-                              alt={`${step.title} visual placeholder.`}
-                              className="h-full w-full object-cover"
-                            />
-                            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.02),rgba(232,239,246,0.16))]" />
-                            <div className="media-caption absolute inset-x-2.5 bottom-2.5 rounded-[1rem] px-3.5 py-3">
-                              <p className="text-[0.66rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-deep)]">
-                                {step.mediaLabel}
-                              </p>
-                              <p className="mt-2 text-[0.92rem] leading-6 text-[var(--text-primary)]">
-                                {step.summary}
-                              </p>
-                            </div>
-                          </div>
-
-                          <p className="text-[0.78rem] leading-5 text-[var(--text-secondary)]">
-                            {step.mediaCaption}
+                  <AnimatePresence mode="wait">
+                    <motion.button
+                      key={`${active.label}-phone-scene`}
+                      type="button"
+                      aria-expanded={isPhoneViewport ? isMobileSceneDetailOpen : undefined}
+                      onClick={() => {
+                        if (isPhoneViewport) {
+                          setIsMobileSceneDetailOpen(true);
+                        }
+                      }}
+                      initial={mediaEnter}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={mediaExit}
+                      transition={contentSwapTransition}
+                      className="scene-focus mt-3 flex w-full flex-col gap-3 p-3 text-left"
+                    >
+                      <div className="film-frame relative min-h-[11.4rem] overflow-hidden">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={active.image}
+                          alt={`${active.title} visual placeholder.`}
+                          className="h-full w-full object-cover"
+                        />
+                        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.02),rgba(232,239,246,0.16))]" />
+                        <div className="media-caption absolute inset-x-2.5 bottom-2.5 rounded-[1rem] px-3.5 py-3">
+                          <p className="text-[0.66rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-deep)]">
+                            {active.mediaLabel}
                           </p>
-                        </button>
-                      </article>
-                    ))}
-                  </div>
+                          <p className="mt-2 text-[0.92rem] leading-6 text-[var(--text-primary)]">
+                            {active.summary}
+                          </p>
+                        </div>
+                      </div>
 
-                  <div className="mt-3 flex items-center justify-between gap-3">
-                    <div className="flex flex-wrap gap-1.5">
-                      {steps.map((step, index) => {
-                        const isActive = index === activeIndex;
+                      <p className="text-[0.78rem] leading-5 text-[var(--text-secondary)]">
+                        {active.mediaCaption}
+                      </p>
+                    </motion.button>
+                  </AnimatePresence>
 
-                        return (
-                          <button
-                            key={`${step.label}-dot`}
-                            type="button"
-                            aria-label={`Show ${step.title}`}
-                            onClick={(event) => {
-                              event.stopPropagation();
-                              goToStep(index);
-                            }}
-                            className={`h-2.5 rounded-full transition-all duration-300 ${
-                              isActive
-                                ? "w-7 bg-[var(--accent-deep)]"
-                                : "w-2.5 bg-[rgba(158,179,200,0.34)]"
-                            }`}
-                          />
-                        );
-                      })}
-                    </div>
-                  </div>
+                  <CompactSceneControls
+                    className="mt-3"
+                    labels={steps.map((step) => step.title)}
+                    activeIndex={activeIndex}
+                    onSelect={goToStep}
+                    onPrevious={goPrev}
+                    onNext={goNext}
+                    previousDisabled={isFirst}
+                    nextDisabled={isLast}
+                  />
 
                   <p className="mt-3 text-[0.74rem] uppercase tracking-[0.14em] text-[var(--text-tertiary)]">
-                    Tap the scene to open the active state.
+                    Tap image to view details.
                   </p>
                 </div>
               </RevealItem>
@@ -245,10 +220,10 @@ export function SceneScreen({
               </RevealItem>
             </div>
 
-            <div className="hidden lg:grid lg:min-h-0 lg:flex-1 lg:grid-cols-[minmax(0,1.08fr)_minmax(20rem,0.92fr)] lg:gap-5">
-              <RevealGroup className="lg:min-h-0" delay={80} stagger={0.08} amount={0.2}>
-                <RevealItem variant="media" className="lg:h-full">
-                  <div className="scene-focus flex min-h-[20rem] flex-col gap-3 p-3 sm:min-h-[22rem] sm:p-4 lg:h-full">
+            <div className="hidden md:grid md:min-h-0 md:flex-1 md:grid-cols-[minmax(0,1.08fr)_minmax(20rem,0.92fr)] md:gap-5">
+              <RevealGroup className="md:min-h-0" delay={80} stagger={0.08} amount={0.2}>
+                <RevealItem variant="media" className="md:h-full">
+                  <div className="scene-focus flex min-h-[20rem] flex-col gap-3 p-3 sm:min-h-[22rem] sm:p-4 md:h-full">
                     <AnimatePresence mode="wait">
                       <motion.div
                         key={active.title}
@@ -256,9 +231,9 @@ export function SceneScreen({
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={mediaExit}
                         transition={contentSwapTransition}
-                        className="flex h-full flex-col gap-3 lg:min-h-0"
+                        className="flex h-full flex-col gap-3 md:min-h-0"
                       >
-                        <div className="film-frame relative min-h-[18rem] flex-1 overflow-hidden sm:min-h-[19rem] lg:min-h-[16rem]">
+                        <div className="film-frame relative min-h-[18rem] flex-1 overflow-hidden sm:min-h-[19rem] md:min-h-[16rem]">
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
                             src={active.image}
@@ -299,7 +274,7 @@ export function SceneScreen({
               </RevealGroup>
 
               <RevealGroup
-                className="grid gap-3 lg:min-h-0 lg:grid-rows-[auto_minmax(0,1fr)_auto]"
+                className="grid gap-3 md:min-h-0 md:grid-rows-[auto_minmax(0,1fr)_auto]"
                 delay={140}
                 stagger={0.1}
                 amount={0.2}
@@ -316,8 +291,8 @@ export function SceneScreen({
                 </RevealItem>
 
                 <RevealItem variant="card" className="min-h-0">
-                  <div className="panel-strong flex flex-col gap-3 rounded-[1.7rem] p-3.5 sm:p-4 lg:h-full lg:min-h-0">
-                    <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-1">
+                  <div className="panel-strong flex flex-col gap-3 rounded-[1.7rem] p-3.5 sm:p-4 md:h-full md:min-h-0">
+                    <div className="grid gap-2 sm:grid-cols-2 md:grid-cols-1">
                       {steps.map((step, index) => {
                         const isActive = index === activeIndex;
 
@@ -362,7 +337,7 @@ export function SceneScreen({
                         animate={{ opacity: 1, y: 0 }}
                         exit={panelExit}
                         transition={contentSwapTransition}
-                        className="flex flex-col justify-between gap-4 lg:min-h-0 lg:flex-1"
+                        className="flex flex-col justify-between gap-4 md:min-h-0 md:flex-1"
                       >
                         <div>
                           <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-deep)]">

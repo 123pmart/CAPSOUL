@@ -20,6 +20,7 @@ export function MobilePageNextLink({ className = "" }: MobilePageNextLinkProps) 
   return (
     <TransitionLink
       href={next.href}
+      scroll
       className={`button-primary w-full px-4 ${className}`.trim()}
     >
       {`Next Page: ${next.label}`}

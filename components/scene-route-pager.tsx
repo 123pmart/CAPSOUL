@@ -20,7 +20,7 @@ export function SceneRoutePager({
   className = "",
 }: SceneRoutePagerProps) {
   const pathname = usePathname();
-  const isCompactViewport = useCompactViewport("(max-width: 1023px)");
+  const isCompactViewport = useCompactViewport("(max-width: 767px)");
   const current = getSceneRouteEntry(pathname);
   const previous = getAdjacentSceneRoute(pathname, "previous");
   const next = getAdjacentSceneRoute(pathname, "next");
