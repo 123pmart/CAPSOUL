@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  useEffect,
   useState,
   type ChangeEvent,
   type FormEvent,
@@ -18,6 +19,7 @@ import { SceneRoutePager } from "@/components/scene-route-pager";
 import { SceneViewport } from "@/components/scene-viewport";
 import { TransitionLink } from "@/components/transition-link";
 import { useMobileSceneCarousel } from "@/components/use-mobile-scene-carousel";
+import { useCompactViewport } from "@/components/use-compact-viewport";
 import { useSceneProgression } from "@/components/use-scene-progression";
 import type { ResolvedInquiryContent } from "@/lib/site-content-schema";
 
@@ -57,10 +59,12 @@ type InquirySceneProps = {
 
 export function InquiryScene({ sceneData }: InquirySceneProps) {
   const reduceMotion = useReducedMotion();
+  const isPhoneViewport = useCompactViewport("(max-width: 767px)");
   const [submitted, setSubmitted] = useState(false);
   const [formState, setFormState] = useState<InquiryFormState>(initialState);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
+  const [isMobileSupportOpen, setIsMobileSupportOpen] = useState(false);
   const {
     activeIndex,
     goNext,
@@ -84,6 +88,12 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
     onIndexChange: resetToStep,
     enabled: !submitted && !isSubmitting && !usesViewportProgression,
   });
+
+  useEffect(() => {
+    if (isPhoneViewport) {
+      setIsMobileSupportOpen(false);
+    }
+  }, [activeIndex, isPhoneViewport]);
 
   if (!activeSupport || !activeFormStep) {
     return null;
@@ -388,7 +398,7 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
               amount={0.25}
             >
               <RevealItem variant="hero">
-                <div className="max-w-[36rem]">
+                <div className="max-w-[36rem] flex flex-col items-start">
                   <span className="eyebrow">{sceneData.eyebrow}</span>
                   <h1 className="page-heading headline-display mt-[var(--mobile-label-heading-gap)]">
                     {sceneData.title}
@@ -441,7 +451,16 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
                       <div ref={mobileSupportRailRef} className="mobile-scene-rail mt-3" {...carouselBindings}>
                         {sceneData.supportStates.map((support, index) => (
                           <article key={`${support.label}-slide`} className="mobile-scene-slide">
-                            <div className="scene-focus flex h-full flex-col gap-3 p-3">
+                            <button
+                              type="button"
+                              aria-expanded={isPhoneViewport ? isMobileSupportOpen : undefined}
+                              onClick={() => {
+                                if (isPhoneViewport) {
+                                  setIsMobileSupportOpen((current) => !current);
+                                }
+                              }}
+                              className="scene-focus flex h-full w-full flex-col gap-3 p-3 text-left"
+                            >
                               <div className="film-frame relative min-h-[10.85rem] overflow-hidden">
                                 {/* eslint-disable-next-line @next/next/no-img-element */}
                                 <img
@@ -462,12 +481,9 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
                                   <h2 className="mt-2 text-[1.14rem] leading-[1.04] text-[var(--text-primary)]">
                                     {support.title}
                                   </h2>
-                                  <p className="mt-2 text-[0.88rem] leading-6 text-[var(--text-secondary)]">
-                                    {support.body}
-                                  </p>
                                 </div>
                               </div>
-                            </div>
+                            </button>
                           </article>
                         ))}
                       </div>
@@ -482,7 +498,10 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
                                 key={`${support.label}-indicator`}
                                 type="button"
                                 aria-label={`Show ${support.title}`}
-                                onClick={() => goToStep(index)}
+                                onClick={(event) => {
+                                  event.stopPropagation();
+                                  goToStep(index);
+                                }}
                                 className={`h-2.5 rounded-full transition-all duration-300 ${
                                   isActive
                                     ? "w-7 bg-[var(--accent-deep)]"
@@ -493,6 +512,27 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
                           })}
                         </div>
                       </div>
+
+                      <p className="mt-3 text-[0.74rem] uppercase tracking-[0.14em] text-[var(--text-tertiary)]">
+                        Tap the scene to {isMobileSupportOpen ? "hide" : "reveal"} more.
+                      </p>
+
+                      <AnimatePresence initial={false}>
+                        {isMobileSupportOpen ? (
+                          <motion.div
+                            key={`${activeSupport.label}-mobile-support-reveal`}
+                            initial={contentEnter}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={contentExit}
+                            transition={contentSwapTransition}
+                            className="panel mt-3 rounded-[1rem] px-3.5 py-3.5"
+                          >
+                            <p className="text-[0.88rem] leading-6 text-[var(--text-secondary)]">
+                              {activeSupport.body}
+                            </p>
+                          </motion.div>
+                        ) : null}
+                      </AnimatePresence>
                     </div>
                   </RevealItem>
 

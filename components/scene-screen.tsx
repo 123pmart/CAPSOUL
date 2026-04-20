@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 
 import {
@@ -15,6 +15,7 @@ import { SceneRoutePager } from "@/components/scene-route-pager";
 import { SceneViewport } from "@/components/scene-viewport";
 import { TransitionLink } from "@/components/transition-link";
 import { useMobileSceneCarousel } from "@/components/use-mobile-scene-carousel";
+import { useCompactViewport } from "@/components/use-compact-viewport";
 import { useSceneProgression } from "@/components/use-scene-progression";
 import type { ScreenAction, ScreenStep } from "@/content/screen-scenes";
 
@@ -42,6 +43,8 @@ export function SceneScreen({
   tone = "cool",
 }: SceneScreenProps) {
   const reduceMotion = useReducedMotion();
+  const isPhoneViewport = useCompactViewport("(max-width: 767px)");
+  const [isMobileSceneDetailOpen, setIsMobileSceneDetailOpen] = useState(false);
   const {
     activeIndex,
     goNext,
@@ -68,6 +71,12 @@ export function SceneScreen({
     onIndexChange: resetToStep,
     enabled: !usesViewportProgression,
   });
+
+  useEffect(() => {
+    if (isPhoneViewport) {
+      setIsMobileSceneDetailOpen(false);
+    }
+  }, [activeIndex, isPhoneViewport]);
 
   if (!active) {
     return null;
@@ -109,7 +118,7 @@ export function SceneScreen({
               amount={0.25}
             >
               <RevealItem variant="hero">
-                <div className="max-w-[34rem]">
+                <div className="max-w-[34rem] flex flex-col items-start">
                   <span className="eyebrow">{eyebrow}</span>
                   <h1 className="page-heading headline-display mt-[var(--mobile-label-heading-gap)]">
                     {title}
@@ -164,7 +173,16 @@ export function SceneScreen({
                   >
                     {steps.map((step) => (
                       <article key={`${step.label}-slide`} className="mobile-scene-slide">
-                        <div className="scene-focus flex h-full flex-col gap-3 p-3">
+                        <button
+                          type="button"
+                          aria-expanded={isPhoneViewport ? isMobileSceneDetailOpen : undefined}
+                          onClick={() => {
+                            if (isPhoneViewport) {
+                              setIsMobileSceneDetailOpen((current) => !current);
+                            }
+                          }}
+                          className="scene-focus flex h-full w-full flex-col gap-3 p-3 text-left"
+                        >
                           <div className="film-frame relative min-h-[11.4rem] overflow-hidden">
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
@@ -186,7 +204,7 @@ export function SceneScreen({
                           <p className="text-[0.78rem] leading-5 text-[var(--text-secondary)]">
                             {step.mediaCaption}
                           </p>
-                        </div>
+                        </button>
                       </article>
                     ))}
                   </div>
@@ -201,7 +219,10 @@ export function SceneScreen({
                             key={`${step.label}-dot`}
                             type="button"
                             aria-label={`Show ${step.title}`}
-                            onClick={() => goToStep(index)}
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              goToStep(index);
+                            }}
                             className={`h-2.5 rounded-full transition-all duration-300 ${
                               isActive
                                 ? "w-7 bg-[var(--accent-deep)]"
@@ -213,9 +234,29 @@ export function SceneScreen({
                     </div>
                   </div>
 
-                  <p className="mt-3 text-[0.88rem] leading-6 text-[var(--text-secondary)]">
-                    {active.detail}
+                  <p className="mt-3 text-[0.74rem] uppercase tracking-[0.14em] text-[var(--text-tertiary)]">
+                    Tap the scene to {isMobileSceneDetailOpen ? "hide" : "reveal"} more.
                   </p>
+
+                  <AnimatePresence initial={false}>
+                    {isMobileSceneDetailOpen ? (
+                      <motion.div
+                        key={`${active.label}-mobile-reveal`}
+                        initial={panelEnter}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={panelExit}
+                        transition={contentSwapTransition}
+                        className="panel mt-3 rounded-[1rem] px-3.5 py-3.5"
+                      >
+                        <h2 className="text-[1.12rem] leading-[1.06] text-[var(--text-primary)]">
+                          {active.title}
+                        </h2>
+                        <p className="mt-2 text-[0.88rem] leading-6 text-[var(--text-secondary)]">
+                          {active.detail}
+                        </p>
+                      </motion.div>
+                    ) : null}
+                  </AnimatePresence>
                 </div>
               </RevealItem>
 
