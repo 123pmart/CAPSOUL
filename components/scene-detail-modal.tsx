@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 
 import { measuredEase, premiumEase } from "@/components/motion-config";
@@ -23,6 +23,13 @@ export function SceneDetailModal({
   children,
 }: SceneDetailModalProps) {
   const reduceMotion = useReducedMotion();
+  const [shouldRender, setShouldRender] = useState(open);
+
+  useEffect(() => {
+    if (open) {
+      setShouldRender(true);
+    }
+  }, [open]);
 
   useEffect(() => {
     if (!open) {
@@ -49,13 +56,16 @@ export function SceneDetailModal({
     ? { duration: 0 }
     : { duration: 0.34, ease: premiumEase };
 
+  if (!shouldRender) {
+    return null;
+  }
+
   return (
     <div
       aria-hidden={!open}
       className="scene-detail-modal md:hidden"
       style={{
         pointerEvents: open ? "auto" : "none",
-        visibility: open ? "visible" : "hidden",
       }}
     >
       <motion.button
@@ -82,6 +92,11 @@ export function SceneDetailModal({
               : { opacity: 0, scale: 0.982, y: 10 }
         }
         transition={panelTransition}
+        onAnimationComplete={() => {
+          if (!open) {
+            setShouldRender(false);
+          }
+        }}
       >
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">

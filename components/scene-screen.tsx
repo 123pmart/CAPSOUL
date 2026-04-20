@@ -6,6 +6,7 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import {
   cardStateTransition,
   contentSwapTransition,
+  measuredEase,
   subtleHoverLift,
   subtleTapPress,
 } from "@/components/motion-config";
@@ -15,7 +16,6 @@ import { RevealGroup, RevealItem } from "@/components/reveal";
 import { SceneDetailModal } from "@/components/scene-detail-modal";
 import { SceneRoutePager } from "@/components/scene-route-pager";
 import { SceneViewport } from "@/components/scene-viewport";
-import { TransitionLink } from "@/components/transition-link";
 import { useCompactViewport } from "@/components/use-compact-viewport";
 import { useSceneProgression } from "@/components/use-scene-progression";
 import type { ScreenAction, ScreenStep } from "@/content/screen-scenes";
@@ -98,6 +98,9 @@ export function SceneScreen({
   const progressionNote = usesViewportProgression
     ? compactNote
     : "Use the arrows to move through the scene.";
+  const mobileSceneSwapTransition = reduceMotion
+    ? { duration: 0 }
+    : { duration: 0.24, ease: measuredEase };
 
   return (
     <section className="shell py-2 sm:py-4 md:h-[calc(100dvh-var(--header-offset-desktop))] md:min-h-[calc(100svh-var(--header-offset-desktop))]">
@@ -118,24 +121,12 @@ export function SceneScreen({
                   <p className="mt-[var(--mobile-heading-body-gap)] max-w-[32rem] text-[0.94rem] leading-6 text-[var(--text-secondary)] sm:text-[1.02rem] sm:leading-7">
                     {description}
                   </p>
-                  <div className="mt-[var(--mobile-body-action-gap)] hidden md:block">
-                    <SceneRoutePager compact className="max-w-[28rem]" />
-                  </div>
                 </div>
               </RevealItem>
 
               <RevealItem variant="card" className="hidden md:block">
-                <div className="grid gap-[var(--mobile-body-action-gap)] sm:grid-cols-[auto_auto] md:justify-end">
-                  {primaryAction ? (
-                    <TransitionLink className="button-primary" href={primaryAction.href}>
-                      {primaryAction.label}
-                    </TransitionLink>
-                  ) : null}
-                  {secondaryAction ? (
-                    <TransitionLink className="button-secondary" href={secondaryAction.href}>
-                      {secondaryAction.label}
-                    </TransitionLink>
-                  ) : null}
+                <div className="grid w-full max-w-[25rem] gap-3 md:justify-self-end">
+                  <SceneRoutePager compact />
                 </div>
               </RevealItem>
             </RevealGroup>
@@ -159,47 +150,64 @@ export function SceneScreen({
                   </div>
 
                   <div className="scene-mobile-stage mt-3">
-                    <AnimatePresence initial={false} mode="wait">
-                      <motion.button
-                        key={`${active.label}-phone-scene`}
-                        type="button"
-                        aria-expanded={isPhoneViewport ? isMobileSceneDetailOpen : undefined}
-                        onClick={() => {
-                          if (isPhoneViewport) {
-                            setIsMobileSceneDetailOpen(true);
-                          }
-                        }}
-                        initial={mediaEnter}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={mediaExit}
-                        transition={contentSwapTransition}
-                        className="scene-focus scene-mobile-card flex w-full flex-col gap-3 p-3 text-left"
-                      >
-                        <div className="scene-media-shell">
-                          <div className="scene-media-frame film-frame relative overflow-hidden">
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img
-                              src={active.image}
-                              alt={`${active.title} visual placeholder.`}
-                              className="h-full w-full object-cover"
-                            />
-                            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.02),rgba(232,239,246,0.16))]" />
-                            <div className="media-caption absolute inset-x-2.5 bottom-2.5 rounded-[1rem] px-3.5 py-3">
-                              <p className="text-[0.66rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-deep)]">
-                                {active.mediaLabel}
-                              </p>
-                              <p className="mt-2 line-clamp-2 text-[0.92rem] leading-6 text-[var(--text-primary)]">
-                                {active.summary}
-                              </p>
-                            </div>
+                    <motion.button
+                      type="button"
+                      aria-expanded={isPhoneViewport ? isMobileSceneDetailOpen : undefined}
+                      onClick={() => {
+                        if (isPhoneViewport) {
+                          setIsMobileSceneDetailOpen(true);
+                        }
+                      }}
+                      className="scene-focus scene-mobile-card flex w-full flex-col gap-3 p-3 text-left"
+                    >
+                      <div className="scene-media-shell">
+                        <div className="scene-media-frame film-frame relative overflow-hidden">
+                          <div className="scene-mobile-media-slot">
+                            <AnimatePresence initial={false} mode="sync">
+                              <motion.div
+                                key={`${active.label}-phone-scene`}
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                transition={mobileSceneSwapTransition}
+                                className="scene-mobile-media-layer"
+                              >
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                <img
+                                  src={active.image}
+                                  alt={`${active.title} visual placeholder.`}
+                                  className="h-full w-full object-cover"
+                                />
+                                <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.02),rgba(232,239,246,0.16))]" />
+                                <div className="media-caption absolute inset-x-2.5 bottom-2.5 rounded-[1rem] px-3.5 py-3">
+                                  <p className="text-[0.66rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-deep)]">
+                                    {active.mediaLabel}
+                                  </p>
+                                  <p className="mt-2 line-clamp-2 text-[0.92rem] leading-6 text-[var(--text-primary)]">
+                                    {active.summary}
+                                  </p>
+                                </div>
+                              </motion.div>
+                            </AnimatePresence>
                           </div>
                         </div>
+                      </div>
 
-                        <p className="scene-mobile-note line-clamp-2 text-[0.78rem] leading-5 text-[var(--text-secondary)]">
-                          {active.mediaCaption}
-                        </p>
-                      </motion.button>
-                    </AnimatePresence>
+                      <div className="scene-mobile-caption-slot">
+                        <AnimatePresence initial={false} mode="sync">
+                          <motion.p
+                            key={`${active.label}-phone-note`}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={mobileSceneSwapTransition}
+                            className="scene-mobile-note line-clamp-2 text-[0.78rem] leading-5 text-[var(--text-secondary)]"
+                          >
+                            {active.mediaCaption}
+                          </motion.p>
+                        </AnimatePresence>
+                      </div>
+                    </motion.button>
                   </div>
 
                   <CompactSceneControls

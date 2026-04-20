@@ -679,6 +679,7 @@
   aspect-ratio: 4 / 5;
   min-height: 0;
   flex: none;
+  background: linear-gradient(180deg, rgba(247, 250, 253, 0.9), rgba(236, 243, 249, 0.94));
 }
 
 .scene-state-detail {
@@ -690,6 +691,22 @@
 .scene-mobile-title-lock {
   display: block;
   min-height: 2.45rem;
+}
+
+.scene-mobile-media-slot {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.scene-mobile-media-layer {
+  position: absolute;
+  inset: 0;
+}
+
+.scene-mobile-caption-slot {
+  position: relative;
+  min-height: 2.75rem;
 }
 
 .scene-detail-modal {
@@ -997,8 +1014,13 @@
 }
 
 @media (min-width: 768px) {
+  .scene-media-shell {
+    align-items: stretch;
+  }
+
   .scene-media-frame {
-    max-width: clamp(18.5rem, 32vw, 27rem);
+    max-width: 100%;
+    aspect-ratio: 3 / 2;
   }
 
   .scene-state-detail {
