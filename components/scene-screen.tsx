@@ -100,7 +100,7 @@ export function SceneScreen({
       : compactNote.replace(/^Scroll or tap/i, "Tap");
 
   const stepRail = (
-    <div className="touch-step-rail -mx-1 flex gap-2 overflow-x-auto px-1 pb-1">
+    <div className="touch-step-rail flex gap-2 overflow-x-auto pb-1">
       {steps.map((step, index) => {
         const isActive = index === activeIndex;
 
@@ -119,7 +119,7 @@ export function SceneScreen({
             }
             whileHover={reduceMotion || isActive ? undefined : subtleHoverLift}
             whileTap={reduceMotion ? undefined : subtleTapPress}
-            className={`shrink-0 rounded-full border px-3.5 py-2.5 text-left ${
+            className={`touch-step-card rounded-full border px-3.5 py-2.5 text-left ${
               isActive
                 ? "border-white/88 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(231,239,247,0.98))] shadow-[0_18px_34px_rgba(152,169,189,0.2)]"
                 : "border-[rgba(181,196,211,0.28)] bg-[linear-gradient(180deg,rgba(255,255,255,0.48),rgba(243,248,252,0.68))]"
@@ -138,17 +138,17 @@ export function SceneScreen({
   );
 
   return (
-    <section className="shell py-2.5 sm:py-4 lg:h-[calc(100dvh-var(--header-offset-desktop))] lg:min-h-[calc(100svh-var(--header-offset-desktop))]">
+    <section className="shell py-2 sm:py-4 lg:h-[calc(100dvh-var(--header-offset-desktop))] lg:min-h-[calc(100svh-var(--header-offset-desktop))]">
       <SceneViewport className="lg:h-full">
         <div className={`scene-shell ${toneClassName} scene-pad lg:h-full`} {...sceneBindings}>
-          <div className="relative z-10 flex flex-col gap-4 overflow-visible lg:h-full lg:min-h-0 lg:gap-5">
+          <div className="relative z-10 flex flex-col gap-[var(--mobile-section-gap)] overflow-visible lg:h-full lg:min-h-0 lg:gap-5">
             <RevealGroup
-              className="grid gap-4 lg:grid-cols-[minmax(0,0.92fr)_auto] lg:items-end lg:gap-5"
+              className="grid gap-[var(--mobile-section-gap)] lg:grid-cols-[minmax(0,0.92fr)_auto] lg:items-end lg:gap-5"
               stagger={0.1}
               amount={0.25}
             >
               <RevealItem variant="hero">
-                <div className="max-w-[34rem] space-y-3.5 sm:space-y-4">
+                <div className="max-w-[34rem] space-y-[var(--mobile-heading-body-gap)] sm:space-y-4">
                   <span className="eyebrow">{eyebrow}</span>
                   <h1 className="page-heading headline-display">{title}</h1>
                   <p className="max-w-[32rem] text-[0.94rem] leading-6 text-[var(--text-secondary)] sm:text-[1.02rem] sm:leading-7">
@@ -161,7 +161,7 @@ export function SceneScreen({
               </RevealItem>
 
               <RevealItem variant="card">
-                <div className="grid gap-3 sm:grid-cols-[auto_auto] lg:justify-end">
+                <div className="grid gap-[var(--mobile-body-action-gap)] sm:grid-cols-[auto_auto] lg:justify-end">
                   {primaryAction ? (
                     <TransitionLink className="button-primary" href={primaryAction.href}>
                       {primaryAction.label}
@@ -183,7 +183,7 @@ export function SceneScreen({
             </RevealGroup>
 
             <div className="lg:hidden">
-              <RevealGroup className="grid gap-3.5" delay={90} stagger={0.08} amount={0.2}>
+              <RevealGroup className="grid gap-[var(--mobile-card-gap)]" delay={90} stagger={0.08} amount={0.2}>
                 <RevealItem variant="micro">
                   <div className="flex flex-wrap items-center justify-between gap-2.5">
                     <span className="archive-chip rounded-full px-3.5 py-1.5 text-[0.68rem] uppercase tracking-[0.18em] text-[var(--text-secondary)]">
@@ -205,7 +205,7 @@ export function SceneScreen({
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={mediaExit}
                       transition={contentSwapTransition}
-                      className="scene-focus flex flex-col gap-3 p-3"
+                      className="scene-focus scene-swipe-surface flex flex-col gap-[var(--mobile-card-gap)] p-3"
                       {...swipeBindings}
                     >
                       <div className="film-frame relative min-h-[13.5rem] overflow-hidden">
@@ -227,7 +227,7 @@ export function SceneScreen({
                         </span>
                       </div>
 
-                      <div className="space-y-2">
+                      <div className="space-y-[var(--mobile-heading-body-gap)]">
                         <p className="text-[1rem] leading-6 text-[var(--text-primary)]">
                           {active.summary}
                         </p>
@@ -247,7 +247,7 @@ export function SceneScreen({
                       animate={{ opacity: 1, y: 0 }}
                       exit={panelExit}
                       transition={contentSwapTransition}
-                      className="panel-strong flex flex-col gap-4 rounded-[1.3rem] p-4"
+                      className="panel-strong scene-swipe-surface flex flex-col gap-[var(--mobile-card-gap)] rounded-[1.3rem] p-4"
                       {...swipeBindings}
                     >
                       <div>
@@ -273,7 +273,7 @@ export function SceneScreen({
                         ))}
                       </div>
 
-                      <div className="grid gap-3 sm:grid-cols-2">
+                      <div className="grid gap-[var(--mobile-body-action-gap)] sm:grid-cols-2">
                         <button
                           type="button"
                           className="button-secondary px-4"

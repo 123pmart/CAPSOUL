@@ -5,8 +5,22 @@
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --safe-left: env(safe-area-inset-left, 0px);
   --safe-right: env(safe-area-inset-right, 0px);
-  --header-offset-mobile: calc(4.95rem + var(--safe-top));
-  --header-offset-desktop: calc(5.45rem + var(--safe-top));
+  --header-shell-offset-mobile: 0.65rem;
+  --header-shell-offset-desktop: 0.75rem;
+  --header-shell-pad-mobile: 0.625rem;
+  --header-shell-pad-desktop: 0.75rem;
+  --header-height-mobile: 3.2rem;
+  --header-height-desktop: 3.5rem;
+  --page-top-gap-mobile: 0.7rem;
+  --page-top-gap-desktop: 0.9rem;
+  --header-offset-mobile: calc(
+    var(--safe-top) + var(--header-shell-offset-mobile) + var(--header-height-mobile) +
+      (2 * var(--header-shell-pad-mobile)) + var(--page-top-gap-mobile)
+  );
+  --header-offset-desktop: calc(
+    var(--safe-top) + var(--header-shell-offset-desktop) + var(--header-height-desktop) +
+      (2 * var(--header-shell-pad-desktop)) + var(--page-top-gap-desktop)
+  );
   --admin-entry-offset: calc(var(--safe-bottom) + 0.9rem);
   --admin-entry-clearance: calc(var(--safe-bottom) + 4.85rem);
   --shell-max: 1560px;
@@ -24,6 +38,11 @@
   --section-gap-tight: clamp(2.2rem, 4.5vw, 3.8rem);
   --section-gap-compact: clamp(1.75rem, 3.5vw, 2.8rem);
   --stack-gap: clamp(0.95rem, 1.4vw, 1.2rem);
+  --mobile-section-gap: 1rem;
+  --mobile-card-gap: 0.75rem;
+  --mobile-label-heading-gap: 0.625rem;
+  --mobile-heading-body-gap: 0.625rem;
+  --mobile-body-action-gap: 0.875rem;
   --background-primary: #f8fbff;
   --background-secondary: #eef3f8;
   --surface: #ffffff;
@@ -76,6 +95,9 @@
     scroll-behavior: smooth;
     background: var(--background-primary);
     color-scheme: light;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
   }
 
   body {
@@ -95,6 +117,8 @@
     font-kerning: normal;
     text-rendering: optimizeLegibility;
     overflow-x: hidden;
+    width: 100%;
+    max-width: 100%;
   }
 
   h1,
@@ -244,6 +268,19 @@
     var(--shadow-soft),
     inset 0 1px 0 rgba(255, 255, 255, 0.88);
   backdrop-filter: blur(26px) saturate(152%);
+}
+
+.scene-shell,
+.scene-focus,
+.panel,
+.panel-strong,
+.panel-ink,
+.archive-chip,
+.surface-note,
+.film-frame,
+.media-caption {
+  min-width: 0;
+  max-width: 100%;
 }
 
 .scene-shell::before,
@@ -609,7 +646,12 @@
 }
 
 .touch-step-rail {
-  scroll-snap-type: x proximity;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: 0.125rem;
+  overscroll-behavior-x: contain;
+  overscroll-behavior-y: auto;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x;
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
@@ -620,6 +662,17 @@
 
 .touch-step-rail > * {
   scroll-snap-align: start;
+}
+
+.touch-step-card {
+  flex: 0 0 auto;
+  width: min(18rem, calc(100% - 0.25rem));
+  max-width: calc(100vw - (2 * var(--shell-gutter)) - 0.35rem);
+}
+
+.scene-swipe-surface {
+  touch-action: pan-x;
+  overscroll-behavior-x: contain;
 }
 
 .depth-hover {
@@ -778,6 +831,7 @@
     --section-gap-compact: clamp(1.35rem, 5.6vw, 2rem);
     --stack-gap: clamp(0.82rem, 2.8vw, 1rem);
     --admin-entry-clearance: calc(var(--safe-bottom) + 4.75rem);
+    --page-top-gap-mobile: 0.65rem;
   }
 
   .scene-shell {
@@ -793,6 +847,11 @@
     --section-gap: clamp(2.1rem, 8vw, 3rem);
     --section-gap-tight: clamp(1.45rem, 6.6vw, 2.1rem);
     --section-gap-compact: clamp(1.15rem, 5.5vw, 1.65rem);
+    --mobile-section-gap: 1rem;
+    --mobile-card-gap: 0.75rem;
+    --mobile-label-heading-gap: 0.625rem;
+    --mobile-heading-body-gap: 0.625rem;
+    --mobile-body-action-gap: 0.875rem;
   }
 
   .field-input,
@@ -816,7 +875,7 @@
   }
 
   .touch-step-rail > * {
-    max-width: min(18.5rem, calc(100vw - (2 * var(--shell-gutter)) - 1.4rem));
+    max-width: calc(100vw - (2 * var(--shell-gutter)) - 0.35rem);
   }
 }
 

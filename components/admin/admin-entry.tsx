@@ -22,7 +22,7 @@ export function AdminEntry() {
     >
       <TransitionLink
         href="/admin"
-        className="archive-chip pointer-events-auto rounded-full px-3.5 py-1.5 text-[0.66rem] uppercase tracking-[0.18em] text-[var(--text-secondary)] shadow-[0_14px_30px_rgba(150,166,186,0.14)]"
+        className="archive-chip pointer-events-auto rounded-full px-3 py-1.25 text-[0.62rem] uppercase tracking-[0.18em] text-[var(--text-secondary)] shadow-[0_14px_30px_rgba(150,166,186,0.14)] sm:px-3.5 sm:py-1.5 sm:text-[0.66rem]"
       >
         Admin
       </TransitionLink>

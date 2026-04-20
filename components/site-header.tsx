@@ -24,7 +24,7 @@ export function SiteHeader() {
       className="fixed inset-x-0 top-0 z-50"
       style={{ paddingLeft: "var(--safe-left)", paddingRight: "var(--safe-right)" }}
     >
-      <div className="shell pt-[calc(var(--safe-top)+0.65rem)] sm:pt-3">
+      <div className="shell pt-[calc(var(--safe-top)+var(--header-shell-offset-mobile))] sm:pt-[calc(var(--safe-top)+var(--header-shell-offset-desktop))]">
         <motion.div
           initial={reduceMotion ? false : { y: -14, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
@@ -32,9 +32,9 @@ export function SiteHeader() {
             duration: reduceMotion ? 0 : heroRevealTransition.duration,
             ease: reduceMotion ? measuredEase : heroRevealTransition.ease,
           }}
-          className="scene-shell scene-shell-cool w-full px-3 py-2.5 backdrop-blur-xl sm:px-4 sm:py-3"
+          className="scene-shell scene-shell-cool w-full px-3 py-[var(--header-shell-pad-mobile)] backdrop-blur-xl sm:px-4 sm:py-[var(--header-shell-pad-desktop)]"
         >
-          <div className="relative z-10 flex min-h-[3.2rem] min-w-0 items-center justify-between gap-3 sm:min-h-[3.5rem] sm:gap-4 lg:grid lg:grid-cols-[minmax(14rem,1fr)_auto_minmax(14rem,1fr)] lg:items-center lg:gap-6">
+          <div className="relative z-10 flex min-h-[var(--header-height-mobile)] min-w-0 items-center justify-between gap-3 sm:min-h-[var(--header-height-desktop)] sm:gap-4 lg:grid lg:grid-cols-[minmax(14rem,1fr)_auto_minmax(14rem,1fr)] lg:items-center lg:gap-6">
             <div className="flex min-w-0 flex-1 items-center lg:w-full lg:justify-self-start">
               <TransitionLink href="/" aria-label="Go to CAPSOUL home page" className="shrink-0">
                 <BrandMark compact />

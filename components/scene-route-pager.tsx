@@ -42,14 +42,17 @@ export function SceneRoutePager({
   return (
     <div className={`${wrapperClassName} ${className}`.trim()}>
       <div className="flex items-center justify-between gap-3">
-        <span className="archive-chip rounded-full px-3.5 py-1.5 text-[0.66rem] uppercase tracking-[0.18em] text-[var(--text-secondary)]">
-          {current.label} / {String(progress.current).padStart(2, "0")} / {String(progress.total).padStart(2, "0")}
+        <span className="archive-chip min-w-0 max-w-[72%] truncate rounded-full px-3 py-1.5 text-[0.64rem] uppercase tracking-[0.16em] text-[var(--text-secondary)]">
+          {current.label}
+        </span>
+        <span className="text-[0.68rem] uppercase tracking-[0.18em] text-[var(--text-tertiary)]">
+          {String(progress.current).padStart(2, "0")} / {String(progress.total).padStart(2, "0")}
         </span>
       </div>
 
       <div className="grid gap-2.5 sm:grid-cols-2">
         {previous ? (
-          <TransitionLink href={previous.href} className={cardClassName}>
+          <TransitionLink href={previous.href} className={`block min-w-0 ${cardClassName}`}>
             <p className={`${labelClassName} font-semibold uppercase text-[var(--accent-deep)]`}>
               Previous
             </p>
@@ -60,7 +63,7 @@ export function SceneRoutePager({
         )}
 
         {next ? (
-          <TransitionLink href={next.href} className={cardClassName}>
+          <TransitionLink href={next.href} className={`block min-w-0 ${cardClassName}`}>
             <p className={`${labelClassName} font-semibold uppercase text-[var(--accent-deep)]`}>
               Next
             </p>
