@@ -122,7 +122,7 @@ export function SceneScreen({
                 </div>
               </RevealItem>
 
-              <RevealItem variant="card">
+              <RevealItem variant="card" className="hidden lg:block">
                 <div className="grid gap-[var(--mobile-body-action-gap)] sm:grid-cols-[auto_auto] lg:justify-end">
                   {primaryAction ? (
                     <TransitionLink className="button-primary" href={primaryAction.href}>
@@ -150,9 +150,6 @@ export function SceneScreen({
                       <p className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">
                         {progressionNote}
                       </p>
-                      <p className="mt-1.5 text-[0.82rem] leading-5 text-[var(--text-secondary)]">
-                        Swipe inside this scene or use the controls below.
-                      </p>
                     </div>
                     <span className="text-[0.72rem] uppercase tracking-[0.18em] text-[var(--text-tertiary)]">
                       {String(activeIndex + 1).padStart(2, "0")} / {String(steps.length).padStart(2, "0")}
@@ -175,29 +172,19 @@ export function SceneScreen({
                               className="h-full w-full object-cover"
                             />
                             <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.02),rgba(232,239,246,0.16))]" />
-                            <div className="media-caption absolute inset-x-2.5 bottom-2.5 rounded-[1rem] px-3.5 py-3">
-                              <div className="flex items-center justify-between gap-2">
-                                <p className="text-[0.66rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-deep)]">
-                                  {step.mediaLabel}
-                                </p>
-                                <p className="text-[0.62rem] uppercase tracking-[0.16em] text-[var(--text-tertiary)]">
-                                  {stageLabel}
-                                </p>
-                              </div>
+                              <div className="media-caption absolute inset-x-2.5 bottom-2.5 rounded-[1rem] px-3.5 py-3">
+                              <p className="text-[0.66rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-deep)]">
+                                {step.mediaLabel}
+                              </p>
                               <p className="mt-2 text-[0.92rem] leading-6 text-[var(--text-primary)]">
                                 {step.summary}
                               </p>
                             </div>
                           </div>
 
-                          <div className="flex flex-wrap items-start gap-2.5">
-                            <span className="archive-chip rounded-full px-3 py-1.5 text-[0.64rem] uppercase tracking-[0.16em] text-[var(--accent-deep)]">
-                              {step.label}
-                            </span>
-                            <p className="min-w-0 flex-1 text-[0.76rem] leading-5 text-[var(--text-secondary)]">
-                              {step.mediaCaption}
-                            </p>
-                          </div>
+                          <p className="text-[0.78rem] leading-5 text-[var(--text-secondary)]">
+                            {step.mediaCaption}
+                          </p>
                         </div>
                       </article>
                     ))}
@@ -223,9 +210,6 @@ export function SceneScreen({
                         );
                       })}
                     </div>
-                    <span className="archive-chip rounded-full px-3 py-1.5 text-[0.64rem] uppercase tracking-[0.16em] text-[var(--text-secondary)]">
-                      {active.label}
-                    </span>
                   </div>
                 </div>
               </RevealItem>
@@ -241,10 +225,7 @@ export function SceneScreen({
                     className="panel-strong flex flex-col gap-[var(--mobile-card-gap)] rounded-[1.3rem] p-4"
                   >
                     <div>
-                      <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-deep)]">
-                        Active state
-                      </p>
-                      <h2 className="mt-[var(--mobile-label-heading-gap)] text-[1.42rem] leading-[1.02] text-balance">
+                      <h2 className="text-[1.42rem] leading-[1.02] text-balance">
                         {active.title}
                       </h2>
                       <p className="mt-[var(--mobile-heading-body-gap)] text-[0.92rem] leading-6 text-[var(--text-secondary)]">
@@ -263,22 +244,22 @@ export function SceneScreen({
                       ))}
                     </div>
 
-                    <div className="grid gap-[var(--mobile-body-action-gap)] sm:grid-cols-2">
+                    <div className="flex items-center gap-2.5">
                       <button
                         type="button"
-                        className="button-secondary px-4"
+                        className="button-secondary !min-h-0 !w-auto shrink-0 px-3 py-2 text-[0.74rem] opacity-80"
                         disabled={isFirst}
                         onClick={goPrev}
                       >
-                        Previous Step
+                        Previous
                       </button>
                       <button
                         type="button"
-                        className="button-primary px-4"
+                        className="button-primary flex-1 px-4"
                         disabled={isLast}
                         onClick={goNext}
                       >
-                        Next Step
+                        Next
                       </button>
                     </div>
                   </motion.div>

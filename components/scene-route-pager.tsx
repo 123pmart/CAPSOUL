@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 
 import { TransitionLink } from "@/components/transition-link";
+import { useCompactViewport } from "@/components/use-compact-viewport";
 import {
   getAdjacentSceneRoute,
   getSceneRouteEntry,
@@ -19,6 +20,7 @@ export function SceneRoutePager({
   className = "",
 }: SceneRoutePagerProps) {
   const pathname = usePathname();
+  const isPhoneViewport = useCompactViewport("(max-width: 767px)");
   const current = getSceneRouteEntry(pathname);
   const previous = getAdjacentSceneRoute(pathname, "previous");
   const next = getAdjacentSceneRoute(pathname, "next");
@@ -38,6 +40,21 @@ export function SceneRoutePager({
   const titleClassName = compact
     ? "mt-1.5 text-[0.9rem] leading-5"
     : "mt-1.5 text-[0.94rem] leading-6";
+
+  if (compact && isPhoneViewport) {
+    return (
+      <div className={`${wrapperClassName} ${className}`.trim()}>
+        <div className="flex items-center justify-between gap-3">
+          <span className="archive-chip min-w-0 max-w-[72%] truncate rounded-full px-3 py-1.5 text-[0.64rem] uppercase tracking-[0.16em] text-[var(--text-secondary)]">
+            {current.label}
+          </span>
+          <span className="text-[0.68rem] uppercase tracking-[0.18em] text-[var(--text-tertiary)]">
+            {String(progress.current).padStart(2, "0")} / {String(progress.total).padStart(2, "0")}
+          </span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={`${wrapperClassName} ${className}`.trim()}>

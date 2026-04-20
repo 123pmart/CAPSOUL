@@ -426,18 +426,15 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
               {!submitted ? (
                 <>
                   <RevealItem variant="card">
-                    <div className="panel-strong rounded-[1.28rem] p-3.5">
-                      <div className="flex items-start justify-between gap-3">
-                        <div className="min-w-0">
-                          <p className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">
-                            {sceneData.progressionLabel}
-                          </p>
-                          <p className="mt-1.5 text-[0.82rem] leading-5 text-[var(--text-secondary)]">
-                            Swipe this guidance panel or tap through the steps below.
-                          </p>
-                        </div>
-                        <span className="text-[0.72rem] uppercase tracking-[0.18em] text-[var(--text-tertiary)]">
-                          {String(activeIndex + 1).padStart(2, "0")} / {String(sceneData.formSteps.length).padStart(2, "0")}
+                  <div className="panel-strong rounded-[1.28rem] p-3.5">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0">
+                        <p className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">
+                          {sceneData.progressionLabel}
+                        </p>
+                      </div>
+                      <span className="text-[0.72rem] uppercase tracking-[0.18em] text-[var(--text-tertiary)]">
+                        {String(activeIndex + 1).padStart(2, "0")} / {String(sceneData.formSteps.length).padStart(2, "0")}
                         </span>
                       </div>
 
@@ -495,9 +492,6 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
                             );
                           })}
                         </div>
-                        <span className="archive-chip rounded-full px-3 py-1.5 text-[0.64rem] uppercase tracking-[0.16em] text-[var(--text-secondary)]">
-                          {activeSupport.label}
-                        </span>
                       </div>
                     </div>
                   </RevealItem>
@@ -505,17 +499,6 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
                   <RevealItem variant="card">
                     <div className="panel-strong rounded-[1.35rem] p-4">
                       <form className="grid gap-[var(--mobile-card-gap)]" onSubmit={handleSubmit}>
-                        <div className="flex flex-wrap gap-2">
-                          {sceneData.trustPoints.map((point) => (
-                            <span
-                              key={point}
-                              className="archive-chip rounded-full px-3 py-1.5 text-[0.62rem] uppercase tracking-[0.14em] text-[var(--text-secondary)]"
-                            >
-                              {point}
-                            </span>
-                          ))}
-                        </div>
-
                         <div className="grid grid-cols-3 gap-2">
                           {sceneData.formSteps.map((step, index) => {
                             const isActive = index === activeIndex;
@@ -550,10 +533,7 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
                         </div>
 
                         <div>
-                          <p className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">
-                            {activeSupport.label}
-                          </p>
-                          <h2 className="mt-[var(--mobile-label-heading-gap)] text-[1.34rem] leading-[1.04] text-balance">
+                          <h2 className="text-[1.34rem] leading-[1.04] text-balance">
                             {activeFormStep.title}
                           </h2>
                           <p className="mt-[var(--mobile-heading-body-gap)] text-[0.9rem] leading-6 text-[var(--text-secondary)]">
@@ -584,30 +564,30 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
                           {sceneData.footerNote}
                         </p>
 
-                        <div className="grid gap-[var(--mobile-body-action-gap)] sm:grid-cols-2">
+                      <div className="flex items-center gap-2.5">
+                        <button
+                          type="button"
+                          className="button-secondary !min-h-0 !w-auto shrink-0 px-3 py-2 text-[0.74rem] opacity-80"
+                          disabled={isFirst}
+                          onClick={goPrev}
+                        >
+                          {sceneData.previousButtonLabel}
+                        </button>
+
+                        {!isLast ? (
                           <button
                             type="button"
-                            className="button-secondary px-4"
-                            disabled={isFirst}
-                            onClick={goPrev}
+                            className="button-primary flex-1 px-4"
+                            disabled={isSubmitting}
+                            onClick={goNext}
                           >
-                            {sceneData.previousButtonLabel}
+                            {sceneData.nextButtonLabel}
                           </button>
-
-                          {!isLast ? (
-                            <button
-                              type="button"
-                              className="button-primary px-4"
-                              disabled={isSubmitting}
-                              onClick={goNext}
-                            >
-                              {sceneData.nextButtonLabel}
-                            </button>
-                          ) : (
-                            <button className="button-primary px-4" disabled={isSubmitting} type="submit">
-                              {isSubmitting ? "Submitting..." : sceneData.submitButtonLabel}
-                            </button>
-                          )}
+                        ) : (
+                          <button className="button-primary flex-1 px-4" disabled={isSubmitting} type="submit">
+                            {isSubmitting ? "Submitting..." : sceneData.submitButtonLabel}
+                          </button>
+                        )}
                         </div>
                       </form>
                     </div>
