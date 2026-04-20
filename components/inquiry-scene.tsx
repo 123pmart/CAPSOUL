@@ -17,6 +17,7 @@ import { RevealGroup, RevealItem } from "@/components/reveal";
 import { SceneRoutePager } from "@/components/scene-route-pager";
 import { SceneViewport } from "@/components/scene-viewport";
 import { TransitionLink } from "@/components/transition-link";
+import { useMobileSceneCarousel } from "@/components/use-mobile-scene-carousel";
 import { useSceneProgression } from "@/components/use-scene-progression";
 import type { ResolvedInquiryContent } from "@/lib/site-content-schema";
 
@@ -77,6 +78,12 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
 
   const activeSupport = sceneData.supportStates[activeIndex] ?? sceneData.supportStates[0];
   const activeFormStep = sceneData.formSteps[activeIndex] ?? sceneData.formSteps[0];
+  const { containerRef: mobileSupportRailRef, carouselBindings } = useMobileSceneCarousel({
+    activeIndex,
+    slideCount: sceneData.supportStates.length,
+    onIndexChange: resetToStep,
+    enabled: !submitted && !isSubmitting && !usesViewportProgression,
+  });
 
   if (!activeSupport || !activeFormStep) {
     return null;
@@ -416,29 +423,100 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
                 <SceneRoutePager compact />
               </RevealItem>
 
-              <RevealItem variant="micro">
-                <div className="grid gap-2 sm:grid-cols-3">
-                  {sceneData.trustPoints.map((point) => (
-                    <div
-                      key={point}
-                      className="archive-chip rounded-[0.95rem] px-3 py-2.5 text-center text-[0.68rem] uppercase tracking-[0.14em] text-[var(--text-secondary)]"
-                    >
-                      {point}
-                    </div>
-                  ))}
-                </div>
-              </RevealItem>
-            </div>
+              {!submitted ? (
+                <>
+                  <RevealItem variant="card">
+                    <div className="panel-strong rounded-[1.28rem] p-3.5">
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="min-w-0">
+                          <p className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">
+                            {sceneData.progressionLabel}
+                          </p>
+                          <p className="mt-1.5 text-[0.82rem] leading-5 text-[var(--text-secondary)]">
+                            Swipe this guidance panel or tap through the steps below.
+                          </p>
+                        </div>
+                        <span className="text-[0.72rem] uppercase tracking-[0.18em] text-[var(--text-tertiary)]">
+                          {String(activeIndex + 1).padStart(2, "0")} / {String(sceneData.formSteps.length).padStart(2, "0")}
+                        </span>
+                      </div>
 
-            <div className="lg:hidden">
-              <RevealGroup className="grid gap-[var(--mobile-card-gap)]" delay={100} stagger={0.08} amount={0.2}>
-                <RevealItem variant="card">
-                  <div className="panel-strong rounded-[1.35rem] p-4">
-                    {submitted ? (
-                      renderSuccessContent(true)
-                    ) : (
+                      <div ref={mobileSupportRailRef} className="mobile-scene-rail mt-3" {...carouselBindings}>
+                        {sceneData.supportStates.map((support, index) => (
+                          <article key={`${support.label}-slide`} className="mobile-scene-slide">
+                            <div className="scene-focus flex h-full flex-col gap-3 p-3">
+                              <div className="film-frame relative min-h-[10.85rem] overflow-hidden">
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                <img
+                                  src={support.image}
+                                  alt={`${support.title} visual placeholder.`}
+                                  className="h-full w-full object-cover"
+                                />
+                                <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.02),rgba(232,239,246,0.16))]" />
+                                <div className="media-caption absolute inset-x-2.5 bottom-2.5 rounded-[1rem] px-3.5 py-3">
+                                  <div className="flex items-center justify-between gap-2">
+                                    <p className="text-[0.66rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-deep)]">
+                                      {support.label}
+                                    </p>
+                                    <p className="text-[0.62rem] uppercase tracking-[0.16em] text-[var(--text-tertiary)]">
+                                      {sceneData.formSteps[index]?.chip ?? sceneData.progressionLabel}
+                                    </p>
+                                  </div>
+                                  <h2 className="mt-2 text-[1.14rem] leading-[1.04] text-[var(--text-primary)]">
+                                    {support.title}
+                                  </h2>
+                                  <p className="mt-2 text-[0.88rem] leading-6 text-[var(--text-secondary)]">
+                                    {support.body}
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                          </article>
+                        ))}
+                      </div>
+
+                      <div className="mt-3 flex items-center justify-between gap-3">
+                        <div className="flex flex-wrap gap-1.5">
+                          {sceneData.supportStates.map((support, index) => {
+                            const isActive = index === activeIndex;
+
+                            return (
+                              <button
+                                key={`${support.label}-indicator`}
+                                type="button"
+                                aria-label={`Show ${support.title}`}
+                                onClick={() => goToStep(index)}
+                                className={`h-2.5 rounded-full transition-all duration-300 ${
+                                  isActive
+                                    ? "w-7 bg-[var(--accent-deep)]"
+                                    : "w-2.5 bg-[rgba(158,179,200,0.34)]"
+                                }`}
+                              />
+                            );
+                          })}
+                        </div>
+                        <span className="archive-chip rounded-full px-3 py-1.5 text-[0.64rem] uppercase tracking-[0.16em] text-[var(--text-secondary)]">
+                          {activeSupport.label}
+                        </span>
+                      </div>
+                    </div>
+                  </RevealItem>
+
+                  <RevealItem variant="card">
+                    <div className="panel-strong rounded-[1.35rem] p-4">
                       <form className="grid gap-[var(--mobile-card-gap)]" onSubmit={handleSubmit}>
-                        <div className="grid gap-2 sm:grid-cols-3">
+                        <div className="flex flex-wrap gap-2">
+                          {sceneData.trustPoints.map((point) => (
+                            <span
+                              key={point}
+                              className="archive-chip rounded-full px-3 py-1.5 text-[0.62rem] uppercase tracking-[0.14em] text-[var(--text-secondary)]"
+                            >
+                              {point}
+                            </span>
+                          ))}
+                        </div>
+
+                        <div className="grid grid-cols-3 gap-2">
                           {sceneData.formSteps.map((step, index) => {
                             const isActive = index === activeIndex;
 
@@ -475,15 +553,13 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
                           <p className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">
                             {activeSupport.label}
                           </p>
-                          <h2 className="mt-[var(--mobile-label-heading-gap)] text-[1.42rem] leading-[1.04] text-balance">
+                          <h2 className="mt-[var(--mobile-label-heading-gap)] text-[1.34rem] leading-[1.04] text-balance">
                             {activeFormStep.title}
                           </h2>
-                          <p className="mt-[var(--mobile-heading-body-gap)] text-[0.92rem] leading-6 text-[var(--text-secondary)]">
+                          <p className="mt-[var(--mobile-heading-body-gap)] text-[0.9rem] leading-6 text-[var(--text-secondary)]">
                             {activeFormStep.description}
                           </p>
                         </div>
-
-                        <div className="home-divider" />
 
                         <AnimatePresence mode="wait">
                           <motion.div
@@ -503,18 +579,6 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
                             {submitError}
                           </p>
                         ) : null}
-
-                        <div className="panel rounded-[1rem] p-3.5">
-                          <p className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">
-                            {sceneData.progressionLabel}
-                          </p>
-                          <p className="mt-2 text-[0.92rem] leading-6 text-[var(--text-primary)]">
-                            {activeSupport.body}
-                          </p>
-                          <p className="mt-2 text-[0.84rem] leading-6 text-[var(--text-secondary)]">
-                            {sceneData.mediaNote}
-                          </p>
-                        </div>
 
                         <p className="text-[0.82rem] leading-6 text-[var(--text-secondary)]">
                           {sceneData.footerNote}
@@ -546,10 +610,14 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
                           )}
                         </div>
                       </form>
-                    )}
-                  </div>
+                    </div>
+                  </RevealItem>
+                </>
+              ) : (
+                <RevealItem variant="card">
+                  <div className="panel-strong rounded-[1.35rem] p-4">{renderSuccessContent(true)}</div>
                 </RevealItem>
-              </RevealGroup>
+              )}
             </div>
 
             <div className="hidden lg:grid lg:min-h-0 lg:flex-1 lg:grid-cols-[minmax(0,1.02fr)_minmax(20rem,0.98fr)] lg:gap-5">

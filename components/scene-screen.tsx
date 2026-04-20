@@ -13,6 +13,7 @@ import { RevealGroup, RevealItem } from "@/components/reveal";
 import { SceneRoutePager } from "@/components/scene-route-pager";
 import { SceneViewport } from "@/components/scene-viewport";
 import { TransitionLink } from "@/components/transition-link";
+import { useMobileSceneCarousel } from "@/components/use-mobile-scene-carousel";
 import { useSceneProgression } from "@/components/use-scene-progression";
 import type { ScreenAction, ScreenStep } from "@/content/screen-scenes";
 
@@ -45,6 +46,7 @@ export function SceneScreen({
     goNext,
     goPrev,
     goToStep,
+    resetToStep,
     isFirst,
     isLast,
     sceneBindings,
@@ -59,6 +61,12 @@ export function SceneScreen({
     if (tone === "deep") return "scene-shell-deep";
     return "scene-shell-cool";
   }, [tone]);
+  const { containerRef: mobileSceneRailRef, carouselBindings } = useMobileSceneCarousel({
+    activeIndex,
+    slideCount: steps.length,
+    onIndexChange: resetToStep,
+    enabled: !usesViewportProgression,
+  });
 
   if (!active) {
     return null;
@@ -87,7 +95,7 @@ export function SceneScreen({
 
   const progressionNote = usesViewportProgression
     ? compactNote
-    : "Tap through the step controls.";
+    : "Swipe through the scene states.";
 
   return (
     <section className="shell py-2 sm:py-4 lg:h-[calc(100dvh-var(--header-offset-desktop))] lg:min-h-[calc(100svh-var(--header-offset-desktop))]">
@@ -135,98 +143,91 @@ export function SceneScreen({
                 <SceneRoutePager compact />
               </RevealItem>
 
-              <RevealItem variant="micro">
-                <div className="panel rounded-[1rem] px-3.5 py-3">
-                  <div className="flex flex-wrap items-center justify-between gap-2">
-                    <span className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">
-                      {progressionNote}
-                    </span>
+              <RevealItem variant="card">
+                <div className="panel-strong rounded-[1.2rem] p-3.5">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">
+                        {progressionNote}
+                      </p>
+                      <p className="mt-1.5 text-[0.82rem] leading-5 text-[var(--text-secondary)]">
+                        Swipe inside this scene or use the controls below.
+                      </p>
+                    </div>
                     <span className="text-[0.72rem] uppercase tracking-[0.18em] text-[var(--text-tertiary)]">
                       {String(activeIndex + 1).padStart(2, "0")} / {String(steps.length).padStart(2, "0")}
                     </span>
                   </div>
-                </div>
-              </RevealItem>
 
-              <RevealItem variant="card">
-                <div className="panel-strong rounded-[1.2rem] p-3.5">
-                  <div className="grid gap-2 sm:grid-cols-2">
-                    {steps.map((step, index) => {
-                      const isActive = index === activeIndex;
+                  <div
+                    ref={mobileSceneRailRef}
+                    className="mobile-scene-rail mt-3"
+                    {...carouselBindings}
+                  >
+                    {steps.map((step) => (
+                      <article key={`${step.label}-slide`} className="mobile-scene-slide">
+                        <div className="scene-focus flex h-full flex-col gap-3 p-3">
+                          <div className="film-frame relative min-h-[11.4rem] overflow-hidden">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                              src={step.image}
+                              alt={`${step.title} visual placeholder.`}
+                              className="h-full w-full object-cover"
+                            />
+                            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.02),rgba(232,239,246,0.16))]" />
+                            <div className="media-caption absolute inset-x-2.5 bottom-2.5 rounded-[1rem] px-3.5 py-3">
+                              <div className="flex items-center justify-between gap-2">
+                                <p className="text-[0.66rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-deep)]">
+                                  {step.mediaLabel}
+                                </p>
+                                <p className="text-[0.62rem] uppercase tracking-[0.16em] text-[var(--text-tertiary)]">
+                                  {stageLabel}
+                                </p>
+                              </div>
+                              <p className="mt-2 text-[0.92rem] leading-6 text-[var(--text-primary)]">
+                                {step.summary}
+                              </p>
+                            </div>
+                          </div>
 
-                      return (
-                        <motion.button
-                          key={step.label}
-                          type="button"
-                          onClick={() => goToStep(index)}
-                          transition={cardStateTransition}
-                          animate={
-                            reduceMotion
-                              ? undefined
-                              : isActive
-                                ? { y: -3, scale: 1.01 }
-                                : { y: 0, scale: 1 }
-                          }
-                          whileHover={reduceMotion || isActive ? undefined : subtleHoverLift}
-                          whileTap={reduceMotion ? undefined : subtleTapPress}
-                          className={`rounded-[1rem] border px-3.5 py-3 text-left ${
-                            isActive
-                              ? "border-white/88 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(231,239,247,0.98))] shadow-[0_18px_34px_rgba(152,169,189,0.2)]"
-                              : "border-[rgba(181,196,211,0.28)] bg-[linear-gradient(180deg,rgba(255,255,255,0.48),rgba(243,248,252,0.68))]"
-                          }`}
-                        >
-                          <p className="text-[0.64rem] font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">
-                            {step.label}
-                          </p>
-                          <p className="mt-1.5 text-[0.9rem] leading-5 text-[var(--text-primary)]">
-                            {step.title}
-                          </p>
-                        </motion.button>
-                      );
-                    })}
+                          <div className="flex flex-wrap items-start gap-2.5">
+                            <span className="archive-chip rounded-full px-3 py-1.5 text-[0.64rem] uppercase tracking-[0.16em] text-[var(--accent-deep)]">
+                              {step.label}
+                            </span>
+                            <p className="min-w-0 flex-1 text-[0.76rem] leading-5 text-[var(--text-secondary)]">
+                              {step.mediaCaption}
+                            </p>
+                          </div>
+                        </div>
+                      </article>
+                    ))}
+                  </div>
+
+                  <div className="mt-3 flex items-center justify-between gap-3">
+                    <div className="flex flex-wrap gap-1.5">
+                      {steps.map((step, index) => {
+                        const isActive = index === activeIndex;
+
+                        return (
+                          <button
+                            key={`${step.label}-dot`}
+                            type="button"
+                            aria-label={`Show ${step.title}`}
+                            onClick={() => goToStep(index)}
+                            className={`h-2.5 rounded-full transition-all duration-300 ${
+                              isActive
+                                ? "w-7 bg-[var(--accent-deep)]"
+                                : "w-2.5 bg-[rgba(158,179,200,0.34)]"
+                            }`}
+                          />
+                        );
+                      })}
+                    </div>
+                    <span className="archive-chip rounded-full px-3 py-1.5 text-[0.64rem] uppercase tracking-[0.16em] text-[var(--text-secondary)]">
+                      {active.label}
+                    </span>
                   </div>
                 </div>
-              </RevealItem>
-
-              <RevealItem variant="media">
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={`${active.label}-mobile-media`}
-                    initial={mediaEnter}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={mediaExit}
-                    transition={contentSwapTransition}
-                    className="scene-focus flex flex-col gap-[var(--mobile-card-gap)] p-3"
-                  >
-                    <div className="film-frame relative min-h-[12.5rem] overflow-hidden">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={active.image}
-                        alt={`${active.title} visual placeholder.`}
-                        className="h-full w-full object-cover"
-                      />
-                      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.02),rgba(232,239,246,0.16))]" />
-                    </div>
-
-                    <div className="flex flex-wrap items-center justify-between gap-2">
-                      <span className="archive-chip rounded-full px-3 py-1.5 text-[0.66rem] uppercase tracking-[0.16em] text-[var(--accent-deep)]">
-                        {active.mediaLabel}
-                      </span>
-                      <span className="text-[0.66rem] uppercase tracking-[0.18em] text-[var(--text-tertiary)]">
-                        {stageLabel}
-                      </span>
-                    </div>
-
-                    <div>
-                      <p className="text-[0.98rem] leading-6 text-[var(--text-primary)]">
-                        {active.summary}
-                      </p>
-                      <p className="mt-2 text-[0.86rem] leading-6 text-[var(--text-secondary)]">
-                        {active.mediaCaption}
-                      </p>
-                    </div>
-                  </motion.div>
-                </AnimatePresence>
               </RevealItem>
 
               <RevealItem variant="card">
@@ -243,19 +244,19 @@ export function SceneScreen({
                       <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-deep)]">
                         Active state
                       </p>
-                      <h2 className="mt-2 text-[1.48rem] leading-[1.02] text-balance">
+                      <h2 className="mt-[var(--mobile-label-heading-gap)] text-[1.42rem] leading-[1.02] text-balance">
                         {active.title}
                       </h2>
-                      <p className="mt-3 text-[0.92rem] leading-6 text-[var(--text-secondary)]">
+                      <p className="mt-[var(--mobile-heading-body-gap)] text-[0.92rem] leading-6 text-[var(--text-secondary)]">
                         {active.detail}
                       </p>
                     </div>
 
-                    <div className="grid gap-2">
+                    <div className="flex flex-wrap gap-2">
                       {active.bullets.map((bullet) => (
                         <div
                           key={`${active.label}-mobile-${bullet}`}
-                          className="panel rounded-[0.92rem] px-3.5 py-3 text-[0.85rem] leading-6 text-[var(--text-secondary)]"
+                          className="archive-chip rounded-full px-3 py-2 text-[0.76rem] leading-5 text-[var(--text-secondary)]"
                         >
                           {bullet}
                         </div>
