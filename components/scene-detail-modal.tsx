@@ -44,23 +44,27 @@ export function SceneDetailModal({
 
   const backdropTransition = reduceMotion
     ? { duration: 0 }
-    : { duration: 0.28, ease: measuredEase };
+    : { duration: 0.32, ease: measuredEase };
   const panelTransition = reduceMotion
     ? { duration: 0 }
-    : { duration: 0.34, ease: premiumEase };
+    : { duration: 0.3, ease: premiumEase };
 
   return (
     <AnimatePresence initial={false}>
       {open ? (
-        <div key="scene-detail-modal" className="scene-detail-modal lg:hidden">
+        <div key="scene-detail-modal" className="scene-detail-modal md:hidden">
           <motion.button
             type="button"
             aria-label="Close scene detail"
             className="scene-detail-backdrop"
             onClick={onClose}
-            initial={reduceMotion ? { opacity: 1 } : { opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+            initial={
+              reduceMotion
+                ? { opacity: 1 }
+                : { opacity: 0, backdropFilter: "blur(0px) saturate(100%)" }
+            }
+            animate={{ opacity: 1, backdropFilter: "blur(16px) saturate(138%)" }}
+            exit={{ opacity: 0, backdropFilter: "blur(0px) saturate(100%)" }}
             transition={backdropTransition}
           />
 
@@ -69,9 +73,9 @@ export function SceneDetailModal({
             aria-modal="true"
             aria-label={title}
             className="scene-detail-panel panel-strong"
-            initial={reduceMotion ? { opacity: 1 } : { opacity: 0, scale: 0.972, y: 12 }}
+            initial={reduceMotion ? { opacity: 1 } : { opacity: 0, scale: 0.978, y: 12 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.986, y: 10 }}
+            exit={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.99, y: 8 }}
             transition={panelTransition}
           >
             <div className="flex items-start justify-between gap-3">

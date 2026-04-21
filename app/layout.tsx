@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import type { Metadata } from "next";
 
+import { AdminEntry } from "@/components/admin/admin-entry";
 import { SceneTransitionProvider } from "@/components/scene-transition-provider";
 import { SiteLocaleProvider } from "@/components/site-locale-provider";
 import { SiteHeader } from "@/components/site-header";
@@ -48,7 +49,13 @@ export default async function RootLayout({
                 className="relative min-h-[100svh] w-full max-w-full pt-[var(--header-offset-mobile)] sm:pt-[var(--header-offset-desktop)]"
               >
                 {children}
+                <div className="md:hidden">
+                  <AdminEntry inline />
+                </div>
               </main>
+              <div className="hidden md:block">
+                <AdminEntry />
+              </div>
             </SceneTransitionProvider>
           </SiteLocaleProvider>
         </div>

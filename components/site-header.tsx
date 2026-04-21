@@ -16,7 +16,6 @@ export function SiteHeader() {
   const [isOpen, setIsOpen] = useState(false);
   const reduceMotion = useReducedMotion();
   const { globalContent } = useSiteLocale();
-  const showAdminLink = !pathname?.startsWith("/admin");
 
   const navigationItems = useMemo(
     () =>
@@ -46,8 +45,8 @@ export function SiteHeader() {
           }}
           className="scene-shell scene-shell-cool w-full px-3 py-[var(--header-shell-pad-mobile)] backdrop-blur-xl sm:px-4 sm:py-[var(--header-shell-pad-desktop)]"
         >
-          <div className="relative z-10 flex min-h-[var(--header-height-mobile)] min-w-0 items-center justify-between gap-3 sm:min-h-[var(--header-height-desktop)] sm:gap-4 xl:grid xl:grid-cols-[minmax(16rem,1fr)_auto_minmax(16rem,1fr)] xl:items-center xl:gap-6">
-            <div className="flex min-w-0 flex-1 items-center xl:w-full xl:justify-self-start">
+          <div className="relative z-10 flex min-h-[var(--header-height-mobile)] min-w-0 items-center justify-between gap-3 sm:min-h-[var(--header-height-desktop)] sm:gap-4 lg:grid lg:grid-cols-[minmax(14rem,1fr)_auto_minmax(14rem,1fr)] lg:items-center lg:gap-6">
+            <div className="flex min-w-0 flex-1 items-center lg:w-full lg:justify-self-start">
               <TransitionLink href="/" aria-label="Go to CAPSOUL home page" className="shrink-0">
                 <BrandMark compact />
               </TransitionLink>
@@ -55,7 +54,7 @@ export function SiteHeader() {
 
             <nav
               aria-label="Primary navigation"
-              className="hidden items-center justify-self-center gap-1 rounded-full border border-white/80 bg-[linear-gradient(180deg,rgba(255,255,255,0.72),rgba(242,247,252,0.88))] px-1.5 py-1.5 shadow-[0_18px_42px_rgba(152,169,189,0.18)] backdrop-blur-xl xl:inline-flex"
+              className="hidden items-center justify-self-center gap-1 rounded-full border border-white/80 bg-[linear-gradient(180deg,rgba(255,255,255,0.72),rgba(242,247,252,0.88))] px-1.5 py-1.5 shadow-[0_18px_42px_rgba(152,169,189,0.18)] backdrop-blur-xl lg:inline-flex"
             >
               {navigationItems.map((item) => {
                 const active = isSceneRouteActive(pathname, item.href);
@@ -76,25 +75,17 @@ export function SiteHeader() {
               })}
             </nav>
 
-            <div className="header-utility-row hidden xl:w-full xl:justify-self-end xl:flex">
+            <div className="hidden min-w-0 items-center justify-end gap-2.5 lg:flex lg:w-full lg:justify-self-end">
               <LanguageToggle className="w-auto min-w-[9.5rem]" />
               <span className="archive-chip utility-pill rounded-full px-3 py-1.5 text-[0.68rem] uppercase tracking-[0.16em] text-[var(--text-secondary)]">
                 {globalContent.headerTagline}
               </span>
-              {showAdminLink ? (
-                <TransitionLink
-                  href="/admin"
-                  className="archive-chip utility-pill utility-pill-tight rounded-full px-3 py-1.5 text-[0.66rem] uppercase tracking-[0.18em] text-[var(--text-secondary)]"
-                >
-                  {globalContent.adminEntryLabel}
-                </TransitionLink>
-              ) : null}
               <TransitionLink className="button-primary px-4 py-2 text-[0.88rem]" href="/inquire" scroll>
                 {globalContent.headerInquireLabel}
               </TransitionLink>
             </div>
 
-            <div className="flex shrink-0 items-center gap-2 xl:hidden">
+            <div className="flex shrink-0 items-center gap-2 lg:hidden">
               <TransitionLink
                 className="button-primary !min-h-0 !w-auto shrink-0 px-3.5 py-2 text-[0.78rem] sm:px-4 sm:text-[0.84rem]"
                 href="/inquire"
@@ -134,49 +125,30 @@ export function SiteHeader() {
 
           <div
             id="mobile-navigation"
-            className={`overflow-hidden transition-[max-height,opacity,padding] duration-300 ease-out xl:hidden ${
-              isOpen ? "max-h-[min(72svh,34rem)] pt-4 opacity-100" : "max-h-0 opacity-0"
+            className={`overflow-hidden transition-[max-height,padding] duration-300 ease-out lg:hidden ${
+              isOpen ? "max-h-[min(72svh,28rem)] pt-4" : "max-h-0"
             }`}
           >
-            <div className="header-menu-panel">
-              <div className="header-menu-scroll">
-                <LanguageToggle />
+            <div className="grid max-h-[min(60svh,22rem)] gap-2.5 overflow-y-auto pr-1 pb-[calc(var(--safe-bottom)+0.35rem)]">
+              <LanguageToggle />
 
-                {navigationItems.map((item) => {
-                  const active = isSceneRouteActive(pathname, item.href);
+              {navigationItems.map((item) => {
+                const active = isSceneRouteActive(pathname, item.href);
 
-                  return (
-                    <TransitionLink
-                      key={item.href}
-                      href={item.href}
-                      className={`nav-pill rounded-[1rem] px-4 py-3 text-[0.94rem] ${
-                        active
-                          ? "border border-white/85 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(228,237,246,0.98))] text-[var(--text-primary)] shadow-[0_12px_24px_rgba(154,170,190,0.16)]"
-                          : "bg-[linear-gradient(180deg,rgba(255,255,255,0.72),rgba(242,247,252,0.88))] text-[var(--text-primary)]"
-                      }`}
-                    >
-                      {item.label}
-                    </TransitionLink>
-                  );
-                })}
-              </div>
-
-              <div className="header-menu-cta">
-                <div className="grid gap-2.5 sm:grid-cols-[auto_minmax(0,1fr)]">
-                  {showAdminLink ? (
-                    <TransitionLink
-                      href="/admin"
-                      className="archive-chip utility-pill rounded-full px-3 py-2 text-center text-[0.68rem] uppercase tracking-[0.18em] text-[var(--text-secondary)]"
-                    >
-                      {globalContent.adminEntryLabel}
-                    </TransitionLink>
-                  ) : null}
-
-                  <TransitionLink className="button-primary w-full justify-center" href="/inquire" scroll>
-                    {globalContent.headerInquireLabel}
+                return (
+                  <TransitionLink
+                    key={item.href}
+                    href={item.href}
+                    className={`nav-pill rounded-[1rem] px-4 py-3 text-[0.94rem] ${
+                      active
+                        ? "border border-white/85 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(228,237,246,0.98))] text-[var(--text-primary)] shadow-[0_12px_24px_rgba(154,170,190,0.16)]"
+                        : "bg-[linear-gradient(180deg,rgba(255,255,255,0.72),rgba(242,247,252,0.88))] text-[var(--text-primary)]"
+                    }`}
+                  >
+                    {item.label}
                   </TransitionLink>
-                </div>
-              </div>
+                );
+              })}
             </div>
           </div>
         </motion.div>

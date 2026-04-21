@@ -529,6 +529,10 @@
   overflow: hidden;
 }
 
+.scene-focus.scene-panel-shell {
+  overflow: visible;
+}
+
 .panel {
   border: 1px solid rgba(255, 255, 255, 0.74);
   background:
@@ -789,7 +793,7 @@
 
 .scene-counter {
   display: inline-flex;
-  min-width: 5.2rem;
+  min-width: 4.9rem;
   flex-shrink: 0;
   align-items: center;
   justify-content: flex-end;
@@ -870,8 +874,8 @@
   position: absolute;
   inset: 0;
   border: 0;
-  background: rgba(240, 246, 252, 0.42);
-  backdrop-filter: blur(18px) saturate(142%);
+  background: rgba(240, 246, 252, 0.44);
+  backdrop-filter: blur(0px) saturate(100%);
   will-change: opacity, backdrop-filter;
 }
 

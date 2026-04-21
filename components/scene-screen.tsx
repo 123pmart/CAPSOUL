@@ -49,7 +49,7 @@ export function SceneScreen({
   tone = "cool",
 }: SceneScreenProps) {
   const reduceMotion = useReducedMotion();
-  const isCompactSceneViewport = useCompactViewport("(max-width: 1023px)");
+  const isPhoneViewport = useCompactViewport("(max-width: 767px)");
   const { globalContent } = useSiteLocale();
   const [isMobileSceneDetailOpen, setIsMobileSceneDetailOpen] = useState(false);
   const {
@@ -74,7 +74,7 @@ export function SceneScreen({
 
   useEffect(() => {
     setIsMobileSceneDetailOpen(false);
-  }, [activeIndex, isCompactSceneViewport]);
+  }, [activeIndex, isPhoneViewport]);
 
   if (!active) {
     return null;
@@ -109,12 +109,12 @@ export function SceneScreen({
     : { duration: 0.24, ease: measuredEase };
 
   return (
-    <section className="shell py-2 sm:py-4 lg:h-[calc(100dvh-var(--header-offset-desktop))] lg:min-h-[calc(100svh-var(--header-offset-desktop))]">
-      <SceneViewport className="lg:h-full">
-        <div className={`scene-shell ${toneClassName} scene-pad lg:h-full`} {...sceneBindings}>
-          <div className="scene-shell-body relative z-10 overflow-visible">
+    <section className="shell py-2 sm:py-4 md:h-[calc(100dvh-var(--header-offset-desktop))] md:min-h-[calc(100svh-var(--header-offset-desktop))]">
+      <SceneViewport className="md:h-full">
+        <div className={`scene-shell ${toneClassName} scene-pad md:h-full`} {...sceneBindings}>
+          <div className="relative z-10 flex flex-col gap-[var(--mobile-section-gap)] overflow-visible md:h-full md:min-h-0 md:gap-5">
             <RevealGroup
-              className="scene-shell-top grid gap-[var(--mobile-section-gap)] lg:gap-[var(--scene-shell-gap)]"
+              className="grid gap-[var(--mobile-section-gap)] md:grid-cols-[minmax(0,0.92fr)_auto] md:items-end md:gap-5"
               stagger={0.1}
               amount={0.25}
             >
@@ -130,12 +130,14 @@ export function SceneScreen({
                 </div>
               </RevealItem>
 
-              <RevealItem variant="card" className="hidden lg:block">
-                <SceneRoutePager className="scene-meta-cluster" />
+              <RevealItem variant="card" className="hidden md:block">
+                <div className="grid w-full max-w-[24rem] gap-2.5 md:justify-self-end">
+                  <SceneRoutePager compact />
+                </div>
               </RevealItem>
             </RevealGroup>
 
-            <div className="grid gap-[var(--mobile-card-gap)] lg:hidden">
+            <div className="grid gap-[var(--mobile-card-gap)] md:hidden">
               <RevealItem variant="micro">
                 <SceneRoutePager compact />
               </RevealItem>
@@ -156,9 +158,9 @@ export function SceneScreen({
                   <div className="scene-mobile-stage mt-3">
                     <motion.button
                       type="button"
-                      aria-expanded={isCompactSceneViewport ? isMobileSceneDetailOpen : undefined}
+                      aria-expanded={isPhoneViewport ? isMobileSceneDetailOpen : undefined}
                       onClick={() => {
-                        if (isCompactSceneViewport) {
+                        if (isPhoneViewport) {
                           setIsMobileSceneDetailOpen(true);
                         }
                       }}
@@ -239,10 +241,10 @@ export function SceneScreen({
               </RevealItem>
             </div>
 
-            <div className="scene-shell-main hidden lg:grid">
-              <RevealGroup className="min-h-0" delay={80} stagger={0.08} amount={0.2}>
-                <RevealItem variant="media" className="h-full min-h-0">
-                  <div className="scene-focus scene-panel-shell flex h-full min-h-[20rem] flex-col gap-3 p-3.5 xl:p-4">
+            <div className="hidden md:grid md:min-h-0 md:flex-1 md:grid-cols-[minmax(0,1.08fr)_minmax(20rem,0.92fr)] md:gap-5">
+              <RevealGroup className="md:min-h-0" delay={80} stagger={0.08} amount={0.2}>
+                <RevealItem variant="media" className="md:h-full">
+                  <div className="scene-focus scene-panel-shell flex min-h-[20rem] flex-col gap-3 p-3 sm:min-h-[22rem] sm:p-4 md:h-full">
                     <AnimatePresence mode="wait">
                       <motion.div
                         key={active.title}
@@ -279,7 +281,7 @@ export function SceneScreen({
                           </div>
                         </div>
 
-                        <div className="scene-support-tags">
+                        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
                           {active.bullets.map((bullet) => (
                             <div
                               key={bullet}
@@ -296,22 +298,24 @@ export function SceneScreen({
               </RevealGroup>
 
               <RevealGroup
-                className="scene-shell-side"
+                className="grid gap-3 md:min-h-0 md:grid-rows-[auto_minmax(0,1fr)_auto] md:pb-2"
                 delay={140}
                 stagger={0.1}
                 amount={0.2}
               >
-                <RevealItem variant="card" className="min-h-0">
-                  <div className="panel-strong flex h-full min-h-0 flex-col gap-4 rounded-[1.7rem] p-4 xl:p-5">
-                    <div className="flex flex-nowrap items-center justify-between gap-3">
-                      <span className="archive-chip utility-pill utility-pill-tight rounded-full px-3 py-1.5 text-[0.68rem] uppercase tracking-[0.16em] text-[var(--text-secondary)]">
-                        {usesViewportProgression ? compactNote : globalContent.sceneLabels.arrowInstruction}
-                      </span>
-                      <span className="scene-counter text-[0.75rem] uppercase tracking-[0.18em] text-[var(--text-tertiary)]">
-                        {String(activeIndex + 1).padStart(2, "0")} / {String(steps.length).padStart(2, "0")}
-                      </span>
-                    </div>
+                <RevealItem variant="micro">
+                  <div className="flex flex-nowrap items-center justify-between gap-3">
+                    <span className="archive-chip utility-pill utility-pill-tight rounded-full px-3.5 py-1.5 text-[0.7rem] uppercase tracking-[0.18em] text-[var(--text-secondary)]">
+                      {usesViewportProgression ? compactNote : globalContent.sceneLabels.arrowInstruction}
+                    </span>
+                    <span className="scene-counter text-[0.75rem] uppercase tracking-[0.18em] text-[var(--text-tertiary)]">
+                      {String(activeIndex + 1).padStart(2, "0")} / {String(steps.length).padStart(2, "0")}
+                    </span>
+                  </div>
+                </RevealItem>
 
+                <RevealItem variant="card" className="min-h-0">
+                  <div className="panel-strong flex flex-col gap-3 rounded-[1.7rem] p-3.5 sm:p-4 md:h-full md:min-h-0">
                     <div className="grid gap-2 sm:grid-cols-2 md:grid-cols-1">
                       {steps.map((step, index) => {
                         const isActive = index === activeIndex;
@@ -357,7 +361,7 @@ export function SceneScreen({
                         animate={{ opacity: 1, y: 0 }}
                         exit={panelExit}
                         transition={contentSwapTransition}
-                        className="scene-state-detail flex min-h-0 flex-1 flex-col justify-between gap-4"
+                        className="scene-state-detail flex flex-col justify-between gap-4 md:min-h-0 md:flex-1"
                       >
                         <div>
                           <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-deep)]">
@@ -386,30 +390,24 @@ export function SceneScreen({
                   </div>
                 </RevealItem>
 
-                <RevealItem variant="micro" className="scene-side-footer">
-                  <div className="scene-side-footer">
-                    <div className="grid gap-3 sm:grid-cols-2">
-                      <button
-                        type="button"
-                        className="button-secondary px-4"
-                        disabled={isFirst}
-                        onClick={goPrev}
-                      >
-                        {globalContent.routeLabels.previous}
-                      </button>
-                      <button
-                        type="button"
-                        className="button-primary px-4"
-                        disabled={isLast}
-                        onClick={goNext}
-                      >
-                        {globalContent.routeLabels.next}
-                      </button>
-                    </div>
-
-                    <p className="scene-footer-note text-[0.82rem] leading-6 text-[var(--text-secondary)]">
-                      {globalContent.sceneLabels.arrowInstruction}
-                    </p>
+                <RevealItem variant="micro">
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <button
+                      type="button"
+                      className="button-secondary px-4"
+                      disabled={isFirst}
+                      onClick={goPrev}
+                    >
+                      {globalContent.routeLabels.previous}
+                    </button>
+                    <button
+                      type="button"
+                      className="button-primary px-4"
+                      disabled={isLast}
+                      onClick={goNext}
+                    >
+                      {globalContent.routeLabels.next}
+                    </button>
                   </div>
                 </RevealItem>
               </RevealGroup>
