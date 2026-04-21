@@ -43,10 +43,10 @@ export function AdminEntry({ inline = false }: { inline?: boolean }) {
         paddingRight: "var(--safe-right)",
       }}
     >
-      <div className="shell flex justify-end pb-[var(--admin-entry-offset)]">
+      <div className="shell flex justify-start pb-[var(--admin-entry-offset)]">
         <TransitionLink
           href="/admin"
-          className="archive-chip pointer-events-auto rounded-full px-3 py-1.25 text-[0.62rem] uppercase tracking-[0.18em] text-[var(--text-secondary)] opacity-80 shadow-[0_14px_30px_rgba(150,166,186,0.14)] transition-opacity duration-200 hover:opacity-100 sm:px-3.5 sm:py-1.5 sm:text-[0.66rem]"
+          className="archive-chip pointer-events-auto rounded-full px-3 py-1.25 text-[0.62rem] uppercase tracking-[0.18em] text-[var(--text-secondary)] opacity-70 shadow-[0_12px_24px_rgba(150,166,186,0.12)] transition-opacity duration-200 hover:opacity-100 sm:px-3.5 sm:py-1.5 sm:text-[0.66rem]"
         >
           {globalContent.adminEntryLabel}
         </TransitionLink>

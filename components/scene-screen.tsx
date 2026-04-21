@@ -109,7 +109,7 @@ export function SceneScreen({
     : { duration: 0.24, ease: measuredEase };
 
   return (
-    <section className="shell py-2 sm:py-4 md:h-[calc(100dvh-var(--header-offset-desktop))] md:min-h-[calc(100svh-var(--header-offset-desktop))]">
+    <section className="shell py-2 sm:py-4 md:h-[calc(100svh-var(--header-offset-desktop))] md:min-h-[calc(100svh-var(--header-offset-desktop))] md:overflow-hidden">
       <SceneViewport className="md:h-full">
         <div className={`scene-shell ${toneClassName} scene-pad md:h-full`} {...sceneBindings}>
           <div className="relative z-10 flex flex-col gap-[var(--mobile-section-gap)] overflow-visible md:h-full md:min-h-0 md:gap-5">
@@ -131,7 +131,7 @@ export function SceneScreen({
               </RevealItem>
 
               <RevealItem variant="card" className="hidden md:block">
-                <div className="grid w-full max-w-[24rem] gap-2.5 md:justify-self-end">
+                <div className="grid w-full max-w-[23.5rem] gap-2.5 md:justify-self-end">
                   <SceneRoutePager compact />
                 </div>
               </RevealItem>
@@ -316,7 +316,7 @@ export function SceneScreen({
 
                 <RevealItem variant="card" className="min-h-0">
                   <div className="panel-strong flex flex-col gap-3 rounded-[1.7rem] p-3.5 sm:p-4 md:h-full md:min-h-0">
-                    <div className="grid gap-2 sm:grid-cols-2 md:grid-cols-1">
+                    <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-1">
                       {steps.map((step, index) => {
                         const isActive = index === activeIndex;
 
@@ -361,7 +361,7 @@ export function SceneScreen({
                         animate={{ opacity: 1, y: 0 }}
                         exit={panelExit}
                         transition={contentSwapTransition}
-                        className="scene-state-detail flex flex-col justify-between gap-4 md:min-h-0 md:flex-1"
+                        className="scene-state-detail grid gap-4 md:min-h-0 md:grid-rows-[auto_minmax(0,1fr)]"
                       >
                         <div>
                           <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-deep)]">
@@ -375,7 +375,7 @@ export function SceneScreen({
                           </p>
                         </div>
 
-                        <div className="grid gap-2">
+                        <div className="grid content-end gap-2 md:grid-cols-2 xl:grid-cols-1">
                           {active.bullets.map((bullet) => (
                             <div
                               key={`${active.label}-${bullet}`}

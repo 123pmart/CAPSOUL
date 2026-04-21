@@ -390,7 +390,7 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
   );
 
   return (
-    <section className="shell py-2 sm:py-4 md:h-[calc(100dvh-var(--header-offset-desktop))] md:min-h-[calc(100svh-var(--header-offset-desktop))]">
+    <section className="shell py-2 sm:py-4 md:h-[calc(100svh-var(--header-offset-desktop))] md:min-h-[calc(100svh-var(--header-offset-desktop))] md:overflow-hidden">
       <SceneViewport className="md:h-full">
         <div className="scene-shell scene-shell-warm scene-pad md:h-full" {...sceneBindings}>
           <div className="relative z-10 flex flex-col gap-[var(--mobile-section-gap)] overflow-visible md:h-full md:min-h-0 md:gap-5">
@@ -411,11 +411,6 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
                 </div>
               </RevealItem>
 
-              <RevealItem variant="card" className="hidden md:block">
-                <div className="grid max-w-[24rem] gap-2.5 md:justify-self-end">
-                  <SceneRoutePager compact />
-                </div>
-              </RevealItem>
             </RevealGroup>
 
             <div className="grid gap-[var(--mobile-card-gap)] md:hidden">
@@ -740,11 +735,17 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
               </RevealItem>
 
               <RevealGroup
-                className="grid gap-3 md:min-h-0 md:grid-rows-[minmax(0,1fr)_auto] md:pb-2"
+                className="grid gap-3 md:min-h-0 md:grid-rows-[auto_minmax(0,1fr)_auto] md:pb-2"
                 delay={120}
                 stagger={0.1}
                 amount={0.2}
               >
+                <RevealItem variant="card">
+                  <div className="grid w-full max-w-[23.5rem] gap-2.5">
+                    <SceneRoutePager compact />
+                  </div>
+                </RevealItem>
+
                 <RevealItem variant="media" className="min-h-0">
                   <div className="scene-focus scene-panel-shell flex min-h-[20rem] flex-col gap-3 p-3 sm:min-h-[22rem] sm:p-4 md:h-full">
                     <AnimatePresence mode="wait">
@@ -797,7 +798,7 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
                 </RevealItem>
 
                 <RevealItem variant="card">
-                  <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-1">
+                  <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-1">
                     {sceneData.trustPoints.map((point) => (
                       <div
                         key={point}

@@ -126,10 +126,10 @@ export function SiteHeader() {
           <div
             id="mobile-navigation"
             className={`overflow-hidden transition-[max-height,padding] duration-300 ease-out lg:hidden ${
-              isOpen ? "max-h-[min(72svh,28rem)] pt-4" : "max-h-0"
+              isOpen ? "max-h-[calc(100svh-var(--safe-top)-1rem)] pt-3" : "max-h-0"
             }`}
           >
-            <div className="grid max-h-[min(60svh,22rem)] gap-2.5 overflow-y-auto pr-1 pb-[calc(var(--safe-bottom)+0.35rem)]">
+            <div className="grid gap-2 pr-1 pb-[calc(var(--safe-bottom)+0.3rem)]">
               <LanguageToggle />
 
               {navigationItems.map((item) => {
@@ -139,7 +139,7 @@ export function SiteHeader() {
                   <TransitionLink
                     key={item.href}
                     href={item.href}
-                    className={`nav-pill rounded-[1rem] px-4 py-3 text-[0.94rem] ${
+                    className={`nav-pill rounded-[1rem] px-4 py-[0.8rem] text-[0.94rem] ${
                       active
                         ? "border border-white/85 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(228,237,246,0.98))] text-[var(--text-primary)] shadow-[0_12px_24px_rgba(154,170,190,0.16)]"
                         : "bg-[linear-gradient(180deg,rgba(255,255,255,0.72),rgba(242,247,252,0.88))] text-[var(--text-primary)]"

@@ -874,9 +874,9 @@
   position: absolute;
   inset: 0;
   border: 0;
-  background: rgba(240, 246, 252, 0.44);
-  backdrop-filter: blur(0px) saturate(100%);
-  will-change: opacity, backdrop-filter;
+  background: rgba(240, 246, 252, 0.34);
+  backdrop-filter: blur(14px) saturate(132%);
+  will-change: opacity;
 }
 
 .scene-detail-panel {
