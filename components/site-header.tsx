@@ -54,7 +54,7 @@ export function SiteHeader() {
 
             <nav
               aria-label="Primary navigation"
-              className="hidden items-center justify-self-center gap-1 rounded-full border border-white/80 bg-[linear-gradient(180deg,rgba(255,255,255,0.72),rgba(242,247,252,0.88))] px-1.5 py-1.5 shadow-[0_18px_42px_rgba(152,169,189,0.18)] backdrop-blur-xl lg:inline-flex"
+              className="hidden items-center justify-self-center gap-1 rounded-full border border-[rgba(255,255,255,0.84)] bg-[linear-gradient(180deg,rgba(255,255,255,0.8),rgba(232,243,253,0.9))] px-1.5 py-1.5 shadow-[0_18px_42px_rgba(111,144,181,0.14)] backdrop-blur-[16px] lg:inline-flex"
             >
               {navigationItems.map((item) => {
                 const active = isSceneRouteActive(pathname, item.href);
@@ -65,8 +65,8 @@ export function SiteHeader() {
                     href={item.href}
                     className={`nav-pill rounded-full px-3 py-2 text-[0.8rem] font-medium tracking-[-0.012em] xl:px-3.5 xl:text-[0.84rem] ${
                       active
-                        ? "border border-white/85 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(228,237,246,0.98))] text-[var(--text-primary)] shadow-[0_14px_28px_rgba(154,170,190,0.2)]"
-                        : "text-[var(--text-secondary)] hover:bg-white/58 hover:text-[var(--text-primary)]"
+                        ? "border border-[rgba(255,255,255,0.92)] bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(223,236,250,0.98))] text-[var(--text-primary)] shadow-[0_14px_28px_rgba(111,144,181,0.18)]"
+                        : "text-[var(--text-secondary)] hover:bg-[rgba(255,255,255,0.64)] hover:text-[var(--text-primary)]"
                     }`}
                   >
                     {item.label}
@@ -138,8 +138,8 @@ export function SiteHeader() {
                     href={item.href}
                     className={`nav-pill rounded-[1rem] px-4 py-[0.8rem] text-[0.94rem] ${
                       active
-                        ? "border border-white/85 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(228,237,246,0.98))] text-[var(--text-primary)] shadow-[0_12px_24px_rgba(154,170,190,0.16)]"
-                        : "bg-[linear-gradient(180deg,rgba(255,255,255,0.72),rgba(242,247,252,0.88))] text-[var(--text-primary)]"
+                        ? "border border-[rgba(255,255,255,0.9)] bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(223,236,250,0.98))] text-[var(--text-primary)] shadow-[0_12px_24px_rgba(111,144,181,0.16)]"
+                        : "bg-[linear-gradient(180deg,rgba(255,255,255,0.82),rgba(236,245,255,0.9))] text-[var(--text-primary)]"
                     }`}
                   >
                     {item.label}
