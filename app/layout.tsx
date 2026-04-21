@@ -1,13 +1,16 @@
 import type { ReactNode } from "react";
 import type { Metadata } from "next";
+import Script from "next/script";
 
 import { AdminEntry } from "@/components/admin/admin-entry";
 import { SceneTransitionProvider } from "@/components/scene-transition-provider";
 import { SiteLocaleProvider } from "@/components/site-locale-provider";
 import { SiteHeader } from "@/components/site-header";
+import { SiteThemeProvider } from "@/components/site-theme-provider";
 import { company } from "@/content/site";
 import { getRequestSiteLocale } from "@/lib/site-locale";
 import { getSiteContent } from "@/lib/site-content";
+import { getThemeInitializationScript } from "@/lib/site-theme";
 
 import "./globals.css";
 
@@ -32,7 +35,14 @@ export default async function RootLayout({
   const siteContent = await getSiteContent(locale);
 
   return (
-    <html lang={locale}>
+    <html lang={locale} data-theme="dark" suppressHydrationWarning>
+      <head>
+        <Script
+          id="capsoul-theme-init"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{ __html: getThemeInitializationScript() }}
+        />
+      </head>
       <body>
         <a
           href="#main-content"
@@ -41,20 +51,22 @@ export default async function RootLayout({
           Skip to content
         </a>
         <div className="relative isolate min-h-[100svh] overflow-x-clip">
-          <SiteLocaleProvider locale={locale} globalContent={siteContent.global}>
-            <SceneTransitionProvider>
-              <SiteHeader />
-              <main
-                id="main-content"
-                className="relative min-h-[100svh] w-full max-w-full pt-[var(--header-offset-mobile)] sm:pt-[var(--header-offset-desktop)]"
-              >
-                {children}
-                <div className="md:hidden">
-                  <AdminEntry inline />
-                </div>
-              </main>
-            </SceneTransitionProvider>
-          </SiteLocaleProvider>
+          <SiteThemeProvider>
+            <SiteLocaleProvider locale={locale} globalContent={siteContent.global}>
+              <SceneTransitionProvider>
+                <SiteHeader />
+                <main
+                  id="main-content"
+                  className="relative min-h-[100svh] w-full max-w-full pt-[var(--header-offset-mobile)] sm:pt-[var(--header-offset-desktop)]"
+                >
+                  {children}
+                  <div className="md:hidden">
+                    <AdminEntry inline />
+                  </div>
+                </main>
+              </SceneTransitionProvider>
+            </SiteLocaleProvider>
+          </SiteThemeProvider>
         </div>
       </body>
     </html>

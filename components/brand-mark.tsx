@@ -17,14 +17,14 @@ export function BrandMark({ compact = false }: BrandMarkProps) {
       }`}
     >
       <div
-        className={`relative flex shrink-0 items-center justify-center overflow-hidden rounded-[1rem] border border-[rgba(255,255,255,0.84)] bg-[linear-gradient(160deg,rgba(255,255,255,0.98),rgba(228,236,244,0.92))] shadow-[0_16px_30px_rgba(154,170,190,0.14)] backdrop-blur-xl lg:border-[rgba(196,219,244,0.18)] lg:bg-[linear-gradient(160deg,rgba(14,24,36,0.94),rgba(7,13,22,0.98))] lg:shadow-[0_24px_54px_rgba(1,6,14,0.32)] ${
+        className={`brand-mark-shell relative flex shrink-0 items-center justify-center overflow-hidden rounded-[1rem] ${
           compact ? "h-[2.2rem] w-[2.2rem]" : "h-[2.7rem] w-[2.7rem]"
         }`}
       >
-        <span className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.92),transparent_58%)] lg:bg-[radial-gradient(circle_at_top,rgba(190,220,248,0.18),transparent_58%)]" />
-        <span className="absolute inset-x-[18%] bottom-[18%] h-[36%] rounded-full bg-[radial-gradient(circle,rgba(152,171,190,0.16),transparent_72%)] lg:bg-[radial-gradient(circle,rgba(115,167,226,0.14),transparent_72%)]" />
+        <span className="brand-mark-topglow absolute inset-0" />
+        <span className="brand-mark-bottomglow absolute inset-x-[18%] bottom-[18%] h-[36%] rounded-full" />
         <span
-          className={`relative lg:text-[rgba(240,247,255,0.98)] ${compact ? "text-[1rem]" : "text-[1.16rem]"}`}
+          className={`brand-mark-glyph relative ${compact ? "text-[1rem]" : "text-[1.16rem]"}`}
           style={{ fontFamily: "var(--font-serif)" }}
         >
           C

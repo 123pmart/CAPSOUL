@@ -236,7 +236,7 @@ export function SceneScreen({
               </RevealItem>
             </div>
 
-            <div className="hidden md:grid md:min-h-0 md:grid-cols-[minmax(0,1.08fr)_minmax(19.5rem,0.92fr)] md:items-start md:gap-4 lg:gap-5">
+            <div className="hidden md:grid md:min-h-0 md:grid-cols-[minmax(0,1.12fr)_minmax(18.9rem,0.88fr)] md:items-start md:gap-4 lg:grid-cols-[minmax(0,1.08fr)_minmax(19.5rem,0.92fr)] lg:gap-5">
               <RevealGroup className="md:min-h-0" delay={80} stagger={0.08} amount={0.2}>
                 <RevealItem variant="media">
                   <div className="scene-focus scene-panel-shell flex min-h-[19rem] flex-col gap-3 p-3 sm:min-h-[21rem] sm:p-4">
@@ -258,7 +258,7 @@ export function SceneScreen({
                               className="h-full w-full object-cover"
                               style={{ objectPosition: active.objectPosition ?? "center center" }}
                             />
-                            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.02),rgba(232,239,246,0.18))] md:bg-[linear-gradient(180deg,rgba(4,10,16,0.08),rgba(4,10,16,0.42))]" />
+                            <div className="scene-media-overlay absolute inset-0" />
                             <div className="surface-note absolute left-3 top-3 max-w-[14rem] rounded-[1rem] px-3 py-2.5 text-[0.78rem] leading-5 text-[var(--text-secondary)] sm:left-4 sm:top-4">
                               <p className="text-[0.66rem] font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">
                                 {active.mediaLabel}
@@ -320,8 +320,8 @@ export function SceneScreen({
                             whileTap={reduceMotion ? undefined : subtleTapPress}
                             className={`text-left rounded-[1.15rem] border px-3.5 py-3 ${
                               isActive
-                                ? "border-white/88 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(231,239,247,0.98))] shadow-[0_18px_34px_rgba(152,169,189,0.2)] md:border-[rgba(222,238,255,0.24)] md:bg-[linear-gradient(180deg,rgba(31,48,69,0.96),rgba(19,31,46,0.99))] md:shadow-[0_20px_46px_rgba(2,8,17,0.34)]"
-                                : "border-[rgba(181,196,211,0.28)] bg-[linear-gradient(180deg,rgba(255,255,255,0.48),rgba(243,248,252,0.68))] md:border-[rgba(176,203,231,0.12)] md:bg-[linear-gradient(180deg,rgba(15,24,36,0.8),rgba(11,18,28,0.9))]"
+                                ? "scene-step-chip-active"
+                                : "scene-step-chip"
                             }`}
                           >
                             <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-deep)]">
