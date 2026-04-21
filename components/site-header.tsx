@@ -8,6 +8,7 @@ import { BrandMark } from "@/components/brand-mark";
 import { LanguageToggle } from "@/components/language-toggle";
 import { heroRevealTransition, measuredEase } from "@/components/motion-config";
 import { useSiteLocale } from "@/components/site-locale-provider";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { TransitionLink } from "@/components/transition-link";
 import { isSceneRouteActive, sceneRouteEntries } from "@/lib/scene-route-order";
 
@@ -46,10 +47,11 @@ export function SiteHeader() {
           className="scene-shell scene-shell-cool w-full px-3 py-[var(--header-shell-pad-mobile)] backdrop-blur-xl sm:px-4 sm:py-[var(--header-shell-pad-desktop)]"
         >
           <div className="relative z-10 flex min-h-[var(--header-height-mobile)] min-w-0 items-center justify-between gap-3 sm:min-h-[var(--header-height-desktop)] sm:gap-4 lg:grid lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] lg:items-center lg:gap-4 xl:gap-6">
-            <div className="flex min-w-0 flex-1 items-center gap-3 lg:w-full lg:justify-self-start">
+            <div className="flex min-w-0 flex-1 items-center gap-2.5 lg:w-full lg:justify-self-start">
               <TransitionLink href="/" aria-label="Go to CAPSOUL home page" className="shrink-0">
                 <BrandMark compact />
               </TransitionLink>
+              <ThemeToggle className="shrink-0" />
             </div>
 
             <nav

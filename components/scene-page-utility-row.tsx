@@ -3,7 +3,6 @@
 import { usePathname } from "next/navigation";
 
 import { useSiteLocale } from "@/components/site-locale-provider";
-import { ThemeToggle } from "@/components/theme-toggle";
 import { TransitionLink } from "@/components/transition-link";
 import { getAdjacentSceneRoute } from "@/lib/scene-route-order";
 
@@ -41,8 +40,7 @@ export function ScenePageUtilityRow({
         )}
       </div>
 
-      <div className="flex items-center justify-center gap-2.5">
-        <ThemeToggle />
+      <div className="flex items-center justify-center">
         <TransitionLink
           href="/admin"
           className="archive-chip inline-flex min-h-[2.1rem] items-center rounded-full px-3 py-1.5 text-[0.62rem] font-medium uppercase tracking-[0.18em] text-[var(--text-secondary)] opacity-72 transition-opacity duration-200 hover:opacity-100"

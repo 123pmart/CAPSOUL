@@ -3,7 +3,6 @@
 import { usePathname } from "next/navigation";
 
 import { useSiteLocale } from "@/components/site-locale-provider";
-import { ThemeToggle } from "@/components/theme-toggle";
 import { TransitionLink } from "@/components/transition-link";
 
 export function AdminEntry({ inline = false }: { inline?: boolean }) {
@@ -24,8 +23,7 @@ export function AdminEntry({ inline = false }: { inline?: boolean }) {
           paddingBottom: "calc(var(--safe-bottom) + 0.5rem)",
         }}
       >
-        <div className="flex items-center justify-center gap-2.5">
-          <ThemeToggle />
+        <div className="flex items-center justify-center">
           <TransitionLink
             href="/admin"
             className="archive-chip rounded-full px-3 py-1.25 text-[0.62rem] uppercase tracking-[0.18em] text-[var(--text-secondary)]"
@@ -45,10 +43,7 @@ export function AdminEntry({ inline = false }: { inline?: boolean }) {
         paddingRight: "var(--safe-right)",
       }}
     >
-      <div className="shell flex items-center justify-center gap-2.5 pb-[var(--admin-entry-offset)]">
-        <div className="pointer-events-auto">
-          <ThemeToggle />
-        </div>
+      <div className="shell flex items-center justify-center pb-[var(--admin-entry-offset)]">
         <TransitionLink
           href="/admin"
           className="archive-chip pointer-events-auto rounded-full px-3 py-1.25 text-[0.62rem] uppercase tracking-[0.18em] text-[var(--text-secondary)] opacity-70 transition-opacity duration-200 hover:opacity-100 sm:px-3.5 sm:py-1.5 sm:text-[0.66rem]"

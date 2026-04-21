@@ -236,10 +236,10 @@ export function SceneScreen({
               </RevealItem>
             </div>
 
-            <div className="hidden md:grid md:min-h-0 md:grid-cols-[minmax(0,1.12fr)_minmax(18.9rem,0.88fr)] md:items-start md:gap-4 lg:grid-cols-[minmax(0,1.08fr)_minmax(19.5rem,0.92fr)] lg:gap-5">
-              <RevealGroup className="md:min-h-0" delay={80} stagger={0.08} amount={0.2}>
+            <div className="hidden md:grid md:min-h-0 md:grid-cols-[minmax(0,1.12fr)_minmax(18.9rem,0.88fr)] md:items-stretch md:gap-4 min-[1025px]:grid-cols-[minmax(0,1.08fr)_minmax(19.5rem,0.92fr)] min-[1025px]:items-start min-[1025px]:gap-5">
+              <RevealGroup className="md:min-h-0 md:h-full min-[1025px]:h-auto" delay={80} stagger={0.08} amount={0.2}>
                 <RevealItem variant="media">
-                  <div className="scene-focus scene-panel-shell flex min-h-[19rem] flex-col gap-3 p-3 sm:min-h-[21rem] sm:p-4">
+                  <div className="scene-focus scene-panel-shell flex min-h-[19rem] flex-col gap-3 p-3 sm:min-h-[21rem] sm:p-4 md:h-full min-[1025px]:h-auto">
                     <AnimatePresence mode="wait">
                       <motion.div
                         key={active.title}
@@ -247,10 +247,10 @@ export function SceneScreen({
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={mediaExit}
                         transition={contentSwapTransition}
-                        className="grid min-h-0 gap-3"
+                        className="grid min-h-0 gap-3 md:h-full min-[1025px]:h-auto"
                       >
-                        <div className="scene-media-shell min-h-0">
-                          <div className="scene-media-frame film-frame relative overflow-hidden">
+                        <div className="scene-media-shell min-h-0 md:h-full min-[1025px]:h-auto">
+                          <div className="scene-media-frame film-frame relative overflow-hidden md:h-full md:aspect-auto min-[1025px]:h-auto min-[1025px]:aspect-[3/2]">
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
                               src={active.image}
@@ -396,7 +396,7 @@ export function SceneScreen({
               </RevealGroup>
             </div>
 
-            <ScenePageUtilityRow className="md:pt-2 lg:pt-3" />
+            <ScenePageUtilityRow className="md:pt-2 min-[1025px]:pt-3" />
           </div>
         </div>
       </SceneViewport>

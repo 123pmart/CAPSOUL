@@ -1,5 +1,8 @@
 "use client";
 
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+
+import { measuredEase, premiumEase } from "@/components/motion-config";
 import { useSiteTheme } from "@/components/site-theme-provider";
 
 type ThemeToggleProps = {
@@ -37,22 +40,41 @@ function MoonIcon() {
 export function ThemeToggle({ className = "" }: ThemeToggleProps) {
   const { theme, toggleTheme } = useSiteTheme();
   const nextTheme = theme === "dark" ? "light" : "dark";
+  const reduceMotion = useReducedMotion();
 
   return (
     <button
       type="button"
       aria-label={`Switch to ${nextTheme} mode`}
       aria-pressed={theme === "dark"}
-      data-theme={theme}
       className={`theme-toggle ${className}`.trim()}
       onClick={toggleTheme}
     >
-      <span className="theme-toggle-thumb" aria-hidden="true" />
-      <span className="theme-toggle-icon theme-toggle-icon-sun" aria-hidden="true">
-        <SunIcon />
-      </span>
-      <span className="theme-toggle-icon theme-toggle-icon-moon" aria-hidden="true">
-        <MoonIcon />
+      <span className="theme-toggle-orb" aria-hidden="true">
+        <AnimatePresence initial={false} mode="wait">
+          <motion.span
+            key={theme}
+            initial={
+              reduceMotion
+                ? { opacity: 1 }
+                : { opacity: 0, rotate: theme === "dark" ? -22 : 22, scale: 0.8, y: 1 }
+            }
+            animate={{ opacity: 1, rotate: 0, scale: 1, y: 0 }}
+            exit={
+              reduceMotion
+                ? { opacity: 0 }
+                : { opacity: 0, rotate: theme === "dark" ? 20 : -20, scale: 0.8, y: -1 }
+            }
+            transition={
+              reduceMotion
+                ? { duration: 0 }
+                : { duration: 0.24, ease: premiumEase ?? measuredEase }
+            }
+            className="theme-toggle-glyph"
+          >
+            {theme === "dark" ? <MoonIcon /> : <SunIcon />}
+          </motion.span>
+        </AnimatePresence>
       </span>
     </button>
   );

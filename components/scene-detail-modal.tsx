@@ -57,9 +57,21 @@ export function SceneDetailModal({
             aria-hidden="true"
             className="scene-detail-backdrop"
             onClick={onClose}
-            initial={reduceMotion ? { opacity: 1 } : { opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+            initial={
+              reduceMotion
+                ? { opacity: 1 }
+                : { opacity: 0, backdropFilter: "blur(0px) saturate(100%)" }
+            }
+            animate={
+              reduceMotion
+                ? { opacity: 1 }
+                : { opacity: 1, backdropFilter: "blur(18px) saturate(136%)" }
+            }
+            exit={
+              reduceMotion
+                ? { opacity: 0 }
+                : { opacity: 0, backdropFilter: "blur(0px) saturate(100%)" }
+            }
             transition={backdropTransition}
           />
 
@@ -68,9 +80,17 @@ export function SceneDetailModal({
             aria-modal="true"
             aria-label={title}
             className="scene-detail-panel"
-            initial={reduceMotion ? { opacity: 1 } : { opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+            initial={
+              reduceMotion
+                ? { opacity: 1 }
+                : { opacity: 0, y: 8, scale: 0.985 }
+            }
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={
+              reduceMotion
+                ? { opacity: 0 }
+                : { opacity: 0, y: 6, scale: 0.99 }
+            }
             transition={panelTransition}
           >
             <div className="flex items-start justify-between gap-3">

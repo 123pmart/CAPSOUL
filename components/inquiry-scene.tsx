@@ -626,7 +626,7 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
               )}
             </div>
 
-            <div className="hidden md:grid md:min-h-0 md:grid-cols-[minmax(0,1.08fr)_minmax(18.8rem,0.86fr)] md:items-start md:gap-4 lg:grid-cols-[minmax(0,1.03fr)_minmax(19.5rem,0.9fr)] lg:gap-5">
+            <div className="hidden md:grid md:min-h-0 md:grid-cols-[minmax(0,1.08fr)_minmax(18.8rem,0.86fr)] md:items-start md:gap-4 min-[1025px]:grid-cols-[minmax(0,1.03fr)_minmax(19.5rem,0.9fr)] min-[1025px]:gap-5">
               <RevealItem variant="section" className="min-h-0">
                 <div className="panel-strong flex flex-col rounded-[1.8rem] p-4 sm:p-5 md:min-h-0">
                   {submitted ? (
@@ -807,7 +807,7 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
               </RevealGroup>
             </div>
 
-            <ScenePageUtilityRow className="md:pt-2 lg:pt-3" />
+            <ScenePageUtilityRow className="md:pt-2 min-[1025px]:pt-3" />
           </div>
         </div>
       </SceneViewport>
