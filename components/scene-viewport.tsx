@@ -16,7 +16,7 @@ export function SceneViewport({
 }) {
   const { phase } = useSceneTransition();
   const reduceMotion = useReducedMotion();
-  const isCompactViewport = useCompactViewport();
+  const isCompactViewport = useCompactViewport("(max-width: 1023px)");
 
   return (
     <motion.div

@@ -52,20 +52,13 @@ export function SceneDetailModal({
   return (
     <AnimatePresence initial={false}>
       {open ? (
-        <motion.div
-          key="scene-detail-modal"
-          className="scene-detail-modal md:hidden"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={backdropTransition}
-        >
+        <div key="scene-detail-modal" className="scene-detail-modal lg:hidden">
           <motion.button
             type="button"
             aria-label="Close scene detail"
             className="scene-detail-backdrop"
             onClick={onClose}
-            initial={{ opacity: 0 }}
+            initial={reduceMotion ? { opacity: 1 } : { opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={backdropTransition}
@@ -76,9 +69,9 @@ export function SceneDetailModal({
             aria-modal="true"
             aria-label={title}
             className="scene-detail-panel panel-strong"
-            initial={reduceMotion ? { opacity: 1 } : { opacity: 0, scale: 0.975, y: 10 }}
+            initial={reduceMotion ? { opacity: 1 } : { opacity: 0, scale: 0.972, y: 12 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.984, y: 8 }}
+            exit={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.986, y: 10 }}
             transition={panelTransition}
           >
             <div className="flex items-start justify-between gap-3">
@@ -113,7 +106,7 @@ export function SceneDetailModal({
               {children ? <div className="grid gap-2.5">{children}</div> : null}
             </div>
           </motion.div>
-        </motion.div>
+        </div>
       ) : null}
     </AnimatePresence>
   );

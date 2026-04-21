@@ -62,7 +62,7 @@ type InquirySceneProps = {
 
 export function InquiryScene({ sceneData }: InquirySceneProps) {
   const reduceMotion = useReducedMotion();
-  const isPhoneViewport = useCompactViewport("(max-width: 767px)");
+  const isCompactSceneViewport = useCompactViewport("(max-width: 1023px)");
   const { globalContent } = useSiteLocale();
   const [submitted, setSubmitted] = useState(false);
   const [formState, setFormState] = useState<InquiryFormState>(initialState);
@@ -90,7 +90,7 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
 
   useEffect(() => {
     setIsMobileSupportOpen(false);
-  }, [activeIndex, isPhoneViewport]);
+  }, [activeIndex, isCompactSceneViewport]);
 
   if (!activeSupport || !activeFormStep) {
     return null;
@@ -390,12 +390,12 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
   );
 
   return (
-    <section className="shell py-2 sm:py-4 md:h-[calc(100dvh-var(--header-offset-desktop))] md:min-h-[calc(100svh-var(--header-offset-desktop))]">
-      <SceneViewport className="md:h-full">
-        <div className="scene-shell scene-shell-warm scene-pad md:h-full" {...sceneBindings}>
-          <div className="relative z-10 flex flex-col gap-[var(--mobile-section-gap)] overflow-visible md:h-full md:min-h-0 md:gap-5">
+    <section className="shell py-2 sm:py-4 lg:h-[calc(100dvh-var(--header-offset-desktop))] lg:min-h-[calc(100svh-var(--header-offset-desktop))]">
+      <SceneViewport className="lg:h-full">
+        <div className="scene-shell scene-shell-warm scene-pad lg:h-full" {...sceneBindings}>
+          <div className="scene-shell-body relative z-10 overflow-visible">
             <RevealGroup
-              className="grid gap-[var(--mobile-section-gap)] md:grid-cols-[minmax(0,0.94fr)_minmax(0,0.86fr)] md:items-end md:gap-5"
+              className="scene-shell-top grid gap-[var(--mobile-section-gap)] lg:gap-[var(--scene-shell-gap)]"
               stagger={0.1}
               amount={0.25}
             >
@@ -411,25 +411,12 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
                 </div>
               </RevealItem>
 
-              <RevealItem variant="card">
-                <div className="hidden md:grid md:max-w-[25rem] md:justify-self-end md:gap-3">
-                  <SceneRoutePager compact />
-
-                  <div className="grid gap-2.5 sm:grid-cols-3">
-                    {sceneData.trustPoints.map((point) => (
-                      <div
-                        key={point}
-                        className="archive-chip rounded-full px-3.5 py-2 text-center text-[0.72rem] uppercase tracking-[0.16em] text-[var(--text-secondary)]"
-                      >
-                        {point}
-                      </div>
-                    ))}
-                  </div>
-                </div>
+              <RevealItem variant="card" className="hidden lg:block">
+                <SceneRoutePager className="scene-meta-cluster" />
               </RevealItem>
             </RevealGroup>
 
-            <div className="grid gap-[var(--mobile-card-gap)] md:hidden">
+            <div className="grid gap-[var(--mobile-card-gap)] lg:hidden">
               <RevealItem variant="micro">
                 <SceneRoutePager compact />
               </RevealItem>
@@ -452,9 +439,9 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
                       <div className="scene-mobile-stage mt-3">
                         <motion.button
                           type="button"
-                          aria-expanded={isPhoneViewport ? isMobileSupportOpen : undefined}
+                          aria-expanded={isCompactSceneViewport ? isMobileSupportOpen : undefined}
                           onClick={() => {
-                            if (isPhoneViewport) {
+                            if (isCompactSceneViewport) {
                               setIsMobileSupportOpen(true);
                             }
                           }}
@@ -641,13 +628,13 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
               )}
             </div>
 
-            <div className="hidden md:grid md:min-h-0 md:flex-1 md:grid-cols-[minmax(0,1.02fr)_minmax(20rem,0.98fr)] md:gap-5">
+            <div className="scene-shell-main hidden lg:grid">
               <RevealItem variant="section" className="min-h-0">
-                <div className="panel-strong flex flex-col rounded-[1.8rem] p-4 sm:p-5 md:h-full md:min-h-0">
+                <div className="panel-strong scene-panel-shell flex h-full min-h-0 flex-col rounded-[1.8rem] p-4 sm:p-5">
                   {submitted ? (
                     renderSuccessContent(false)
                   ) : (
-                    <form className="flex flex-col gap-5 md:h-full md:min-h-0" onSubmit={handleSubmit}>
+                    <form className="flex h-full min-h-0 flex-col gap-5" onSubmit={handleSubmit}>
                       <div className="grid gap-2.5 sm:grid-cols-3">
                         {sceneData.formSteps.map((step, index) => {
                           const isActive = index === activeIndex;
@@ -714,34 +701,36 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
                         </p>
                       ) : null}
 
-                      <div className="grid gap-3 md:grid-cols-[auto_auto_minmax(0,1fr)] md:items-center">
-                        <button
-                          type="button"
-                          className="button-secondary px-4"
-                          disabled={isFirst}
-                          onClick={goPrev}
-                        >
-                          {sceneData.previousButtonLabel}
-                        </button>
-
-                        {!isLast ? (
+                      <div className="scene-form-footer">
+                        <div className="grid gap-3 xl:grid-cols-[auto_auto_minmax(0,1fr)] xl:items-center">
                           <button
                             type="button"
-                            className="button-primary px-4"
-                            disabled={isSubmitting}
-                            onClick={goNext}
+                            className="button-secondary px-4"
+                            disabled={isFirst}
+                            onClick={goPrev}
                           >
-                            {sceneData.nextButtonLabel}
+                            {sceneData.previousButtonLabel}
                           </button>
+
+                          {!isLast ? (
+                            <button
+                              type="button"
+                              className="button-primary px-4"
+                              disabled={isSubmitting}
+                              onClick={goNext}
+                            >
+                              {sceneData.nextButtonLabel}
+                            </button>
                           ) : (
                             <button className="button-primary px-4" disabled={isSubmitting} type="submit">
-                            {isSubmitting ? fieldCopy.submittingLabel : sceneData.submitButtonLabel}
+                              {isSubmitting ? fieldCopy.submittingLabel : sceneData.submitButtonLabel}
                             </button>
                           )}
 
-                        <p className="max-w-[24rem] text-[0.84rem] leading-6 text-[var(--text-secondary)] md:justify-self-end">
-                          {sceneData.footerNote}
-                        </p>
+                          <p className="scene-footer-note text-[0.84rem] leading-6 text-[var(--text-secondary)] xl:justify-self-end">
+                            {sceneData.footerNote}
+                          </p>
+                        </div>
                       </div>
                     </form>
                   )}
@@ -749,13 +738,13 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
               </RevealItem>
 
               <RevealGroup
-                className="grid gap-3 md:min-h-0 md:grid-rows-[minmax(0,1fr)_auto]"
+                className="scene-shell-side"
                 delay={120}
                 stagger={0.1}
                 amount={0.2}
               >
                 <RevealItem variant="media" className="min-h-0">
-                  <div className="scene-focus flex min-h-[20rem] flex-col gap-3 p-3 sm:min-h-[22rem] sm:p-4 md:h-full">
+                  <div className="scene-focus scene-panel-shell flex h-full min-h-[20rem] flex-col gap-3 p-3.5 xl:p-4">
                     <AnimatePresence mode="wait">
                       <motion.div
                         key={activeSupport.title}
@@ -805,8 +794,8 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
                   </div>
                 </RevealItem>
 
-                <RevealItem variant="card">
-                  <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-1">
+                <RevealItem variant="card" className="scene-side-footer">
+                  <div className="scene-support-tags">
                     {sceneData.trustPoints.map((point) => (
                       <div
                         key={point}
