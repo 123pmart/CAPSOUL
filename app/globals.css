@@ -1528,6 +1528,55 @@ html[data-theme="dark"] .scene-detail-scroll .archive-chip {
   .scene-media-frame {
     max-width: 100%;
   }
+
+  .panel,
+  .panel-strong,
+  .archive-chip,
+  .surface-note,
+  .film-frame,
+  .media-caption {
+    box-shadow: 0 12px 28px rgba(150, 166, 186, 0.1);
+  }
+
+  .scene-focus.scene-panel-shell:hover,
+  .panel:hover,
+  .panel-strong:hover,
+  .archive-chip:hover,
+  .surface-note:hover {
+    transform: none;
+  }
+
+  .panel:hover,
+  .panel-strong:hover,
+  .archive-chip:hover,
+  .surface-note:hover,
+  .film-frame:hover,
+  .media-caption:hover {
+    box-shadow: 0 12px 28px rgba(150, 166, 186, 0.1);
+  }
+
+  .scene-focus.scene-panel-shell:hover .film-frame,
+  .scene-focus.scene-panel-shell:hover .media-caption {
+    transform: none;
+  }
+
+  html[data-theme="dark"] .panel,
+  html[data-theme="dark"] .panel-strong,
+  html[data-theme="dark"] .archive-chip,
+  html[data-theme="dark"] .surface-note,
+  html[data-theme="dark"] .film-frame,
+  html[data-theme="dark"] .media-caption {
+    box-shadow: 0 14px 30px rgba(2, 8, 17, 0.22);
+  }
+
+  html[data-theme="dark"] .panel:hover,
+  html[data-theme="dark"] .panel-strong:hover,
+  html[data-theme="dark"] .archive-chip:hover,
+  html[data-theme="dark"] .surface-note:hover,
+  html[data-theme="dark"] .film-frame:hover,
+  html[data-theme="dark"] .media-caption:hover {
+    box-shadow: 0 14px 30px rgba(2, 8, 17, 0.22);
+  }
 }
 
 @media (min-width: 1024px) {

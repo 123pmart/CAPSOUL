@@ -7,6 +7,7 @@ import {
   routeExitTransition,
   routeVeilTransition,
 } from "@/components/motion-config";
+import { useSiteTheme } from "@/components/site-theme-provider";
 import { useSceneTransition } from "@/components/scene-transition-context";
 import { useCompactViewport } from "@/components/use-compact-viewport";
 import { getSceneRouteLabel } from "@/lib/scene-route-order";
@@ -15,6 +16,7 @@ export function SceneTransitionOverlay() {
   const { phase, pathname, pendingPath } = useSceneTransition();
   const reduceMotion = useReducedMotion();
   const isCompactViewport = useCompactViewport();
+  const { theme } = useSiteTheme();
 
   if (reduceMotion || phase === "idle") {
     return null;
@@ -22,6 +24,26 @@ export function SceneTransitionOverlay() {
 
   const activePath = phase === "exiting" ? pendingPath ?? pathname : pathname;
   const activeLabel = getSceneRouteLabel(activePath);
+  const isDark = theme === "dark";
+
+  const compactOverlayClass = isDark
+    ? "absolute inset-0 bg-[rgba(7,12,20,0.74)]"
+    : "absolute inset-0 bg-[rgba(244,248,252,0.72)]";
+  const largeBackdropClass = isDark
+    ? "absolute inset-0 bg-[rgba(6,11,20,0.84)]"
+    : "absolute inset-0 bg-[rgba(243,247,252,0.82)]";
+  const largeVeilClass = isDark
+    ? "absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(22,36,52,0.82),rgba(11,18,29,0.88)_44%,rgba(5,10,18,0.94)_100%)] backdrop-blur-[8px]"
+    : "absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.9),rgba(238,244,250,0.82)_44%,rgba(233,240,247,0.76)_100%)] backdrop-blur-[8px]";
+  const largePanelClass = isDark
+    ? "absolute inset-[5vh_3vw] rounded-[2.8rem] border border-[rgba(194,219,244,0.16)] bg-[linear-gradient(180deg,rgba(18,29,42,0.9),rgba(9,16,27,0.96))] shadow-[0_36px_90px_rgba(1,6,14,0.34)] backdrop-blur-[12px]"
+    : "absolute inset-[5vh_3vw] rounded-[2.8rem] border border-white/82 bg-[linear-gradient(180deg,rgba(255,255,255,0.62),rgba(236,242,248,0.82))] shadow-[0_36px_90px_rgba(152,169,189,0.2)] backdrop-blur-[12px]";
+  const largePanelHighlightPrimaryClass = isDark
+    ? "absolute inset-0 rounded-[inherit] bg-[radial-gradient(circle_at_top,rgba(116,166,222,0.12),transparent_54%)]"
+    : "absolute inset-0 rounded-[inherit] bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.94),transparent_52%)]";
+  const largePanelHighlightSecondaryClass = isDark
+    ? "absolute inset-0 rounded-[inherit] bg-[radial-gradient(circle_at_82%_12%,rgba(78,116,156,0.14),transparent_28%)]"
+    : "absolute inset-0 rounded-[inherit] bg-[radial-gradient(circle_at_82%_12%,rgba(194,210,224,0.22),transparent_28%)]";
 
   if (isCompactViewport) {
     return (
@@ -35,7 +57,7 @@ export function SceneTransitionOverlay() {
           exit={{ opacity: 0 }}
           transition={phase === "exiting" ? routeExitTransition : routeEnterTransition}
         >
-          <div className="absolute inset-0 bg-[rgba(244,248,252,0.72)]" />
+          <div className={compactOverlayClass} />
           <motion.div
             className="absolute inset-x-0 top-1/2 flex -translate-y-1/2 justify-center"
             initial={{ opacity: 0, y: 6 }}
@@ -63,7 +85,7 @@ export function SceneTransitionOverlay() {
         exit={{ opacity: 0 }}
       >
         <motion.div
-          className="absolute inset-0 bg-[rgba(243,247,252,0.82)]"
+          className={largeBackdropClass}
           initial={{ opacity: phase === "exiting" ? 0 : 0.22 }}
           animate={{ opacity: phase === "exiting" ? 0.92 : 0.16 }}
           exit={{ opacity: 0 }}
@@ -71,7 +93,7 @@ export function SceneTransitionOverlay() {
         />
 
         <motion.div
-          className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.9),rgba(238,244,250,0.82)_44%,rgba(233,240,247,0.76)_100%)] backdrop-blur-[8px]"
+          className={largeVeilClass}
           initial={phase === "exiting" ? { opacity: 0 } : { opacity: 0.76 }}
           animate={phase === "exiting" ? { opacity: 1 } : { opacity: 0 }}
           exit={{ opacity: 0 }}
@@ -79,7 +101,7 @@ export function SceneTransitionOverlay() {
         />
 
         <motion.div
-          className="absolute inset-[5vh_3vw] rounded-[2.8rem] border border-white/82 bg-[linear-gradient(180deg,rgba(255,255,255,0.62),rgba(236,242,248,0.82))] shadow-[0_36px_90px_rgba(152,169,189,0.2)] backdrop-blur-[12px]"
+          className={largePanelClass}
           initial={
             phase === "exiting"
               ? { opacity: 0, scale: 1.012, y: 10 }
@@ -93,8 +115,8 @@ export function SceneTransitionOverlay() {
           exit={{ opacity: 0, scale: 0.99, y: -8 }}
           transition={routeEnterTransition}
         >
-          <div className="absolute inset-0 rounded-[inherit] bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.94),transparent_52%)]" />
-          <div className="absolute inset-0 rounded-[inherit] bg-[radial-gradient(circle_at_82%_12%,rgba(194,210,224,0.22),transparent_28%)]" />
+          <div className={largePanelHighlightPrimaryClass} />
+          <div className={largePanelHighlightSecondaryClass} />
         </motion.div>
 
         <motion.div

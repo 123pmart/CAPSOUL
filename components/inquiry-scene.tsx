@@ -539,15 +539,15 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
                                       ? { y: -3, scale: 1.01 }
                                       : { y: 0, scale: 1 }
                                 }
-                                transition={cardStateTransition}
-                                whileHover={reduceMotion || isActive ? undefined : subtleHoverLift}
-                                whileTap={reduceMotion ? undefined : subtleTapPress}
-                                className={`rounded-[0.95rem] border px-3 py-2.5 text-center ${
-                                  isActive
-                                    ? "border-white/88 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(231,239,247,0.98))] text-[var(--text-primary)] shadow-[0_18px_34px_rgba(152,169,189,0.2)]"
-                                    : "border-[rgba(181,196,211,0.28)] bg-[linear-gradient(180deg,rgba(255,255,255,0.48),rgba(243,248,252,0.68))] text-[var(--text-secondary)]"
-                                }`}
-                              >
+                              transition={cardStateTransition}
+                              whileHover={reduceMotion || isActive ? undefined : subtleHoverLift}
+                              whileTap={reduceMotion ? undefined : subtleTapPress}
+                              className={`rounded-[0.95rem] px-3 py-2.5 text-center ${
+                                isActive
+                                  ? "scene-step-chip-active text-[var(--text-primary)]"
+                                  : "scene-step-chip text-[var(--text-secondary)]"
+                              }`}
+                            >
                                 <p className="text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-[var(--accent-deep)]">
                                   {step.chip}
                                 </p>

@@ -57,21 +57,9 @@ export function SceneDetailModal({
             aria-hidden="true"
             className="scene-detail-backdrop"
             onClick={onClose}
-            initial={
-              reduceMotion
-                ? { opacity: 1 }
-                : { opacity: 0, backdropFilter: "blur(0px) saturate(100%)" }
-            }
-            animate={
-              reduceMotion
-                ? { opacity: 1 }
-                : { opacity: 1, backdropFilter: "blur(18px) saturate(136%)" }
-            }
-            exit={
-              reduceMotion
-                ? { opacity: 0 }
-                : { opacity: 0, backdropFilter: "blur(0px) saturate(100%)" }
-            }
+            initial={{ opacity: reduceMotion ? 1 : 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             transition={backdropTransition}
           />
 
@@ -83,13 +71,13 @@ export function SceneDetailModal({
             initial={
               reduceMotion
                 ? { opacity: 1 }
-                : { opacity: 0, y: 8, scale: 0.985 }
+                : { opacity: 0, y: 10 }
             }
-            animate={{ opacity: 1, y: 0, scale: 1 }}
+            animate={{ opacity: 1, y: 0 }}
             exit={
               reduceMotion
                 ? { opacity: 0 }
-                : { opacity: 0, y: 6, scale: 0.99 }
+                : { opacity: 0, y: 8 }
             }
             transition={panelTransition}
           >
