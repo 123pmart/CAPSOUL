@@ -68,9 +68,9 @@ export function SceneDetailModal({
             aria-modal="true"
             aria-label={title}
             className="scene-detail-panel panel-strong"
-            initial={reduceMotion ? { opacity: 1 } : { opacity: 0, scale: 0.985, y: 10 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.985, y: 10 }}
+            initial={reduceMotion ? { opacity: 1 } : { opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 10 }}
             transition={panelTransition}
           >
             <div className="flex items-start justify-between gap-3">

@@ -45,7 +45,7 @@ export function SiteHeader() {
           }}
           className="scene-shell scene-shell-cool w-full px-3 py-[var(--header-shell-pad-mobile)] backdrop-blur-xl sm:px-4 sm:py-[var(--header-shell-pad-desktop)]"
         >
-          <div className="relative z-10 flex min-h-[var(--header-height-mobile)] min-w-0 items-center justify-between gap-3 sm:min-h-[var(--header-height-desktop)] sm:gap-4 lg:grid lg:grid-cols-[minmax(14rem,1fr)_auto_minmax(14rem,1fr)] lg:items-center lg:gap-6">
+          <div className="relative z-10 flex min-h-[var(--header-height-mobile)] min-w-0 items-center justify-between gap-3 sm:min-h-[var(--header-height-desktop)] sm:gap-4 lg:grid lg:grid-cols-[minmax(10.5rem,1fr)_auto_minmax(10.5rem,1fr)] lg:items-center lg:gap-3 xl:grid-cols-[minmax(14rem,1fr)_auto_minmax(14rem,1fr)] xl:gap-6">
             <div className="flex min-w-0 flex-1 items-center lg:w-full lg:justify-self-start">
               <TransitionLink href="/" aria-label="Go to CAPSOUL home page" className="shrink-0">
                 <BrandMark compact />
@@ -63,7 +63,7 @@ export function SiteHeader() {
                   <TransitionLink
                     key={item.href}
                     href={item.href}
-                    className={`nav-pill rounded-full px-3.5 py-2 text-[0.84rem] font-medium tracking-[-0.012em] ${
+                    className={`nav-pill rounded-full px-3 py-2 text-[0.8rem] font-medium tracking-[-0.012em] xl:px-3.5 xl:text-[0.84rem] ${
                       active
                         ? "border border-white/85 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(228,237,246,0.98))] text-[var(--text-primary)] shadow-[0_14px_28px_rgba(154,170,190,0.2)]"
                         : "text-[var(--text-secondary)] hover:bg-white/58 hover:text-[var(--text-primary)]"
@@ -75,12 +75,12 @@ export function SiteHeader() {
               })}
             </nav>
 
-            <div className="hidden min-w-0 items-center justify-end gap-2.5 lg:flex lg:w-full lg:justify-self-end">
-              <LanguageToggle className="w-auto min-w-[9.5rem]" />
-              <span className="archive-chip utility-pill rounded-full px-3 py-1.5 text-[0.68rem] uppercase tracking-[0.16em] text-[var(--text-secondary)]">
+            <div className="hidden min-w-0 items-center justify-end gap-2 lg:flex lg:w-full lg:justify-self-end xl:gap-2.5">
+              <LanguageToggle className="w-auto min-w-[7.8rem] xl:min-w-[9.5rem]" />
+              <span className="archive-chip utility-pill hidden rounded-full px-3 py-1.5 text-[0.68rem] uppercase tracking-[0.16em] text-[var(--text-secondary)] xl:inline-flex">
                 {globalContent.headerTagline}
               </span>
-              <TransitionLink className="button-primary px-4 py-2 text-[0.88rem]" href="/inquire" scroll>
+              <TransitionLink className="button-primary px-3.5 py-2 text-[0.84rem] xl:px-4 xl:text-[0.88rem]" href="/inquire" scroll>
                 {globalContent.headerInquireLabel}
               </TransitionLink>
             </div>

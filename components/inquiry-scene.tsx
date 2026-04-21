@@ -390,10 +390,10 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
   );
 
   return (
-    <section className="shell py-2 sm:py-4 md:h-[calc(100svh-var(--header-offset-desktop))] md:min-h-[calc(100svh-var(--header-offset-desktop))] md:overflow-hidden">
-      <SceneViewport className="md:h-full">
-        <div className="scene-shell scene-shell-warm scene-pad md:h-full" {...sceneBindings}>
-          <div className="relative z-10 flex flex-col gap-[var(--mobile-section-gap)] overflow-visible md:h-full md:min-h-0 md:gap-5">
+    <section className="shell py-2 sm:py-4 md:flex md:min-h-[calc(100svh-var(--header-offset-desktop))] md:items-center md:overflow-hidden xl:h-[calc(100svh-var(--header-offset-desktop))] xl:min-h-[calc(100svh-var(--header-offset-desktop))]">
+      <SceneViewport className="md:w-full xl:h-full">
+        <div className="scene-shell scene-shell-warm scene-pad md:w-full xl:h-full" {...sceneBindings}>
+          <div className="relative z-10 flex flex-col gap-[var(--mobile-section-gap)] overflow-visible md:min-h-0 md:justify-center md:gap-4 xl:h-full xl:justify-start xl:gap-5">
             <RevealGroup
               className="grid gap-[var(--mobile-section-gap)] md:grid-cols-[minmax(0,0.94fr)_minmax(0,0.86fr)] md:items-end md:gap-5"
               stagger={0.1}
@@ -625,9 +625,9 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
               )}
             </div>
 
-            <div className="hidden md:grid md:min-h-0 md:flex-1 md:grid-cols-[minmax(0,1.02fr)_minmax(20rem,0.98fr)] md:gap-5">
+            <div className="hidden md:grid md:min-h-0 md:flex-none md:grid-cols-[minmax(0,1.02fr)_minmax(20rem,0.98fr)] md:gap-4 xl:flex-1 xl:gap-5">
               <RevealItem variant="section" className="min-h-0">
-                <div className="panel-strong flex flex-col rounded-[1.8rem] p-4 sm:p-5 md:h-full md:min-h-0">
+                <div className="panel-strong flex flex-col rounded-[1.8rem] p-4 sm:p-5 md:min-h-0 xl:h-full">
                   {submitted ? (
                     renderSuccessContent(false)
                   ) : (
@@ -735,7 +735,7 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
               </RevealItem>
 
               <RevealGroup
-                className="grid gap-3 md:min-h-0 md:grid-rows-[auto_minmax(0,1fr)_auto] md:pb-2"
+                className="grid gap-2.5 md:min-h-0 md:grid-rows-[auto_auto_auto] md:pb-1 xl:gap-3 xl:grid-rows-[auto_minmax(0,1fr)_auto] xl:pb-2"
                 delay={120}
                 stagger={0.1}
                 amount={0.2}
@@ -747,7 +747,7 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
                 </RevealItem>
 
                 <RevealItem variant="media" className="min-h-0">
-                  <div className="scene-focus scene-panel-shell flex min-h-[20rem] flex-col gap-3 p-3 sm:min-h-[22rem] sm:p-4 md:h-full">
+                  <div className="scene-focus scene-panel-shell flex min-h-[20rem] flex-col gap-3 p-3 sm:min-h-[22rem] sm:p-4 xl:h-full">
                     <AnimatePresence mode="wait">
                       <motion.div
                         key={activeSupport.title}
@@ -755,7 +755,7 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={supportExit}
                         transition={contentSwapTransition}
-                        className="grid h-full min-h-0 grid-rows-[minmax(0,1fr)_auto] gap-3"
+                        className="grid h-full min-h-0 gap-3 md:grid-rows-[auto_auto] xl:grid-rows-[minmax(0,1fr)_auto]"
                       >
                         <div className="scene-media-shell min-h-0">
                           <div className="scene-media-frame film-frame relative overflow-hidden">

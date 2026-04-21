@@ -109,10 +109,10 @@ export function SceneScreen({
     : { duration: 0.24, ease: measuredEase };
 
   return (
-    <section className="shell py-2 sm:py-4 md:h-[calc(100svh-var(--header-offset-desktop))] md:min-h-[calc(100svh-var(--header-offset-desktop))] md:overflow-hidden">
-      <SceneViewport className="md:h-full">
-        <div className={`scene-shell ${toneClassName} scene-pad md:h-full`} {...sceneBindings}>
-          <div className="relative z-10 flex flex-col gap-[var(--mobile-section-gap)] overflow-visible md:h-full md:min-h-0 md:gap-5">
+    <section className="shell py-2 sm:py-4 md:flex md:min-h-[calc(100svh-var(--header-offset-desktop))] md:items-center md:overflow-hidden xl:h-[calc(100svh-var(--header-offset-desktop))] xl:min-h-[calc(100svh-var(--header-offset-desktop))]">
+      <SceneViewport className="md:w-full xl:h-full">
+        <div className={`scene-shell ${toneClassName} scene-pad md:w-full xl:h-full`} {...sceneBindings}>
+          <div className="relative z-10 flex flex-col gap-[var(--mobile-section-gap)] overflow-visible md:min-h-0 md:justify-center md:gap-4 xl:h-full xl:justify-start xl:gap-5">
             <RevealGroup
               className="grid gap-[var(--mobile-section-gap)] md:grid-cols-[minmax(0,0.92fr)_auto] md:items-end md:gap-5"
               stagger={0.1}
@@ -241,10 +241,10 @@ export function SceneScreen({
               </RevealItem>
             </div>
 
-            <div className="hidden md:grid md:min-h-0 md:flex-1 md:grid-cols-[minmax(0,1.08fr)_minmax(20rem,0.92fr)] md:gap-5">
+            <div className="hidden md:grid md:min-h-0 md:flex-none md:grid-cols-[minmax(0,1.08fr)_minmax(20rem,0.92fr)] md:gap-4 xl:flex-1 xl:gap-5">
               <RevealGroup className="md:min-h-0" delay={80} stagger={0.08} amount={0.2}>
-                <RevealItem variant="media" className="md:h-full">
-                  <div className="scene-focus scene-panel-shell flex min-h-[20rem] flex-col gap-3 p-3 sm:min-h-[22rem] sm:p-4 md:h-full">
+                <RevealItem variant="media" className="xl:h-full">
+                  <div className="scene-focus scene-panel-shell flex min-h-[20rem] flex-col gap-3 p-3 sm:min-h-[22rem] sm:p-4 xl:h-full">
                     <AnimatePresence mode="wait">
                       <motion.div
                         key={active.title}
@@ -252,7 +252,7 @@ export function SceneScreen({
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={mediaExit}
                         transition={contentSwapTransition}
-                        className="grid h-full min-h-0 grid-rows-[minmax(0,1fr)_auto] gap-3"
+                        className="grid h-full min-h-0 gap-3 md:grid-rows-[auto_auto] xl:grid-rows-[minmax(0,1fr)_auto]"
                       >
                         <div className="scene-media-shell min-h-0">
                           <div className="scene-media-frame film-frame relative overflow-hidden">
@@ -298,7 +298,7 @@ export function SceneScreen({
               </RevealGroup>
 
               <RevealGroup
-                className="grid gap-3 md:min-h-0 md:grid-rows-[auto_minmax(0,1fr)_auto] md:pb-2"
+                className="grid gap-2.5 md:min-h-0 md:grid-rows-[auto_auto_auto] md:pb-1 xl:gap-3 xl:grid-rows-[auto_minmax(0,1fr)_auto] xl:pb-2"
                 delay={140}
                 stagger={0.1}
                 amount={0.2}
@@ -315,7 +315,7 @@ export function SceneScreen({
                 </RevealItem>
 
                 <RevealItem variant="card" className="min-h-0">
-                  <div className="panel-strong flex flex-col gap-3 rounded-[1.7rem] p-3.5 sm:p-4 md:h-full md:min-h-0">
+                  <div className="panel-strong flex flex-col gap-2.5 rounded-[1.7rem] p-3.5 sm:p-4 md:min-h-0 xl:h-full xl:gap-3">
                     <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-1">
                       {steps.map((step, index) => {
                         const isActive = index === activeIndex;

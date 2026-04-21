@@ -52,7 +52,7 @@ export function SceneRoutePager({
 
   return (
     <div className={`${wrapperClassName} ${className}`.trim()}>
-      <div className="panel grid gap-3 rounded-[1.18rem] px-4 py-3.5">
+      <div className="panel grid gap-2.5 rounded-[1.18rem] px-3.5 py-3 md:px-3.5 md:py-3 xl:gap-3 xl:px-4 xl:py-3.5">
         <div className="flex flex-nowrap items-center justify-between gap-3">
           <span className="archive-chip utility-pill utility-pill-tight min-w-0 max-w-[72%] truncate rounded-full px-3 py-1.5 text-[0.64rem] uppercase tracking-[0.16em] text-[var(--text-secondary)]">
             {current.label}
@@ -68,7 +68,7 @@ export function SceneRoutePager({
           {previous ? (
             <TransitionLink
               href={previous.href}
-              className="archive-chip flex min-w-0 flex-col rounded-[1rem] px-3.5 py-3"
+              className="archive-chip flex min-w-0 flex-col rounded-[1rem] px-3 py-2.75 xl:px-3.5 xl:py-3"
             >
               <p className="text-[0.64rem] font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">
                 {globalContent.routeLabels.previous}
@@ -87,7 +87,7 @@ export function SceneRoutePager({
           {next ? (
             <TransitionLink
               href={next.href}
-              className="archive-chip flex min-w-0 flex-col rounded-[1rem] px-3.5 py-3"
+              className="archive-chip flex min-w-0 flex-col rounded-[1rem] px-3 py-2.75 xl:px-3.5 xl:py-3"
             >
               <p className="text-[0.64rem] font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">
                 {globalContent.routeLabels.next}
