@@ -45,10 +45,17 @@ export function SiteHeader() {
           }}
           className="scene-shell scene-shell-cool w-full px-3 py-[var(--header-shell-pad-mobile)] backdrop-blur-xl sm:px-4 sm:py-[var(--header-shell-pad-desktop)]"
         >
-          <div className="relative z-10 flex min-h-[var(--header-height-mobile)] min-w-0 items-center justify-between gap-3 sm:min-h-[var(--header-height-desktop)] sm:gap-4 lg:grid lg:grid-cols-[minmax(10.5rem,1fr)_auto_auto] lg:items-center lg:gap-4 xl:grid-cols-[minmax(14rem,1fr)_auto_auto] xl:gap-6">
-            <div className="flex min-w-0 flex-1 items-center lg:w-full lg:justify-self-start">
+          <div className="relative z-10 flex min-h-[var(--header-height-mobile)] min-w-0 items-center justify-between gap-3 sm:min-h-[var(--header-height-desktop)] sm:gap-4 lg:grid lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] lg:items-center lg:gap-4 xl:gap-6">
+            <div className="flex min-w-0 flex-1 items-center gap-3 lg:w-full lg:justify-self-start">
               <TransitionLink href="/" aria-label="Go to CAPSOUL home page" className="shrink-0">
                 <BrandMark compact />
+              </TransitionLink>
+
+              <TransitionLink
+                href="/admin"
+                className="hidden md:inline-flex shrink-0 items-center rounded-full px-2.5 py-1 text-[0.58rem] font-medium uppercase tracking-[0.18em] text-[var(--text-tertiary)] opacity-75 transition-opacity duration-200 hover:opacity-100 lg:px-0 lg:py-0"
+              >
+                {globalContent.adminEntryLabel}
               </TransitionLink>
             </div>
 
@@ -75,7 +82,7 @@ export function SiteHeader() {
               })}
             </nav>
 
-            <div className="hidden min-w-0 items-center justify-end gap-2 lg:flex lg:justify-self-end xl:gap-2.5">
+            <div className="hidden min-w-0 items-center justify-end gap-2 lg:flex lg:w-full lg:justify-self-end xl:gap-2.5">
               <LanguageToggle className="w-auto min-w-[7.6rem] xl:min-w-[8.6rem]" />
               <TransitionLink className="button-primary px-3.5 py-2 text-[0.84rem] xl:px-4 xl:text-[0.88rem]" href="/inquire" scroll>
                 {globalContent.headerInquireLabel}

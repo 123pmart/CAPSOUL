@@ -806,14 +806,6 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
               </RevealGroup>
             </div>
 
-            <div className="hidden md:flex justify-end pt-2">
-              <TransitionLink
-                href="/admin"
-                className="archive-chip rounded-full px-3 py-1.25 text-[0.62rem] uppercase tracking-[0.18em] text-[var(--text-secondary)] opacity-70 shadow-[0_12px_24px_rgba(150,166,186,0.12)] transition-opacity duration-200 hover:opacity-100 sm:px-3.5 sm:py-1.5 sm:text-[0.66rem]"
-              >
-                {globalContent.adminEntryLabel}
-              </TransitionLink>
-            </div>
           </div>
         </div>
       </SceneViewport>
