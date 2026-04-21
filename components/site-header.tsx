@@ -54,7 +54,7 @@ export function SiteHeader() {
 
             <nav
               aria-label="Primary navigation"
-              className="hidden items-center justify-self-center gap-1 rounded-full border border-[rgba(255,255,255,0.84)] bg-[linear-gradient(180deg,rgba(255,255,255,0.8),rgba(232,243,253,0.9))] px-1.5 py-1.5 shadow-[0_18px_42px_rgba(111,144,181,0.14)] backdrop-blur-[16px] lg:inline-flex"
+              className="hidden items-center justify-self-center gap-1 rounded-full border border-[rgba(255,255,255,0.84)] bg-[linear-gradient(180deg,rgba(255,255,255,0.8),rgba(232,243,253,0.9))] px-1.5 py-1.5 shadow-[0_18px_42px_rgba(111,144,181,0.14)] backdrop-blur-[16px] lg:inline-flex lg:border-[rgba(196,219,244,0.16)] lg:bg-[linear-gradient(180deg,rgba(12,20,31,0.76),rgba(7,13,22,0.9))] lg:shadow-[0_28px_72px_rgba(1,6,14,0.36)] lg:backdrop-blur-[20px]"
             >
               {navigationItems.map((item) => {
                 const active = isSceneRouteActive(pathname, item.href);
@@ -65,8 +65,8 @@ export function SiteHeader() {
                     href={item.href}
                     className={`nav-pill rounded-full px-3 py-2 text-[0.8rem] font-medium tracking-[-0.012em] xl:px-3.5 xl:text-[0.84rem] ${
                       active
-                        ? "border border-[rgba(255,255,255,0.92)] bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(223,236,250,0.98))] text-[var(--text-primary)] shadow-[0_14px_28px_rgba(111,144,181,0.18)]"
-                        : "text-[var(--text-secondary)] hover:bg-[rgba(255,255,255,0.64)] hover:text-[var(--text-primary)]"
+                        ? "border border-[rgba(255,255,255,0.92)] bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(223,236,250,0.98))] text-[var(--text-primary)] shadow-[0_14px_28px_rgba(111,144,181,0.18)] lg:border-[rgba(222,238,255,0.24)] lg:bg-[linear-gradient(180deg,rgba(142,189,239,0.2),rgba(52,84,128,0.28))] lg:text-white lg:shadow-[0_20px_42px_rgba(2,8,17,0.34)]"
+                        : "text-[var(--text-secondary)] hover:bg-[rgba(255,255,255,0.64)] hover:text-[var(--text-primary)] lg:text-[rgba(223,236,250,0.8)] lg:hover:bg-[rgba(155,193,232,0.12)] lg:hover:text-white"
                     }`}
                   >
                     {item.label}

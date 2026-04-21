@@ -32,8 +32,8 @@ export function LanguageToggle({
             type="button"
             className={`nav-pill min-w-0 flex-1 whitespace-nowrap rounded-full font-medium tracking-[-0.01em] ${buttonSpacing} ${
               active
-                ? "border border-[rgba(255,255,255,0.92)] bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(223,236,250,0.98))] text-[var(--text-primary)] shadow-[0_14px_28px_rgba(111,144,181,0.16)]"
-                : "text-[var(--text-secondary)]"
+                ? "border border-[rgba(255,255,255,0.92)] bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(223,236,250,0.98))] text-[var(--text-primary)] shadow-[0_14px_28px_rgba(111,144,181,0.16)] lg:border-[rgba(222,238,255,0.22)] lg:bg-[linear-gradient(180deg,rgba(148,194,242,0.18),rgba(56,89,133,0.26))] lg:text-white lg:shadow-[0_18px_36px_rgba(2,8,17,0.3)]"
+                : "text-[var(--text-secondary)] lg:text-[rgba(223,236,250,0.78)]"
             }`}
             disabled={isUpdatingLocale}
             onClick={() => {

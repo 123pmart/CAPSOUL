@@ -654,8 +654,8 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
                               whileTap={reduceMotion ? undefined : subtleTapPress}
                               className={`rounded-full border px-3 py-2 text-center text-[0.75rem] uppercase tracking-[0.16em] ${
                                 isActive
-                                  ? "border-white/88 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(231,239,247,0.98))] text-[var(--text-primary)] shadow-[0_18px_34px_rgba(152,169,189,0.2)]"
-                                  : "border-[rgba(181,196,211,0.28)] bg-[linear-gradient(180deg,rgba(255,255,255,0.48),rgba(243,248,252,0.68))] text-[var(--text-secondary)]"
+                                  ? "border-white/88 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(231,239,247,0.98))] text-[var(--text-primary)] shadow-[0_18px_34px_rgba(152,169,189,0.2)] md:border-[rgba(222,238,255,0.24)] md:bg-[linear-gradient(180deg,rgba(31,48,69,0.96),rgba(19,31,46,0.99))] md:shadow-[0_20px_46px_rgba(2,8,17,0.34)]"
+                                  : "border-[rgba(181,196,211,0.28)] bg-[linear-gradient(180deg,rgba(255,255,255,0.48),rgba(243,248,252,0.68))] text-[var(--text-secondary)] md:border-[rgba(176,203,231,0.12)] md:bg-[linear-gradient(180deg,rgba(15,24,36,0.8),rgba(11,18,28,0.9))]"
                               }`}
                             >
                               {step.chip}
@@ -761,7 +761,7 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
                               className="h-full w-full object-cover"
                               style={{ objectPosition: activeSupport.objectPosition }}
                             />
-                            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.02),rgba(232,239,246,0.16))]" />
+                            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.02),rgba(232,239,246,0.16))] md:bg-[linear-gradient(180deg,rgba(4,10,16,0.08),rgba(4,10,16,0.42))]" />
                             <div className="surface-note absolute left-3 top-3 max-w-[14rem] rounded-[1rem] px-3 py-2.5 text-[0.78rem] leading-5 text-[var(--text-secondary)] sm:left-4 sm:top-4">
                               <p className="text-[0.66rem] font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">
                                 {activeSupport.label}

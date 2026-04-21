@@ -28,7 +28,7 @@ export function ScenePageUtilityRow({
             href={previous.href}
             scroll
             aria-label={`${globalContent.routeLabels.previous}: ${previous.label}`}
-            className="archive-chip inline-flex min-h-[2.4rem] max-w-full items-center gap-2 rounded-full px-3.5 py-1.5 text-[0.78rem] leading-none text-[var(--text-secondary)] shadow-[0_12px_24px_rgba(150,166,186,0.12)] transition-transform duration-200 hover:-translate-y-0.5 hover:text-[var(--text-primary)]"
+            className="archive-chip inline-flex min-h-[2.4rem] max-w-full items-center gap-2 rounded-full px-3.5 py-1.5 text-[0.78rem] leading-none text-[var(--text-secondary)] transition-transform duration-200 hover:-translate-y-0.5 hover:text-[var(--text-primary)] md:border-[rgba(196,219,244,0.16)] md:text-[rgba(223,236,250,0.82)]"
           >
             <span aria-hidden="true" className="text-[0.86rem]">
               &larr;
@@ -43,7 +43,7 @@ export function ScenePageUtilityRow({
       <div className="flex justify-center">
         <TransitionLink
           href="/admin"
-          className="archive-chip inline-flex min-h-[2.1rem] items-center rounded-full px-3 py-1.5 text-[0.62rem] font-medium uppercase tracking-[0.18em] text-[var(--text-secondary)] opacity-72 shadow-[0_12px_24px_rgba(150,166,186,0.1)] transition-opacity duration-200 hover:opacity-100"
+          className="archive-chip inline-flex min-h-[2.1rem] items-center rounded-full px-3 py-1.5 text-[0.62rem] font-medium uppercase tracking-[0.18em] text-[var(--text-secondary)] opacity-72 transition-opacity duration-200 hover:opacity-100 md:border-[rgba(196,219,244,0.14)] md:text-[rgba(223,236,250,0.72)]"
         >
           {globalContent.adminEntryLabel}
         </TransitionLink>
@@ -55,7 +55,7 @@ export function ScenePageUtilityRow({
             href={next.href}
             scroll
             aria-label={`${globalContent.routeLabels.next}: ${next.label}`}
-            className="archive-chip inline-flex min-h-[2.4rem] max-w-full items-center gap-2 rounded-full px-3.5 py-1.5 text-[0.78rem] leading-none text-[var(--text-secondary)] shadow-[0_12px_24px_rgba(150,166,186,0.12)] transition-transform duration-200 hover:-translate-y-0.5 hover:text-[var(--text-primary)]"
+            className="archive-chip inline-flex min-h-[2.4rem] max-w-full items-center gap-2 rounded-full px-3.5 py-1.5 text-[0.78rem] leading-none text-[var(--text-secondary)] transition-transform duration-200 hover:-translate-y-0.5 hover:text-[var(--text-primary)] md:border-[rgba(196,219,244,0.16)] md:text-[rgba(223,236,250,0.82)]"
           >
             <span className="truncate">{next.label}</span>
             <span aria-hidden="true" className="text-[0.86rem]">
