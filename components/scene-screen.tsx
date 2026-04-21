@@ -17,6 +17,7 @@ import { SceneDetailModal } from "@/components/scene-detail-modal";
 import { SceneRoutePager } from "@/components/scene-route-pager";
 import { useSiteLocale } from "@/components/site-locale-provider";
 import { SceneViewport } from "@/components/scene-viewport";
+import { TransitionLink } from "@/components/transition-link";
 import { useCompactViewport } from "@/components/use-compact-viewport";
 import { useSceneProgression } from "@/components/use-scene-progression";
 import type { ScreenAction, ScreenStep } from "@/content/screen-scenes";
@@ -109,12 +110,12 @@ export function SceneScreen({
     : { duration: 0.24, ease: measuredEase };
 
   return (
-    <section className="shell py-2 sm:py-4 md:flex md:min-h-[calc(100svh-var(--header-offset-desktop))] md:items-center md:overflow-hidden xl:h-[calc(100svh-var(--header-offset-desktop))] xl:min-h-[calc(100svh-var(--header-offset-desktop))]">
-      <SceneViewport className="md:w-full xl:h-full">
-        <div className={`scene-shell ${toneClassName} scene-pad md:w-full xl:h-full`} {...sceneBindings}>
-          <div className="relative z-10 flex flex-col gap-[var(--mobile-section-gap)] overflow-visible md:min-h-0 md:justify-center md:gap-4 xl:h-full xl:justify-start xl:gap-5">
+    <section className="shell py-2 sm:py-4 md:flex md:min-h-[calc(100svh-var(--header-offset-desktop))] md:items-center">
+      <SceneViewport className="md:w-full">
+        <div className={`scene-shell ${toneClassName} scene-pad md:w-full`} {...sceneBindings}>
+          <div className="relative z-10 flex flex-col gap-[var(--mobile-section-gap)] overflow-visible md:min-h-0 md:gap-4 lg:gap-5">
             <RevealGroup
-              className="grid gap-[var(--mobile-section-gap)] md:grid-cols-[minmax(0,0.92fr)_auto] md:items-end md:gap-5"
+              className="grid gap-[var(--mobile-section-gap)] md:max-w-[38rem] md:gap-4"
               stagger={0.1}
               amount={0.25}
             >
@@ -127,12 +128,6 @@ export function SceneScreen({
                   <p className="mt-[var(--mobile-heading-body-gap)] max-w-[32rem] text-[0.94rem] leading-6 text-[var(--text-secondary)] sm:text-[1.02rem] sm:leading-7">
                     {description}
                   </p>
-                </div>
-              </RevealItem>
-
-              <RevealItem variant="card" className="hidden md:block">
-                <div className="grid w-full max-w-[23.5rem] gap-2.5 md:justify-self-end">
-                  <SceneRoutePager compact />
                 </div>
               </RevealItem>
             </RevealGroup>
@@ -241,10 +236,10 @@ export function SceneScreen({
               </RevealItem>
             </div>
 
-            <div className="hidden md:grid md:min-h-0 md:flex-none md:grid-cols-[minmax(0,1.08fr)_minmax(20rem,0.92fr)] md:gap-4 xl:flex-1 xl:gap-5">
+            <div className="hidden md:grid md:min-h-0 md:grid-cols-[minmax(0,1.08fr)_minmax(19.5rem,0.92fr)] md:items-start md:gap-4 lg:gap-5">
               <RevealGroup className="md:min-h-0" delay={80} stagger={0.08} amount={0.2}>
-                <RevealItem variant="media" className="xl:h-full">
-                  <div className="scene-focus scene-panel-shell flex min-h-[20rem] flex-col gap-3 p-3 sm:min-h-[22rem] sm:p-4 xl:h-full">
+                <RevealItem variant="media">
+                  <div className="scene-focus scene-panel-shell flex min-h-[19rem] flex-col gap-3 p-3 sm:min-h-[21rem] sm:p-4">
                     <AnimatePresence mode="wait">
                       <motion.div
                         key={active.title}
@@ -252,7 +247,7 @@ export function SceneScreen({
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={mediaExit}
                         transition={contentSwapTransition}
-                        className="grid h-full min-h-0 gap-3 md:grid-rows-[auto_auto] xl:grid-rows-[minmax(0,1fr)_auto]"
+                        className="grid min-h-0 gap-3"
                       >
                         <div className="scene-media-shell min-h-0">
                           <div className="scene-media-frame film-frame relative overflow-hidden">
@@ -281,16 +276,6 @@ export function SceneScreen({
                           </div>
                         </div>
 
-                        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-                          {active.bullets.map((bullet) => (
-                            <div
-                              key={bullet}
-                              className="archive-chip rounded-[1rem] px-3.5 py-3 text-[0.86rem] leading-6 text-[var(--text-secondary)]"
-                            >
-                              {bullet}
-                            </div>
-                          ))}
-                        </div>
                       </motion.div>
                     </AnimatePresence>
                   </div>
@@ -298,25 +283,23 @@ export function SceneScreen({
               </RevealGroup>
 
               <RevealGroup
-                className="grid gap-2.5 md:min-h-0 md:grid-rows-[auto_auto_auto] md:pb-1 xl:gap-3 xl:grid-rows-[auto_minmax(0,1fr)_auto] xl:pb-2"
+                className="grid gap-3 md:min-h-0 md:content-start"
                 delay={140}
                 stagger={0.1}
                 amount={0.2}
               >
-                <RevealItem variant="micro">
-                  <div className="flex flex-nowrap items-center justify-between gap-3">
-                    <span className="archive-chip utility-pill utility-pill-tight rounded-full px-3.5 py-1.5 text-[0.7rem] uppercase tracking-[0.18em] text-[var(--text-secondary)]">
-                      {usesViewportProgression ? compactNote : globalContent.sceneLabels.arrowInstruction}
-                    </span>
-                    <span className="scene-counter text-[0.75rem] uppercase tracking-[0.18em] text-[var(--text-tertiary)]">
-                      {String(activeIndex + 1).padStart(2, "0")} / {String(steps.length).padStart(2, "0")}
-                    </span>
-                  </div>
-                </RevealItem>
-
                 <RevealItem variant="card" className="min-h-0">
-                  <div className="panel-strong flex flex-col gap-2.5 rounded-[1.7rem] p-3.5 sm:p-4 md:min-h-0 xl:h-full xl:gap-3">
-                    <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-1">
+                  <div className="panel-strong flex flex-col gap-3 rounded-[1.7rem] p-3.5 sm:p-4 md:min-h-0">
+                    <div className="flex flex-nowrap items-center justify-between gap-3">
+                      <span className="archive-chip utility-pill utility-pill-tight rounded-full px-3.5 py-1.5 text-[0.7rem] uppercase tracking-[0.18em] text-[var(--text-secondary)]">
+                        {usesViewportProgression ? compactNote : globalContent.sceneLabels.arrowInstruction}
+                      </span>
+                      <span className="scene-counter text-[0.75rem] uppercase tracking-[0.18em] text-[var(--text-tertiary)]">
+                        {String(activeIndex + 1).padStart(2, "0")} / {String(steps.length).padStart(2, "0")}
+                      </span>
+                    </div>
+
+                    <div className="grid gap-2 sm:grid-cols-2">
                       {steps.map((step, index) => {
                         const isActive = index === activeIndex;
 
@@ -361,7 +344,7 @@ export function SceneScreen({
                         animate={{ opacity: 1, y: 0 }}
                         exit={panelExit}
                         transition={contentSwapTransition}
-                        className="scene-state-detail grid gap-4 md:min-h-0 md:grid-rows-[auto_minmax(0,1fr)]"
+                        className="grid gap-3.5"
                       >
                         <div>
                           <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-deep)]">
@@ -375,7 +358,7 @@ export function SceneScreen({
                           </p>
                         </div>
 
-                        <div className="grid content-end gap-2 md:grid-cols-2 xl:grid-cols-1">
+                        <div className="grid gap-2 md:grid-cols-2">
                           {active.bullets.map((bullet) => (
                             <div
                               key={`${active.label}-${bullet}`}
@@ -411,6 +394,15 @@ export function SceneScreen({
                   </div>
                 </RevealItem>
               </RevealGroup>
+            </div>
+
+            <div className="hidden md:flex justify-end pt-2">
+              <TransitionLink
+                href="/admin"
+                className="archive-chip rounded-full px-3 py-1.25 text-[0.62rem] uppercase tracking-[0.18em] text-[var(--text-secondary)] opacity-70 shadow-[0_12px_24px_rgba(150,166,186,0.12)] transition-opacity duration-200 hover:opacity-100 sm:px-3.5 sm:py-1.5 sm:text-[0.66rem]"
+              >
+                {globalContent.adminEntryLabel}
+              </TransitionLink>
             </div>
           </div>
         </div>

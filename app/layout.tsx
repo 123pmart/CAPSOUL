@@ -53,9 +53,6 @@ export default async function RootLayout({
                   <AdminEntry inline />
                 </div>
               </main>
-              <div className="hidden md:block">
-                <AdminEntry />
-              </div>
             </SceneTransitionProvider>
           </SiteLocaleProvider>
         </div>
