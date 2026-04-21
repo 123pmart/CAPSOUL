@@ -18,6 +18,7 @@ import {
 import { CompactSceneControls } from "@/components/compact-scene-controls";
 import { RevealGroup, RevealItem } from "@/components/reveal";
 import { SceneDetailModal } from "@/components/scene-detail-modal";
+import { ScenePageUtilityRow } from "@/components/scene-page-utility-row";
 import { SceneRoutePager } from "@/components/scene-route-pager";
 import { useSiteLocale } from "@/components/site-locale-provider";
 import { SceneViewport } from "@/components/scene-viewport";
@@ -806,6 +807,7 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
               </RevealGroup>
             </div>
 
+            <ScenePageUtilityRow className="md:pt-2 lg:pt-3" />
           </div>
         </div>
       </SceneViewport>

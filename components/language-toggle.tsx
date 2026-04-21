@@ -5,12 +5,22 @@ import type { SiteLocale } from "@/lib/site-content-schema";
 
 const localeOptions: SiteLocale[] = ["en", "es"];
 
-export function LanguageToggle({ className = "" }: { className?: string }) {
+type LanguageToggleProps = {
+  className?: string;
+  compact?: boolean;
+};
+
+export function LanguageToggle({
+  className = "",
+  compact = false,
+}: LanguageToggleProps) {
   const { locale, globalContent, isUpdatingLocale, setLocale } = useSiteLocale();
+  const wrapperSpacing = compact ? "gap-0.5 px-1 py-1" : "gap-1 px-1.5 py-1.5";
+  const buttonSpacing = compact ? "px-2.5 py-1.5 text-[0.72rem]" : "px-3 py-2 text-[0.74rem]";
 
   return (
     <div
-      className={`panel inline-flex w-full items-center gap-1 rounded-full px-1.5 py-1.5 ${className}`.trim()}
+      className={`panel inline-flex w-full items-center rounded-full ${wrapperSpacing} ${className}`.trim()}
       aria-label="Language selector"
     >
       {localeOptions.map((option) => {
@@ -20,7 +30,7 @@ export function LanguageToggle({ className = "" }: { className?: string }) {
           <button
             key={option}
             type="button"
-            className={`nav-pill min-w-0 flex-1 rounded-full px-3 py-2 text-[0.74rem] font-medium tracking-[-0.01em] ${
+            className={`nav-pill min-w-0 flex-1 whitespace-nowrap rounded-full font-medium tracking-[-0.01em] ${buttonSpacing} ${
               active
                 ? "border border-white/84 bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(228,237,246,0.98))] text-[var(--text-primary)] shadow-[0_14px_28px_rgba(154,170,190,0.18)]"
                 : "text-[var(--text-secondary)]"

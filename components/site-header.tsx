@@ -50,13 +50,6 @@ export function SiteHeader() {
               <TransitionLink href="/" aria-label="Go to CAPSOUL home page" className="shrink-0">
                 <BrandMark compact />
               </TransitionLink>
-
-              <TransitionLink
-                href="/admin"
-                className="hidden md:inline-flex shrink-0 items-center rounded-full px-2.5 py-1 text-[0.58rem] font-medium uppercase tracking-[0.18em] text-[var(--text-tertiary)] opacity-75 transition-opacity duration-200 hover:opacity-100 lg:px-0 lg:py-0"
-              >
-                {globalContent.adminEntryLabel}
-              </TransitionLink>
             </div>
 
             <nav
@@ -83,7 +76,7 @@ export function SiteHeader() {
             </nav>
 
             <div className="hidden min-w-0 items-center justify-end gap-2 lg:flex lg:w-full lg:justify-self-end xl:gap-2.5">
-              <LanguageToggle className="w-auto min-w-[7.6rem] xl:min-w-[8.6rem]" />
+              <LanguageToggle compact className="w-auto min-w-[6.5rem] xl:min-w-[7.1rem]" />
               <TransitionLink className="button-primary px-3.5 py-2 text-[0.84rem] xl:px-4 xl:text-[0.88rem]" href="/inquire" scroll>
                 {globalContent.headerInquireLabel}
               </TransitionLink>
