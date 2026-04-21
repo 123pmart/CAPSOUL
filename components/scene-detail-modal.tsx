@@ -67,7 +67,7 @@ export function SceneDetailModal({
             role="dialog"
             aria-modal="true"
             aria-label={title}
-            className="scene-detail-panel panel-strong"
+            className="scene-detail-panel"
             initial={reduceMotion ? { opacity: 1 } : { opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
