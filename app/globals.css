@@ -1345,6 +1345,18 @@
     --scene-bottom-safe: clamp(0.36rem, 0.45vw, 0.48rem);
   }
 
+  .inquiry-scene-viewport,
+  .inquiry-scene-frame {
+    height: 100%;
+    min-height: 0;
+  }
+
+  .inquiry-scene-viewport,
+  .inquiry-scene-frame {
+    display: flex;
+    flex: 1 1 auto;
+  }
+
   .scene-screen-shell,
   .inquiry-scene-shell {
     padding-top: 0.25rem;
@@ -1357,7 +1369,13 @@
   }
 
   .inquiry-scene-stack {
+    display: grid;
+    height: 100%;
+    min-height: 0;
+    align-content: stretch;
+    grid-template-rows: auto minmax(0, 1fr) auto;
     gap: 0.68rem;
+    overflow: hidden;
   }
 
   .scene-screen-grid,
@@ -1367,6 +1385,7 @@
 
   .inquiry-tablet-branch {
     flex: 1 1 auto;
+    height: 100%;
     min-height: 0;
     align-items: stretch !important;
     overflow: hidden;

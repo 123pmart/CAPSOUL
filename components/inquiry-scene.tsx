@@ -471,8 +471,8 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
 
   return (
       <section className="inquiry-scene-shell shell py-2 sm:py-4 md:flex md:h-[calc(100svh-var(--header-offset-desktop))] md:min-h-0 md:items-start md:overflow-hidden min-[1025px]:items-center">
-        <SceneViewport className="md:w-full">
-        <div className="scene-shell scene-shell-warm scene-pad md:w-full" {...sceneBindings}>
+        <SceneViewport className="inquiry-scene-viewport md:w-full">
+        <div className="inquiry-scene-frame scene-shell scene-shell-warm scene-pad md:w-full" {...sceneBindings}>
           <div className="inquiry-scene-stack relative z-10 flex flex-col gap-[var(--mobile-section-gap)] overflow-visible md:min-h-0 md:gap-4 lg:gap-5">
             <RevealGroup
               className="grid gap-[var(--mobile-section-gap)] md:max-w-[40rem] md:gap-4"
@@ -707,7 +707,7 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
             </div>
 
             <div className="inquiry-tablet-branch inquiry-tablet-grid md:min-h-0 md:grid-cols-[minmax(0,1.02fr)_minmax(16.8rem,0.98fr)] md:items-start md:gap-3">
-              <RevealItem variant="section" className="min-h-0">
+              <RevealItem variant="section" className="h-full min-h-0">
                 <div className="inquiry-tablet-form-panel panel-strong flex flex-col rounded-[1.55rem] p-3 md:min-h-0">
                   {submitted ? (
                     renderSuccessContent(false)
@@ -816,7 +816,7 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
               </RevealItem>
 
               <RevealGroup
-                className="inquiry-tablet-support-stack grid gap-2.5 md:min-h-0 md:content-start"
+                className="inquiry-tablet-support-stack grid h-full gap-2.5 md:min-h-0 md:content-start"
                 delay={120}
                 stagger={0.1}
                 amount={0.2}
