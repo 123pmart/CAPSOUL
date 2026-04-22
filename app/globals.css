@@ -1337,6 +1337,42 @@
   }
 }
 
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
+  .scene-screen-viewport,
+  .scene-screen-frame {
+    display: block;
+    flex: 0 1 auto;
+    height: auto;
+    min-height: 0;
+  }
+
+  .scene-screen-stack {
+    display: flex;
+    height: auto;
+    min-height: 0;
+    overflow: visible;
+  }
+
+  .scene-tablet-branch,
+  .scene-screen-side-column {
+    height: auto;
+    min-height: 0;
+  }
+
+  .scene-screen-media-panel,
+  .scene-screen-media-panel > .grid,
+  .scene-screen-media-panel .scene-media-shell,
+  .scene-screen-media-panel .scene-media-frame {
+    height: auto;
+    min-height: 0;
+  }
+
+  .scene-screen-media-panel .scene-media-frame {
+    aspect-ratio: 3 / 2;
+    min-height: clamp(13.4rem, 33vw, 14.9rem);
+  }
+}
+
 @media (min-width: 768px) and (max-width: 1194px) and (orientation: landscape) {
   :root {
     --page-top-gap-desktop: 0.56rem;

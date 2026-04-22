@@ -33,11 +33,11 @@ export function SceneTransitionOverlay() {
     ? "absolute inset-0 bg-[rgba(6,11,20,0.84)]"
     : "absolute inset-0 bg-[rgba(243,247,252,0.82)]";
   const largeVeilClass = isDark
-    ? "absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(22,36,52,0.82),rgba(11,18,29,0.88)_44%,rgba(5,10,18,0.94)_100%)] backdrop-blur-[8px]"
-    : "absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.9),rgba(238,244,250,0.82)_44%,rgba(233,240,247,0.76)_100%)] backdrop-blur-[8px]";
+    ? "absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(22,36,52,0.82),rgba(11,18,29,0.88)_44%,rgba(5,10,18,0.94)_100%)] backdrop-blur-[6px]"
+    : "absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.9),rgba(238,244,250,0.82)_44%,rgba(233,240,247,0.76)_100%)] backdrop-blur-[6px]";
   const largePanelClass = isDark
-    ? "absolute inset-[5vh_3vw] rounded-[2.8rem] border border-[rgba(194,219,244,0.16)] bg-[linear-gradient(180deg,rgba(18,29,42,0.9),rgba(9,16,27,0.96))] shadow-[0_36px_90px_rgba(1,6,14,0.34)] backdrop-blur-[12px]"
-    : "absolute inset-[5vh_3vw] rounded-[2.8rem] border border-white/82 bg-[linear-gradient(180deg,rgba(255,255,255,0.62),rgba(236,242,248,0.82))] shadow-[0_36px_90px_rgba(152,169,189,0.2)] backdrop-blur-[12px]";
+    ? "absolute inset-[5vh_3vw] rounded-[2.8rem] border border-[rgba(194,219,244,0.16)] bg-[linear-gradient(180deg,rgba(18,29,42,0.9),rgba(9,16,27,0.96))] shadow-[0_32px_72px_rgba(1,6,14,0.3)] backdrop-blur-[8px]"
+    : "absolute inset-[5vh_3vw] rounded-[2.8rem] border border-white/82 bg-[linear-gradient(180deg,rgba(255,255,255,0.62),rgba(236,242,248,0.82))] shadow-[0_32px_72px_rgba(152,169,189,0.18)] backdrop-blur-[8px]";
   const largePanelHighlightPrimaryClass = isDark
     ? "absolute inset-0 rounded-[inherit] bg-[radial-gradient(circle_at_top,rgba(116,166,222,0.12),transparent_54%)]"
     : "absolute inset-0 rounded-[inherit] bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.94),transparent_52%)]";

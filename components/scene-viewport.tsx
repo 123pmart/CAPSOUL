@@ -26,14 +26,14 @@ export function SceneViewport({
           : isCompactViewport
             ? {
                 opacity: 0.56,
-                y: 10,
+                y: 8,
                 scale: 1,
                 rotateX: 0,
               }
             : {
-                opacity: 0.28,
-                y: 22,
-                scale: 1.01,
+                opacity: 0.36,
+                y: 16,
+                scale: 1.006,
                 rotateX: 0,
               }
       }
@@ -43,7 +43,7 @@ export function SceneViewport({
           : phase === "exiting"
             ? isCompactViewport
               ? { opacity: 0.36, y: -4, scale: 0.998, rotateX: 0 }
-              : { opacity: 0.18, y: -10, scale: 0.988, rotateX: 0 }
+              : { opacity: 0.22, y: -6, scale: 0.992, rotateX: 0 }
             : { opacity: 1, y: 0, scale: 1, rotateX: 0 }
       }
       transition={phase === "exiting" ? routeExitTransition : routeEnterTransition}

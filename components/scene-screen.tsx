@@ -43,8 +43,6 @@ export function SceneScreen({
   title,
   description,
   steps,
-  primaryAction,
-  secondaryAction,
   stageLabel = "Scene progression",
   compactNote = "Scroll or tap through the states inside this screen.",
   tone = "cool",
