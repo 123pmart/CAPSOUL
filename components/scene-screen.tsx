@@ -284,12 +284,12 @@ export function SceneScreen({
               </RevealGroup>
 
               <RevealGroup
-                className="grid gap-2.5 md:min-h-0 md:content-start"
+                className="grid gap-2.5 md:h-full md:min-h-0 md:content-start"
                 delay={140}
                 stagger={0.1}
                 amount={0.2}
               >
-                <RevealItem variant="card" className="min-h-0">
+                <RevealItem variant="card" className="h-full min-h-0">
                   <div className="panel-strong flex h-full min-h-0 flex-col gap-2.5 rounded-[1.45rem] p-3">
                     <div className="flex items-center justify-end">
                       <span className="scene-counter text-[0.7rem] uppercase tracking-[0.17em] text-[var(--text-tertiary)]">
@@ -340,7 +340,7 @@ export function SceneScreen({
                         animate={{ opacity: 1, y: 0 }}
                         exit={panelExit}
                         transition={contentSwapTransition}
-                        className="grid gap-2.5"
+                        className="grid min-h-0 flex-1 content-start gap-2.5"
                       >
                         <div>
                           <p className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">
@@ -366,27 +366,25 @@ export function SceneScreen({
                         </div>
                       </motion.div>
                     </AnimatePresence>
-                  </div>
-                </RevealItem>
 
-                <RevealItem variant="micro">
-                  <div className="grid gap-2 sm:grid-cols-2">
-                    <button
-                      type="button"
-                      className="button-secondary px-3.5 text-[0.82rem]"
-                      disabled={isFirst}
-                      onClick={goPrev}
-                    >
-                      {globalContent.routeLabels.previous}
-                    </button>
-                    <button
-                      type="button"
-                      className="button-primary px-3.5 text-[0.82rem]"
-                      disabled={isLast}
-                      onClick={goNext}
-                    >
-                      {globalContent.routeLabels.next}
-                    </button>
+                    <div className="mt-auto grid gap-2 sm:grid-cols-2">
+                      <button
+                        type="button"
+                        className="button-secondary px-3.5 text-[0.82rem]"
+                        disabled={isFirst}
+                        onClick={goPrev}
+                      >
+                        {globalContent.routeLabels.previous}
+                      </button>
+                      <button
+                        type="button"
+                        className="button-primary px-3.5 text-[0.82rem]"
+                        disabled={isLast}
+                        onClick={goNext}
+                      >
+                        {globalContent.routeLabels.next}
+                      </button>
+                    </div>
                   </div>
                 </RevealItem>
               </RevealGroup>
@@ -440,13 +438,13 @@ export function SceneScreen({
               </RevealGroup>
 
               <RevealGroup
-                className="scene-screen-side-column grid gap-3 md:min-h-0 md:content-start"
+                className="scene-screen-side-column grid gap-3 md:h-full md:min-h-0 md:content-start"
                 delay={140}
                 stagger={0.1}
                 amount={0.2}
               >
-                <RevealItem variant="card" className="min-h-0">
-                  <div className="panel-strong flex flex-col gap-3 rounded-[1.7rem] p-3.5 sm:p-4 md:min-h-0">
+                <RevealItem variant="card" className="h-full min-h-0">
+                  <div className="panel-strong flex h-full min-h-0 flex-col gap-3 rounded-[1.7rem] p-3.5 sm:p-4">
                     <div className="flex items-center justify-end">
                       <span className="scene-counter text-[0.75rem] uppercase tracking-[0.18em] text-[var(--text-tertiary)]">
                         {String(activeIndex + 1).padStart(2, "0")} / {String(steps.length).padStart(2, "0")}
@@ -498,7 +496,7 @@ export function SceneScreen({
                         animate={{ opacity: 1, y: 0 }}
                         exit={panelExit}
                         transition={contentSwapTransition}
-                        className="grid gap-3.5"
+                        className="grid min-h-0 flex-1 content-start gap-3.5"
                       >
                         <div>
                           <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-deep)]">
@@ -524,27 +522,25 @@ export function SceneScreen({
                         </div>
                       </motion.div>
                     </AnimatePresence>
-                  </div>
-                </RevealItem>
 
-                <RevealItem variant="micro">
-                  <div className="grid gap-3 sm:grid-cols-2">
-                    <button
-                      type="button"
-                      className="button-secondary px-4"
-                      disabled={isFirst}
-                      onClick={goPrev}
-                    >
-                      {globalContent.routeLabels.previous}
-                    </button>
-                    <button
-                      type="button"
-                      className="button-primary px-4"
-                      disabled={isLast}
-                      onClick={goNext}
-                    >
-                      {globalContent.routeLabels.next}
-                    </button>
+                    <div className="mt-auto grid gap-3 sm:grid-cols-2">
+                      <button
+                        type="button"
+                        className="button-secondary px-4"
+                        disabled={isFirst}
+                        onClick={goPrev}
+                      >
+                        {globalContent.routeLabels.previous}
+                      </button>
+                      <button
+                        type="button"
+                        className="button-primary px-4"
+                        disabled={isLast}
+                        onClick={goNext}
+                      >
+                        {globalContent.routeLabels.next}
+                      </button>
+                    </div>
                   </div>
                 </RevealItem>
               </RevealGroup>
