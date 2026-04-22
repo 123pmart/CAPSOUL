@@ -706,7 +706,7 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
               )}
             </div>
 
-            <div className="inquiry-tablet-grid hidden md:grid min-[1025px]:hidden md:min-h-0 md:grid-cols-[minmax(0,1.02fr)_minmax(16.8rem,0.98fr)] md:items-start md:gap-3">
+            <div className="inquiry-tablet-branch inquiry-tablet-grid md:min-h-0 md:grid-cols-[minmax(0,1.02fr)_minmax(16.8rem,0.98fr)] md:items-start md:gap-3">
               <RevealItem variant="section" className="min-h-0">
                 <div className="inquiry-tablet-form-panel panel-strong flex flex-col rounded-[1.55rem] p-3 md:min-h-0">
                   {submitted ? (
@@ -888,7 +888,7 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
               </RevealGroup>
             </div>
 
-            <div className="inquiry-scene-grid hidden min-[1025px]:grid min-[1025px]:min-h-0 min-[1025px]:grid-cols-[minmax(0,1.03fr)_minmax(19.5rem,0.9fr)] min-[1025px]:gap-5">
+            <div className="inquiry-desktop-branch inquiry-scene-grid min-[1025px]:min-h-0 min-[1025px]:grid-cols-[minmax(0,1.03fr)_minmax(19.5rem,0.9fr)] min-[1025px]:gap-5">
               <RevealItem variant="section" className="min-h-0">
                 <div className="inquiry-form-panel panel-strong flex flex-col rounded-[1.8rem] p-4 sm:p-5 md:min-h-0">
                   {submitted ? (

@@ -318,6 +318,13 @@
   text-wrap: pretty;
 }
 
+.scene-tablet-branch,
+.scene-desktop-branch,
+.inquiry-tablet-branch,
+.inquiry-desktop-branch {
+  display: none;
+}
+
 .utility-pill {
   display: inline-flex;
   min-height: var(--utility-pill-min-height);
@@ -1278,6 +1285,11 @@
     --scene-bottom-safe: clamp(0.5rem, 0.8vw, 0.7rem);
   }
 
+  .scene-tablet-branch,
+  .inquiry-tablet-branch {
+    display: grid;
+  }
+
   .scene-screen-shell,
   .inquiry-scene-shell {
     padding-top: 0.25rem;
@@ -1811,7 +1823,12 @@ html[data-theme="dark"] .scene-detail-scroll .archive-chip {
   }
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1025px) {
+  .scene-desktop-branch,
+  .inquiry-desktop-branch {
+    display: grid;
+  }
+
   .scene-shell-body {
     display: grid;
     height: 100%;

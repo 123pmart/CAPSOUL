@@ -237,7 +237,7 @@ export function SceneScreen({
               </RevealItem>
             </div>
 
-            <div className="hidden md:grid min-[1025px]:hidden md:min-h-0 md:grid-cols-[minmax(0,1.03fr)_minmax(17rem,0.97fr)] md:items-stretch md:gap-3">
+            <div className="scene-tablet-branch md:min-h-0 md:grid-cols-[minmax(0,1.03fr)_minmax(17rem,0.97fr)] md:items-stretch md:gap-3">
               <RevealGroup className="md:min-h-0 md:h-full" delay={80} stagger={0.08} amount={0.2}>
                 <RevealItem variant="media">
                   <div className="scene-focus scene-panel-shell flex h-full min-h-[15.8rem] flex-col gap-2.5 p-2.5">
@@ -392,7 +392,7 @@ export function SceneScreen({
               </RevealGroup>
             </div>
 
-            <div className="scene-screen-grid hidden min-[1025px]:grid min-[1025px]:min-h-0 min-[1025px]:grid-cols-[minmax(0,1.08fr)_minmax(19.5rem,0.92fr)] min-[1025px]:items-start min-[1025px]:gap-5">
+            <div className="scene-desktop-branch scene-screen-grid min-[1025px]:min-h-0 min-[1025px]:grid-cols-[minmax(0,1.08fr)_minmax(19.5rem,0.92fr)] min-[1025px]:items-start min-[1025px]:gap-5">
               <RevealGroup className="md:min-h-0 md:h-full min-[1025px]:h-auto" delay={80} stagger={0.08} amount={0.2}>
                 <RevealItem variant="media">
                   <div className="scene-screen-media-panel scene-focus scene-panel-shell flex min-h-[19rem] flex-col gap-3 p-3 sm:min-h-[21rem] sm:p-4 md:h-full min-[1025px]:h-auto">
