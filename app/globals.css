@@ -1874,6 +1874,46 @@ html[data-theme="dark"] .scene-detail-scroll .archive-chip {
 }
 
 @media (min-width: 768px) {
+  .scene-screen-viewport,
+  .scene-screen-frame {
+    display: flex;
+    flex: 1 1 auto;
+    height: 100%;
+    min-height: 0;
+  }
+
+  .scene-screen-stack {
+    display: grid;
+    height: 100%;
+    min-height: 0;
+    align-content: stretch;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    overflow: hidden;
+  }
+
+  .scene-tablet-branch,
+  .scene-desktop-branch,
+  .scene-screen-side-column {
+    height: 100%;
+    min-height: 0;
+  }
+
+  .scene-screen-side-column {
+    align-content: stretch;
+  }
+
+  .scene-screen-media-panel,
+  .scene-screen-media-panel > .grid,
+  .scene-screen-media-panel .scene-media-shell,
+  .scene-screen-media-panel .scene-media-frame {
+    height: 100%;
+    min-height: 0;
+  }
+
+  .scene-screen-media-panel .scene-media-frame {
+    aspect-ratio: auto;
+  }
+
   .scene-focus.scene-panel-shell {
     padding: 0 !important;
     border-color: transparent;
