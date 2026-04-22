@@ -15,7 +15,7 @@ export function HomepageHero() {
           <div className="absolute bottom-[-10%] right-[-7%] h-72 w-72 rounded-full bg-[radial-gradient(circle,rgba(205,183,156,0.22),transparent_72%)]" />
         </div>
 
-        <div className="relative z-10 content-frame-wide grid min-h-[calc(100svh-8.75rem)] gap-5 lg:grid-cols-[minmax(0,0.84fr)_minmax(0,1.16fr)] lg:items-center lg:gap-7 xl:gap-9">
+        <div className="relative z-10 content-frame-wide grid min-h-[calc(100svh-8.75rem)] gap-5 md:min-h-[calc(100svh-var(--header-offset-desktop))] lg:grid-cols-[minmax(0,0.84fr)_minmax(0,1.16fr)] lg:items-center lg:gap-7 xl:gap-9">
           <RevealGroup className="flex h-full flex-col justify-center gap-5 px-1 py-2 lg:max-w-[33.5rem]" stagger={0.11} amount={0.3}>
             <RevealItem variant="micro">
               <span className="eyebrow">{hero.eyebrow}</span>

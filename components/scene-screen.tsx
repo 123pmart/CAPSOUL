@@ -109,10 +109,10 @@ export function SceneScreen({
     ? { duration: 0 }
     : { duration: 0.24, ease: measuredEase };
 
-  return (
-    <section className="shell py-2 sm:py-4 md:flex md:min-h-[calc(100svh-var(--header-offset-desktop))] md:items-center">
-      <SceneViewport className="md:w-full">
-        <div className={`scene-shell ${toneClassName} scene-pad md:w-full`} {...sceneBindings}>
+    return (
+      <section className="shell py-2 sm:py-4 md:flex md:h-[calc(100svh-var(--header-offset-desktop))] md:min-h-0 md:items-center md:overflow-hidden">
+        <SceneViewport className="md:w-full">
+          <div className={`scene-shell ${toneClassName} scene-pad md:w-full`} {...sceneBindings}>
           <div className="relative z-10 flex flex-col gap-[var(--mobile-section-gap)] overflow-visible md:min-h-0 md:gap-4 lg:gap-5">
             <RevealGroup
               className="grid gap-[var(--mobile-section-gap)] md:max-w-[38rem] md:gap-4"
