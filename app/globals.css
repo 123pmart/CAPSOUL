@@ -1380,13 +1380,15 @@
   }
 
   .inquiry-tablet-form-shell {
+    display: grid;
     height: 100%;
     min-height: 0;
+    align-content: stretch;
+    grid-template-rows: auto auto auto minmax(0, 1fr) auto auto;
     gap: 0.82rem;
   }
 
   .inquiry-tablet-field-stage {
-    flex: 1 1 auto;
     min-height: 0;
     overflow-y: auto;
     overscroll-behavior: contain;
@@ -1396,6 +1398,13 @@
 
   .inquiry-tablet-field-stage > .grid {
     align-content: start;
+  }
+
+  .inquiry-tablet-tabs,
+  .inquiry-tablet-copy,
+  .inquiry-tablet-actions,
+  .inquiry-tablet-error {
+    min-height: 0;
   }
 
   .scene-screen-media-panel {

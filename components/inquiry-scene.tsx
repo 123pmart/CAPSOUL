@@ -713,7 +713,7 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
                     renderSuccessContent(false)
                   ) : (
                     <form className="inquiry-tablet-form-shell flex flex-col gap-3.5 md:min-h-0" onSubmit={handleSubmit}>
-                      <div className="grid gap-2 sm:grid-cols-3">
+                      <div className="inquiry-tablet-tabs grid gap-2 sm:grid-cols-3">
                         {sceneData.formSteps.map((step, index) => {
                           const isActive = index === activeIndex;
 
@@ -744,7 +744,7 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
                         })}
                       </div>
 
-                      <div>
+                      <div className="inquiry-tablet-copy">
                         <p className="text-[0.64rem] font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">
                           {activeSupport.label}
                         </p>
@@ -774,12 +774,12 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
                       </div>
 
                       {submitError ? (
-                        <p className="rounded-[0.95rem] border border-[rgba(199,116,116,0.2)] bg-[rgba(255,255,255,0.52)] px-3 py-2.5 text-[0.8rem] leading-5 text-[var(--text-primary)]">
+                        <p className="inquiry-tablet-error rounded-[0.95rem] border border-[rgba(199,116,116,0.2)] bg-[rgba(255,255,255,0.52)] px-3 py-2.5 text-[0.8rem] leading-5 text-[var(--text-primary)]">
                           {submitError}
                         </p>
                       ) : null}
 
-                      <div className="grid gap-2">
+                      <div className="inquiry-tablet-actions grid gap-2">
                         <div className="grid gap-2 sm:grid-cols-2">
                           <button
                             type="button"
