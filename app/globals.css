@@ -1277,6 +1277,52 @@
     --section-gap-tight: clamp(1.7rem, 3.4vw, 2.45rem);
     --scene-bottom-safe: clamp(0.5rem, 0.8vw, 0.7rem);
   }
+
+  .scene-screen-shell,
+  .inquiry-scene-shell {
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+  }
+
+  .scene-screen-utility,
+  .inquiry-scene-utility {
+    padding-top: 0.35rem !important;
+  }
+
+  .inquiry-tablet-form-shell .field-input,
+  .inquiry-tablet-form-shell .field-textarea,
+  .inquiry-tablet-form-shell .field-select {
+    padding: 0.76rem 0.84rem;
+    font-size: 0.94rem;
+  }
+
+  .inquiry-tablet-form-shell .field-textarea {
+    min-height: 4.45rem;
+  }
+
+  .inquiry-tablet-form-shell .budget-slider-shell {
+    gap: 0.68rem;
+    padding: 0.8rem 0.86rem;
+  }
+
+  .inquiry-tablet-form-shell .budget-slider-track,
+  .inquiry-tablet-form-shell .budget-slider-input {
+    min-height: 2.05rem;
+    height: 2.05rem;
+  }
+
+  .inquiry-tablet-form-shell .budget-slider-value {
+    min-height: 1.86rem;
+    padding: 0.36rem 0.74rem;
+    font-size: 0.8rem;
+  }
+
+  .inquiry-tablet-form-shell .button-primary,
+  .inquiry-tablet-form-shell .button-secondary {
+    min-height: 2.72rem;
+    padding-top: 0.72rem;
+    padding-bottom: 0.72rem;
+  }
 }
 
 @media (min-width: 768px) and (max-width: 1194px) and (orientation: landscape) {
