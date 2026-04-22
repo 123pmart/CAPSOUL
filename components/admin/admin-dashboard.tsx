@@ -78,6 +78,7 @@ export function AdminDashboard({
           lead.filmFor,
           lead.relationship,
           lead.region,
+          lead.estimatedBudget,
           lead.storyImportance,
         ]
           .join(" ")
@@ -488,7 +489,7 @@ export function AdminDashboard({
                     <input
                       id="lead-search"
                       className="field-input"
-                      placeholder="Search by name, email, region, or story"
+                      placeholder="Search by name, email, region, budget, or story"
                       value={searchValue}
                       onChange={(event) => setSearchValue(event.target.value)}
                     />
@@ -624,6 +625,7 @@ export function AdminDashboard({
                         ["Email", activeLead.email],
                         ["Phone", activeLead.phone || "Not provided"],
                         ["Region", activeLead.region || "Not provided"],
+                        ["Estimated budget", activeLead.estimatedBudget || "Not provided"],
                         ["Film for", activeLead.filmFor],
                         ["Relationship", activeLead.relationship],
                         ["Still living", activeLead.stillLiving || "Not provided"],

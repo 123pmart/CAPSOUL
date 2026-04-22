@@ -110,10 +110,10 @@ export function SceneScreen({
     : { duration: 0.24, ease: measuredEase };
 
   return (
-    <section className="shell py-2 sm:py-4 md:flex md:h-[calc(100svh-var(--header-offset-desktop))] md:min-h-0 md:items-center md:overflow-hidden md:py-2 min-[1025px]:py-4">
+    <section className="scene-screen-shell shell py-2 sm:py-4 md:flex md:h-[calc(100svh-var(--header-offset-desktop))] md:min-h-0 md:items-center md:overflow-hidden md:py-2 min-[1025px]:py-4">
         <SceneViewport className="md:w-full">
           <div className={`scene-shell ${toneClassName} scene-pad md:w-full`} {...sceneBindings}>
-          <div className="relative z-10 flex flex-col gap-[var(--mobile-section-gap)] overflow-visible md:min-h-0 md:gap-3 min-[1025px]:gap-5">
+          <div className="scene-screen-stack relative z-10 flex flex-col gap-[var(--mobile-section-gap)] overflow-visible md:min-h-0 md:gap-3 min-[1025px]:gap-5">
             <RevealGroup
               className="grid gap-[var(--mobile-section-gap)] md:max-w-[38rem] md:gap-3 min-[1025px]:gap-4"
               stagger={0.1}
@@ -177,6 +177,7 @@ export function SceneScreen({
                                 <img
                                   src={active.image}
                                   alt={`${active.title} visual placeholder.`}
+                                  decoding="async"
                                   className="h-full w-full object-cover"
                                   style={{ objectPosition: active.objectPosition ?? "center center" }}
                                 />
@@ -236,10 +237,10 @@ export function SceneScreen({
               </RevealItem>
             </div>
 
-            <div className="hidden md:grid md:min-h-0 md:grid-cols-[minmax(0,1.12fr)_minmax(18.9rem,0.88fr)] md:items-stretch md:gap-4 min-[1025px]:grid-cols-[minmax(0,1.08fr)_minmax(19.5rem,0.92fr)] min-[1025px]:items-start min-[1025px]:gap-5">
+            <div className="scene-screen-grid hidden md:grid md:min-h-0 md:grid-cols-[minmax(0,1.12fr)_minmax(18.9rem,0.88fr)] md:items-stretch md:gap-4 min-[1025px]:grid-cols-[minmax(0,1.08fr)_minmax(19.5rem,0.92fr)] min-[1025px]:items-start min-[1025px]:gap-5">
               <RevealGroup className="md:min-h-0 md:h-full min-[1025px]:h-auto" delay={80} stagger={0.08} amount={0.2}>
                 <RevealItem variant="media">
-                  <div className="scene-focus scene-panel-shell flex min-h-[19rem] flex-col gap-3 p-3 sm:min-h-[21rem] sm:p-4 md:h-full min-[1025px]:h-auto">
+                  <div className="scene-screen-media-panel scene-focus scene-panel-shell flex min-h-[19rem] flex-col gap-3 p-3 sm:min-h-[21rem] sm:p-4 md:h-full min-[1025px]:h-auto">
                     <AnimatePresence mode="wait">
                       <motion.div
                         key={active.title}
@@ -255,6 +256,7 @@ export function SceneScreen({
                             <img
                               src={active.image}
                               alt={`${active.title} visual placeholder.`}
+                              decoding="async"
                               className="h-full w-full object-cover"
                               style={{ objectPosition: active.objectPosition ?? "center center" }}
                             />
@@ -283,7 +285,7 @@ export function SceneScreen({
               </RevealGroup>
 
               <RevealGroup
-                className="grid gap-3 md:min-h-0 md:content-start"
+                className="scene-screen-side-column grid gap-3 md:min-h-0 md:content-start"
                 delay={140}
                 stagger={0.1}
                 amount={0.2}
@@ -393,7 +395,7 @@ export function SceneScreen({
               </RevealGroup>
             </div>
 
-            <ScenePageUtilityRow className="md:pt-2 min-[1025px]:pt-3" />
+            <ScenePageUtilityRow className="scene-screen-utility md:pt-2 min-[1025px]:pt-3" />
           </div>
         </div>
       </SceneViewport>

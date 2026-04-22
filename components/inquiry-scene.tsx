@@ -4,6 +4,7 @@ import {
   useEffect,
   useState,
   type ChangeEvent,
+  type CSSProperties,
   type FormEvent,
 } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
@@ -32,6 +33,7 @@ type InquiryFormState = {
   email: string;
   phone: string;
   region: string;
+  estimatedBudget: string;
   filmFor: string;
   relationship: string;
   stillLiving: string;
@@ -47,6 +49,7 @@ const initialState: InquiryFormState = {
   email: "",
   phone: "",
   region: "",
+  estimatedBudget: "$12,500",
   filmFor: "",
   relationship: "",
   stillLiving: "",
@@ -61,10 +64,33 @@ type InquirySceneProps = {
   sceneData: ResolvedInquiryContent;
 };
 
+const budgetSliderMin = 5000;
+const budgetSliderMax = 25000;
+const budgetSliderStep = 500;
+const budgetSliderDefault = 12500;
+
+function formatBudgetValue(value: number) {
+  if (value >= budgetSliderMax) {
+    return "$25,000+";
+  }
+
+  return `$${value.toLocaleString("en-US")}`;
+}
+
+function parseBudgetValue(value: string) {
+  const numeric = Number.parseInt(value.replace(/[^\d]/g, ""), 10);
+
+  if (Number.isNaN(numeric)) {
+    return budgetSliderDefault;
+  }
+
+  return Math.min(Math.max(numeric, budgetSliderMin), budgetSliderMax);
+}
+
 export function InquiryScene({ sceneData }: InquirySceneProps) {
   const reduceMotion = useReducedMotion();
   const isPhoneViewport = useCompactViewport("(max-width: 767px)");
-  const { globalContent } = useSiteLocale();
+  const { globalContent, locale } = useSiteLocale();
   const [submitted, setSubmitted] = useState(false);
   const [formState, setFormState] = useState<InquiryFormState>(initialState);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -88,6 +114,14 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
   const activeSupport = sceneData.supportStates[activeIndex] ?? sceneData.supportStates[0];
   const activeFormStep = sceneData.formSteps[activeIndex] ?? sceneData.formSteps[0];
   const fieldCopy = sceneData.fieldCopy;
+  const estimatedBudgetValue = parseBudgetValue(formState.estimatedBudget);
+  const estimatedBudgetProgress =
+    ((estimatedBudgetValue - budgetSliderMin) / (budgetSliderMax - budgetSliderMin)) * 100;
+  const estimatedBudgetLabel = locale === "es" ? "Presupuesto estimado" : "Estimated budget";
+  const estimatedBudgetHint =
+    locale === "es"
+      ? "Un rango cómodo nos ayuda a orientar el alcance y la producción."
+      : "A comfortable range helps us shape scope and production.";
 
   useEffect(() => {
     setIsMobileSupportOpen(false);
@@ -129,6 +163,15 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
     setFormState((current) => ({
       ...current,
       [name]: value,
+    }));
+  };
+
+  const handleBudgetChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const nextValue = Number(event.target.value);
+
+    setFormState((current) => ({
+      ...current,
+      estimatedBudget: formatBudgetValue(nextValue),
     }));
   };
 
@@ -219,6 +262,42 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
               placeholder={fieldCopy.regionPlaceholder}
               value={formState.region}
             />
+          </div>
+          <div className="sm:col-span-2">
+            <div
+              className="budget-slider-shell"
+              style={{ "--budget-progress": `${estimatedBudgetProgress}%` } as CSSProperties}
+            >
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <label className="field-label !mb-0" htmlFor="estimatedBudget">
+                  {estimatedBudgetLabel}
+                </label>
+                <motion.span
+                  layout
+                  className="budget-slider-value"
+                  transition={cardStateTransition}
+                >
+                  {formState.estimatedBudget}
+                </motion.span>
+              </div>
+
+              <div className="budget-slider-track">
+                <div className="budget-slider-progress" />
+                <input
+                  id="estimatedBudget"
+                  name="estimatedBudget"
+                  type="range"
+                  min={budgetSliderMin}
+                  max={budgetSliderMax}
+                  step={budgetSliderStep}
+                  value={estimatedBudgetValue}
+                  onChange={handleBudgetChange}
+                  className="budget-slider-input"
+                />
+              </div>
+
+              <p className="budget-slider-hint">{estimatedBudgetHint}</p>
+            </div>
           </div>
         </div>
       );
@@ -390,11 +469,11 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
     </div>
   );
 
-    return (
-      <section className="shell py-2 sm:py-4 md:flex md:h-[calc(100svh-var(--header-offset-desktop))] md:min-h-0 md:items-center md:overflow-hidden">
+  return (
+      <section className="inquiry-scene-shell shell py-2 sm:py-4 md:flex md:h-[calc(100svh-var(--header-offset-desktop))] md:min-h-0 md:items-center md:overflow-hidden">
         <SceneViewport className="md:w-full">
         <div className="scene-shell scene-shell-warm scene-pad md:w-full" {...sceneBindings}>
-          <div className="relative z-10 flex flex-col gap-[var(--mobile-section-gap)] overflow-visible md:min-h-0 md:gap-4 lg:gap-5">
+          <div className="inquiry-scene-stack relative z-10 flex flex-col gap-[var(--mobile-section-gap)] overflow-visible md:min-h-0 md:gap-4 lg:gap-5">
             <RevealGroup
               className="grid gap-[var(--mobile-section-gap)] md:max-w-[40rem] md:gap-4"
               stagger={0.1}
@@ -461,6 +540,7 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
                                     <img
                                       src={activeSupport.image}
                                       alt={`${activeSupport.title} visual placeholder.`}
+                                      decoding="async"
                                       className="h-full w-full object-cover"
                                       style={{ objectPosition: activeSupport.objectPosition }}
                                     />
@@ -626,13 +706,13 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
               )}
             </div>
 
-            <div className="hidden md:grid md:min-h-0 md:grid-cols-[minmax(0,1.08fr)_minmax(18.8rem,0.86fr)] md:items-start md:gap-4 min-[1025px]:grid-cols-[minmax(0,1.03fr)_minmax(19.5rem,0.9fr)] min-[1025px]:gap-5">
+            <div className="inquiry-scene-grid hidden md:grid md:min-h-0 md:grid-cols-[minmax(0,1.08fr)_minmax(18.8rem,0.86fr)] md:items-start md:gap-4 min-[1025px]:grid-cols-[minmax(0,1.03fr)_minmax(19.5rem,0.9fr)] min-[1025px]:gap-5">
               <RevealItem variant="section" className="min-h-0">
-                <div className="panel-strong flex flex-col rounded-[1.8rem] p-4 sm:p-5 md:min-h-0">
+                <div className="inquiry-form-panel panel-strong flex flex-col rounded-[1.8rem] p-4 sm:p-5 md:min-h-0">
                   {submitted ? (
                     renderSuccessContent(false)
                   ) : (
-                    <form className="flex flex-col gap-5 md:h-full md:min-h-0" onSubmit={handleSubmit}>
+                    <form className="inquiry-form-shell flex flex-col gap-5 md:h-full md:min-h-0" onSubmit={handleSubmit}>
                       <div className="grid gap-2.5 sm:grid-cols-3">
                         {sceneData.formSteps.map((step, index) => {
                           const isActive = index === activeIndex;
@@ -736,13 +816,13 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
               </RevealItem>
 
               <RevealGroup
-                className="grid gap-3 md:min-h-0 md:content-start"
+                className="inquiry-support-stack grid gap-3 md:min-h-0 md:content-start"
                 delay={120}
                 stagger={0.1}
                 amount={0.2}
               >
                 <RevealItem variant="media" className="min-h-0">
-                  <div className="scene-focus scene-panel-shell flex min-h-[18.75rem] flex-col gap-3 p-3 sm:min-h-[20.5rem] sm:p-4">
+                  <div className="inquiry-support-media-panel scene-focus scene-panel-shell flex min-h-[18.75rem] flex-col gap-3 p-3 sm:min-h-[20.5rem] sm:p-4">
                     <AnimatePresence mode="wait">
                       <motion.div
                         key={activeSupport.title}
@@ -760,6 +840,7 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
                               alt={`${activeSupport.title} visual placeholder.`}
                               className="h-full w-full object-cover"
                               style={{ objectPosition: activeSupport.objectPosition }}
+                              decoding="async"
                             />
                             <div className="scene-media-overlay absolute inset-0" />
                             <div className="surface-note absolute left-3 top-3 max-w-[14rem] rounded-[1rem] px-3 py-2.5 text-[0.78rem] leading-5 text-[var(--text-secondary)] sm:left-4 sm:top-4">
@@ -807,7 +888,7 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
               </RevealGroup>
             </div>
 
-            <ScenePageUtilityRow className="md:pt-2 min-[1025px]:pt-3" />
+            <ScenePageUtilityRow className="inquiry-scene-utility md:pt-2 min-[1025px]:pt-3" />
           </div>
         </div>
       </SceneViewport>

@@ -63,6 +63,7 @@ async function initializeDatabase() {
       email TEXT NOT NULL,
       phone TEXT NOT NULL,
       region TEXT NOT NULL,
+      estimated_budget TEXT NOT NULL DEFAULT '',
       film_for TEXT NOT NULL,
       relationship TEXT NOT NULL,
       still_living TEXT NOT NULL,
@@ -74,6 +75,11 @@ async function initializeDatabase() {
       status TEXT NOT NULL,
       submitted_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
     )
+  `;
+
+  await sql`
+    ALTER TABLE leads
+    ADD COLUMN IF NOT EXISTS estimated_budget TEXT NOT NULL DEFAULT ''
   `;
 
   await sql`

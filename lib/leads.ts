@@ -13,6 +13,7 @@ export type LeadSubmissionInput = {
   email: string;
   phone: string;
   region: string;
+  estimatedBudget: string;
   filmFor: string;
   relationship: string;
   stillLiving: string;
@@ -38,6 +39,7 @@ type PersistentLeadRow = {
   email: string;
   phone: string;
   region: string;
+  estimated_budget: string;
   film_for: string;
   relationship: string;
   still_living: string;
@@ -64,6 +66,7 @@ function normalizeLeadInput(input: LeadSubmissionInput): LeadSubmissionInput {
     email: normalizeValue(input.email).toLowerCase(),
     phone: normalizeValue(input.phone),
     region: normalizeValue(input.region),
+    estimatedBudget: normalizeValue(input.estimatedBudget),
     filmFor: normalizeValue(input.filmFor),
     relationship: normalizeValue(input.relationship),
     stillLiving: normalizeValue(input.stillLiving),
@@ -108,6 +111,7 @@ function mapPersistentLead(row: PersistentLeadRow): LeadRecord {
     email: row.email,
     phone: row.phone,
     region: row.region,
+    estimatedBudget: row.estimated_budget,
     filmFor: row.film_for,
     relationship: row.relationship,
     stillLiving: row.still_living,
@@ -164,6 +168,7 @@ async function ensurePersistentLeadsSeeded() {
             email,
             phone,
             region,
+            estimated_budget,
             film_for,
             relationship,
             still_living,
@@ -181,6 +186,7 @@ async function ensurePersistentLeadsSeeded() {
             ${lead.email},
             ${lead.phone},
             ${lead.region},
+            ${lead.estimatedBudget ?? ""},
             ${lead.filmFor},
             ${lead.relationship},
             ${lead.stillLiving},
@@ -213,6 +219,7 @@ export async function listLeads() {
           email,
           phone,
           region,
+          estimated_budget,
           film_for,
           relationship,
           still_living,
@@ -261,6 +268,7 @@ export async function createLead(input: LeadSubmissionInput) {
         email,
         phone,
         region,
+        estimated_budget,
         film_for,
         relationship,
         still_living,
@@ -278,6 +286,7 @@ export async function createLead(input: LeadSubmissionInput) {
         ${lead.email},
         ${lead.phone},
         ${lead.region},
+        ${lead.estimatedBudget},
         ${lead.filmFor},
         ${lead.relationship},
         ${lead.stillLiving},
@@ -318,6 +327,7 @@ export async function updateLeadStatus(leadId: string, status: LeadStatus) {
         email,
         phone,
         region,
+        estimated_budget,
         film_for,
         relationship,
         still_living,
@@ -366,6 +376,7 @@ export async function deleteLead(leadId: string) {
         email,
         phone,
         region,
+        estimated_budget,
         film_for,
         relationship,
         still_living,

@@ -11,6 +11,7 @@ export async function POST(request: Request) {
       email: body.email ?? "",
       phone: body.phone ?? "",
       region: body.region ?? "",
+      estimatedBudget: body.estimatedBudget ?? "",
       filmFor: body.filmFor ?? "",
       relationship: body.relationship ?? "",
       stillLiving: body.stillLiving ?? "",
