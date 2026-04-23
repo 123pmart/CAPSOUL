@@ -235,10 +235,10 @@ export function SceneScreen({
               </RevealItem>
             </div>
 
-            <div className="scene-tablet-branch md:h-full md:min-h-0 md:grid-cols-[minmax(0,1.03fr)_minmax(17rem,0.97fr)] md:items-stretch md:gap-3">
-              <RevealGroup className="md:min-h-0 md:h-full" delay={80} stagger={0.08} amount={0.2}>
-                <RevealItem variant="media" className="h-full min-h-0">
-                  <div className="scene-focus scene-panel-shell flex h-full min-h-[15.8rem] flex-col gap-2.5 p-2.5">
+            <div className="scene-tablet-branch md:min-h-0 md:grid-cols-[minmax(0,1.03fr)_minmax(17rem,0.97fr)] md:items-stretch md:gap-3">
+              <RevealGroup className="scene-screen-tablet-media-group md:min-h-0" delay={80} stagger={0.08} amount={0.2}>
+                <RevealItem variant="media" className="scene-screen-tablet-media-item min-h-0">
+                  <div className="scene-screen-tablet-media-panel scene-focus scene-panel-shell flex min-h-[15.8rem] flex-col gap-2.5 p-2.5">
                     <AnimatePresence mode="wait">
                       <motion.div
                         key={`${active.title}-tablet`}
@@ -246,10 +246,10 @@ export function SceneScreen({
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={mediaExit}
                         transition={contentSwapTransition}
-                        className="grid h-full min-h-0 gap-2.5"
+                        className="scene-screen-tablet-media-stage grid min-h-0 gap-2.5"
                       >
-                        <div className="scene-media-shell h-full min-h-0">
-                          <div className="scene-media-frame film-frame relative h-full overflow-hidden">
+                        <div className="scene-screen-tablet-media-shell scene-media-shell min-h-0">
+                          <div className="scene-screen-tablet-media-frame scene-media-frame film-frame relative overflow-hidden">
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
                               src={active.image}
@@ -282,13 +282,13 @@ export function SceneScreen({
               </RevealGroup>
 
               <RevealGroup
-                className="grid gap-2.5 md:h-full md:min-h-0 md:content-start"
+                className="scene-screen-tablet-side-column grid gap-2.5 md:min-h-0 md:content-start"
                 delay={140}
                 stagger={0.1}
                 amount={0.2}
               >
-                <RevealItem variant="card" className="h-full min-h-0">
-                  <div className="panel-strong flex h-full min-h-0 flex-col gap-2.5 rounded-[1.45rem] p-3">
+                <RevealItem variant="card" className="scene-screen-tablet-card-item min-h-0">
+                  <div className="scene-screen-tablet-card panel-strong flex min-h-0 flex-col gap-2.5 rounded-[1.45rem] p-3">
                     <div className="flex items-center justify-end">
                       <span className="scene-counter text-[0.7rem] uppercase tracking-[0.17em] text-[var(--text-tertiary)]">
                         {String(activeIndex + 1).padStart(2, "0")} / {String(steps.length).padStart(2, "0")}

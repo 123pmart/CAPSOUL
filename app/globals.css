@@ -1909,7 +1909,7 @@ html[data-theme="dark"] .scene-detail-scroll .archive-chip {
   backdrop-filter: none;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1025px), (min-width: 768px) and (orientation: landscape) {
   .scene-screen-viewport,
   .scene-screen-frame {
     display: flex;
@@ -1949,7 +1949,9 @@ html[data-theme="dark"] .scene-detail-scroll .archive-chip {
   .scene-screen-media-panel .scene-media-frame {
     aspect-ratio: auto;
   }
+}
 
+@media (min-width: 768px) {
   .scene-focus.scene-panel-shell {
     padding: 0 !important;
     border-color: transparent;
