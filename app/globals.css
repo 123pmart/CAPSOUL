@@ -1338,35 +1338,35 @@
 }
 
 @media (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
-  [data-portrait-shell] .portrait-tablet-scene-viewport,
-  [data-portrait-shell] .portrait-tablet-scene-frame,
-  [data-portrait-shell] .portrait-tablet-page-group {
+  [data-portrait-shell] .portrait-tablet-page-center-wrapper {
+    display: flex;
+    height: 100%;
+    min-height: 0;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    outline: 2px solid rgba(234, 67, 53, 0.78);
+    outline-offset: -2px;
+  }
+
+  [data-portrait-shell] .portrait-tablet-content-shell {
+    height: auto;
+    min-height: 0;
     width: 100%;
     max-width: 100%;
-    min-height: 0;
-  }
-
-  [data-portrait-shell] .portrait-tablet-scene-viewport {
-    flex: 0 1 auto;
-    height: auto;
-  }
-
-  [data-portrait-shell] .portrait-tablet-scene-frame {
     flex: none;
-    height: auto;
     align-self: center;
     padding-top: clamp(0.92rem, 1.48vw, 1.08rem);
     padding-bottom: clamp(0.64rem, 1vw, 0.78rem);
-    outline: 1px solid rgba(234, 67, 53, 0.32);
-    outline-offset: -1px;
+    outline: 2px solid rgba(52, 168, 83, 0.78);
+    outline-offset: -2px;
   }
 
   [data-portrait-shell] .portrait-tablet-page-group {
     display: flex;
     min-height: 0;
     flex-direction: column;
-    outline: 1px solid rgba(52, 168, 83, 0.32);
-    outline-offset: -1px;
+    width: 100%;
   }
 
   [data-portrait-shell] .portrait-tablet-main-grid {
