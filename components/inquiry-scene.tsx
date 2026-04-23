@@ -717,13 +717,19 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
           shellClassName="inquiry-scene-shell"
           viewportClassName="inquiry-scene-viewport"
           frameClassName="inquiry-scene-frame"
-          stackClassName="gap-[var(--mobile-section-gap)] md:gap-4 lg:gap-5"
+          stackClassName=""
           toneClassName="scene-shell-warm"
           sceneBindings={sceneBindings}
         >
-          {inquiryIntro}
-          {inquiryTabletBranch}
-          {inquiryUtilityRow}
+          <div className="portrait-tablet-page-center-shell">
+            <div aria-hidden="true" className="portrait-tablet-page-spacer" />
+            <div className="portrait-tablet-page-group gap-[var(--mobile-section-gap)] md:gap-4 lg:gap-5">
+              {inquiryIntro}
+              {inquiryTabletBranch}
+              {inquiryUtilityRow}
+            </div>
+            <div aria-hidden="true" className="portrait-tablet-page-spacer" />
+          </div>
         </PortraitTabletSceneShell>
         {inquirySupportModal}
       </>

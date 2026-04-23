@@ -329,13 +329,19 @@ export function SceneScreen({
           shellClassName="scene-screen-shell"
           viewportClassName="scene-screen-viewport"
           frameClassName="scene-screen-frame"
-          stackClassName="gap-[var(--mobile-section-gap)] md:gap-4 lg:gap-5"
+          stackClassName=""
           toneClassName={toneClassName}
           sceneBindings={sceneBindings}
         >
-          {sceneIntro}
-          {scenePortraitBody}
-          {sceneUtilityRow}
+          <div className="portrait-tablet-page-center-shell">
+            <div aria-hidden="true" className="portrait-tablet-page-spacer" />
+            <div className="portrait-tablet-page-group gap-[var(--mobile-section-gap)] md:gap-4 lg:gap-5">
+              {sceneIntro}
+              {scenePortraitBody}
+              {sceneUtilityRow}
+            </div>
+            <div aria-hidden="true" className="portrait-tablet-page-spacer" />
+          </div>
         </PortraitTabletSceneShell>
         {sceneDetailModal}
       </>
