@@ -1352,16 +1352,20 @@
   }
 
   [data-portrait-shell] .portrait-tablet-scene-stack {
+    display: flex;
+    flex: 1 1 auto;
+    height: 100%;
+    min-height: 0;
+  }
+
+  [data-portrait-shell] .portrait-tablet-centering-wrapper {
     display: grid;
     flex: 1 1 auto;
     height: 100%;
     min-height: 0;
     grid-template-rows: minmax(0, 1fr) auto minmax(0, 1fr);
     align-items: stretch;
-  }
-
-  [data-portrait-shell] .portrait-tablet-scene-spacer {
-    min-height: 0;
+    background: rgba(52, 168, 83, 0.08);
   }
 
   [data-portrait-shell] .portrait-tablet-content-group {
@@ -1369,6 +1373,7 @@
     width: 100%;
     min-height: 0;
     flex-direction: column;
+    grid-row: 2;
   }
 
   [data-portrait-shell] .portrait-tablet-main-grid {
