@@ -1338,31 +1338,6 @@
 }
 
 @media (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
-  .scene-screen-shell[data-scene-branch="tablet-portrait-live"] .scene-screen-viewport,
-  .scene-screen-shell[data-scene-branch="tablet-portrait-live"] .scene-screen-frame {
-    display: flex;
-    flex: 1 1 auto;
-    height: 100%;
-    min-height: 0;
-  }
-
-  .scene-screen-shell[data-scene-branch="tablet-portrait-live"] .scene-screen-frame {
-    padding-top: clamp(0.92rem, 1.48vw, 1.08rem);
-    padding-bottom: clamp(0.64rem, 1vw, 0.78rem);
-  }
-
-  .scene-screen-shell[data-scene-branch="tablet-portrait-live"] .scene-screen-stack {
-    display: grid;
-    flex: 1 1 auto;
-    min-height: 0;
-    align-content: center;
-    grid-template-rows: auto auto auto;
-  }
-
-  .scene-screen-shell[data-scene-branch="tablet-portrait-live"] .scene-screen-utility {
-    padding-top: 0.35rem !important;
-  }
-
   .scene-screen-portrait-main,
   .scene-screen-portrait-support-stack,
   .scene-screen-portrait-media-panel {
