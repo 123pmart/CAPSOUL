@@ -1339,8 +1339,7 @@
 
 @media (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
   [data-portrait-shell] .portrait-tablet-scene-viewport,
-  [data-portrait-shell] .portrait-tablet-scene-frame,
-  [data-portrait-shell] .portrait-tablet-scene-stack {
+  [data-portrait-shell] .portrait-tablet-scene-frame {
     display: flex;
     flex: 1 1 auto;
     height: 100%;
@@ -1352,12 +1351,24 @@
     padding-bottom: clamp(0.64rem, 1vw, 0.78rem);
   }
 
+  [data-portrait-shell] .portrait-tablet-scene-stack {
+    display: grid;
+    flex: 1 1 auto;
+    height: 100%;
+    min-height: 0;
+    grid-template-rows: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: stretch;
+  }
+
+  [data-portrait-shell] .portrait-tablet-scene-spacer {
+    min-height: 0;
+  }
+
   [data-portrait-shell] .portrait-tablet-content-group {
     display: flex;
     width: 100%;
     min-height: 0;
     flex-direction: column;
-    margin-block: auto;
   }
 
   [data-portrait-shell] .portrait-tablet-main-grid {

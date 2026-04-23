@@ -53,7 +53,9 @@ export function PortraitTabletSceneShell({
       <SceneViewport className={viewportClasses}>
         <div className={frameClasses} {...sceneBindings}>
           <div className={stackClasses}>
+            <div aria-hidden="true" className="portrait-tablet-scene-spacer" />
             <div className={contentGroupClasses}>{children}</div>
+            <div aria-hidden="true" className="portrait-tablet-scene-spacer" />
           </div>
         </div>
       </SceneViewport>
