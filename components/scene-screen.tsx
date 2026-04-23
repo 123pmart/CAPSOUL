@@ -12,7 +12,6 @@ import {
 } from "@/components/motion-config";
 import { CompactSceneControls } from "@/components/compact-scene-controls";
 import { MobilePageNextLink } from "@/components/mobile-page-next-link";
-import { PortraitTabletSceneShell } from "@/components/portrait-tablet-scene-shell";
 import { RevealGroup, RevealItem } from "@/components/reveal";
 import { SceneDetailModal } from "@/components/scene-detail-modal";
 import { ScenePageUtilityRow } from "@/components/scene-page-utility-row";
@@ -51,7 +50,7 @@ export function SceneScreen({
   const reduceMotion = useReducedMotion();
   const isPhoneViewport = useCompactViewport("(max-width: 767px)");
   const isTabletPortraitViewport = useCompactViewport(
-    "(min-width: 768px) and (max-width: 1024px) and (orientation: portrait)",
+    "(min-width: 768px) and (orientation: portrait) and (hover: none) and (pointer: coarse)",
   );
   const { globalContent } = useSiteLocale();
   const [isMobileSceneDetailOpen, setIsMobileSceneDetailOpen] = useState(false);
@@ -324,19 +323,21 @@ export function SceneScreen({
   if (isTabletPortraitViewport) {
     return (
       <>
-        <PortraitTabletSceneShell
-          kind="scene"
-          shellClassName="scene-screen-shell"
-          viewportClassName="scene-screen-viewport"
-          frameClassName="scene-screen-frame"
-          stackClassName="gap-[var(--mobile-section-gap)] md:gap-3"
-          toneClassName={toneClassName}
-          sceneBindings={sceneBindings}
+        <section
+          data-scene-branch="tablet-portrait-live"
+          style={{ outline: "6px solid #ff2b2b", outlineOffset: "-6px" }}
+          className="scene-screen-shell shell py-2 sm:py-4 md:flex md:h-[calc(100svh-var(--header-offset-desktop))] md:min-h-0 md:items-center md:overflow-hidden md:py-2"
         >
-          {sceneIntro}
-          {scenePortraitBody}
-          {sceneUtilityRow}
-        </PortraitTabletSceneShell>
+          <SceneViewport className="scene-screen-viewport md:w-full">
+            <div className={`scene-screen-frame scene-shell ${toneClassName} scene-pad md:w-full`} {...sceneBindings}>
+              <div className="scene-screen-stack relative z-10 flex flex-col gap-[var(--mobile-section-gap)] overflow-visible md:min-h-0 md:gap-3">
+                {sceneIntro}
+                {scenePortraitBody}
+                {sceneUtilityRow}
+              </div>
+            </div>
+          </SceneViewport>
+        </section>
         {sceneDetailModal}
       </>
     );
