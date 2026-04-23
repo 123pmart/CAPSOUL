@@ -1339,56 +1339,34 @@
 
 @media (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
   [data-portrait-shell] .portrait-tablet-scene-viewport,
-  [data-portrait-shell] .portrait-tablet-scene-frame {
-    display: flex;
-    flex: 1 1 auto;
-    height: 100%;
+  [data-portrait-shell] .portrait-tablet-scene-frame,
+  [data-portrait-shell] .portrait-tablet-page-group {
+    width: 100%;
+    max-width: 100%;
     min-height: 0;
   }
 
+  [data-portrait-shell] .portrait-tablet-scene-viewport {
+    flex: 0 1 auto;
+    height: auto;
+  }
+
   [data-portrait-shell] .portrait-tablet-scene-frame {
+    flex: none;
+    height: auto;
+    align-self: center;
     padding-top: clamp(0.92rem, 1.48vw, 1.08rem);
     padding-bottom: clamp(0.64rem, 1vw, 0.78rem);
-  }
-
-  [data-portrait-shell] .portrait-tablet-scene-stack {
-    display: flex;
-    flex: 1 1 auto;
-    height: 100%;
-    min-height: 0;
-  }
-
-  [data-portrait-shell] .portrait-tablet-shell-content {
-    display: flex;
-    flex: 1 1 auto;
-    height: 100%;
-    min-height: 0;
-    width: 100%;
-    background: rgba(234, 67, 53, 0.08);
-  }
-
-  [data-portrait-shell] .portrait-tablet-page-center-shell {
-    display: grid;
-    flex: 1 1 auto;
-    height: 100%;
-    min-height: 0;
-    width: 100%;
-    grid-template-rows: minmax(0, 1fr) auto minmax(0, 1fr);
-    align-items: stretch;
-    background: rgba(52, 168, 83, 0.08);
-  }
-
-  [data-portrait-shell] .portrait-tablet-page-spacer {
-    min-height: 0;
+    outline: 1px solid rgba(234, 67, 53, 0.32);
+    outline-offset: -1px;
   }
 
   [data-portrait-shell] .portrait-tablet-page-group {
     display: flex;
-    width: 100%;
     min-height: 0;
     flex-direction: column;
-    grid-row: 2;
-    background: rgba(66, 133, 244, 0.08);
+    outline: 1px solid rgba(52, 168, 83, 0.32);
+    outline-offset: -1px;
   }
 
   [data-portrait-shell] .portrait-tablet-main-grid {

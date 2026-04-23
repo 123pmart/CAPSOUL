@@ -711,19 +711,16 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
   if (isTabletPortraitViewport) {
     return (
       <>
-        <section className="inquiry-scene-shell shell py-2 sm:py-4 md:flex md:h-[calc(100svh-var(--header-offset-desktop))] md:min-h-0 md:items-center md:overflow-hidden md:py-2">
+        <section
+          data-portrait-shell="inquiry"
+          className="inquiry-scene-shell shell py-2 sm:py-4 md:flex md:h-[calc(100svh-var(--header-offset-desktop))] md:min-h-0 md:items-center md:overflow-hidden md:py-2"
+        >
           <SceneViewport className="portrait-tablet-scene-viewport inquiry-scene-viewport md:w-full">
             <div className="portrait-tablet-scene-frame inquiry-scene-frame scene-shell scene-shell-warm scene-pad md:w-full" {...sceneBindings}>
-              <div className="portrait-tablet-shell-content">
-                <div className="portrait-tablet-page-center-shell">
-                  <div aria-hidden="true" className="portrait-tablet-page-spacer" />
-                  <div className="portrait-tablet-page-group gap-[var(--mobile-section-gap)] md:gap-4 lg:gap-5">
-                    {inquiryIntro}
-                    {inquiryTabletBranch}
-                    {inquiryUtilityRow}
-                  </div>
-                  <div aria-hidden="true" className="portrait-tablet-page-spacer" />
-                </div>
+              <div className="portrait-tablet-page-group gap-[var(--mobile-section-gap)] md:gap-4 lg:gap-5">
+                {inquiryIntro}
+                {inquiryTabletBranch}
+                {inquiryUtilityRow}
               </div>
             </div>
           </SceneViewport>
