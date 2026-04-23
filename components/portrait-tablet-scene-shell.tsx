@@ -25,10 +25,23 @@ export function PortraitTabletSceneShell({
   sceneBindings,
   children,
 }: PortraitTabletSceneShellProps) {
-  const frameClasses = [frameClassName, "scene-shell", toneClassName, "scene-pad", "md:w-full"]
+  const viewportClasses = ["portrait-tablet-scene-viewport", viewportClassName, "md:w-full"]
     .filter(Boolean)
     .join(" ");
-  const stackClasses = [stackClassName, "relative", "z-10", "flex", "flex-col", "overflow-visible", "md:min-h-0"]
+  const frameClasses = ["portrait-tablet-scene-frame", frameClassName, "scene-shell", toneClassName, "scene-pad", "md:w-full"]
+    .filter(Boolean)
+    .join(" ");
+  const stackClasses = ["portrait-tablet-scene-stack", "relative", "z-10", "md:min-h-0"]
+    .filter(Boolean)
+    .join(" ");
+  const contentGroupClasses = [
+    "portrait-tablet-content-group",
+    stackClassName,
+    "flex",
+    "flex-col",
+    "overflow-visible",
+    "md:min-h-0",
+  ]
     .filter(Boolean)
     .join(" ");
 
@@ -37,9 +50,11 @@ export function PortraitTabletSceneShell({
       data-portrait-shell={kind}
       className={`${shellClassName} shell py-2 sm:py-4 md:flex md:h-[calc(100svh-var(--header-offset-desktop))] md:min-h-0 md:items-center md:overflow-hidden md:py-2`}
     >
-      <SceneViewport className={`${viewportClassName} md:w-full`}>
+      <SceneViewport className={viewportClasses}>
         <div className={frameClasses} {...sceneBindings}>
-          <div className={stackClasses}>{children}</div>
+          <div className={stackClasses}>
+            <div className={contentGroupClasses}>{children}</div>
+          </div>
         </div>
       </SceneViewport>
     </section>

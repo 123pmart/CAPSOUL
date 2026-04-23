@@ -494,13 +494,13 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
   );
 
   const inquiryTabletBranch = (
-    <div className="inquiry-tablet-branch inquiry-tablet-grid md:min-h-0 md:grid-cols-[minmax(0,1.02fr)_minmax(16.8rem,0.98fr)] md:items-start md:gap-3">
+    <div className="inquiry-tablet-branch inquiry-tablet-grid portrait-tablet-main-grid md:min-h-0 md:grid-cols-[minmax(0,1.02fr)_minmax(16.8rem,0.98fr)] md:items-stretch md:gap-3">
       <RevealItem variant="section" className="h-full min-h-0">
-        <div className="inquiry-tablet-form-panel panel-strong flex flex-col rounded-[1.55rem] p-3 md:min-h-0">
+        <div className="inquiry-tablet-form-panel portrait-tablet-main-panel panel-strong flex h-full flex-col rounded-[1.55rem] p-3 md:min-h-0">
           {submitted ? (
             renderSuccessContent(false)
           ) : (
-            <form className="inquiry-tablet-form-shell flex flex-col gap-3.5 md:min-h-0" onSubmit={handleSubmit}>
+            <form className="inquiry-tablet-form-shell flex h-full flex-col gap-3.5 md:min-h-0" onSubmit={handleSubmit}>
               <div className="inquiry-tablet-tabs grid gap-2 sm:grid-cols-3">
                 {sceneData.formSteps.map((step, index) => {
                   const isActive = index === activeIndex;
@@ -604,13 +604,13 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
       </RevealItem>
 
       <RevealGroup
-        className="inquiry-tablet-support-stack grid h-full gap-2.5 md:min-h-0 md:content-start"
+        className="inquiry-tablet-support-stack portrait-tablet-support-stack grid h-full gap-2.5 md:min-h-0 md:content-start"
         delay={120}
         stagger={0.1}
         amount={0.2}
       >
-        <RevealItem variant="media" className="min-h-0">
-          <div className="inquiry-tablet-media-panel scene-focus scene-panel-shell flex min-h-[14.9rem] flex-col gap-2.5 p-2.5">
+        <RevealItem variant="media" className="portrait-tablet-support-media-item h-full min-h-0">
+          <div className="inquiry-tablet-media-panel portrait-tablet-support-media-panel scene-focus scene-panel-shell flex h-full min-h-[14.9rem] flex-col gap-2.5 p-2.5">
             <AnimatePresence mode="wait">
               <motion.div
                 key={`${activeSupport.title}-tablet`}
@@ -618,7 +618,7 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={supportExit}
                 transition={contentSwapTransition}
-                className="grid min-h-0 gap-2.5"
+                className="portrait-tablet-support-media-stage grid h-full min-h-0 gap-2.5"
               >
                 <div className="scene-media-shell min-h-0">
                   <div className="scene-media-frame film-frame relative overflow-hidden">

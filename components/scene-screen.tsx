@@ -130,9 +130,9 @@ export function SceneScreen({
     </RevealGroup>
   );
   const scenePortraitBody = (
-    <div className="scene-screen-portrait-grid md:grid md:grid-cols-[minmax(0,1.02fr)_minmax(16.8rem,0.98fr)] md:items-start md:gap-3">
-      <RevealItem variant="section" className="min-h-0">
-        <div className="scene-screen-portrait-main panel-strong flex flex-col rounded-[1.55rem] p-3 md:min-h-0">
+    <div className="scene-screen-portrait-grid portrait-tablet-main-grid md:grid md:grid-cols-[minmax(0,1.02fr)_minmax(16.8rem,0.98fr)] md:items-stretch md:gap-3">
+      <RevealItem variant="section" className="h-full min-h-0">
+        <div className="scene-screen-portrait-main portrait-tablet-main-panel panel-strong flex h-full flex-col rounded-[1.55rem] p-3 md:min-h-0">
           <div className="flex items-center justify-end">
             <span className="scene-counter text-[0.7rem] uppercase tracking-[0.17em] text-[var(--text-tertiary)]">
               {String(activeIndex + 1).padStart(2, "0")} / {String(steps.length).padStart(2, "0")}
@@ -209,13 +209,13 @@ export function SceneScreen({
       </RevealItem>
 
       <RevealGroup
-        className="scene-screen-portrait-support-stack grid h-full gap-2.5 md:min-h-0 md:content-start"
+        className="scene-screen-portrait-support-stack portrait-tablet-support-stack grid h-full gap-2.5 md:min-h-0 md:content-start"
         delay={140}
         stagger={0.1}
         amount={0.2}
       >
-        <RevealItem variant="media" className="min-h-0">
-          <div className="scene-screen-portrait-media-panel scene-focus scene-panel-shell flex min-h-[14.9rem] flex-col gap-2.5 p-2.5">
+        <RevealItem variant="media" className="portrait-tablet-support-media-item h-full min-h-0">
+          <div className="scene-screen-portrait-media-panel portrait-tablet-support-media-panel scene-focus scene-panel-shell flex h-full min-h-[14.9rem] flex-col gap-2.5 p-2.5">
             <AnimatePresence mode="wait">
               <motion.div
                 key={`${active.title}-tablet-portrait`}
@@ -223,7 +223,7 @@ export function SceneScreen({
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={mediaExit}
                 transition={contentSwapTransition}
-                className="grid min-h-0 gap-2.5"
+                className="portrait-tablet-support-media-stage grid h-full min-h-0 gap-2.5"
               >
                 <div className="scene-screen-portrait-media-shell scene-media-shell min-h-0">
                   <div className="scene-screen-portrait-media-frame scene-media-frame film-frame relative overflow-hidden">
