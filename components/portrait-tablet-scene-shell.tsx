@@ -31,10 +31,18 @@ export function PortraitTabletSceneShell({
   const stackClasses = [stackClassName, "relative", "z-10", "flex", "flex-col", "overflow-visible", "md:min-h-0"]
     .filter(Boolean)
     .join(" ");
+  const debugOutlineStyle =
+    kind === "scene"
+      ? {
+          outline: "8px solid #ff2b2b",
+          outlineOffset: "-8px",
+        }
+      : undefined;
 
   return (
     <section
       data-portrait-shell={kind}
+      style={debugOutlineStyle}
       className={`${shellClassName} shell py-2 sm:py-4 md:flex md:h-[calc(100svh-var(--header-offset-desktop))] md:min-h-0 md:items-center md:overflow-hidden md:py-2`}
     >
       <SceneViewport className={`${viewportClassName} md:w-full`}>
