@@ -327,19 +327,30 @@ export function SceneScreen({
           data-portrait-shell="scene"
           className="scene-screen-shell shell py-2 sm:py-4 md:min-h-0 md:overflow-hidden md:py-2"
         >
+          <div className="mb-3 rounded-[0.9rem] bg-[#d92d20] px-4 py-3 text-center text-[1rem] font-black uppercase tracking-[0.18em] text-white shadow-[0_14px_32px_rgba(217,45,32,0.32)]">
+            PORTRAIT LIVE PATH
+          </div>
           <div className="portrait-tablet-page-area">
             <div className="portrait-tablet-page-center-wrapper">
               <SceneViewport className="portrait-tablet-scene-viewport scene-screen-viewport md:w-full">
-              <div
-                className={`portrait-tablet-content-shell scene-screen-frame scene-shell ${toneClassName} scene-pad md:w-full`}
-                {...sceneBindings}
-              >
-                <div className="portrait-tablet-page-group gap-[var(--mobile-section-gap)] md:gap-4 lg:gap-5">
-                  {sceneIntro}
-                  {scenePortraitBody}
-                  {sceneUtilityRow}
+                <div
+                  className={`portrait-tablet-content-shell scene-screen-frame scene-shell ${toneClassName} scene-pad md:w-full`}
+                  {...sceneBindings}
+                >
+                  <div className="mb-3 rounded-[0.85rem] bg-[#16a34a] px-4 py-2.5 text-center text-[0.92rem] font-black uppercase tracking-[0.18em] text-white shadow-[0_12px_28px_rgba(22,163,74,0.28)]">
+                    SCENE SHELL LIVE
+                  </div>
+                  <div className="rounded-[1rem] bg-[#2563eb] p-2 shadow-[0_16px_34px_rgba(37,99,235,0.26)]">
+                    <div className="mb-2 rounded-[0.8rem] bg-[#1d4ed8] px-4 py-2.5 text-center text-[0.92rem] font-black uppercase tracking-[0.18em] text-white">
+                      GROUPED CONTENT LIVE
+                    </div>
+                    <div className="portrait-tablet-page-group gap-[var(--mobile-section-gap)] md:gap-4 lg:gap-5">
+                      {sceneIntro}
+                      {scenePortraitBody}
+                      {sceneUtilityRow}
+                    </div>
+                  </div>
                 </div>
-              </div>
               </SceneViewport>
             </div>
           </div>
