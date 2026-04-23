@@ -90,6 +90,9 @@ function parseBudgetValue(value: string) {
 export function InquiryScene({ sceneData }: InquirySceneProps) {
   const reduceMotion = useReducedMotion();
   const isPhoneViewport = useCompactViewport("(max-width: 767px)");
+  const isTabletPortraitViewport = useCompactViewport(
+    "(min-width: 768px) and (max-width: 1024px) and (orientation: portrait)",
+  );
   const { globalContent, locale } = useSiteLocale();
   const [submitted, setSubmitted] = useState(false);
   const [formState, setFormState] = useState<InquiryFormState>(initialState);
@@ -154,6 +157,11 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
   const mobileSceneSwapTransition = reduceMotion
     ? { duration: 0 }
     : { duration: 0.24, ease: measuredEase };
+  const inquiryLayoutMode = isPhoneViewport
+    ? "phone"
+    : isTabletPortraitViewport
+      ? "tablet-portrait"
+      : "default";
 
   const handleChange = (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
@@ -470,7 +478,10 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
   );
 
   return (
-      <section className="inquiry-scene-shell shell py-2 sm:py-4 md:flex md:h-[calc(100svh-var(--header-offset-desktop))] md:min-h-0 md:items-start md:overflow-hidden min-[1025px]:items-center">
+      <section
+        data-inquiry-layout={inquiryLayoutMode}
+        className="inquiry-scene-shell shell py-2 sm:py-4 md:flex md:h-[calc(100svh-var(--header-offset-desktop))] md:min-h-0 md:items-start md:overflow-hidden min-[1025px]:items-center"
+      >
         <SceneViewport className="inquiry-scene-viewport md:w-full">
         <div className="inquiry-scene-frame scene-shell scene-shell-warm scene-pad md:w-full" {...sceneBindings}>
           <div className="inquiry-scene-stack relative z-10 flex flex-col gap-[var(--mobile-section-gap)] overflow-visible md:min-h-0 md:gap-4 lg:gap-5">

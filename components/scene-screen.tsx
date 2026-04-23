@@ -246,10 +246,92 @@ export function SceneScreen({
               </RevealItem>
             </div>
 
-            <div className="scene-tablet-portrait-branch md:grid-cols-[minmax(0,1.02fr)_minmax(16rem,0.98fr)] md:items-start md:gap-3">
-              <RevealGroup className="scene-screen-portrait-media-group grid gap-2.5 md:content-start" delay={80} stagger={0.08} amount={0.2}>
-                <RevealItem variant="media">
-                  <div className="scene-screen-portrait-media-panel scene-focus scene-panel-shell flex flex-col gap-2.5 p-2.5">
+            <div className="scene-tablet-portrait-branch scene-screen-portrait-grid md:grid-cols-[minmax(0,1.02fr)_minmax(16.8rem,0.98fr)] md:items-start md:gap-3">
+              <RevealItem variant="section" className="min-h-0">
+                <div className="scene-screen-portrait-main panel-strong flex flex-col rounded-[1.55rem] p-3 md:min-h-0">
+                  <div className="flex items-center justify-end">
+                    <span className="scene-counter text-[0.7rem] uppercase tracking-[0.17em] text-[var(--text-tertiary)]">
+                      {String(activeIndex + 1).padStart(2, "0")} / {String(steps.length).padStart(2, "0")}
+                    </span>
+                  </div>
+
+                  <div className="grid gap-1.5 sm:grid-cols-2">
+                    {steps.map((step, index) => {
+                      const isActive = index === activeIndex;
+
+                      return (
+                        <motion.button
+                          key={`${step.label}-tablet-portrait`}
+                          type="button"
+                          onClick={() => goToStep(index)}
+                          transition={cardStateTransition}
+                          animate={
+                            reduceMotion
+                              ? undefined
+                              : isActive
+                                ? { y: -2, scale: 1.005 }
+                                : { y: 0, scale: 1 }
+                          }
+                          whileHover={reduceMotion || isActive ? undefined : subtleHoverLift}
+                          whileTap={reduceMotion ? undefined : subtleTapPress}
+                          className={`text-left rounded-[1rem] border px-3 py-2.5 ${
+                            isActive ? "scene-step-chip-active" : "scene-step-chip"
+                          }`}
+                        >
+                          <p className="text-[0.62rem] font-semibold uppercase tracking-[0.17em] text-[var(--accent-deep)]">
+                            {step.label}
+                          </p>
+                          <p className="mt-1 text-[0.88rem] leading-5 text-[var(--text-primary)]">
+                            {step.title}
+                          </p>
+                        </motion.button>
+                      );
+                    })}
+                  </div>
+
+                  <div className="scene-screen-portrait-copy">
+                    <p className="text-[0.64rem] font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">
+                      {globalContent.sceneLabels.activeState}
+                    </p>
+                    <h2 className="mt-2 text-[1.36rem] leading-[0.98] text-balance">
+                      {active.title}
+                    </h2>
+                    <p className="mt-2.5 max-w-[28rem] text-[0.88rem] leading-6 text-[var(--text-secondary)]">
+                      {active.detail}
+                    </p>
+                  </div>
+
+                  <div className="home-divider" />
+
+                  <div className="mt-auto grid gap-2 sm:grid-cols-2">
+                    <button
+                      type="button"
+                      className="button-secondary px-3.5 text-[0.82rem]"
+                      disabled={isFirst}
+                      onClick={goPrev}
+                    >
+                      {globalContent.routeLabels.previous}
+                    </button>
+                    <button
+                      type="button"
+                      className="button-primary px-3.5 text-[0.82rem]"
+                      disabled={isLast}
+                      onClick={goNext}
+                    >
+                      {globalContent.routeLabels.next}
+                    </button>
+                  </div>
+                </div>
+              </RevealItem>
+
+              <RevealGroup
+                className="scene-screen-portrait-support-stack grid gap-2.5 md:min-h-0 md:content-start"
+                delay={140}
+                stagger={0.1}
+                amount={0.2}
+              >
+                <RevealItem variant="media" className="min-h-0">
+                  <div className="scene-screen-portrait-media-panel scene-focus scene-panel-shell flex min-h-[14.9rem] flex-col gap-2.5 p-2.5">
                     <AnimatePresence mode="wait">
                       <motion.div
                         key={`${active.title}-tablet-portrait`}
@@ -257,9 +339,9 @@ export function SceneScreen({
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={mediaExit}
                         transition={contentSwapTransition}
-                        className="scene-screen-portrait-media-stage grid gap-2.5"
+                        className="grid min-h-0 gap-2.5"
                       >
-                        <div className="scene-screen-portrait-media-shell scene-media-shell">
+                        <div className="scene-screen-portrait-media-shell scene-media-shell min-h-0">
                           <div className="scene-screen-portrait-media-frame scene-media-frame film-frame relative overflow-hidden">
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
@@ -270,7 +352,7 @@ export function SceneScreen({
                               style={{ objectPosition: active.objectPosition ?? "center center" }}
                             />
                             <div className="scene-media-overlay absolute inset-0" />
-                            <div className="surface-note absolute left-2.5 top-2.5 max-w-[11.5rem] rounded-[0.95rem] px-2.5 py-2 text-[0.72rem] leading-5 text-[var(--text-secondary)]">
+                            <div className="surface-note absolute left-2.5 top-2.5 max-w-[11rem] rounded-[0.95rem] px-2.5 py-2 text-[0.72rem] leading-5 text-[var(--text-secondary)]">
                               <p className="text-[0.6rem] font-semibold uppercase tracking-[0.15em] text-[var(--accent-deep)]">
                                 {active.mediaLabel}
                               </p>
@@ -286,115 +368,40 @@ export function SceneScreen({
                             </div>
                           </div>
                         </div>
+
+                        <div className="panel rounded-[1rem] p-3">
+                          <p className="text-[0.64rem] font-semibold uppercase tracking-[0.15em] text-[var(--accent-deep)]">
+                            {stageLabel}
+                          </p>
+                          <p className="mt-1.5 text-[0.86rem] leading-6 text-[var(--text-secondary)]">
+                            {active.summary}
+                          </p>
+                        </div>
                       </motion.div>
                     </AnimatePresence>
                   </div>
                 </RevealItem>
-              </RevealGroup>
 
-              <RevealGroup
-                className="scene-screen-portrait-side-column grid gap-2.5 md:content-start"
-                delay={140}
-                stagger={0.1}
-                amount={0.2}
-              >
                 <RevealItem variant="card">
-                  <div className="scene-screen-portrait-card panel-strong flex flex-col gap-2.5 rounded-[1.45rem] p-3">
-                    <div className="flex items-center justify-end">
-                      <span className="scene-counter text-[0.7rem] uppercase tracking-[0.17em] text-[var(--text-tertiary)]">
-                        {String(activeIndex + 1).padStart(2, "0")} / {String(steps.length).padStart(2, "0")}
-                      </span>
-                    </div>
-
-                    <div className="grid gap-1.5 sm:grid-cols-2">
-                      {steps.map((step, index) => {
-                        const isActive = index === activeIndex;
-
-                        return (
-                          <motion.button
-                            key={`${step.label}-tablet-portrait`}
-                            type="button"
-                            onClick={() => goToStep(index)}
-                            transition={cardStateTransition}
-                            animate={
-                              reduceMotion
-                                ? undefined
-                                : isActive
-                                  ? { y: -2, scale: 1.005 }
-                                  : { y: 0, scale: 1 }
-                            }
-                            whileHover={reduceMotion || isActive ? undefined : subtleHoverLift}
-                            whileTap={reduceMotion ? undefined : subtleTapPress}
-                            className={`text-left rounded-[1rem] border px-3 py-2.5 ${
-                              isActive ? "scene-step-chip-active" : "scene-step-chip"
-                            }`}
-                          >
-                            <p className="text-[0.62rem] font-semibold uppercase tracking-[0.17em] text-[var(--accent-deep)]">
-                              {step.label}
-                            </p>
-                            <p className="mt-1 text-[0.88rem] leading-5 text-[var(--text-primary)]">
-                              {step.title}
-                            </p>
-                          </motion.button>
-                        );
-                      })}
-                    </div>
-
-                    <div className="home-divider" />
-
-                    <AnimatePresence mode="wait">
-                      <motion.div
-                        key={`${active.label}-${activeIndex}-tablet-portrait`}
-                        initial={panelEnter}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={panelExit}
-                        transition={contentSwapTransition}
-                        className="grid content-start gap-2.5"
-                      >
-                        <div>
-                          <p className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">
-                            {globalContent.sceneLabels.activeState}
-                          </p>
-                          <h2 className="mt-1.5 text-[1.34rem] leading-[0.98] text-balance">
-                            {active.title}
-                          </h2>
-                          <p className="mt-2.5 text-[0.88rem] leading-6 text-[var(--text-secondary)]">
-                            {active.detail}
-                          </p>
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={`${active.label}-${activeIndex}-tablet-portrait-bullets`}
+                      initial={panelEnter}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={panelExit}
+                      transition={contentSwapTransition}
+                      className="grid gap-2 sm:grid-cols-2"
+                    >
+                      {active.bullets.map((bullet) => (
+                        <div
+                          key={`${active.label}-${bullet}-tablet-portrait`}
+                          className="panel rounded-[0.92rem] px-3 py-2.5 text-[0.8rem] leading-5 text-[var(--text-secondary)]"
+                        >
+                          {bullet}
                         </div>
-
-                        <div className="grid gap-1.5 sm:grid-cols-2">
-                          {active.bullets.map((bullet) => (
-                            <div
-                              key={`${active.label}-${bullet}-tablet-portrait`}
-                              className="panel rounded-[0.92rem] px-3 py-2.5 text-[0.8rem] leading-5 text-[var(--text-secondary)]"
-                            >
-                              {bullet}
-                            </div>
-                          ))}
-                        </div>
-                      </motion.div>
-                    </AnimatePresence>
-
-                    <div className="mt-auto grid gap-2 sm:grid-cols-2">
-                      <button
-                        type="button"
-                        className="button-secondary px-3.5 text-[0.82rem]"
-                        disabled={isFirst}
-                        onClick={goPrev}
-                      >
-                        {globalContent.routeLabels.previous}
-                      </button>
-                      <button
-                        type="button"
-                        className="button-primary px-3.5 text-[0.82rem]"
-                        disabled={isLast}
-                        onClick={goNext}
-                      >
-                        {globalContent.routeLabels.next}
-                      </button>
-                    </div>
-                  </div>
+                      ))}
+                    </motion.div>
+                  </AnimatePresence>
                 </RevealItem>
               </RevealGroup>
             </div>
