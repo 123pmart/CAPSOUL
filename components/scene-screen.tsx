@@ -111,12 +111,12 @@ export function SceneScreen({
     : { duration: 0.24, ease: measuredEase };
   const sceneIntro = (
     <RevealGroup
-      className="grid gap-[var(--mobile-section-gap)] md:max-w-[38rem] md:gap-3 min-[1025px]:gap-4"
+      className="grid gap-[var(--mobile-section-gap)] md:max-w-[40rem] md:gap-4"
       stagger={0.1}
       amount={0.25}
     >
       <RevealItem variant="hero">
-        <div className="max-w-[34rem] flex flex-col items-start">
+        <div className="max-w-[36rem] flex flex-col items-start">
           <span className="eyebrow">{eyebrow}</span>
           <h1 className="page-heading headline-display mt-[var(--mobile-label-heading-gap)]">
             {title}
@@ -208,7 +208,7 @@ export function SceneScreen({
       </RevealItem>
 
       <RevealGroup
-        className="scene-screen-portrait-support-stack grid gap-2.5 md:min-h-0 md:content-start"
+        className="scene-screen-portrait-support-stack grid h-full gap-2.5 md:min-h-0 md:content-start"
         delay={140}
         stagger={0.1}
         amount={0.2}
@@ -325,12 +325,11 @@ export function SceneScreen({
       <>
         <section
           data-scene-branch="tablet-portrait-live"
-          style={{ outline: "6px solid #ff2b2b", outlineOffset: "-6px" }}
           className="scene-screen-shell shell py-2 sm:py-4 md:flex md:h-[calc(100svh-var(--header-offset-desktop))] md:min-h-0 md:items-center md:overflow-hidden md:py-2"
         >
           <SceneViewport className="scene-screen-viewport md:w-full">
             <div className={`scene-screen-frame scene-shell ${toneClassName} scene-pad md:w-full`} {...sceneBindings}>
-              <div className="scene-screen-stack relative z-10 flex flex-col gap-[var(--mobile-section-gap)] overflow-visible md:min-h-0 md:gap-3">
+              <div className="scene-screen-stack relative z-10 flex flex-col gap-[var(--mobile-section-gap)] overflow-visible md:min-h-0 md:gap-4 lg:gap-5">
                 {sceneIntro}
                 {scenePortraitBody}
                 {sceneUtilityRow}
