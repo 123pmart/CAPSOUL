@@ -319,6 +319,7 @@
 }
 
 .scene-tablet-branch,
+.scene-tablet-portrait-branch,
 .scene-desktop-branch,
 .inquiry-tablet-branch,
 .inquiry-desktop-branch {
@@ -1338,38 +1339,41 @@
 }
 
 @media (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
-  .scene-screen-viewport,
-  .scene-screen-frame {
-    display: block;
-    flex: 0 1 auto;
-    height: auto;
+  .scene-tablet-branch {
+    display: none;
+  }
+
+  .scene-tablet-portrait-branch {
+    display: grid;
+  }
+
+  .scene-screen-portrait-media-panel,
+  .scene-screen-portrait-side-column,
+  .scene-screen-portrait-card {
     min-height: 0;
   }
 
-  .scene-screen-stack {
-    display: flex;
-    height: auto;
-    min-height: 0;
-    overflow: visible;
+  .scene-screen-portrait-media-panel {
+    gap: 0.72rem;
   }
 
-  .scene-tablet-branch,
-  .scene-screen-side-column {
-    height: auto;
-    min-height: 0;
+  .scene-screen-portrait-media-stage {
+    gap: 0.72rem;
   }
 
-  .scene-screen-media-panel,
-  .scene-screen-media-panel > .grid,
-  .scene-screen-media-panel .scene-media-shell,
-  .scene-screen-media-panel .scene-media-frame {
-    height: auto;
-    min-height: 0;
-  }
-
-  .scene-screen-media-panel .scene-media-frame {
+  .scene-screen-portrait-media-frame {
     aspect-ratio: 3 / 2;
+    max-width: 100%;
     min-height: clamp(13.4rem, 33vw, 14.9rem);
+  }
+
+  .scene-screen-portrait-side-column {
+    gap: 0.72rem;
+    align-content: start;
+  }
+
+  .scene-screen-portrait-card {
+    gap: 0.72rem;
   }
 }
 
