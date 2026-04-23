@@ -319,7 +319,6 @@
 }
 
 .scene-tablet-branch,
-.scene-tablet-portrait-branch,
 .scene-desktop-branch,
 .inquiry-tablet-branch,
 .inquiry-desktop-branch {
@@ -1339,19 +1338,6 @@
 }
 
 @media (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
-  .scene-screen-shell[data-scene-layout="tablet-portrait"],
-  .inquiry-scene-shell[data-inquiry-layout="tablet-portrait"] {
-    align-items: center;
-  }
-
-  .scene-tablet-branch {
-    display: none;
-  }
-
-  .scene-tablet-portrait-branch {
-    display: grid;
-  }
-
   .scene-screen-portrait-main,
   .scene-screen-portrait-support-stack,
   .scene-screen-portrait-media-panel {
