@@ -713,10 +713,11 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
       <>
         <section
           data-portrait-shell="inquiry"
-          className="inquiry-scene-shell shell py-2 sm:py-4 md:h-[calc(100svh-var(--header-offset-desktop))] md:min-h-0 md:overflow-hidden md:py-2"
+          className="inquiry-scene-shell shell py-2 sm:py-4 md:min-h-0 md:overflow-hidden md:py-2"
         >
-          <div className="portrait-tablet-page-center-wrapper">
-            <SceneViewport className="inquiry-scene-viewport md:w-full">
+          <div className="portrait-tablet-page-area">
+            <div className="portrait-tablet-page-center-wrapper">
+              <SceneViewport className="portrait-tablet-scene-viewport inquiry-scene-viewport md:w-full">
               <div className="portrait-tablet-content-shell inquiry-scene-frame scene-shell scene-shell-warm scene-pad md:w-full" {...sceneBindings}>
                 <div className="portrait-tablet-page-group gap-[var(--mobile-section-gap)] md:gap-4 lg:gap-5">
                   {inquiryIntro}
@@ -724,7 +725,8 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
                   {inquiryUtilityRow}
                 </div>
               </div>
-            </SceneViewport>
+              </SceneViewport>
+            </div>
           </div>
         </section>
         {inquirySupportModal}

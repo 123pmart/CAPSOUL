@@ -325,10 +325,11 @@ export function SceneScreen({
       <>
         <section
           data-portrait-shell="scene"
-          className="scene-screen-shell shell py-2 sm:py-4 md:h-[calc(100svh-var(--header-offset-desktop))] md:min-h-0 md:overflow-hidden md:py-2"
+          className="scene-screen-shell shell py-2 sm:py-4 md:min-h-0 md:overflow-hidden md:py-2"
         >
-          <div className="portrait-tablet-page-center-wrapper">
-            <SceneViewport className="scene-screen-viewport md:w-full">
+          <div className="portrait-tablet-page-area">
+            <div className="portrait-tablet-page-center-wrapper">
+              <SceneViewport className="portrait-tablet-scene-viewport scene-screen-viewport md:w-full">
               <div
                 className={`portrait-tablet-content-shell scene-screen-frame scene-shell ${toneClassName} scene-pad md:w-full`}
                 {...sceneBindings}
@@ -339,7 +340,8 @@ export function SceneScreen({
                   {sceneUtilityRow}
                 </div>
               </div>
-            </SceneViewport>
+              </SceneViewport>
+            </div>
           </div>
         </section>
         {sceneDetailModal}

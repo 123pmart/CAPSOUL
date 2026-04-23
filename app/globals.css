@@ -1338,10 +1338,9 @@
 }
 
 @media (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
-  [data-portrait-shell] .portrait-tablet-page-center-wrapper {
+  [data-portrait-shell] .portrait-tablet-page-area {
     display: flex;
-    height: 100%;
-    min-height: 0;
+    min-height: calc(100svh - var(--header-offset-desktop));
     width: 100%;
     align-items: center;
     justify-content: center;
@@ -1349,13 +1348,30 @@
     outline-offset: -2px;
   }
 
+  [data-portrait-shell] .portrait-tablet-page-center-wrapper {
+    display: block;
+    height: auto;
+    min-height: 0;
+    width: 100%;
+  }
+
+  [data-portrait-shell] .portrait-tablet-scene-viewport {
+    display: block;
+    height: auto;
+    min-height: 0;
+    width: 100%;
+    flex: none;
+    outline: 2px solid rgba(66, 133, 244, 0.78);
+    outline-offset: -2px;
+  }
+
   [data-portrait-shell] .portrait-tablet-content-shell {
+    display: block;
     height: auto;
     min-height: 0;
     width: 100%;
     max-width: 100%;
     flex: none;
-    align-self: center;
     padding-top: clamp(0.92rem, 1.48vw, 1.08rem);
     padding-bottom: clamp(0.64rem, 1vw, 0.78rem);
     outline: 2px solid rgba(52, 168, 83, 0.78);
