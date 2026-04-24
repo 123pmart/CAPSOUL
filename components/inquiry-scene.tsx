@@ -494,9 +494,9 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
   );
 
   const inquiryTabletBranch = (
-    <div className="inquiry-tablet-branch inquiry-tablet-grid scene-balanced-row portrait-tablet-main-grid md:grid md:min-h-0 md:grid-cols-[minmax(0,1.02fr)_minmax(16.8rem,0.98fr)] md:items-stretch md:gap-3">
+    <div className="inquiry-tablet-branch inquiry-tablet-grid scene-balanced-row scene-composition-row portrait-tablet-main-grid md:grid md:min-h-0 md:grid-cols-[minmax(0,1.02fr)_minmax(16.8rem,0.98fr)] md:items-stretch md:gap-3">
       <RevealItem variant="section" className="h-full min-h-0">
-        <div className="scene-balanced-main inquiry-tablet-form-panel portrait-tablet-main-panel panel-strong flex h-full flex-col rounded-[1.55rem] p-3 md:min-h-0">
+        <div className="scene-balanced-main scene-composition-main scene-composition-main-panel inquiry-tablet-form-panel portrait-tablet-main-panel panel-strong flex h-full flex-col rounded-[1.55rem] p-3 md:min-h-0">
           {submitted ? (
             renderSuccessContent(false)
           ) : (
@@ -604,13 +604,13 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
       </RevealItem>
 
       <RevealGroup
-        className="scene-balanced-media-stack scene-wide-support-stack inquiry-tablet-support-stack portrait-tablet-support-stack grid h-full gap-2.5 md:min-h-0 md:content-start"
+        className="scene-balanced-media-stack scene-composition-side scene-wide-support-stack inquiry-tablet-support-stack portrait-tablet-support-stack grid h-full gap-2.5 md:min-h-0 md:content-start"
         delay={120}
         stagger={0.1}
         amount={0.2}
       >
         <RevealItem variant="media" className="portrait-tablet-support-media-item h-full min-h-0">
-          <div className="inquiry-tablet-media-panel portrait-tablet-support-media-panel scene-focus scene-panel-shell flex h-full min-h-[14.9rem] flex-col gap-2.5 p-2.5">
+          <div className="inquiry-tablet-media-panel scene-composition-side-panel portrait-tablet-support-media-panel scene-focus scene-panel-shell flex h-full min-h-[14.9rem] flex-col gap-2.5 p-2.5">
             <AnimatePresence mode="wait">
               <motion.div
                 key={`${activeSupport.title}-tablet`}
@@ -621,7 +621,7 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
                 className="portrait-tablet-support-media-stage grid h-full min-h-0 gap-2.5"
               >
                 <div className="scene-media-shell min-h-0">
-                  <div className="scene-media-frame scene-media-visual-frame scene-media-wide-frame film-frame relative overflow-hidden">
+                  <div className="scene-media-frame scene-media-visual-frame scene-media-wide-frame scene-composition-media-frame film-frame relative overflow-hidden">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={activeSupport.image}
@@ -981,9 +981,9 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
               {isTabletLandscapeViewport ? inquiryTabletBranch : null}
 
               {!isTabletLandscapeViewport ? (
-                <div className="inquiry-desktop-branch inquiry-scene-grid scene-balanced-row min-[1025px]:grid min-[1025px]:grid-cols-[minmax(0,1.03fr)_minmax(19.5rem,0.9fr)] min-[1025px]:gap-5">
+                <div className="inquiry-desktop-branch inquiry-scene-grid scene-balanced-row scene-composition-row min-[1025px]:grid min-[1025px]:grid-cols-[minmax(0,1.03fr)_minmax(19.5rem,0.9fr)] min-[1025px]:gap-5">
                   <RevealItem variant="section" className="min-h-0">
-                    <div className="scene-balanced-main inquiry-form-panel panel-strong flex flex-col rounded-[1.8rem] p-4 sm:p-5 md:min-h-0">
+                    <div className="scene-balanced-main scene-composition-main scene-composition-main-panel inquiry-form-panel panel-strong flex h-full flex-col rounded-[1.8rem] p-4 sm:p-5 md:min-h-0">
                       {submitted ? (
                         renderSuccessContent(false)
                       ) : (
@@ -1091,13 +1091,13 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
                   </RevealItem>
 
                   <RevealGroup
-                    className="scene-balanced-media-stack scene-wide-support-stack inquiry-support-stack grid gap-3 md:min-h-0 md:content-start"
+                    className="scene-balanced-media-stack scene-composition-side scene-wide-support-stack inquiry-support-stack grid gap-3 md:min-h-0 md:content-start"
                     delay={120}
                     stagger={0.1}
                     amount={0.2}
                   >
                     <RevealItem variant="media" className="min-h-0">
-                      <div className="inquiry-support-media-panel scene-focus scene-panel-shell flex min-h-[18.75rem] flex-col gap-3 p-3 sm:min-h-[20.5rem] sm:p-4">
+                      <div className="inquiry-support-media-panel scene-composition-side-panel scene-focus scene-panel-shell flex h-full min-h-[18.75rem] flex-col gap-3 p-3 sm:min-h-[20.5rem] sm:p-4">
                         <AnimatePresence mode="wait">
                           <motion.div
                             key={activeSupport.title}
@@ -1108,7 +1108,7 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
                             className="grid min-h-0 gap-3"
                           >
                             <div className="scene-media-shell min-h-0">
-                              <div className="scene-media-frame scene-media-visual-frame scene-media-wide-frame film-frame relative overflow-hidden">
+                              <div className="scene-media-frame scene-media-visual-frame scene-media-wide-frame scene-composition-media-frame film-frame relative overflow-hidden">
                                 {/* eslint-disable-next-line @next/next/no-img-element */}
                                 <img
                                   src={activeSupport.image}
