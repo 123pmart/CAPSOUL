@@ -631,20 +631,24 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
                       decoding="async"
                     />
                     <div className="scene-media-overlay absolute inset-0" />
-                    <div className="surface-note absolute left-2.5 top-2.5 max-w-[11rem] rounded-[0.95rem] px-2.5 py-2 text-[0.72rem] leading-5 text-[var(--text-secondary)]">
-                      <p className="text-[0.6rem] font-semibold uppercase tracking-[0.15em] text-[var(--accent-deep)]">
-                        {activeSupport.label}
-                      </p>
-                      <p className="mt-1">{sceneData.mediaNote}</p>
-                    </div>
-                    <div className="media-caption absolute inset-x-2.5 bottom-2.5 rounded-[0.98rem] px-3 py-2.5">
-                      <p className="text-[0.62rem] font-semibold uppercase tracking-[0.17em] text-[var(--accent-deep)]">
-                        {sceneData.progressionLabel}
-                      </p>
-                      <p className="mt-1.5 text-[0.88rem] leading-6 text-[var(--text-primary)]">
-                        {activeSupport.body}
-                      </p>
-                    </div>
+                    {!isTabletLandscapeViewport ? (
+                      <>
+                        <div className="surface-note absolute left-2.5 top-2.5 max-w-[11rem] rounded-[0.95rem] px-2.5 py-2 text-[0.72rem] leading-5 text-[var(--text-secondary)]">
+                          <p className="text-[0.6rem] font-semibold uppercase tracking-[0.15em] text-[var(--accent-deep)]">
+                            {activeSupport.label}
+                          </p>
+                          <p className="mt-1">{sceneData.mediaNote}</p>
+                        </div>
+                        <div className="media-caption absolute inset-x-2.5 bottom-2.5 rounded-[0.98rem] px-3 py-2.5">
+                          <p className="text-[0.62rem] font-semibold uppercase tracking-[0.17em] text-[var(--accent-deep)]">
+                            {sceneData.progressionLabel}
+                          </p>
+                          <p className="mt-1.5 text-[0.88rem] leading-6 text-[var(--text-primary)]">
+                            {activeSupport.body}
+                          </p>
+                        </div>
+                      </>
+                    ) : null}
                   </div>
                 </div>
 
@@ -1118,20 +1122,6 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
                                   decoding="async"
                                 />
                                 <div className="scene-media-overlay absolute inset-0" />
-                                <div className="surface-note absolute left-3 top-3 max-w-[14rem] rounded-[1rem] px-3 py-2.5 text-[0.78rem] leading-5 text-[var(--text-secondary)] sm:left-4 sm:top-4">
-                                  <p className="text-[0.66rem] font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">
-                                    {activeSupport.label}
-                                  </p>
-                                  <p className="mt-1.5">{sceneData.mediaNote}</p>
-                                </div>
-                                <div className="media-caption absolute inset-x-3 bottom-3 rounded-[1.1rem] px-4 py-3.5 sm:inset-x-4 sm:bottom-4">
-                                  <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-deep)]">
-                                    {sceneData.progressionLabel}
-                                  </p>
-                                  <p className="mt-2 max-w-[28rem] text-[1.02rem] leading-7 text-[var(--text-primary)]">
-                                    {activeSupport.body}
-                                  </p>
-                                </div>
                               </div>
                             </div>
 
