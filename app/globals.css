@@ -1540,11 +1540,10 @@
 
 @media (min-width: 768px) and (orientation: landscape) and (min-height: 561px) {
   [data-scene-mode="tabletLandscape"] {
-    --scene-content-max-width: min(92vw, 74rem);
-    --scene-media-max-width: clamp(22rem, 38vw, 34rem);
-    --scene-media-max-height: min(58svh, 34rem);
-    --scene-media-column-width: clamp(22rem, 38vw, 34rem);
-    --scene-balanced-gap: clamp(1.1rem, 2vw, 2rem);
+    --scene-stage-max-tablet-landscape: 74rem;
+    --scene-stage-gap-tablet-landscape: clamp(1rem, 1.6vw, 1.5rem);
+    --scene-media-width-tablet-landscape: clamp(26.25rem, 40vw, 32.5rem);
+    --scene-media-aspect-wide: 4 / 3;
     --scene-wide-support-gap: 0.82rem;
   }
 
@@ -1614,11 +1613,11 @@
 
   [data-scene-mode="tabletLandscape"] .scene-composition-row {
     display: grid;
-    width: min(100%, 74rem);
-    max-width: 74rem;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    width: min(100%, var(--scene-stage-max-tablet-landscape));
+    max-width: var(--scene-stage-max-tablet-landscape);
+    grid-template-columns: minmax(0, 1fr) var(--scene-media-width-tablet-landscape);
     align-items: stretch;
-    gap: clamp(1rem, 1.6vw, 1.5rem);
+    gap: var(--scene-stage-gap-tablet-landscape);
   }
 
   [data-scene-mode="tabletLandscape"] .scene-composition-main,
@@ -1679,7 +1678,7 @@
   }
 
   [data-scene-mode="tabletLandscape"] .scene-composition-media-frame {
-    aspect-ratio: 4 / 3;
+    aspect-ratio: var(--scene-media-aspect-wide);
     width: 100%;
     max-width: none;
     min-height: clamp(20rem, 40svh, 30rem);
@@ -2292,11 +2291,10 @@ html[data-theme="dark"] .scene-detail-scroll .archive-chip {
 @media (min-width: 1025px) {
   [data-scene-mode="desktop"],
   [data-scene-mode="desktopShortHeight"] {
-    --scene-content-max-width: min(100%, clamp(62rem, 78vw, 86rem));
-    --scene-media-max-width: clamp(28rem, 36vw, 42rem);
-    --scene-media-max-height: min(58svh, 34rem);
-    --scene-media-column-width: clamp(26rem, 34vw, 40rem);
-    --scene-balanced-gap: clamp(1.25rem, 2vw, 2.5rem);
+    --scene-stage-max-desktop: 96rem;
+    --scene-stage-gap-desktop: clamp(1.5rem, 2vw, 2.5rem);
+    --scene-media-width-desktop: clamp(31.25rem, 36vw, 36.25rem);
+    --scene-media-aspect-wide: 4 / 3;
     --scene-wide-support-gap: 0.9rem;
   }
 
@@ -2344,11 +2342,11 @@ html[data-theme="dark"] .scene-detail-scroll .archive-chip {
   [data-scene-mode="desktop"] .scene-composition-row,
   [data-scene-mode="desktopShortHeight"] .scene-composition-row {
     display: grid;
-    width: min(100%, 96rem);
-    max-width: 96rem;
-    grid-template-columns: minmax(36rem, 1fr) minmax(36rem, 1fr);
+    width: min(100%, var(--scene-stage-max-desktop));
+    max-width: var(--scene-stage-max-desktop);
+    grid-template-columns: minmax(0, 1fr) var(--scene-media-width-desktop);
     align-items: stretch;
-    gap: clamp(1.5rem, 2vw, 2.5rem);
+    gap: var(--scene-stage-gap-desktop);
   }
 
   [data-scene-mode="desktop"] .scene-composition-main,
@@ -2429,7 +2427,7 @@ html[data-theme="dark"] .scene-detail-scroll .archive-chip {
 
   [data-scene-mode="desktop"] .scene-composition-media-frame,
   [data-scene-mode="desktopShortHeight"] .scene-composition-media-frame {
-    aspect-ratio: 4 / 3;
+    aspect-ratio: var(--scene-media-aspect-wide);
     width: 100%;
     max-width: none;
     min-height: clamp(22rem, 40svh, 34rem);
@@ -2474,11 +2472,10 @@ html[data-theme="dark"] .scene-detail-scroll .archive-chip {
 }
 
 @media (min-width: 1440px) {
-  [data-scene-mode="desktop"] .scene-composition-row,
-  [data-scene-mode="desktopShortHeight"] .scene-composition-row {
-    width: min(100%, 104rem);
-    max-width: 104rem;
-    grid-template-columns: minmax(38rem, 1fr) minmax(38rem, 1fr);
+  [data-scene-mode="desktop"],
+  [data-scene-mode="desktopShortHeight"] {
+    --scene-stage-max-desktop: 104rem;
+    --scene-media-width-desktop: clamp(31.25rem, 36vw, 38rem);
   }
 
   [data-scene-mode="desktop"] .scene-composition-media-frame,
