@@ -1513,11 +1513,11 @@
 
 @media (min-width: 768px) and (orientation: landscape) and (min-height: 561px) {
   [data-scene-mode="tabletLandscape"] {
-    --scene-content-max-width: min(100%, 70rem);
-    --scene-media-max-width: clamp(18rem, 34vw, 30rem);
-    --scene-media-max-height: min(58svh, 36rem);
-    --scene-media-column-width: clamp(18rem, 34vw, 30rem);
-    --scene-balanced-gap: clamp(1rem, 2vw, 1.6rem);
+    --scene-content-max-width: min(92vw, 74rem);
+    --scene-media-max-width: clamp(22rem, 38vw, 34rem);
+    --scene-media-max-height: min(58svh, 34rem);
+    --scene-media-column-width: clamp(22rem, 38vw, 34rem);
+    --scene-balanced-gap: clamp(1.1rem, 2vw, 2rem);
     --scene-wide-support-gap: 0.82rem;
   }
 
@@ -1576,7 +1576,7 @@
   }
 
   [data-scene-mode="tabletLandscape"] .scene-balanced-row {
-    grid-template-columns: minmax(0, 1fr) minmax(18rem, var(--scene-media-column-width));
+    grid-template-columns: minmax(24rem, 1fr) minmax(22rem, 0.95fr);
     align-items: start;
     gap: var(--scene-balanced-gap);
   }
@@ -2193,11 +2193,11 @@ html[data-theme="dark"] .scene-detail-scroll .archive-chip {
 @media (min-width: 1025px) {
   [data-scene-mode="desktop"],
   [data-scene-mode="desktopShortHeight"] {
-    --scene-content-max-width: min(100%, 76rem);
-    --scene-media-max-width: clamp(20rem, 28vw, 34rem);
-    --scene-media-max-height: min(60svh, 42rem);
-    --scene-media-column-width: clamp(20rem, 28vw, 34rem);
-    --scene-balanced-gap: clamp(1.2rem, 2.2vw, 1.9rem);
+    --scene-content-max-width: min(100%, clamp(62rem, 78vw, 86rem));
+    --scene-media-max-width: clamp(28rem, 36vw, 42rem);
+    --scene-media-max-height: min(58svh, 34rem);
+    --scene-media-column-width: clamp(26rem, 34vw, 40rem);
+    --scene-balanced-gap: clamp(1.25rem, 2vw, 2.5rem);
     --scene-wide-support-gap: 0.9rem;
   }
 
@@ -2233,7 +2233,7 @@ html[data-theme="dark"] .scene-detail-scroll .archive-chip {
 
   [data-scene-mode="desktop"] .scene-balanced-row,
   [data-scene-mode="desktopShortHeight"] .scene-balanced-row {
-    grid-template-columns: minmax(0, 1fr) minmax(18rem, var(--scene-media-column-width));
+    grid-template-columns: minmax(28rem, 1fr) minmax(26rem, 0.92fr);
     align-items: start;
     gap: var(--scene-balanced-gap);
   }
