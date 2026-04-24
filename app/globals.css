@@ -1664,6 +1664,15 @@
     padding: clamp(1rem, 1.2vw, 1.35rem);
   }
 
+  [data-scene-mode="tabletLandscape"] .scene-composition-side-panel.scene-focus.scene-panel-shell {
+    padding: clamp(1rem, 1.2vw, 1.35rem) !important;
+    border-color: rgba(255, 255, 255, 0.76);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.84), rgba(235, 244, 253, 0.94));
+    box-shadow: var(--shadow-card);
+    backdrop-filter: blur(16px) saturate(140%);
+    overflow: visible;
+  }
+
   [data-scene-mode="tabletLandscape"] .scene-composition-side .scene-media-shell {
     justify-content: stretch;
     align-items: stretch;
@@ -2402,6 +2411,16 @@ html[data-theme="dark"] .scene-detail-scroll .archive-chip {
     padding: clamp(1rem, 1.2vw, 1.4rem);
   }
 
+  [data-scene-mode="desktop"] .scene-composition-side-panel.scene-focus.scene-panel-shell,
+  [data-scene-mode="desktopShortHeight"] .scene-composition-side-panel.scene-focus.scene-panel-shell {
+    padding: clamp(1rem, 1.2vw, 1.4rem) !important;
+    border-color: rgba(255, 255, 255, 0.76);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.84), rgba(235, 244, 253, 0.94));
+    box-shadow: var(--shadow-card);
+    backdrop-filter: blur(16px) saturate(140%);
+    overflow: visible;
+  }
+
   [data-scene-mode="desktop"] .scene-composition-side .scene-media-shell,
   [data-scene-mode="desktopShortHeight"] .scene-composition-side .scene-media-shell {
     justify-content: stretch;
@@ -2466,6 +2485,15 @@ html[data-theme="dark"] .scene-detail-scroll .archive-chip {
   [data-scene-mode="desktopShortHeight"] .scene-composition-media-frame {
     min-height: clamp(25rem, 42svh, 38rem);
   }
+}
+
+html[data-theme="dark"] [data-scene-mode="tabletLandscape"] .scene-composition-side-panel.scene-focus.scene-panel-shell,
+html[data-theme="dark"] [data-scene-mode="desktop"] .scene-composition-side-panel.scene-focus.scene-panel-shell,
+html[data-theme="dark"] [data-scene-mode="desktopShortHeight"] .scene-composition-side-panel.scene-focus.scene-panel-shell {
+  border-color: rgba(196, 219, 244, 0.14);
+  background: linear-gradient(180deg, rgba(16, 27, 40, 0.82), rgba(11, 18, 29, 0.9));
+  box-shadow: 0 26px 64px rgba(3, 9, 18, 0.34);
+  backdrop-filter: none;
 }
 
 @media (max-width: 639px) {
