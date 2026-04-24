@@ -1570,11 +1570,21 @@
   }
 
   [data-scene-mode="tabletLandscape"] .scene-page-frame {
-    display: block;
+    display: flex;
+    flex-direction: column;
     height: auto;
-    min-height: 0;
+    min-height: calc(100svh - var(--header-offset-desktop) - 0.5rem);
     width: 100%;
     flex: none;
+  }
+
+  [data-scene-mode="tabletLandscape"] .scene-page-group {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 0;
+    width: 100%;
   }
 
   [data-scene-mode="tabletLandscape"] .scene-screen-shell,
@@ -1604,19 +1614,20 @@
 
   [data-scene-mode="tabletLandscape"] .scene-composition-row {
     display: grid;
-    width: min(100%, 72rem);
-    max-width: none;
-    grid-template-columns: minmax(28rem, 1fr) minmax(28rem, 1fr);
+    width: min(100%, 74rem);
+    max-width: 74rem;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     align-items: stretch;
-    gap: clamp(1rem, 1.8vw, 1.75rem);
+    gap: clamp(1rem, 1.6vw, 1.5rem);
   }
 
   [data-scene-mode="tabletLandscape"] .scene-composition-main,
   [data-scene-mode="tabletLandscape"] .scene-composition-side {
     width: 100%;
     min-width: 0;
-    min-height: clamp(28rem, 46svh, 38rem);
+    min-height: clamp(28rem, 58svh, 38rem);
     height: 100%;
+    align-self: stretch;
   }
 
   [data-scene-mode="tabletLandscape"] .scene-composition-side {
@@ -1641,8 +1652,16 @@
   [data-scene-mode="tabletLandscape"] .scene-composition-main-panel,
   [data-scene-mode="tabletLandscape"] .scene-composition-side-panel {
     width: 100%;
-    min-height: 0;
+    min-height: inherit;
     height: 100%;
+  }
+
+  [data-scene-mode="tabletLandscape"] .scene-composition-main-panel {
+    padding: clamp(1.35rem, 1.6vw, 2rem);
+  }
+
+  [data-scene-mode="tabletLandscape"] .scene-composition-side-panel {
+    padding: clamp(1rem, 1.2vw, 1.35rem);
   }
 
   [data-scene-mode="tabletLandscape"] .scene-composition-side .scene-media-shell {
@@ -1651,12 +1670,14 @@
   }
 
   [data-scene-mode="tabletLandscape"] .scene-composition-media-frame {
-    aspect-ratio: 3 / 2;
+    aspect-ratio: 4 / 3;
     width: 100%;
     max-width: none;
-    min-height: clamp(18rem, 32svh, 28rem);
+    min-height: clamp(20rem, 40svh, 30rem);
     max-height: none;
     height: auto;
+    justify-self: stretch;
+    align-self: stretch;
   }
 
   [data-scene-kind="screen"][data-scene-mode="tabletLandscape"] .scene-tablet-branch {
@@ -1669,9 +1690,9 @@
 
   [data-scene-mode="tabletLandscape"] .inquiry-tablet-form-panel {
     height: 100%;
-    min-height: 0;
+    min-height: inherit;
     overflow: hidden;
-    padding: 0.82rem;
+    padding: clamp(1.35rem, 1.6vw, 2rem);
   }
 
   [data-scene-mode="tabletLandscape"] .inquiry-tablet-form-shell {
@@ -1703,7 +1724,7 @@
   }
 
   [data-scene-mode="tabletLandscape"] .scene-screen-media-panel {
-    min-height: 17.15rem;
+    min-height: inherit;
   }
 
   [data-scene-kind="screen"][data-scene-mode="tabletLandscape"] .scene-screen-tablet-media-panel,
@@ -1730,7 +1751,7 @@
   }
 
   [data-scene-mode="tabletLandscape"] .inquiry-support-media-panel {
-    min-height: 16.85rem;
+    min-height: inherit;
   }
 
   [data-scene-mode="tabletLandscape"] .inquiry-tablet-support-stack {
@@ -1740,13 +1761,13 @@
   }
 
   [data-scene-mode="tabletLandscape"] .inquiry-tablet-media-panel {
-    min-height: 0;
-    padding: 0.72rem;
-    gap: 0.72rem;
+    min-height: inherit;
+    padding: clamp(1rem, 1.2vw, 1.35rem);
+    gap: clamp(0.75rem, 1vw, 1rem);
   }
 
   [data-scene-mode="tabletLandscape"] .inquiry-tablet-media-panel .scene-media-frame {
-    min-height: 13.15rem;
+    min-height: clamp(20rem, 40svh, 30rem);
   }
 
   [data-scene-mode="tabletLandscape"] .inquiry-tablet-support-stack .archive-chip {
@@ -2288,11 +2309,22 @@ html[data-theme="dark"] .scene-detail-scroll .archive-chip {
 
   [data-scene-mode="desktop"] .scene-page-frame,
   [data-scene-mode="desktopShortHeight"] .scene-page-frame {
-    display: block;
+    display: flex;
+    flex-direction: column;
     width: 100%;
     height: auto;
-    min-height: 0;
+    min-height: calc(100svh - var(--header-offset-desktop) - 0.5rem);
     flex: none;
+  }
+
+  [data-scene-mode="desktop"] .scene-page-group,
+  [data-scene-mode="desktopShortHeight"] .scene-page-group {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 0;
+    width: 100%;
   }
 
   [data-scene-kind="screen"][data-scene-mode="desktop"] .scene-screen-grid,
@@ -2303,21 +2335,29 @@ html[data-theme="dark"] .scene-detail-scroll .archive-chip {
   [data-scene-mode="desktop"] .scene-composition-row,
   [data-scene-mode="desktopShortHeight"] .scene-composition-row {
     display: grid;
-    width: min(100%, 82rem);
-    max-width: none;
-    grid-template-columns: minmax(34rem, 0.98fr) minmax(34rem, 1fr);
+    width: min(100%, 96rem);
+    max-width: 96rem;
+    grid-template-columns: minmax(36rem, 1fr) minmax(36rem, 1fr);
     align-items: stretch;
-    gap: clamp(1.5rem, 2.2vw, 2.75rem);
+    gap: clamp(1.5rem, 2vw, 2.5rem);
   }
 
   [data-scene-mode="desktop"] .scene-composition-main,
+  [data-scene-mode="desktop"] .scene-composition-side {
+    width: 100%;
+    min-width: 0;
+    min-height: clamp(32rem, 58svh, 46rem);
+    height: 100%;
+    align-self: stretch;
+  }
+
   [data-scene-mode="desktopShortHeight"] .scene-composition-main,
-  [data-scene-mode="desktop"] .scene-composition-side,
   [data-scene-mode="desktopShortHeight"] .scene-composition-side {
     width: 100%;
     min-width: 0;
-    min-height: clamp(28rem, 46svh, 38rem);
+    min-height: clamp(28rem, 54svh, 40rem);
     height: 100%;
+    align-self: stretch;
   }
 
   [data-scene-mode="desktop"] .scene-composition-side,
@@ -2348,8 +2388,18 @@ html[data-theme="dark"] .scene-detail-scroll .archive-chip {
   [data-scene-mode="desktop"] .scene-composition-side-panel,
   [data-scene-mode="desktopShortHeight"] .scene-composition-side-panel {
     width: 100%;
-    min-height: 0;
+    min-height: inherit;
     height: 100%;
+  }
+
+  [data-scene-mode="desktop"] .scene-composition-main-panel,
+  [data-scene-mode="desktopShortHeight"] .scene-composition-main-panel {
+    padding: clamp(1.35rem, 1.6vw, 2rem);
+  }
+
+  [data-scene-mode="desktop"] .scene-composition-side-panel,
+  [data-scene-mode="desktopShortHeight"] .scene-composition-side-panel {
+    padding: clamp(1rem, 1.2vw, 1.4rem);
   }
 
   [data-scene-mode="desktop"] .scene-composition-side .scene-media-shell,
@@ -2360,12 +2410,14 @@ html[data-theme="dark"] .scene-detail-scroll .archive-chip {
 
   [data-scene-mode="desktop"] .scene-composition-media-frame,
   [data-scene-mode="desktopShortHeight"] .scene-composition-media-frame {
-    aspect-ratio: 3 / 2;
+    aspect-ratio: 4 / 3;
     width: 100%;
     max-width: none;
-    min-height: clamp(18rem, 32svh, 28rem);
+    min-height: clamp(22rem, 40svh, 34rem);
     max-height: none;
     height: auto;
+    justify-self: stretch;
+    align-self: stretch;
   }
 
   [data-scene-kind="screen"][data-scene-mode="desktop"] .scene-screen-media-panel,
@@ -2377,7 +2429,7 @@ html[data-theme="dark"] .scene-detail-scroll .archive-chip {
   [data-scene-kind="screen"][data-scene-mode="desktop"] .scene-screen-media-panel .scene-media-frame,
   [data-scene-kind="screen"][data-scene-mode="desktopShortHeight"] .scene-screen-media-panel .scene-media-frame {
     height: auto;
-    min-height: 0;
+    min-height: inherit;
   }
 
   [data-scene-kind="screen"][data-scene-mode="desktop"] .scene-screen-media-panel .scene-media-shell,
@@ -2405,8 +2457,14 @@ html[data-theme="dark"] .scene-detail-scroll .archive-chip {
 @media (min-width: 1440px) {
   [data-scene-mode="desktop"] .scene-composition-row,
   [data-scene-mode="desktopShortHeight"] .scene-composition-row {
-    width: min(100%, 88rem);
-    grid-template-columns: minmax(36rem, 0.98fr) minmax(36rem, 1fr);
+    width: min(100%, 104rem);
+    max-width: 104rem;
+    grid-template-columns: minmax(38rem, 1fr) minmax(38rem, 1fr);
+  }
+
+  [data-scene-mode="desktop"] .scene-composition-media-frame,
+  [data-scene-mode="desktopShortHeight"] .scene-composition-media-frame {
+    min-height: clamp(25rem, 42svh, 38rem);
   }
 }
 
