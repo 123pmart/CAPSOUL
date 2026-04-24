@@ -487,7 +487,7 @@ export function SceneScreen({
 
               {isTabletLandscapeViewport ? (
                 <div className="scene-tablet-branch scene-balanced-row md:grid md:min-h-0 md:grid-cols-[minmax(0,1.03fr)_minmax(17rem,0.97fr)] md:items-center md:gap-3">
-              <RevealGroup className="scene-screen-media-group scene-screen-tablet-media-group md:min-h-0" delay={80} stagger={0.08} amount={0.2}>
+              <RevealGroup className="scene-balanced-media-stack scene-wide-support-stack scene-screen-media-group scene-screen-tablet-media-group md:min-h-0" delay={80} stagger={0.08} amount={0.2}>
                 <RevealItem variant="media" className="scene-screen-tablet-media-item min-h-0">
                   <div className="scene-screen-tablet-media-panel scene-focus scene-panel-shell flex min-h-[15.8rem] flex-col gap-2.5 p-2.5">
                     <AnimatePresence mode="wait">
@@ -500,7 +500,7 @@ export function SceneScreen({
                         className="scene-screen-tablet-media-stage grid min-h-0 gap-2.5"
                       >
                         <div className="scene-screen-tablet-media-shell scene-media-shell min-h-0">
-                          <div className="scene-screen-tablet-media-frame scene-media-frame scene-media-visual-frame film-frame relative overflow-hidden">
+                          <div className="scene-screen-tablet-media-frame scene-media-frame scene-media-visual-frame scene-media-wide-frame film-frame relative overflow-hidden">
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
                               src={active.image}
@@ -533,7 +533,7 @@ export function SceneScreen({
               </RevealGroup>
 
               <RevealGroup
-                className="scene-screen-tablet-side-column grid gap-2.5 md:min-h-0 md:content-start"
+                className="scene-balanced-main scene-screen-tablet-side-column grid gap-2.5 md:min-h-0 md:content-start"
                 delay={140}
                 stagger={0.1}
                 amount={0.2}
@@ -642,7 +642,7 @@ export function SceneScreen({
 
               {!isTabletLandscapeViewport ? (
                 <div className="scene-desktop-branch scene-screen-grid scene-balanced-row min-[1025px]:grid min-[1025px]:grid-cols-[minmax(0,1.08fr)_minmax(19.5rem,0.92fr)] min-[1025px]:items-center min-[1025px]:gap-5">
-              <RevealGroup className="scene-screen-media-group h-full min-h-0" delay={80} stagger={0.08} amount={0.2}>
+              <RevealGroup className="scene-balanced-media-stack scene-wide-support-stack scene-screen-media-group h-full min-h-0" delay={80} stagger={0.08} amount={0.2}>
                 <RevealItem variant="media" className="h-full min-h-0">
                   <div className="scene-screen-media-panel scene-focus scene-panel-shell flex min-h-[19rem] flex-col gap-3 p-3 sm:min-h-[21rem] sm:p-4">
                     <AnimatePresence mode="wait">
@@ -655,7 +655,7 @@ export function SceneScreen({
                         className="grid min-h-0 gap-3"
                       >
                         <div className="scene-media-shell min-h-0">
-                          <div className="scene-media-frame scene-media-visual-frame film-frame relative overflow-hidden">
+                          <div className="scene-media-frame scene-media-visual-frame scene-media-wide-frame film-frame relative overflow-hidden">
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
                               src={active.image}
@@ -689,7 +689,7 @@ export function SceneScreen({
               </RevealGroup>
 
               <RevealGroup
-                className="scene-screen-side-column grid gap-3 md:h-full md:min-h-0 md:content-start"
+                className="scene-balanced-main scene-screen-side-column grid gap-3 md:h-full md:min-h-0 md:content-start"
                 delay={140}
                 stagger={0.1}
                 amount={0.2}
