@@ -1076,6 +1076,8 @@
 }
 
 [data-scene-mode="phoneLandscapeShort"] .scene-mobile-card {
+  height: auto;
+  min-height: 0;
   gap: 0.72rem;
 }
 
@@ -1084,6 +1086,22 @@
 [data-scene-mode="phoneLandscapeShort"] .scene-mobile-form-summary,
 [data-scene-mode="phoneLandscapeShort"] .scene-mobile-field-stage {
   min-height: 0;
+}
+
+[data-scene-mode="phoneLandscapeShort"] .scene-mobile-caption-layer {
+  position: static;
+  inset: auto;
+}
+
+[data-scene-mode="phoneLandscapeShort"] .scene-mobile-title-lock {
+  min-height: 0;
+}
+
+[data-scene-mode="phoneLandscapeShort"] .scene-mobile-card .line-clamp-2 {
+  display: block;
+  overflow: visible;
+  -webkit-line-clamp: unset;
+  -webkit-box-orient: initial;
 }
 
 .depth-hover {
@@ -1394,6 +1412,30 @@
     max-width: 100%;
     min-height: 13.15rem;
   }
+
+  [data-scene-kind="screen"][data-scene-mode="tabletPortrait"] .portrait-tablet-main-grid {
+    align-items: start;
+  }
+
+  [data-scene-kind="screen"][data-scene-mode="tabletPortrait"] .portrait-tablet-support-stack {
+    grid-template-rows: auto auto;
+  }
+
+  [data-scene-kind="screen"][data-scene-mode="tabletPortrait"] .portrait-tablet-support-media-item,
+  [data-scene-kind="screen"][data-scene-mode="tabletPortrait"] .portrait-tablet-support-media-panel,
+  [data-scene-kind="screen"][data-scene-mode="tabletPortrait"] .portrait-tablet-support-media-stage {
+    height: auto;
+  }
+
+  [data-scene-kind="screen"][data-scene-mode="tabletPortrait"] .portrait-tablet-support-media-stage .scene-media-shell,
+  [data-scene-kind="screen"][data-scene-mode="tabletPortrait"] .portrait-tablet-support-media-stage .scene-media-frame {
+    height: auto;
+  }
+
+  [data-scene-kind="screen"][data-scene-mode="tabletPortrait"] .scene-screen-portrait-media-frame {
+    aspect-ratio: 16 / 10;
+    max-height: clamp(13.2rem, 28vh, 17.25rem);
+  }
 }
 
 @media (min-width: 768px) and (orientation: landscape) and (min-height: 561px) {
@@ -1451,6 +1493,10 @@
     gap: 0.82rem;
   }
 
+  [data-scene-kind="screen"][data-scene-mode="tabletLandscape"] .scene-tablet-branch {
+    align-items: start;
+  }
+
   [data-scene-mode="tabletLandscape"] .inquiry-tablet-branch {
     display: grid;
     grid-template-columns: minmax(0, 1.02fr) minmax(16.8rem, 0.98fr);
@@ -1495,6 +1541,23 @@
 
   [data-scene-mode="tabletLandscape"] .scene-screen-media-panel {
     min-height: 17.15rem;
+  }
+
+  [data-scene-kind="screen"][data-scene-mode="tabletLandscape"] .scene-screen-tablet-media-panel,
+  [data-scene-kind="screen"][data-scene-mode="tabletLandscape"] .scene-screen-tablet-media-stage,
+  [data-scene-kind="screen"][data-scene-mode="tabletLandscape"] .scene-screen-tablet-media-shell,
+  [data-scene-kind="screen"][data-scene-mode="tabletLandscape"] .scene-screen-tablet-media-frame {
+    height: auto;
+    min-height: 0;
+  }
+
+  [data-scene-kind="screen"][data-scene-mode="tabletLandscape"] .scene-screen-tablet-media-shell {
+    align-items: flex-start;
+  }
+
+  [data-scene-kind="screen"][data-scene-mode="tabletLandscape"] .scene-screen-tablet-media-frame {
+    aspect-ratio: 16 / 10;
+    max-height: clamp(14.8rem, 36vh, 20.5rem);
   }
 
   [data-scene-mode="tabletLandscape"] .inquiry-support-media-panel {
@@ -2047,6 +2110,34 @@ html[data-theme="dark"] .scene-detail-scroll .archive-chip {
     height: auto;
     min-height: 0;
     flex: none;
+  }
+
+  [data-scene-kind="screen"][data-scene-mode="desktop"] .scene-screen-grid,
+  [data-scene-kind="screen"][data-scene-mode="desktopShortHeight"] .scene-screen-grid {
+    align-items: start;
+  }
+
+  [data-scene-kind="screen"][data-scene-mode="desktop"] .scene-screen-media-panel,
+  [data-scene-kind="screen"][data-scene-mode="desktopShortHeight"] .scene-screen-media-panel,
+  [data-scene-kind="screen"][data-scene-mode="desktop"] .scene-screen-media-panel > .grid,
+  [data-scene-kind="screen"][data-scene-mode="desktopShortHeight"] .scene-screen-media-panel > .grid,
+  [data-scene-kind="screen"][data-scene-mode="desktop"] .scene-screen-media-panel .scene-media-shell,
+  [data-scene-kind="screen"][data-scene-mode="desktopShortHeight"] .scene-screen-media-panel .scene-media-shell,
+  [data-scene-kind="screen"][data-scene-mode="desktop"] .scene-screen-media-panel .scene-media-frame,
+  [data-scene-kind="screen"][data-scene-mode="desktopShortHeight"] .scene-screen-media-panel .scene-media-frame {
+    height: auto;
+    min-height: 0;
+  }
+
+  [data-scene-kind="screen"][data-scene-mode="desktop"] .scene-screen-media-panel .scene-media-shell,
+  [data-scene-kind="screen"][data-scene-mode="desktopShortHeight"] .scene-screen-media-panel .scene-media-shell {
+    align-items: flex-start;
+  }
+
+  [data-scene-kind="screen"][data-scene-mode="desktop"] .scene-screen-media-panel .scene-media-frame,
+  [data-scene-kind="screen"][data-scene-mode="desktopShortHeight"] .scene-screen-media-panel .scene-media-frame {
+    aspect-ratio: 16 / 10;
+    max-height: clamp(18rem, 42vh, 31rem);
   }
 }
 

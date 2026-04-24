@@ -486,7 +486,7 @@ export function SceneScreen({
               {sceneIntro}
 
               {isTabletLandscapeViewport ? (
-                <div className="scene-tablet-branch md:min-h-0 md:grid-cols-[minmax(0,1.03fr)_minmax(17rem,0.97fr)] md:items-stretch md:gap-3">
+                <div className="scene-tablet-branch md:min-h-0 md:grid-cols-[minmax(0,1.03fr)_minmax(17rem,0.97fr)] md:items-start md:gap-3">
               <RevealGroup className="scene-screen-tablet-media-group md:min-h-0" delay={80} stagger={0.08} amount={0.2}>
                 <RevealItem variant="media" className="scene-screen-tablet-media-item min-h-0">
                   <div className="scene-screen-tablet-media-panel scene-focus scene-panel-shell flex min-h-[15.8rem] flex-col gap-2.5 p-2.5">
@@ -641,10 +641,10 @@ export function SceneScreen({
               ) : null}
 
               {!isTabletLandscapeViewport ? (
-                <div className="scene-desktop-branch scene-screen-grid min-[1025px]:grid-cols-[minmax(0,1.08fr)_minmax(19.5rem,0.92fr)] min-[1025px]:items-stretch min-[1025px]:gap-5">
+                <div className="scene-desktop-branch scene-screen-grid min-[1025px]:grid-cols-[minmax(0,1.08fr)_minmax(19.5rem,0.92fr)] min-[1025px]:items-start min-[1025px]:gap-5">
               <RevealGroup className="h-full min-h-0" delay={80} stagger={0.08} amount={0.2}>
                 <RevealItem variant="media" className="h-full min-h-0">
-                  <div className="scene-screen-media-panel scene-focus scene-panel-shell flex h-full min-h-[19rem] flex-col gap-3 p-3 sm:min-h-[21rem] sm:p-4">
+                  <div className="scene-screen-media-panel scene-focus scene-panel-shell flex min-h-[19rem] flex-col gap-3 p-3 sm:min-h-[21rem] sm:p-4">
                     <AnimatePresence mode="wait">
                       <motion.div
                         key={active.title}
@@ -652,10 +652,10 @@ export function SceneScreen({
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={mediaExit}
                         transition={contentSwapTransition}
-                        className="grid h-full min-h-0 gap-3"
+                        className="grid min-h-0 gap-3"
                       >
-                        <div className="scene-media-shell h-full min-h-0">
-                          <div className="scene-media-frame film-frame relative h-full overflow-hidden md:aspect-auto">
+                        <div className="scene-media-shell min-h-0">
+                          <div className="scene-media-frame film-frame relative overflow-hidden">
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
                               src={active.image}
