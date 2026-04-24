@@ -500,7 +500,7 @@ export function SceneScreen({
                         className="scene-screen-tablet-media-stage scene-media-rail-stage grid min-h-0 gap-2.5"
                       >
                         <div className="scene-screen-tablet-media-shell scene-media-shell min-h-0">
-                          <div className="scene-screen-tablet-media-frame scene-media-frame scene-media-visual-frame scene-media-wide-frame scene-composition-media-frame scene-media-match-frame film-frame relative overflow-hidden">
+                          <div className="scene-screen-tablet-media-frame scene-media-frame scene-media-visual-frame scene-media-wide-frame scene-landscape-media-frame scene-composition-media-frame scene-media-match-frame film-frame relative overflow-hidden">
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
                               src={active.image}
@@ -655,7 +655,7 @@ export function SceneScreen({
                         className="scene-media-rail-stage grid min-h-0 gap-3"
                       >
                         <div className="scene-media-shell min-h-0">
-                          <div className="scene-media-frame scene-media-visual-frame scene-media-wide-frame scene-composition-media-frame scene-media-match-frame film-frame relative overflow-hidden">
+                          <div className="scene-media-frame scene-media-visual-frame scene-media-wide-frame scene-landscape-media-frame scene-composition-media-frame scene-media-match-frame film-frame relative overflow-hidden">
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
                               src={active.image}

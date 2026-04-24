@@ -621,7 +621,7 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
                 className="portrait-tablet-support-media-stage scene-media-rail-stage grid h-full min-h-0 gap-2.5"
               >
                 <div className="scene-media-shell min-h-0">
-                  <div className="scene-media-frame scene-media-visual-frame scene-media-wide-frame scene-composition-media-frame scene-media-match-frame film-frame relative overflow-hidden">
+                  <div className="scene-media-frame scene-media-visual-frame scene-media-wide-frame scene-landscape-media-frame scene-composition-media-frame scene-media-match-frame film-frame relative overflow-hidden">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={activeSupport.image}
@@ -1108,7 +1108,7 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
                             className="scene-media-rail-stage grid min-h-0 gap-3"
                           >
                             <div className="scene-media-shell min-h-0">
-                              <div className="scene-media-frame scene-media-visual-frame scene-media-wide-frame scene-composition-media-frame scene-media-match-frame film-frame relative overflow-hidden">
+                              <div className="scene-media-frame scene-media-visual-frame scene-media-wide-frame scene-landscape-media-frame scene-composition-media-frame scene-media-match-frame film-frame relative overflow-hidden">
                                 {/* eslint-disable-next-line @next/next/no-img-element */}
                                 <img
                                   src={activeSupport.image}
