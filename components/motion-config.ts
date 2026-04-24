@@ -4,32 +4,32 @@ export const floatingEase = [0.27, 0.88, 0.38, 1] as const;
 export const gentleEase = [0.22, 0.88, 0.3, 0.98] as const;
 
 export const sectionRevealTransition = {
-  duration: 0.68,
+  duration: 0.44,
   ease: premiumEase,
 } as const;
 
 export const heroRevealTransition = {
-  duration: 0.74,
+  duration: 0.46,
   ease: premiumEase,
 } as const;
 
 export const cardRevealTransition = {
-  duration: 0.5,
+  duration: 0.38,
   ease: measuredEase,
 } as const;
 
 export const microRevealTransition = {
-  duration: 0.34,
+  duration: 0.24,
   ease: measuredEase,
 } as const;
 
 export const contentSwapTransition = {
-  duration: 0.42,
+  duration: 0.22,
   ease: premiumEase,
 } as const;
 
 export const cardStateTransition = {
-  duration: 0.26,
+  duration: 0.22,
   ease: measuredEase,
 } as const;
 
@@ -50,17 +50,17 @@ export const scrollDepthSpring = {
 } as const;
 
 export const routeEnterTransition = {
-  duration: 0.42,
+  duration: 0.22,
   ease: gentleEase,
 } as const;
 
 export const routeExitTransition = {
-  duration: 0.24,
+  duration: 0.16,
   ease: measuredEase,
 } as const;
 
 export const routeVeilTransition = {
-  duration: 0.46,
+  duration: 0.24,
   ease: premiumEase,
   times: [0, 0.45, 1] as number[],
 };

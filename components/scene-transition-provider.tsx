@@ -17,7 +17,7 @@ import {
 } from "@/components/scene-transition-context";
 import { routeEnterTransition, routeExitTransition } from "@/components/motion-config";
 import { SceneTransitionOverlay } from "@/components/scene-transition-overlay";
-import { useCompactViewport } from "@/components/use-compact-viewport";
+import { useResponsiveSceneMode } from "@/components/use-compact-viewport";
 
 type PendingNavigation = {
   href: string;
@@ -29,14 +29,19 @@ export function SceneTransitionProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
   const reduceMotion = useReducedMotion();
-  const isCompactViewport = useCompactViewport();
+  const responsiveSceneMode = useResponsiveSceneMode();
   const [phase, setPhase] = useState<TransitionPhase>("idle");
   const [pendingPath, setPendingPath] = useState<string | null>(null);
   const pendingRef = useRef<PendingNavigation | null>(null);
   const previousPathRef = useRef(pathname);
   const shouldResetScrollRef = useRef(false);
-  const exitDurationMs = Math.round((isCompactViewport ? 0.22 : routeExitTransition.duration) * 1000);
-  const enterDurationMs = Math.round((isCompactViewport ? 0.28 : routeEnterTransition.duration) * 1000);
+  const prefersLiteRouteOverlay = responsiveSceneMode.prefersLiteRouteOverlay;
+  const exitDurationMs = Math.round(
+    (prefersLiteRouteOverlay ? 0.14 : routeExitTransition.duration) * 1000,
+  );
+  const enterDurationMs = Math.round(
+    (prefersLiteRouteOverlay ? 0.18 : routeEnterTransition.duration) * 1000,
+  );
 
   const navigate = useCallback(
     (href: string, options?: { replace?: boolean; scroll?: boolean }) => {

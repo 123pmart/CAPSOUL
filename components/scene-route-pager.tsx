@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 
 import { useSiteLocale } from "@/components/site-locale-provider";
 import { TransitionLink } from "@/components/transition-link";
-import { useCompactViewport } from "@/components/use-compact-viewport";
+import { useResponsiveSceneMode } from "@/components/use-compact-viewport";
 import {
   getAdjacentSceneRoute,
   getSceneRouteEntry,
@@ -21,7 +21,7 @@ export function SceneRoutePager({
   className = "",
 }: SceneRoutePagerProps) {
   const pathname = usePathname();
-  const isCompactViewport = useCompactViewport("(max-width: 767px)");
+  const responsiveSceneMode = useResponsiveSceneMode();
   const { globalContent } = useSiteLocale();
   const labels = globalContent.navigation;
   const current = getSceneRouteEntry(pathname, labels);
@@ -35,7 +35,7 @@ export function SceneRoutePager({
 
   const wrapperClassName = compact ? "grid gap-2.5" : "grid gap-2.75";
 
-  if (compact && isCompactViewport) {
+  if (compact && responsiveSceneMode.isCompact) {
     return (
       <div className={`${wrapperClassName} ${className}`.trim()}>
         <div className="panel flex flex-nowrap items-center justify-between gap-3 rounded-[1rem] px-3.5 py-2.5">

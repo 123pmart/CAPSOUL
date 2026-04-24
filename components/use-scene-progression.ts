@@ -8,6 +8,7 @@ import {
   progressionTouchThreshold,
   progressionWheelThreshold,
 } from "@/components/motion-config";
+import { useResponsiveSceneMode } from "@/components/use-compact-viewport";
 
 type UseSceneProgressionOptions = {
   stepCount: number;
@@ -50,15 +51,16 @@ export function useSceneProgression({
   idleResetMs = progressionIdleResetMs,
   lockMs = progressionLockMs,
 }: UseSceneProgressionOptions) {
+  const responsiveSceneMode = useResponsiveSceneMode();
   const [activeIndex, setActiveIndex] = useState(() =>
     stepCount > 0 ? clampIndex(initialIndex, stepCount) : 0,
   );
-  const [usesViewportProgression, setUsesViewportProgression] = useState(false);
   const wheelBufferRef = useRef(0);
   const touchStartYRef = useRef<number | null>(null);
   const lockRef = useRef(false);
   const idleTimerRef = useRef<number | null>(null);
   const lockTimerRef = useRef<number | null>(null);
+  const usesViewportProgression = responsiveSceneMode.usesDesktopProgression;
 
   const clearIdleTimer = useCallback(() => {
     if (idleTimerRef.current != null) {
@@ -154,33 +156,12 @@ export function useSceneProgression({
   );
 
   useEffect(() => {
-    const mediaQuery = window.matchMedia("(min-width: 1025px) and (hover: hover) and (pointer: fine)");
-
-    const syncViewportProgression = () => {
-      setUsesViewportProgression(mediaQuery.matches);
-      wheelBufferRef.current = 0;
-      touchStartYRef.current = null;
-      lockRef.current = false;
-      clearIdleTimer();
-      clearLockTimer();
-    };
-
-    syncViewportProgression();
-
-    if (typeof mediaQuery.addEventListener === "function") {
-      mediaQuery.addEventListener("change", syncViewportProgression);
-
-      return () => {
-        mediaQuery.removeEventListener("change", syncViewportProgression);
-      };
-    }
-
-    mediaQuery.addListener(syncViewportProgression);
-
-    return () => {
-      mediaQuery.removeListener(syncViewportProgression);
-    };
-  }, [clearIdleTimer, clearLockTimer]);
+    wheelBufferRef.current = 0;
+    touchStartYRef.current = null;
+    lockRef.current = false;
+    clearIdleTimer();
+    clearLockTimer();
+  }, [clearIdleTimer, clearLockTimer, usesViewportProgression]);
 
   const handleWheelCapture = useCallback(
     (event: WheelEvent<HTMLElement>) => {

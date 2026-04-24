@@ -50,14 +50,14 @@ export default async function RootLayout({
         >
           Skip to content
         </a>
-        <div className="relative isolate min-h-[100svh] overflow-x-clip md:h-[100svh] md:min-h-0">
+        <div className="relative isolate min-h-[100svh] overflow-x-clip">
           <SiteThemeProvider>
             <SiteLocaleProvider locale={locale} globalContent={siteContent.global}>
               <SceneTransitionProvider>
                 <SiteHeader />
                 <main
                   id="main-content"
-                  className="relative min-h-[100svh] w-full max-w-full pt-[var(--header-offset-mobile)] sm:pt-[var(--header-offset-desktop)] md:h-[100svh] md:min-h-0"
+                  className="relative min-h-[100svh] w-full max-w-full overflow-x-clip pt-[var(--header-offset-mobile)] sm:pt-[var(--header-offset-desktop)]"
                 >
                   {children}
                   <div className="md:hidden">

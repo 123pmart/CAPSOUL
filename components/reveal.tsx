@@ -19,6 +19,7 @@ import {
   scrollDepthSpring,
   sectionRevealTransition,
 } from "@/components/motion-config";
+import { useResponsiveSceneMode } from "@/components/use-compact-viewport";
 
 type RevealVariant = "section" | "card" | "hero" | "media" | "micro";
 type MarginValue = `${number}px ${number}px ${number}px ${number}px`;
@@ -132,10 +133,17 @@ export function Reveal({
 }: RevealProps) {
   const ref = useRef<HTMLDivElement | null>(null);
   const reduceMotion = useReducedMotion();
+  const responsiveSceneMode = useResponsiveSceneMode();
   const defaults = getRevealDefaults(variant);
-  const resolvedDistance = distance ?? defaults.y;
+  const usesLiteRevealMode =
+    responsiveSceneMode.isCompact ||
+    responsiveSceneMode.isTabletPortrait ||
+    responsiveSceneMode.isDesktopShortHeight;
+  const resolvedDistance = usesLiteRevealMode
+    ? Math.min(distance ?? defaults.y, 12)
+    : (distance ?? defaults.y);
   const resolvedDuration = duration ?? defaults.duration;
-  const resolvedBlur = blur ?? defaults.blur;
+  const resolvedBlur = usesLiteRevealMode ? 0 : (blur ?? defaults.blur);
   const inView = useInView(ref, {
     once,
     amount,
@@ -178,7 +186,6 @@ export function Reveal({
         delay: delay / 1000,
         ease: defaults.ease,
       }}
-      style={{ willChange: "transform, opacity, filter, clip-path" }}
       className={className}
     >
       {children}
@@ -237,10 +244,17 @@ export function RevealItem({
   variant = "card",
 }: RevealItemProps) {
   const reduceMotion = useReducedMotion();
+  const responsiveSceneMode = useResponsiveSceneMode();
   const defaults = getRevealDefaults(variant);
-  const resolvedDistance = distance ?? defaults.y;
+  const usesLiteRevealMode =
+    responsiveSceneMode.isCompact ||
+    responsiveSceneMode.isTabletPortrait ||
+    responsiveSceneMode.isDesktopShortHeight;
+  const resolvedDistance = usesLiteRevealMode
+    ? Math.min(distance ?? defaults.y, 12)
+    : (distance ?? defaults.y);
   const resolvedDuration = duration ?? defaults.duration;
-  const resolvedBlur = blur ?? defaults.blur;
+  const resolvedBlur = usesLiteRevealMode ? 0 : (blur ?? defaults.blur);
 
   return (
     <motion.div
@@ -273,7 +287,6 @@ export function RevealItem({
         delay: delay / 1000,
         ease: defaults.ease,
       }}
-      style={{ willChange: "transform, opacity, filter, clip-path" }}
       className={className}
     >
       {children}

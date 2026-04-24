@@ -18,7 +18,7 @@ import { ScenePageUtilityRow } from "@/components/scene-page-utility-row";
 import { SceneRoutePager } from "@/components/scene-route-pager";
 import { useSiteLocale } from "@/components/site-locale-provider";
 import { SceneViewport } from "@/components/scene-viewport";
-import { useCompactViewport } from "@/components/use-compact-viewport";
+import { useResponsiveSceneMode } from "@/components/use-compact-viewport";
 import { useSceneProgression } from "@/components/use-scene-progression";
 import type { ScreenAction, ScreenStep } from "@/content/screen-scenes";
 
@@ -48,10 +48,11 @@ export function SceneScreen({
   tone = "cool",
 }: SceneScreenProps) {
   const reduceMotion = useReducedMotion();
-  const isPhoneViewport = useCompactViewport("(max-width: 767px)");
-  const isTabletPortraitViewport = useCompactViewport(
-    "(min-width: 768px) and (orientation: portrait) and (hover: none) and (pointer: coarse)",
-  );
+  const responsiveSceneMode = useResponsiveSceneMode();
+  const sceneMode = responsiveSceneMode.mode;
+  const isCompactScene = responsiveSceneMode.isCompact;
+  const isTabletPortraitViewport = responsiveSceneMode.isTabletPortrait;
+  const isTabletLandscapeViewport = responsiveSceneMode.isTabletLandscape;
   const { globalContent } = useSiteLocale();
   const [isMobileSceneDetailOpen, setIsMobileSceneDetailOpen] = useState(false);
   const {
@@ -76,7 +77,7 @@ export function SceneScreen({
 
   useEffect(() => {
     setIsMobileSceneDetailOpen(false);
-  }, [activeIndex, isPhoneViewport]);
+  }, [activeIndex, isCompactScene]);
 
   if (!active) {
     return null;
@@ -320,25 +321,150 @@ export function SceneScreen({
     </SceneDetailModal>
   );
 
+  if (isCompactScene) {
+    return (
+      <>
+        <section
+          data-scene-kind="screen"
+          data-scene-mode={sceneMode}
+          className="scene-screen-shell shell py-2 sm:py-4"
+        >
+          <SceneViewport className="scene-screen-viewport">
+            <div className={`scene-screen-frame scene-shell ${toneClassName} scene-pad`} {...sceneBindings}>
+              <div className="scene-screen-stack relative z-10 flex flex-col gap-[var(--mobile-section-gap)] overflow-visible">
+                {sceneIntro}
+
+                <div className="grid gap-[var(--mobile-card-gap)]">
+                  <RevealItem variant="micro">
+                    <SceneRoutePager compact />
+                  </RevealItem>
+
+                  <RevealItem variant="card">
+                    <div className="panel-strong rounded-[1.2rem] p-3.5">
+                      <div className="flex flex-nowrap items-start justify-between gap-3">
+                        <div className="min-w-0">
+                          <p className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">
+                            {mobileProgressionNote}
+                          </p>
+                        </div>
+                        <span className="scene-counter text-[0.72rem] uppercase tracking-[0.18em] text-[var(--text-tertiary)]">
+                          {String(activeIndex + 1).padStart(2, "0")} / {String(steps.length).padStart(2, "0")}
+                        </span>
+                      </div>
+
+                      <div className="scene-mobile-stage mt-3">
+                        <motion.button
+                          type="button"
+                          aria-expanded={isMobileSceneDetailOpen}
+                          onClick={() => {
+                            setIsMobileSceneDetailOpen(true);
+                          }}
+                          className="scene-focus scene-mobile-card flex w-full flex-col gap-3 p-3 text-left"
+                        >
+                          <div className="scene-media-shell">
+                            <div className="scene-media-frame film-frame relative overflow-hidden">
+                              <div className="scene-mobile-media-slot">
+                                <AnimatePresence initial={false} mode="sync">
+                                  <motion.div
+                                    key={`${active.label}-phone-scene`}
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    exit={{ opacity: 0 }}
+                                    transition={mobileSceneSwapTransition}
+                                    className="scene-mobile-media-layer"
+                                  >
+                                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                                    <img
+                                      src={active.image}
+                                      alt={`${active.title} visual placeholder.`}
+                                      decoding="async"
+                                      className="h-full w-full object-cover"
+                                      style={{ objectPosition: active.objectPosition ?? "center center" }}
+                                    />
+                                    <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.02),rgba(232,239,246,0.16))]" />
+                                    <div className="media-caption absolute inset-x-2.5 bottom-2.5 rounded-[1rem] px-3.5 py-3">
+                                      <p className="text-[0.66rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-deep)]">
+                                        {active.mediaLabel}
+                                      </p>
+                                      <p className="mt-2 line-clamp-2 text-[0.92rem] leading-6 text-[var(--text-primary)]">
+                                        {active.summary}
+                                      </p>
+                                    </div>
+                                  </motion.div>
+                                </AnimatePresence>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="scene-mobile-caption-slot">
+                            <AnimatePresence initial={false} mode="sync">
+                              <motion.div
+                                key={`${active.label}-phone-note`}
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                transition={mobileSceneSwapTransition}
+                                className="scene-mobile-caption-layer"
+                              >
+                                <p className="scene-mobile-note line-clamp-2 text-[0.78rem] leading-5 text-[var(--text-secondary)]">
+                                  {active.mediaCaption}
+                                </p>
+                              </motion.div>
+                            </AnimatePresence>
+                          </div>
+                        </motion.button>
+                      </div>
+
+                      <CompactSceneControls
+                        className="mt-3"
+                        labels={steps.map((step) => step.title)}
+                        activeIndex={activeIndex}
+                        onSelect={goToStep}
+                        onPrevious={goPrev}
+                        onNext={goNext}
+                        previousDisabled={isFirst}
+                        nextDisabled={isLast}
+                      />
+
+                      <p className="mt-3 text-[0.74rem] uppercase tracking-[0.14em] text-[var(--text-tertiary)]">
+                        {globalContent.sceneLabels.tapImageHint}
+                      </p>
+                    </div>
+                  </RevealItem>
+
+                  <RevealItem variant="micro">
+                    <MobilePageNextLink />
+                  </RevealItem>
+                </div>
+              </div>
+            </div>
+          </SceneViewport>
+        </section>
+        {sceneDetailModal}
+      </>
+    );
+  }
+
   if (isTabletPortraitViewport) {
     return (
       <>
         <section
-          data-portrait-shell="scene"
-          className="scene-screen-shell shell py-2 sm:py-4 md:min-h-0 md:overflow-hidden md:py-2"
+          data-scene-kind="screen"
+          data-scene-mode={sceneMode}
+          className="scene-screen-shell scene-page-shell shell py-2 sm:py-4 md:py-2"
         >
-          <div className="portrait-tablet-page-area">
-            <SceneViewport className="portrait-tablet-scene-viewport scene-screen-viewport md:w-full">
+          <div className="scene-page-area">
+            <SceneViewport className="scene-page-viewport scene-screen-viewport md:w-full">
               <div
-                className={`portrait-tablet-content-shell scene-screen-frame scene-shell ${toneClassName} scene-pad md:w-full`}
+                className={`scene-page-frame scene-screen-frame scene-shell ${toneClassName} scene-pad md:w-full`}
                 {...sceneBindings}
               >
-                <div className="portrait-tablet-page-group gap-[var(--mobile-section-gap)] md:gap-4 lg:gap-5">
+                <div className="scene-page-group scene-screen-stack relative z-10 flex flex-col gap-[var(--mobile-section-gap)] overflow-visible md:gap-4 lg:gap-5">
                   {sceneIntro}
                   {scenePortraitBody}
                   {sceneUtilityRow}
                 </div>
-                  </div>
+              </div>
             </SceneViewport>
           </div>
         </section>
@@ -348,118 +474,19 @@ export function SceneScreen({
   }
 
   return (
-    <section className="scene-screen-shell shell py-2 sm:py-4 md:flex md:h-[calc(100svh-var(--header-offset-desktop))] md:min-h-0 md:items-start md:overflow-hidden md:py-2 min-[1025px]:items-center min-[1025px]:py-4">
-        <SceneViewport className="scene-screen-viewport md:w-full">
-          <div className={`scene-screen-frame scene-shell ${toneClassName} scene-pad md:w-full`} {...sceneBindings}>
-          <div className="scene-screen-stack relative z-10 flex flex-col gap-[var(--mobile-section-gap)] overflow-visible md:min-h-0 md:gap-3 min-[1025px]:gap-5">
-            {sceneIntro}
+    <section
+      data-scene-kind="screen"
+      data-scene-mode={sceneMode}
+      className="scene-screen-shell scene-page-shell shell py-2 sm:py-4 md:py-2 min-[1025px]:py-4"
+    >
+      <div className="scene-page-area">
+        <SceneViewport className="scene-page-viewport scene-screen-viewport md:w-full">
+          <div className={`scene-page-frame scene-screen-frame scene-shell ${toneClassName} scene-pad md:w-full`} {...sceneBindings}>
+            <div className="scene-page-group scene-screen-stack relative z-10 flex flex-col gap-[var(--mobile-section-gap)] overflow-visible md:min-h-0 md:gap-3 min-[1025px]:gap-5">
+              {sceneIntro}
 
-            <div className="grid gap-[var(--mobile-card-gap)] md:hidden">
-              <RevealItem variant="micro">
-                <SceneRoutePager compact />
-              </RevealItem>
-
-              <RevealItem variant="card">
-                <div className="panel-strong rounded-[1.2rem] p-3.5">
-                  <div className="flex flex-nowrap items-start justify-between gap-3">
-                      <div className="min-w-0">
-                        <p className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">
-                        {mobileProgressionNote}
-                        </p>
-                      </div>
-                    <span className="scene-counter text-[0.72rem] uppercase tracking-[0.18em] text-[var(--text-tertiary)]">
-                      {String(activeIndex + 1).padStart(2, "0")} / {String(steps.length).padStart(2, "0")}
-                    </span>
-                  </div>
-
-                  <div className="scene-mobile-stage mt-3">
-                    <motion.button
-                      type="button"
-                      aria-expanded={isPhoneViewport ? isMobileSceneDetailOpen : undefined}
-                      onClick={() => {
-                        if (isPhoneViewport) {
-                          setIsMobileSceneDetailOpen(true);
-                        }
-                      }}
-                      className="scene-focus scene-mobile-card flex w-full flex-col gap-3 p-3 text-left"
-                    >
-                      <div className="scene-media-shell">
-                        <div className="scene-media-frame film-frame relative overflow-hidden">
-                          <div className="scene-mobile-media-slot">
-                            <AnimatePresence initial={false} mode="sync">
-                              <motion.div
-                                key={`${active.label}-phone-scene`}
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                exit={{ opacity: 0 }}
-                                transition={mobileSceneSwapTransition}
-                                className="scene-mobile-media-layer"
-                              >
-                                {/* eslint-disable-next-line @next/next/no-img-element */}
-                                <img
-                                  src={active.image}
-                                  alt={`${active.title} visual placeholder.`}
-                                  decoding="async"
-                                  className="h-full w-full object-cover"
-                                  style={{ objectPosition: active.objectPosition ?? "center center" }}
-                                />
-                                <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.02),rgba(232,239,246,0.16))]" />
-                                <div className="media-caption absolute inset-x-2.5 bottom-2.5 rounded-[1rem] px-3.5 py-3">
-                                  <p className="text-[0.66rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-deep)]">
-                                    {active.mediaLabel}
-                                  </p>
-                                  <p className="mt-2 line-clamp-2 text-[0.92rem] leading-6 text-[var(--text-primary)]">
-                                    {active.summary}
-                                  </p>
-                                </div>
-                              </motion.div>
-                            </AnimatePresence>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="scene-mobile-caption-slot">
-                        <AnimatePresence initial={false} mode="sync">
-                          <motion.div
-                            key={`${active.label}-phone-note`}
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            transition={mobileSceneSwapTransition}
-                            className="scene-mobile-caption-layer"
-                          >
-                            <p className="scene-mobile-note line-clamp-2 text-[0.78rem] leading-5 text-[var(--text-secondary)]">
-                              {active.mediaCaption}
-                            </p>
-                          </motion.div>
-                        </AnimatePresence>
-                      </div>
-                    </motion.button>
-                  </div>
-
-                  <CompactSceneControls
-                    className="mt-3"
-                    labels={steps.map((step) => step.title)}
-                    activeIndex={activeIndex}
-                    onSelect={goToStep}
-                    onPrevious={goPrev}
-                    onNext={goNext}
-                    previousDisabled={isFirst}
-                    nextDisabled={isLast}
-                  />
-
-                  <p className="mt-3 text-[0.74rem] uppercase tracking-[0.14em] text-[var(--text-tertiary)]">
-                    {globalContent.sceneLabels.tapImageHint}
-                  </p>
-                </div>
-              </RevealItem>
-
-              <RevealItem variant="micro">
-                <MobilePageNextLink />
-              </RevealItem>
-            </div>
-
-            <div className="scene-tablet-branch md:min-h-0 md:grid-cols-[minmax(0,1.03fr)_minmax(17rem,0.97fr)] md:items-stretch md:gap-3">
+              {isTabletLandscapeViewport ? (
+                <div className="scene-tablet-branch md:min-h-0 md:grid-cols-[minmax(0,1.03fr)_minmax(17rem,0.97fr)] md:items-stretch md:gap-3">
               <RevealGroup className="scene-screen-tablet-media-group md:min-h-0" delay={80} stagger={0.08} amount={0.2}>
                 <RevealItem variant="media" className="scene-screen-tablet-media-item min-h-0">
                   <div className="scene-screen-tablet-media-panel scene-focus scene-panel-shell flex min-h-[15.8rem] flex-col gap-2.5 p-2.5">
@@ -610,9 +637,11 @@ export function SceneScreen({
                   </div>
                 </RevealItem>
               </RevealGroup>
-            </div>
+                </div>
+              ) : null}
 
-            <div className="scene-desktop-branch scene-screen-grid min-[1025px]:h-full min-[1025px]:min-h-0 min-[1025px]:grid-cols-[minmax(0,1.08fr)_minmax(19.5rem,0.92fr)] min-[1025px]:items-stretch min-[1025px]:gap-5">
+              {!isTabletLandscapeViewport ? (
+                <div className="scene-desktop-branch scene-screen-grid min-[1025px]:grid-cols-[minmax(0,1.08fr)_minmax(19.5rem,0.92fr)] min-[1025px]:items-stretch min-[1025px]:gap-5">
               <RevealGroup className="h-full min-h-0" delay={80} stagger={0.08} amount={0.2}>
                 <RevealItem variant="media" className="h-full min-h-0">
                   <div className="scene-screen-media-panel scene-focus scene-panel-shell flex h-full min-h-[19rem] flex-col gap-3 p-3 sm:min-h-[21rem] sm:p-4">
@@ -766,12 +795,14 @@ export function SceneScreen({
                   </div>
                 </RevealItem>
               </RevealGroup>
-            </div>
+                </div>
+              ) : null}
 
-            {sceneUtilityRow}
+              {sceneUtilityRow}
+            </div>
           </div>
-        </div>
-      </SceneViewport>
+        </SceneViewport>
+      </div>
 
       {sceneDetailModal}
     </section>

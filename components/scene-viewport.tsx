@@ -5,7 +5,7 @@ import { motion, useReducedMotion } from "framer-motion";
 
 import { routeEnterTransition, routeExitTransition } from "@/components/motion-config";
 import { useSceneTransition } from "@/components/scene-transition-context";
-import { useCompactViewport } from "@/components/use-compact-viewport";
+import { useResponsiveSceneMode } from "@/components/use-compact-viewport";
 
 export function SceneViewport({
   children,
@@ -16,24 +16,25 @@ export function SceneViewport({
 }) {
   const { phase } = useSceneTransition();
   const reduceMotion = useReducedMotion();
-  const isCompactViewport = useCompactViewport();
+  const responsiveSceneMode = useResponsiveSceneMode();
+  const prefersLiteViewportMotion = responsiveSceneMode.prefersLiteViewportMotion;
 
   return (
     <motion.div
       initial={
         reduceMotion
           ? false
-          : isCompactViewport
+          : prefersLiteViewportMotion
             ? {
-                opacity: 0.56,
-                y: 8,
+                opacity: 0.76,
+                y: 4,
                 scale: 1,
                 rotateX: 0,
               }
             : {
                 opacity: 0.36,
-                y: 16,
-                scale: 1.006,
+                y: 12,
+                scale: 1.003,
                 rotateX: 0,
               }
       }
@@ -41,9 +42,9 @@ export function SceneViewport({
         reduceMotion
           ? { opacity: 1, y: 0, scale: 1, rotateX: 0 }
           : phase === "exiting"
-            ? isCompactViewport
-              ? { opacity: 0.36, y: -4, scale: 0.998, rotateX: 0 }
-              : { opacity: 0.22, y: -6, scale: 0.992, rotateX: 0 }
+            ? prefersLiteViewportMotion
+              ? { opacity: 0.44, y: -2, scale: 1, rotateX: 0 }
+              : { opacity: 0.22, y: -5, scale: 0.994, rotateX: 0 }
             : { opacity: 1, y: 0, scale: 1, rotateX: 0 }
       }
       transition={phase === "exiting" ? routeExitTransition : routeEnterTransition}
