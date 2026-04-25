@@ -7,6 +7,7 @@ import { SceneTransitionProvider } from "@/components/scene-transition-provider"
 import { SiteLocaleProvider } from "@/components/site-locale-provider";
 import { SiteHeader } from "@/components/site-header";
 import { SiteThemeProvider } from "@/components/site-theme-provider";
+import { PublicVisualScope } from "@/components/public-visual-scope";
 import { company } from "@/content/site";
 import { getRequestSiteLocale } from "@/lib/site-locale";
 import { getSiteContent } from "@/lib/site-content";
@@ -53,18 +54,20 @@ export default async function RootLayout({
         <div className="relative isolate min-h-[100svh] overflow-x-clip">
           <SiteThemeProvider>
             <SiteLocaleProvider locale={locale} globalContent={siteContent.global}>
-              <SceneTransitionProvider>
-                <SiteHeader />
-                <main
-                  id="main-content"
-                  className="relative min-h-[100svh] w-full max-w-full overflow-x-clip pt-[var(--header-offset-mobile)] sm:pt-[var(--header-offset-desktop)]"
-                >
-                  {children}
-                  <div className="md:hidden">
-                    <AdminEntry inline />
-                  </div>
-                </main>
-              </SceneTransitionProvider>
+              <PublicVisualScope>
+                <SceneTransitionProvider>
+                  <SiteHeader />
+                  <main
+                    id="main-content"
+                    className="relative min-h-[100svh] w-full max-w-full overflow-x-clip pt-[var(--header-offset-mobile)] sm:pt-[var(--header-offset-desktop)]"
+                  >
+                    {children}
+                    <div className="md:hidden">
+                      <AdminEntry inline />
+                    </div>
+                  </main>
+                </SceneTransitionProvider>
+              </PublicVisualScope>
             </SiteLocaleProvider>
           </SiteThemeProvider>
         </div>
