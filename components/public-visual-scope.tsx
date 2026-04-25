@@ -17,8 +17,10 @@ export function PublicVisualScope({ children }: { children: ReactNode }) {
         <span className="liquid-light-field liquid-light-field-one" />
         <span className="liquid-light-field liquid-light-field-two" />
         <span className="liquid-light-field liquid-light-field-three" />
+        <span className="liquid-light-field liquid-light-field-four" />
         <span className="liquid-geometry-light" />
         <span className="liquid-glass-grain" />
+        <span className="liquid-vignette" />
       </div>
       {children}
     </div>
