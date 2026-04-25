@@ -3386,6 +3386,585 @@ html[data-theme="dark"] .public-visual-scope .header-menu-button {
   }
 }
 
+.public-visual-scope {
+  --capsoul-bg-base: #f8fbff;
+  --capsoul-bg-wash: #edf5fd;
+  --capsoul-bg-cool: #dfeaf6;
+  --capsoul-text-primary: #26384d;
+  --capsoul-text-secondary: #667892;
+  --capsoul-text-tertiary: #91a1b6;
+  --accent-ice: #cfe5ff;
+  --accent-ice-strong: #afd2fb;
+  --accent-blue-text: #44617f;
+  --glass-surface: rgba(255, 255, 255, 0.52);
+  --glass-surface-strong: rgba(255, 255, 255, 0.68);
+  --glass-surface-soft: rgba(255, 255, 255, 0.36);
+  --glass-border: rgba(255, 255, 255, 0.72);
+  --glass-border-muted: rgba(128, 153, 180, 0.24);
+  --glass-shadow-soft: 0 24px 80px rgba(90, 121, 155, 0.16);
+  --glass-shadow-card: 0 16px 44px rgba(88, 118, 150, 0.13);
+  --glass-inner-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.82);
+  --glass-blur: 22px;
+  --glass-blur-strong: 34px;
+  --background-primary: var(--capsoul-bg-base);
+  --background-secondary: var(--capsoul-bg-wash);
+  --text-primary: var(--capsoul-text-primary);
+  --text-secondary: var(--capsoul-text-secondary);
+  --text-tertiary: var(--capsoul-text-tertiary);
+  --foreground: var(--capsoul-text-primary);
+  --foreground-soft: #3d526c;
+  --muted: var(--capsoul-text-secondary);
+  --muted-strong: #536b86;
+  --accent-primary: var(--accent-ice-strong);
+  --accent-deep: var(--accent-blue-text);
+  --accent-soft: rgba(175, 210, 251, 0.22);
+  --line: rgba(128, 153, 180, 0.22);
+  --line-strong: rgba(128, 153, 180, 0.34);
+  --warm-line: rgba(128, 153, 180, 0.22);
+  --warm-line-strong: rgba(128, 153, 180, 0.34);
+  --panel: rgba(255, 255, 255, 0.52);
+  --panel-strong: rgba(255, 255, 255, 0.7);
+  --surface: rgba(255, 255, 255, 0.52);
+  --surface-strong: rgba(255, 255, 255, 0.7);
+  --surface-muted: rgba(239, 246, 253, 0.72);
+  --surface-deep: rgba(220, 233, 247, 0.76);
+  --shadow-soft: var(--glass-shadow-soft);
+  --shadow-card: var(--glass-shadow-card);
+  --shadow-float: 0 30px 90px rgba(78, 108, 140, 0.16);
+  --liquid-bg-base: #f8fbff;
+  --liquid-bg-deep: #dfeaf6;
+  --liquid-bg-vignette: rgba(180, 205, 232, 0.26);
+  --liquid-bg-opacity: 1;
+  --liquid-light-primary: rgba(255, 255, 255, 0.92);
+  --liquid-light-secondary: rgba(202, 226, 252, 0.62);
+  --liquid-light-tertiary: rgba(177, 211, 248, 0.44);
+  --liquid-light-opacity-1: 0.54;
+  --liquid-light-opacity-2: 0.36;
+  --liquid-light-opacity-3: 0.26;
+  --liquid-light-opacity-4: 0.18;
+  --liquid-geometry-line: rgba(255, 255, 255, 0.56);
+  --liquid-geometry-shadow: rgba(130, 164, 201, 0.18);
+  --liquid-geometry-opacity: 0.2;
+  --liquid-plane-opacity: 0.16;
+  --liquid-grain-opacity: 0.04;
+  --liquid-vignette-opacity: 0.18;
+  --liquid-glass-fill: linear-gradient(145deg, rgba(255, 255, 255, 0.58), rgba(255, 255, 255, 0.34));
+  --liquid-glass-fill-strong: linear-gradient(145deg, rgba(255, 255, 255, 0.68), rgba(255, 255, 255, 0.42));
+  --liquid-glass-border: rgba(255, 255, 255, 0.74);
+  --glass-fill-strong: var(--liquid-glass-fill-strong);
+  --glass-fill-medium: var(--liquid-glass-fill);
+  --glass-fill-soft: linear-gradient(180deg, rgba(255, 255, 255, 0.54), rgba(255, 255, 255, 0.32));
+  --glass-border-strong: var(--liquid-glass-border);
+  --glass-border-soft: var(--glass-border-muted);
+  --glass-highlight: rgba(255, 255, 255, 0.78);
+  --glass-shadow-soft: var(--glass-shadow-card);
+  --glass-shadow-strong: var(--glass-shadow-soft);
+  --glass-button-fill: linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(203, 226, 255, 0.88));
+  --glass-button-fill-secondary: linear-gradient(180deg, rgba(255, 255, 255, 0.58), rgba(255, 255, 255, 0.32));
+  --glass-button-border: rgba(255, 255, 255, 0.78);
+  --glass-button-highlight: rgba(255, 255, 255, 0.95);
+  --glass-button-glow: rgba(99, 148, 206, 0.24);
+  --grain-opacity: var(--liquid-grain-opacity);
+  color: var(--capsoul-text-primary);
+}
+
+.public-visual-scope .public-liquid-bg {
+  background:
+    radial-gradient(circle at 18% 12%, rgba(255, 255, 255, 0.96), transparent 26%),
+    radial-gradient(circle at 82% 8%, rgba(199, 223, 252, 0.46), transparent 30%),
+    radial-gradient(circle at 55% 70%, rgba(219, 235, 252, 0.5), transparent 42%),
+    linear-gradient(135deg, var(--capsoul-bg-base) 0%, var(--capsoul-bg-wash) 42%, var(--capsoul-bg-cool) 100%);
+}
+
+.public-visual-scope .public-liquid-bg::before {
+  opacity: var(--liquid-geometry-opacity);
+  background:
+    linear-gradient(116deg, transparent 7%, rgba(255, 255, 255, 0.48) 28%, transparent 43%),
+    linear-gradient(154deg, transparent 25%, rgba(134, 166, 202, 0.14) 50%, transparent 68%),
+    radial-gradient(ellipse at 72% 18%, rgba(255, 255, 255, 0.52), transparent 28%);
+  -webkit-mask-image: linear-gradient(180deg, transparent, black 14%, black 86%, transparent);
+  mask-image: linear-gradient(180deg, transparent, black 14%, black 86%, transparent);
+  mix-blend-mode: soft-light;
+  animation: capsoulLightRefractionDrift 30s var(--ease-premium) infinite alternate;
+}
+
+.public-visual-scope .public-liquid-bg::after {
+  opacity: var(--liquid-plane-opacity);
+  background:
+    linear-gradient(102deg, transparent 0%, rgba(255, 255, 255, 0.52) 47%, transparent 64%),
+    linear-gradient(20deg, transparent 10%, rgba(150, 182, 217, 0.16) 39%, transparent 70%);
+  mix-blend-mode: overlay;
+  animation: capsoulGlassPlaneDrift 26s var(--ease-measured) infinite alternate;
+}
+
+.public-visual-scope .liquid-light-field {
+  mix-blend-mode: soft-light;
+}
+
+.public-visual-scope .liquid-light-field-one {
+  inset: -20% 36% 38% -18%;
+  background:
+    radial-gradient(ellipse at 44% 42%, rgba(255, 255, 255, 0.88), transparent 62%),
+    radial-gradient(ellipse at 76% 58%, rgba(198, 224, 252, 0.4), transparent 64%);
+  animation: capsoulLiquidLightDrift 24s var(--ease-premium) infinite alternate;
+}
+
+.public-visual-scope .liquid-light-field-two {
+  inset: 8% -20% 30% 44%;
+  background:
+    radial-gradient(ellipse at 34% 34%, rgba(193, 222, 253, 0.54), transparent 58%),
+    radial-gradient(ellipse at 66% 64%, rgba(255, 255, 255, 0.68), transparent 66%);
+  animation: capsoulLiquidCounterDrift 32s var(--ease-measured) infinite alternate;
+}
+
+.public-visual-scope .liquid-light-field-three {
+  inset: 48% 6% -26% 10%;
+  background:
+    radial-gradient(ellipse at 48% 42%, rgba(221, 237, 253, 0.52), transparent 60%),
+    radial-gradient(ellipse at 70% 52%, rgba(167, 207, 248, 0.28), transparent 68%);
+  animation: capsoulLiquidLowDrift 34s var(--ease-premium) infinite alternate;
+}
+
+.public-visual-scope .liquid-light-field-four {
+  inset: -18% 8% 58% 20%;
+  background:
+    radial-gradient(ellipse at 50% 45%, rgba(255, 255, 255, 0.5), transparent 58%),
+    radial-gradient(ellipse at 78% 56%, rgba(228, 238, 249, 0.34), transparent 64%);
+  animation: capsoulLiquidTopSheen 28s var(--ease-measured) infinite alternate;
+}
+
+.public-visual-scope .liquid-geometry-light {
+  opacity: var(--liquid-geometry-opacity);
+  background:
+    linear-gradient(124deg, transparent 0 27%, rgba(255, 255, 255, 0.46) 34%, transparent 44%),
+    linear-gradient(78deg, transparent 0 50%, rgba(134, 166, 202, 0.16) 58%, transparent 70%),
+    linear-gradient(158deg, transparent 0 34%, rgba(255, 255, 255, 0.32) 42%, transparent 52%);
+  mix-blend-mode: soft-light;
+  animation: capsoulGeometryBreathe 34s var(--ease-measured) infinite alternate;
+}
+
+.public-visual-scope .liquid-glass-grain {
+  opacity: var(--liquid-grain-opacity);
+  background-image:
+    radial-gradient(circle at 16% 24%, rgba(55, 76, 101, 0.34) 0 0.36px, transparent 0.76px),
+    radial-gradient(circle at 82% 68%, rgba(255, 255, 255, 0.72) 0 0.42px, transparent 0.84px);
+  background-size: 3px 3px, 5px 5px;
+  mix-blend-mode: multiply;
+}
+
+.public-visual-scope .liquid-vignette {
+  background:
+    radial-gradient(circle at 50% 40%, transparent 0 58%, rgba(155, 182, 212, 0.18) 100%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.22), transparent 24%, transparent 78%, rgba(177, 203, 231, 0.14));
+}
+
+.public-visual-scope .headline-display,
+.public-visual-scope .page-heading,
+.public-visual-scope h1,
+.public-visual-scope h2,
+.public-visual-scope h3 {
+  color: var(--capsoul-text-primary);
+}
+
+.public-visual-scope .eyebrow,
+html[data-theme="dark"] .public-visual-scope .eyebrow {
+  border-color: rgba(255, 255, 255, 0.74);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.42));
+  color: var(--accent-blue-text);
+  box-shadow: var(--glass-inner-highlight), 0 12px 30px rgba(90, 121, 155, 0.1);
+}
+
+.public-visual-scope .eyebrow::before,
+html[data-theme="dark"] .public-visual-scope .eyebrow::before {
+  background: var(--accent-ice-strong);
+  box-shadow: 0 0 0 4px rgba(175, 210, 251, 0.24);
+}
+
+.public-visual-scope header .scene-shell,
+html[data-theme="dark"] .public-visual-scope header .scene-shell {
+  border-color: rgba(255, 255, 255, 0.72);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.42));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 18px 50px rgba(78, 108, 140, 0.13);
+}
+
+.public-visual-scope .header-nav-shell,
+.public-visual-scope .theme-toggle,
+.public-visual-scope .header-menu-button,
+html[data-theme="dark"] .public-visual-scope .header-nav-shell,
+html[data-theme="dark"] .public-visual-scope .theme-toggle,
+html[data-theme="dark"] .public-visual-scope .header-menu-button {
+  border-color: rgba(255, 255, 255, 0.72);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.68), rgba(255, 255, 255, 0.36));
+  color: var(--capsoul-text-primary);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.86),
+    0 14px 34px rgba(78, 108, 140, 0.12);
+}
+
+.public-visual-scope .theme-toggle-orb,
+html[data-theme="dark"] .public-visual-scope .theme-toggle-orb {
+  background: rgba(255, 255, 255, 0.56);
+  color: var(--accent-blue-text);
+}
+
+.public-visual-scope .theme-toggle-glyph,
+html[data-theme="dark"] .public-visual-scope .theme-toggle-glyph {
+  color: var(--accent-blue-text);
+}
+
+.public-visual-scope .header-nav-pill-active,
+.public-visual-scope .header-mobile-nav-active,
+.public-visual-scope .locale-pill-active {
+  border-color: rgba(255, 255, 255, 0.76);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.86), rgba(222, 236, 253, 0.54));
+  color: var(--capsoul-text-primary);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.94),
+    0 10px 24px rgba(99, 148, 206, 0.14);
+}
+
+.public-visual-scope .header-nav-pill-inactive,
+.public-visual-scope .header-mobile-nav-inactive,
+.public-visual-scope .nav-pill {
+  color: var(--capsoul-text-secondary);
+}
+
+.public-visual-scope main .scene-shell,
+html[data-theme="dark"] .public-visual-scope main .scene-shell,
+html[data-theme="dark"] .public-visual-scope main .scene-shell-warm,
+html[data-theme="dark"] .public-visual-scope main .scene-shell-cool,
+html[data-theme="dark"] .public-visual-scope main .scene-shell-deep {
+  border-color: rgba(255, 255, 255, 0.7);
+  background:
+    radial-gradient(circle at 14% 0%, rgba(255, 255, 255, 0.58), transparent 32%),
+    radial-gradient(circle at 88% 10%, rgba(207, 229, 255, 0.28), transparent 28%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.56), rgba(255, 255, 255, 0.3));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.82),
+    0 28px 90px rgba(78, 108, 140, 0.15);
+}
+
+.public-visual-scope .scene-focus,
+.public-visual-scope .panel,
+.public-visual-scope .panel-strong,
+.public-visual-scope .panel-ink,
+.public-visual-scope .film-frame,
+.public-visual-scope .archive-chip,
+.public-visual-scope .surface-note,
+.public-visual-scope .media-caption,
+.public-visual-scope .budget-slider-shell,
+.public-visual-scope .budget-slider-value,
+.public-visual-scope .scene-detail-panel,
+html[data-theme="dark"] .public-visual-scope .scene-focus,
+html[data-theme="dark"] .public-visual-scope .panel,
+html[data-theme="dark"] .public-visual-scope .panel-strong,
+html[data-theme="dark"] .public-visual-scope .panel-ink,
+html[data-theme="dark"] .public-visual-scope .film-frame,
+html[data-theme="dark"] .public-visual-scope .archive-chip,
+html[data-theme="dark"] .public-visual-scope .surface-note,
+html[data-theme="dark"] .public-visual-scope .media-caption,
+html[data-theme="dark"] .public-visual-scope .budget-slider-shell,
+html[data-theme="dark"] .public-visual-scope .budget-slider-value,
+html[data-theme="dark"] .public-visual-scope .scene-detail-panel {
+  border-color: rgba(255, 255, 255, 0.68);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.42));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.8),
+    0 12px 28px rgba(80, 110, 145, 0.1);
+}
+
+.public-visual-scope [data-scene-mode="tabletLandscape"] .scene-composition-side-panel.scene-focus.scene-panel-shell,
+.public-visual-scope [data-scene-mode="desktop"] .scene-composition-side-panel.scene-focus.scene-panel-shell,
+.public-visual-scope [data-scene-mode="desktopShortHeight"] .scene-composition-side-panel.scene-focus.scene-panel-shell,
+html[data-theme="dark"] .public-visual-scope [data-scene-mode="tabletLandscape"] .scene-composition-side-panel.scene-focus.scene-panel-shell,
+html[data-theme="dark"] .public-visual-scope [data-scene-mode="desktop"] .scene-composition-side-panel.scene-focus.scene-panel-shell,
+html[data-theme="dark"] .public-visual-scope [data-scene-mode="desktopShortHeight"] .scene-composition-side-panel.scene-focus.scene-panel-shell {
+  border-color: rgba(255, 255, 255, 0.7);
+  background:
+    radial-gradient(circle at 18% 0%, rgba(255, 255, 255, 0.76), transparent 30%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.68), rgba(234, 243, 253, 0.48));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.86),
+    0 18px 54px rgba(80, 110, 145, 0.14);
+}
+
+.public-visual-scope .panel-strong,
+.public-visual-scope .panel-ink,
+html[data-theme="dark"] .public-visual-scope .panel-strong,
+html[data-theme="dark"] .public-visual-scope .panel-ink {
+  background:
+    radial-gradient(circle at 16% 0%, rgba(255, 255, 255, 0.72), transparent 30%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.44));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.86),
+    0 18px 50px rgba(80, 110, 145, 0.13);
+}
+
+.public-visual-scope .scene-step-chip,
+html[data-theme="dark"] .public-visual-scope .scene-step-chip {
+  border-color: rgba(255, 255, 255, 0.58);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.58), rgba(255, 255, 255, 0.32));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.68), 0 8px 20px rgba(80, 110, 145, 0.08);
+}
+
+.public-visual-scope .scene-step-chip-active,
+html[data-theme="dark"] .public-visual-scope .scene-step-chip-active {
+  border-color: rgba(174, 205, 242, 0.62);
+  background:
+    radial-gradient(circle at 20% 0%, rgba(255, 255, 255, 0.8), transparent 34%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.86), rgba(207, 229, 255, 0.48));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 14px 32px rgba(99, 148, 206, 0.16);
+}
+
+.public-visual-scope .film-frame,
+.public-visual-scope .scene-media-frame,
+html[data-theme="dark"] .public-visual-scope .film-frame,
+html[data-theme="dark"] .public-visual-scope .scene-media-frame {
+  border-color: rgba(255, 255, 255, 0.76);
+  background:
+    radial-gradient(circle at 22% 14%, rgba(255, 255, 255, 0.92), transparent 30%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.74), rgba(224, 236, 248, 0.7));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.88),
+    0 20px 54px rgba(78, 108, 140, 0.14);
+}
+
+.public-visual-scope .scene-media-overlay,
+html[data-theme="dark"] .public-visual-scope .scene-media-overlay {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(214, 228, 243, 0.2));
+}
+
+.public-visual-scope .button-primary,
+html[data-theme="dark"] .public-visual-scope .button-primary {
+  border-color: rgba(255, 255, 255, 0.78);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(203, 226, 255, 0.88));
+  color: var(--capsoul-text-primary);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    0 16px 34px rgba(99, 148, 206, 0.24);
+}
+
+.public-visual-scope .button-secondary,
+html[data-theme="dark"] .public-visual-scope .button-secondary {
+  border-color: rgba(255, 255, 255, 0.62);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.58), rgba(255, 255, 255, 0.32));
+  color: var(--capsoul-text-secondary);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.75),
+    0 10px 24px rgba(80, 110, 145, 0.09);
+}
+
+.public-visual-scope header .button-primary::after,
+.public-visual-scope .button-primary::after {
+  animation: capsoulButtonSheen 7s var(--ease-measured) infinite;
+}
+
+.public-visual-scope .button-secondary::after {
+  animation: none;
+}
+
+.public-visual-scope .field-input,
+.public-visual-scope .field-textarea,
+.public-visual-scope .field-select,
+html[data-theme="dark"] .public-visual-scope .field-input,
+html[data-theme="dark"] .public-visual-scope .field-textarea,
+html[data-theme="dark"] .public-visual-scope .field-select {
+  color-scheme: light;
+  border-color: rgba(155, 178, 205, 0.28);
+  background: rgba(255, 255, 255, 0.48);
+  color: var(--capsoul-text-primary);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.78),
+    0 10px 24px rgba(80, 110, 145, 0.08);
+}
+
+.public-visual-scope .field-input::placeholder,
+.public-visual-scope .field-textarea::placeholder {
+  color: #8a9bb0;
+}
+
+.public-visual-scope .field-input:focus,
+.public-visual-scope .field-textarea:focus,
+.public-visual-scope .field-select:focus {
+  border-color: rgba(132, 181, 235, 0.65);
+  box-shadow:
+    0 0 0 4px rgba(169, 207, 250, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.82);
+}
+
+.public-visual-scope .home-divider,
+html[data-theme="dark"] .public-visual-scope .home-divider {
+  background: linear-gradient(90deg, transparent, rgba(128, 153, 180, 0.24), transparent);
+}
+
+.public-visual-scope .scene-detail-backdrop {
+  background: rgba(231, 240, 249, 0.48);
+  backdrop-filter: blur(18px) saturate(136%);
+}
+
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .public-visual-scope main .scene-shell,
+  .public-visual-scope header .scene-shell {
+    -webkit-backdrop-filter: blur(28px) saturate(140%);
+    backdrop-filter: blur(28px) saturate(140%);
+  }
+
+  .public-visual-scope .header-nav-shell,
+  .public-visual-scope .theme-toggle,
+  .public-visual-scope .header-menu-button {
+    -webkit-backdrop-filter: blur(24px) saturate(145%);
+    backdrop-filter: blur(24px) saturate(145%);
+  }
+
+  .public-visual-scope .scene-focus,
+  .public-visual-scope .panel,
+  .public-visual-scope .panel-strong,
+  .public-visual-scope .panel-ink,
+  .public-visual-scope .film-frame,
+  .public-visual-scope .media-caption,
+  .public-visual-scope .field-input,
+  .public-visual-scope .field-textarea,
+  .public-visual-scope .field-select {
+    -webkit-backdrop-filter: blur(18px) saturate(135%);
+    backdrop-filter: blur(18px) saturate(135%);
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .public-visual-scope .button-primary:hover,
+  .public-visual-scope .button-secondary:hover {
+    transform: translateY(-1px);
+  }
+
+  .public-visual-scope .button-primary:hover {
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.98),
+      0 18px 42px rgba(99, 148, 206, 0.28);
+  }
+
+  .public-visual-scope .button-secondary:hover {
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.82),
+      0 12px 30px rgba(80, 110, 145, 0.12);
+  }
+
+  .public-visual-scope .button-primary:active,
+  .public-visual-scope .button-secondary:active {
+    transform: translateY(0);
+  }
+}
+
+@keyframes capsoulLiquidLightDrift {
+  0% {
+    opacity: 0.38;
+    transform: translate3d(-1%, -1%, 0) scale(1);
+  }
+  50% {
+    opacity: 0.58;
+    transform: translate3d(1.5%, 1%, 0) scale(1.035);
+  }
+  100% {
+    opacity: 0.44;
+    transform: translate3d(-1%, -1%, 0) scale(1);
+  }
+}
+
+@keyframes capsoulLiquidCounterDrift {
+  0% {
+    opacity: 0.24;
+    transform: translate3d(1.5%, -1%, 0) scale(1.01);
+  }
+  100% {
+    opacity: 0.36;
+    transform: translate3d(-1.5%, 1.25%, 0) scale(1.04);
+  }
+}
+
+@keyframes capsoulLiquidLowDrift {
+  0% {
+    opacity: 0.18;
+    transform: translate3d(-1%, 1.5%, 0) scale(1);
+  }
+  100% {
+    opacity: 0.28;
+    transform: translate3d(1.25%, -1%, 0) scale(1.035);
+  }
+}
+
+@keyframes capsoulLiquidTopSheen {
+  0% {
+    opacity: 0.1;
+    transform: translate3d(-1.25%, -0.75%, 0) rotate(-0.8deg);
+  }
+  100% {
+    opacity: 0.2;
+    transform: translate3d(1.25%, 0.75%, 0) rotate(0.8deg);
+  }
+}
+
+@keyframes capsoulLightRefractionDrift {
+  0% {
+    opacity: 0.12;
+    transform: translate3d(-1.5%, 0, 0) rotate(-0.7deg);
+  }
+  100% {
+    opacity: 0.22;
+    transform: translate3d(1.8%, -0.8%, 0) rotate(0.8deg);
+  }
+}
+
+@keyframes capsoulGlassPlaneDrift {
+  0% {
+    opacity: 0.08;
+    transform: translate3d(-1.5%, 0.5%, 0) rotate(-0.4deg);
+  }
+  100% {
+    opacity: 0.16;
+    transform: translate3d(1.8%, -0.5%, 0) rotate(0.6deg);
+  }
+}
+
+@keyframes capsoulGeometryBreathe {
+  0% {
+    opacity: 0.1;
+    transform: translate3d(-1%, 0.5%, 0);
+  }
+  100% {
+    opacity: 0.2;
+    transform: translate3d(1%, -0.5%, 0);
+  }
+}
+
+@keyframes capsoulButtonSheen {
+  0%,
+  58% {
+    opacity: 0;
+    transform: translate3d(-120%, 0, 0) skewX(-18deg);
+  }
+  68% {
+    opacity: 0.34;
+  }
+  82% {
+    opacity: 0;
+    transform: translate3d(340%, 0, 0) skewX(-18deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(340%, 0, 0) skewX(-18deg);
+  }
+}
+
 @media (prefers-color-scheme: light) {
   :root:not([data-theme]) {
     color-scheme: light;
