@@ -3,6 +3,8 @@
 import type { ReactNode } from "react";
 import { usePathname } from "next/navigation";
 
+import { CinematicBackground } from "@/components/CinematicBackground";
+
 export function PublicVisualScope({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const isAdminRoute = pathname?.startsWith("/admin") ?? false;
@@ -12,16 +14,8 @@ export function PublicVisualScope({ children }: { children: ReactNode }) {
   }
 
   return (
-    <div className="public-visual-scope public-liquid-stage">
-      <div className="public-liquid-bg" aria-hidden="true">
-        <span className="liquid-light-field liquid-light-field-one" />
-        <span className="liquid-light-field liquid-light-field-two" />
-        <span className="liquid-light-field liquid-light-field-three" />
-        <span className="liquid-light-field liquid-light-field-four" />
-        <span className="liquid-geometry-light" />
-        <span className="liquid-glass-grain" />
-        <span className="liquid-vignette" />
-      </div>
+    <div className="public-visual-scope">
+      <CinematicBackground />
       {children}
     </div>
   );

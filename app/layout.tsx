@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import type { Metadata } from "next";
-import Script from "next/script";
+import { cookies } from "next/headers";
 
 import { AdminEntry } from "@/components/admin/admin-entry";
 import { SceneTransitionProvider } from "@/components/scene-transition-provider";
@@ -11,7 +11,11 @@ import { PublicVisualScope } from "@/components/public-visual-scope";
 import { company } from "@/content/site";
 import { getRequestSiteLocale } from "@/lib/site-locale";
 import { getSiteContent } from "@/lib/site-content";
-import { getThemeInitializationScript } from "@/lib/site-theme";
+import {
+  DEFAULT_SITE_THEME,
+  SITE_THEME_COOKIE_NAME,
+  isSiteTheme,
+} from "@/lib/site-theme";
 
 import "./globals.css";
 
@@ -34,16 +38,13 @@ export default async function RootLayout({
 }>) {
   const locale = await getRequestSiteLocale();
   const siteContent = await getSiteContent(locale);
+  const cookieStore = await cookies();
+  const cookieTheme = cookieStore.get(SITE_THEME_COOKIE_NAME)?.value;
+  const initialTheme = isSiteTheme(cookieTheme) ? cookieTheme : DEFAULT_SITE_THEME;
 
   return (
-    <html lang={locale} data-theme="dark" suppressHydrationWarning>
-      <head>
-        <Script
-          id="capsoul-theme-init"
-          strategy="beforeInteractive"
-          dangerouslySetInnerHTML={{ __html: getThemeInitializationScript() }}
-        />
-      </head>
+    <html lang={locale} data-theme={initialTheme} suppressHydrationWarning>
+      <head />
       <body>
         <a
           href="#main-content"
@@ -52,7 +53,7 @@ export default async function RootLayout({
           Skip to content
         </a>
         <div className="relative isolate min-h-[100svh] overflow-x-clip">
-          <SiteThemeProvider>
+          <SiteThemeProvider initialTheme={initialTheme}>
             <SiteLocaleProvider locale={locale} globalContent={siteContent.global}>
               <PublicVisualScope>
                 <SceneTransitionProvider>

@@ -11,7 +11,10 @@ import {
 
 import {
   DEFAULT_SITE_THEME,
+  SITE_THEME_COOKIE_MAX_AGE,
+  SITE_THEME_COOKIE_NAME,
   SITE_THEME_STORAGE_KEY,
+  isSiteTheme,
   type SiteTheme,
 } from "@/lib/site-theme";
 
@@ -30,11 +33,35 @@ function readCurrentTheme(): SiteTheme {
 
   const currentTheme = document.documentElement.dataset.theme;
 
-  return currentTheme === "light" || currentTheme === "dark" ? currentTheme : DEFAULT_SITE_THEME;
+  return isSiteTheme(currentTheme) ? currentTheme : DEFAULT_SITE_THEME;
 }
 
-export function SiteThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setThemeState] = useState<SiteTheme>(readCurrentTheme);
+function applySiteTheme(theme: SiteTheme) {
+  const root = document.documentElement;
+  root.dataset.theme = theme;
+  root.style.colorScheme = theme;
+
+  try {
+    window.localStorage.setItem(SITE_THEME_STORAGE_KEY, theme);
+  } catch {
+    // Ignore persistence failures and keep the in-memory theme.
+  }
+
+  try {
+    document.cookie = `${SITE_THEME_COOKIE_NAME}=${theme}; path=/; max-age=${SITE_THEME_COOKIE_MAX_AGE}; samesite=lax`;
+  } catch {
+    // Cookie persistence is a reload convenience, not required for live theme state.
+  }
+}
+
+export function SiteThemeProvider({
+  children,
+  initialTheme = DEFAULT_SITE_THEME,
+}: {
+  children: ReactNode;
+  initialTheme?: SiteTheme;
+}) {
+  const [theme, setThemeState] = useState<SiteTheme>(initialTheme);
 
   useEffect(() => {
     const nextTheme = readCurrentTheme();
@@ -42,15 +69,7 @@ export function SiteThemeProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    const root = document.documentElement;
-    root.dataset.theme = theme;
-    root.style.colorScheme = theme;
-
-    try {
-      window.localStorage.setItem(SITE_THEME_STORAGE_KEY, theme);
-    } catch {
-      // Ignore persistence failures and keep the in-memory theme.
-    }
+    applySiteTheme(theme);
   }, [theme]);
 
   useEffect(() => {
@@ -59,7 +78,7 @@ export function SiteThemeProvider({ children }: { children: ReactNode }) {
         return;
       }
 
-      const nextTheme = event.newValue === "light" || event.newValue === "dark" ? event.newValue : DEFAULT_SITE_THEME;
+      const nextTheme = isSiteTheme(event.newValue) ? event.newValue : DEFAULT_SITE_THEME;
       setThemeState(nextTheme);
     };
 
@@ -74,10 +93,15 @@ export function SiteThemeProvider({ children }: { children: ReactNode }) {
     () => ({
       theme,
       setTheme: (nextTheme) => {
+        applySiteTheme(nextTheme);
         setThemeState(nextTheme);
       },
       toggleTheme: () => {
-        setThemeState((currentTheme) => (currentTheme === "dark" ? "light" : "dark"));
+        setThemeState((currentTheme) => {
+          const nextTheme = currentTheme === "dark" ? "light" : "dark";
+          applySiteTheme(nextTheme);
+          return nextTheme;
+        });
       },
     }),
     [theme],
