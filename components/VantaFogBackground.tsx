@@ -118,6 +118,7 @@ export default function VantaFogBackground() {
   return (
     <div ref={ref} aria-hidden="true" className="vanta-fog-background">
       <span className="vanta-fog-atmosphere" />
+      <span className="vanta-fog-scroll-glow" />
       <span className="vanta-fog-grain" />
     </div>
   );

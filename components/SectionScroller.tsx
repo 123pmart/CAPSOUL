@@ -43,6 +43,26 @@ export function SectionScroller({ sections, children }: SectionScrollerProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const childItems = useMemo(() => Children.toArray(children), [children]);
 
+  const syncBackgroundMotion = useCallback((root: HTMLDivElement) => {
+    if (reduceMotion) {
+      return;
+    }
+
+    const maxScroll = Math.max(root.scrollHeight - root.clientHeight, 1);
+    const progress = Math.min(1, Math.max(0, root.scrollTop / maxScroll));
+    const wave = Math.sin(progress * Math.PI * 2);
+    const driftX = wave * 18;
+    const shiftY = (progress - 0.5) * -64;
+    const scale = 1 + progress * 0.018;
+    const glow = 0.018 + Math.abs(wave) * 0.028;
+    const rootStyle = document.documentElement.style;
+
+    rootStyle.setProperty("--immersive-bg-drift-x", `${driftX.toFixed(2)}px`);
+    rootStyle.setProperty("--immersive-bg-shift-y", `${shiftY.toFixed(2)}px`);
+    rootStyle.setProperty("--immersive-bg-scale", scale.toFixed(3));
+    rootStyle.setProperty("--immersive-bg-glow", glow.toFixed(3));
+  }, [reduceMotion]);
+
   const setBoundedActiveIndex = useCallback((index: number) => {
     const nextIndex = Math.min(childItems.length - 1, Math.max(0, index));
     setActiveIndex((current) => (current === nextIndex ? current : nextIndex));
@@ -65,6 +85,7 @@ export function SectionScroller({ sections, children }: SectionScrollerProps) {
       );
 
       setBoundedActiveIndex(nextIndex);
+      syncBackgroundMotion(root);
     };
 
     const handleScroll = () => {
@@ -115,8 +136,14 @@ export function SectionScroller({ sections, children }: SectionScrollerProps) {
         window.cancelAnimationFrame(frameRef.current);
         frameRef.current = null;
       }
+
+      const rootStyle = document.documentElement.style;
+      rootStyle.removeProperty("--immersive-bg-drift-x");
+      rootStyle.removeProperty("--immersive-bg-shift-y");
+      rootStyle.removeProperty("--immersive-bg-scale");
+      rootStyle.removeProperty("--immersive-bg-glow");
     };
-  }, [childItems.length, setBoundedActiveIndex]);
+  }, [childItems.length, setBoundedActiveIndex, syncBackgroundMotion]);
 
   useEffect(() => {
     const section = sections[activeIndex];
@@ -148,7 +175,8 @@ export function SectionScroller({ sections, children }: SectionScrollerProps) {
     });
 
     setBoundedActiveIndex(nextIndex);
-  }, [childItems.length, setBoundedActiveIndex]);
+    syncBackgroundMotion(root);
+  }, [childItems.length, setBoundedActiveIndex, syncBackgroundMotion]);
 
   useEffect(() => {
     const handleNavigate = (event: Event) => {
