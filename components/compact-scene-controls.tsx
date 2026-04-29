@@ -8,6 +8,7 @@ type CompactSceneControlsProps = {
   onNext: () => void;
   previousDisabled?: boolean;
   nextDisabled?: boolean;
+  showArrows?: boolean;
   className?: string;
 };
 
@@ -42,19 +43,22 @@ export function CompactSceneControls({
   onNext,
   previousDisabled = false,
   nextDisabled = false,
+  showArrows = true,
   className = "",
 }: CompactSceneControlsProps) {
   return (
     <div className={`flex items-center justify-center gap-3 ${className}`.trim()}>
-      <button
-        type="button"
-        aria-label="Previous scene"
-        className="button-secondary !h-10 !w-10 !min-h-0 shrink-0 !px-0 !py-0"
-        disabled={previousDisabled}
-        onClick={onPrevious}
-      >
-        <Chevron direction="left" />
-      </button>
+      {showArrows ? (
+        <button
+          type="button"
+          aria-label="Previous scene"
+          className="button-secondary !h-10 !w-10 !min-h-0 shrink-0 !px-0 !py-0"
+          disabled={previousDisabled}
+          onClick={onPrevious}
+        >
+          <Chevron direction="left" />
+        </button>
+      ) : null}
 
       <div className="flex items-center justify-center gap-1.5">
         {labels.map((label, index) => {
@@ -77,15 +81,17 @@ export function CompactSceneControls({
         })}
       </div>
 
-      <button
-        type="button"
-        aria-label="Next scene"
-        className="button-secondary !h-10 !w-10 !min-h-0 shrink-0 !px-0 !py-0"
-        disabled={nextDisabled}
-        onClick={onNext}
-      >
-        <Chevron direction="right" />
-      </button>
+      {showArrows ? (
+        <button
+          type="button"
+          aria-label="Next scene"
+          className="button-secondary !h-10 !w-10 !min-h-0 shrink-0 !px-0 !py-0"
+          disabled={nextDisabled}
+          onClick={onNext}
+        >
+          <Chevron direction="right" />
+        </button>
+      ) : null}
     </div>
   );
 }

@@ -14,6 +14,7 @@ type UseSceneProgressionOptions = {
   stepCount: number;
   initialIndex?: number;
   disabled?: boolean;
+  disableViewportInput?: boolean;
   wheelThreshold?: number;
   touchThreshold?: number;
   idleResetMs?: number;
@@ -46,6 +47,7 @@ export function useSceneProgression({
   stepCount,
   initialIndex = 0,
   disabled = false,
+  disableViewportInput = false,
   wheelThreshold = progressionWheelThreshold,
   touchThreshold = progressionTouchThreshold,
   idleResetMs = progressionIdleResetMs,
@@ -60,7 +62,8 @@ export function useSceneProgression({
   const lockRef = useRef(false);
   const idleTimerRef = useRef<number | null>(null);
   const lockTimerRef = useRef<number | null>(null);
-  const usesViewportProgression = responsiveSceneMode.usesDesktopProgression;
+  const usesViewportProgression =
+    responsiveSceneMode.usesDesktopProgression && !disableViewportInput;
 
   const clearIdleTimer = useCallback(() => {
     if (idleTimerRef.current != null) {

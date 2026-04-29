@@ -19,6 +19,7 @@ import {
   scrollDepthSpring,
   sectionRevealTransition,
 } from "@/components/motion-config";
+import { useImmersiveScroll } from "@/components/immersive-scroll-context";
 import { useResponsiveSceneMode } from "@/components/use-compact-viewport";
 
 type RevealVariant = "section" | "card" | "hero" | "media" | "micro";
@@ -133,6 +134,7 @@ export function Reveal({
 }: RevealProps) {
   const ref = useRef<HTMLDivElement | null>(null);
   const reduceMotion = useReducedMotion();
+  const forceVisible = useImmersiveScroll();
   const responsiveSceneMode = useResponsiveSceneMode();
   const defaults = getRevealDefaults(variant);
   const usesLiteRevealMode =
@@ -166,7 +168,7 @@ export function Reveal({
         clipPath: defaults.clipPath ?? "inset(0 0 0% 0 round 0rem)",
       };
 
-  const animate = inView || reduceMotion
+  const animate = inView || reduceMotion || forceVisible
     ? {
         opacity: 1,
         y: 0,
@@ -204,6 +206,7 @@ export function RevealGroup({
 }: RevealGroupProps) {
   const ref = useRef<HTMLDivElement | null>(null);
   const reduceMotion = useReducedMotion();
+  const forceVisible = useImmersiveScroll();
   const inView = useInView(ref, {
     once,
     amount,
@@ -214,7 +217,7 @@ export function RevealGroup({
     <motion.div
       ref={ref}
       initial="hidden"
-      animate={inView || reduceMotion ? "visible" : "hidden"}
+      animate={inView || reduceMotion || forceVisible ? "visible" : "hidden"}
       variants={{
         hidden: {},
         visible: {

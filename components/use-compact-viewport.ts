@@ -201,8 +201,8 @@ function areSceneStatesEqual(
 }
 
 export function useResponsiveSceneMode() {
-  const [sceneState, setSceneState] = useState<ResponsiveSceneState>(() =>
-    getResponsiveSceneState(),
+  const [sceneState, setSceneState] = useState<ResponsiveSceneState>(
+    defaultResponsiveSceneState,
   );
 
   useEffect(() => {

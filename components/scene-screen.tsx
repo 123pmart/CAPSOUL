@@ -36,6 +36,7 @@ type SceneScreenProps = {
   stageLabel?: string;
   compactNote?: string;
   tone?: "warm" | "cool" | "deep";
+  immersiveSectionMode?: boolean;
 };
 
 export function SceneScreen({
@@ -46,6 +47,7 @@ export function SceneScreen({
   stageLabel = "Scene progression",
   compactNote = "Scroll or tap through the states inside this screen.",
   tone = "cool",
+  immersiveSectionMode = false,
 }: SceneScreenProps) {
   const reduceMotion = useReducedMotion();
   const responsiveSceneMode = useResponsiveSceneMode();
@@ -66,6 +68,7 @@ export function SceneScreen({
     usesViewportProgression,
   } = useSceneProgression({
     stepCount: steps.length,
+    disableViewportInput: immersiveSectionMode,
   });
 
   const active = steps[activeIndex] ?? steps[0];
@@ -290,7 +293,9 @@ export function SceneScreen({
       </RevealGroup>
     </div>
   );
-  const sceneUtilityRow = <ScenePageUtilityRow className="scene-screen-utility md:pt-2 min-[1025px]:pt-3" />;
+  const sceneUtilityRow = immersiveSectionMode ? null : (
+    <ScenePageUtilityRow className="scene-screen-utility md:pt-2 min-[1025px]:pt-3" />
+  );
   const sceneDetailModal = (
     <SceneDetailModal
       open={isMobileSceneDetailOpen}
@@ -335,9 +340,11 @@ export function SceneScreen({
                 {sceneIntro}
 
                 <div className="grid gap-[var(--mobile-card-gap)]">
-                  <RevealItem variant="micro">
-                    <SceneRoutePager compact />
-                  </RevealItem>
+                  {!immersiveSectionMode ? (
+                    <RevealItem variant="micro">
+                      <SceneRoutePager compact />
+                    </RevealItem>
+                  ) : null}
 
                   <RevealItem variant="card">
                     <div className="panel-strong rounded-[1.2rem] p-3.5">
@@ -424,6 +431,7 @@ export function SceneScreen({
                         onNext={goNext}
                         previousDisabled={isFirst}
                         nextDisabled={isLast}
+                        showArrows={!immersiveSectionMode}
                       />
 
                       <p className="mt-3 text-[0.74rem] uppercase tracking-[0.14em] text-[var(--text-tertiary)]">
@@ -432,9 +440,11 @@ export function SceneScreen({
                     </div>
                   </RevealItem>
 
-                  <RevealItem variant="micro">
-                    <MobilePageNextLink />
-                  </RevealItem>
+                  {!immersiveSectionMode ? (
+                    <RevealItem variant="micro">
+                      <MobilePageNextLink />
+                    </RevealItem>
+                  ) : null}
                 </div>
               </div>
             </div>

@@ -3,7 +3,7 @@
 import type { ReactNode } from "react";
 import { usePathname } from "next/navigation";
 
-import { CinematicBackground } from "@/components/CinematicBackground";
+import VantaFogBackground from "@/components/VantaFogBackground";
 
 export function PublicVisualScope({ children }: { children: ReactNode }) {
   const pathname = usePathname();
@@ -15,7 +15,7 @@ export function PublicVisualScope({ children }: { children: ReactNode }) {
 
   return (
     <div className="public-visual-scope">
-      <CinematicBackground />
+      <VantaFogBackground />
       {children}
     </div>
   );

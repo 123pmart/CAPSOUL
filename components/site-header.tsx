@@ -38,7 +38,7 @@ export function SiteHeader() {
     >
       <div className="shell pt-[calc(var(--safe-top)+var(--header-shell-offset-mobile))] sm:pt-[calc(var(--safe-top)+var(--header-shell-offset-desktop))]">
         <motion.div
-          initial={reduceMotion ? false : { y: -14, opacity: 0 }}
+          initial={false}
           animate={{ y: 0, opacity: 1 }}
           transition={{
             duration: reduceMotion ? 0 : heroRevealTransition.duration,

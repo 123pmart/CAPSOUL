@@ -62,6 +62,7 @@ const initialState: InquiryFormState = {
 
 type InquirySceneProps = {
   sceneData: ResolvedInquiryContent;
+  immersiveSectionMode?: boolean;
 };
 
 const budgetSliderMin = 5000;
@@ -87,7 +88,7 @@ function parseBudgetValue(value: string) {
   return Math.min(Math.max(numeric, budgetSliderMin), budgetSliderMax);
 }
 
-export function InquiryScene({ sceneData }: InquirySceneProps) {
+export function InquiryScene({ sceneData, immersiveSectionMode = false }: InquirySceneProps) {
   const reduceMotion = useReducedMotion();
   const responsiveSceneMode = useResponsiveSceneMode();
   const sceneMode = responsiveSceneMode.mode;
@@ -113,6 +114,7 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
   } = useSceneProgression({
     stepCount: sceneData.formSteps.length,
     disabled: submitted || isSubmitting,
+    disableViewportInput: immersiveSectionMode,
   });
 
   const activeSupport = sceneData.supportStates[activeIndex] ?? sceneData.supportStates[0];
@@ -681,7 +683,9 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
     </div>
   );
 
-  const inquiryUtilityRow = <ScenePageUtilityRow className="inquiry-scene-utility md:pt-2 min-[1025px]:pt-3" />;
+  const inquiryUtilityRow = immersiveSectionMode ? null : (
+    <ScenePageUtilityRow className="inquiry-scene-utility md:pt-2 min-[1025px]:pt-3" />
+  );
   const inquirySupportModal = (
     <SceneDetailModal
       open={isMobileSupportOpen}
@@ -727,9 +731,11 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
                 {inquiryIntro}
 
                 <div className="grid gap-[var(--mobile-card-gap)]">
-                  <RevealItem variant="micro">
-                    <SceneRoutePager compact />
-                  </RevealItem>
+                  {!immersiveSectionMode ? (
+                    <RevealItem variant="micro">
+                      <SceneRoutePager compact />
+                    </RevealItem>
+                  ) : null}
 
                   {!submitted ? (
                     <>
@@ -823,6 +829,7 @@ export function InquiryScene({ sceneData }: InquirySceneProps) {
                             onNext={goNext}
                             previousDisabled={isFirst}
                             nextDisabled={isLast}
+                            showArrows={!immersiveSectionMode}
                           />
 
                           <p className="mt-3 text-[0.74rem] uppercase tracking-[0.14em] text-[var(--text-tertiary)]">
