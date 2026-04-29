@@ -2,9 +2,15 @@
 
 import { motion, useReducedMotion } from "framer-motion";
 import { usePathname } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState, type MouseEvent } from "react";
 
 import { BrandMark } from "@/components/brand-mark";
+import {
+  IMMERSIVE_SECTION_CHANGE_EVENT,
+  dispatchImmersiveSectionNavigate,
+  getImmersiveSectionForRoute,
+  type ImmersiveSectionChangeDetail,
+} from "@/components/immersive-scroll-context";
 import { LanguageToggle } from "@/components/language-toggle";
 import { heroRevealTransition, measuredEase } from "@/components/motion-config";
 import { useSiteLocale } from "@/components/site-locale-provider";
@@ -15,6 +21,7 @@ import { isSceneRouteActive, sceneRouteEntries } from "@/lib/scene-route-order";
 export function SiteHeader() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
+  const [immersiveActiveHref, setImmersiveActiveHref] = useState<string | null>(null);
   const reduceMotion = useReducedMotion();
   const { globalContent } = useSiteLocale();
 
@@ -30,6 +37,49 @@ export function SiteHeader() {
   useEffect(() => {
     setIsOpen(false);
   }, [pathname]);
+
+  useEffect(() => {
+    if (pathname !== "/") {
+      setImmersiveActiveHref(null);
+      return;
+    }
+
+    const handleSectionChange = (event: Event) => {
+      const detail = (event as CustomEvent<ImmersiveSectionChangeDetail>).detail;
+
+      if (detail?.href) {
+        setImmersiveActiveHref(detail.href);
+      }
+    };
+
+    window.addEventListener(IMMERSIVE_SECTION_CHANGE_EVENT, handleSectionChange);
+
+    return () => {
+      window.removeEventListener(IMMERSIVE_SECTION_CHANGE_EVENT, handleSectionChange);
+    };
+  }, [pathname]);
+
+  const handleImmersiveNavClick = useCallback((
+    href: string,
+    event: MouseEvent<HTMLAnchorElement>,
+  ) => {
+    if (pathname !== "/") {
+      return;
+    }
+
+    const sectionId = getImmersiveSectionForRoute(href);
+
+    if (!sectionId) {
+      return;
+    }
+
+    event.preventDefault();
+    dispatchImmersiveSectionNavigate(sectionId);
+    setImmersiveActiveHref(href);
+    setIsOpen(false);
+  }, [pathname]);
+
+  const activePathname = pathname === "/" ? immersiveActiveHref ?? "/" : pathname;
 
   return (
     <header
@@ -59,12 +109,13 @@ export function SiteHeader() {
               className="header-nav-shell hidden items-center justify-self-center gap-1 rounded-full px-1.5 py-1.5 lg:inline-flex"
             >
               {navigationItems.map((item) => {
-                const active = isSceneRouteActive(pathname, item.href);
+                const active = isSceneRouteActive(activePathname, item.href);
 
                 return (
                   <TransitionLink
                     key={item.href}
                     href={item.href}
+                    onClick={(event) => handleImmersiveNavClick(item.href, event)}
                     className={`nav-pill rounded-full px-3 py-2 text-[0.8rem] font-medium tracking-[-0.012em] xl:px-3.5 xl:text-[0.84rem] ${
                       active
                         ? "header-nav-pill-active"
@@ -132,12 +183,13 @@ export function SiteHeader() {
               <LanguageToggle />
 
               {navigationItems.map((item) => {
-                const active = isSceneRouteActive(pathname, item.href);
+                const active = isSceneRouteActive(activePathname, item.href);
 
                 return (
                   <TransitionLink
                     key={item.href}
                     href={item.href}
+                    onClick={(event) => handleImmersiveNavClick(item.href, event)}
                     className={`nav-pill rounded-[1rem] px-4 py-[0.8rem] text-[0.94rem] ${
                       active ? "header-mobile-nav-active" : "header-mobile-nav-inactive"
                     }`}

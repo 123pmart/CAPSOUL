@@ -72,6 +72,7 @@ export function SceneScreen({
   });
 
   const active = steps[activeIndex] ?? steps[0];
+  const suggestedNextIndex = activeIndex < steps.length - 1 ? activeIndex + 1 : -1;
   const toneClassName = useMemo(() => {
     if (tone === "warm") return "scene-shell-warm";
     if (tone === "deep") return "scene-shell-deep";
@@ -115,12 +116,12 @@ export function SceneScreen({
     : { duration: 0.24, ease: measuredEase };
   const sceneIntro = (
     <RevealGroup
-      className="grid gap-[var(--mobile-section-gap)] md:max-w-[40rem] md:gap-4"
+      className="scene-intro-group grid gap-[var(--mobile-section-gap)] md:gap-4"
       stagger={0.1}
       amount={0.25}
     >
       <RevealItem variant="hero">
-        <div className="max-w-[36rem] flex flex-col items-start">
+        <div className="scene-intro-copy max-w-[36rem] flex flex-col items-start">
           <span className="eyebrow">{eyebrow}</span>
           <h1 className="page-heading headline-display mt-[var(--mobile-label-heading-gap)]">
             {title}
@@ -145,6 +146,7 @@ export function SceneScreen({
           <div className="grid gap-1.5 sm:grid-cols-2">
             {steps.map((step, index) => {
               const isActive = index === activeIndex;
+              const isSuggestedNext = index === suggestedNextIndex;
 
               return (
                 <motion.button
@@ -161,8 +163,10 @@ export function SceneScreen({
                   }
                   whileHover={reduceMotion || isActive ? undefined : subtleHoverLift}
                   whileTap={reduceMotion ? undefined : subtleTapPress}
+                  data-suggested-next={isSuggestedNext ? "true" : undefined}
                   className={`text-left rounded-[1rem] border px-3 py-2.5 ${
                     isActive ? "scene-step-chip-active" : "scene-step-chip"
+                  } ${isSuggestedNext ? "scene-step-chip-suggested" : ""
                   }`}
                 >
                   <p className="text-[0.62rem] font-semibold uppercase tracking-[0.17em] text-[var(--accent-deep)]">
@@ -554,6 +558,7 @@ export function SceneScreen({
                     <div className="grid gap-1.5 sm:grid-cols-2">
                       {steps.map((step, index) => {
                         const isActive = index === activeIndex;
+                        const isSuggestedNext = index === suggestedNextIndex;
 
                         return (
                           <motion.button
@@ -570,8 +575,10 @@ export function SceneScreen({
                             }
                             whileHover={reduceMotion || isActive ? undefined : subtleHoverLift}
                             whileTap={reduceMotion ? undefined : subtleTapPress}
+                            data-suggested-next={isSuggestedNext ? "true" : undefined}
                             className={`text-left rounded-[1rem] border px-3 py-2.5 ${
                               isActive ? "scene-step-chip-active" : "scene-step-chip"
+                            } ${isSuggestedNext ? "scene-step-chip-suggested" : ""
                             }`}
                           >
                             <p className="text-[0.62rem] font-semibold uppercase tracking-[0.17em] text-[var(--accent-deep)]">
@@ -704,6 +711,7 @@ export function SceneScreen({
                     <div className="grid gap-2 sm:grid-cols-2">
                       {steps.map((step, index) => {
                         const isActive = index === activeIndex;
+                        const isSuggestedNext = index === suggestedNextIndex;
 
                         return (
                           <motion.button
@@ -720,10 +728,12 @@ export function SceneScreen({
                             }
                             whileHover={reduceMotion || isActive ? undefined : subtleHoverLift}
                             whileTap={reduceMotion ? undefined : subtleTapPress}
+                            data-suggested-next={isSuggestedNext ? "true" : undefined}
                             className={`text-left rounded-[1.15rem] border px-3.5 py-3 ${
                               isActive
                                 ? "scene-step-chip-active"
                                 : "scene-step-chip"
+                            } ${isSuggestedNext ? "scene-step-chip-suggested" : ""
                             }`}
                           >
                             <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-deep)]">

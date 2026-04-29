@@ -11,10 +11,17 @@ import {
 } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 
-import { ImmersiveScrollProvider } from "@/components/immersive-scroll-context";
+import {
+  IMMERSIVE_SECTION_NAVIGATE_EVENT,
+  ImmersiveScrollProvider,
+  dispatchImmersiveSectionChange,
+  getImmersiveRouteForSection,
+  isImmersiveSectionId,
+  type ImmersiveSectionId,
+} from "@/components/immersive-scroll-context";
 
 type SectionScrollerSection = {
-  id: string;
+  id: ImmersiveSectionId;
   label: string;
 };
 
@@ -36,6 +43,11 @@ export function SectionScroller({ sections, children }: SectionScrollerProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const childItems = useMemo(() => Children.toArray(children), [children]);
 
+  const setBoundedActiveIndex = useCallback((index: number) => {
+    const nextIndex = Math.min(childItems.length - 1, Math.max(0, index));
+    setActiveIndex((current) => (current === nextIndex ? current : nextIndex));
+  }, [childItems.length]);
+
   useEffect(() => {
     const root = containerRef.current;
 
@@ -52,7 +64,7 @@ export function SectionScroller({ sections, children }: SectionScrollerProps) {
         Math.max(0, Math.round(root.scrollTop / viewportHeight)),
       );
 
-      setActiveIndex((current) => (current === nextIndex ? current : nextIndex));
+      setBoundedActiveIndex(nextIndex);
     };
 
     const handleScroll = () => {
@@ -66,15 +78,61 @@ export function SectionScroller({ sections, children }: SectionScrollerProps) {
     syncActiveSection();
     root.addEventListener("scroll", handleScroll, { passive: true });
 
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const mostVisible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+
+        if (!mostVisible) {
+          return;
+        }
+
+        const nextIndex = Number((mostVisible.target as HTMLElement).dataset.sectionIndex);
+
+        if (Number.isFinite(nextIndex)) {
+          setBoundedActiveIndex(nextIndex);
+        }
+      },
+      {
+        root,
+        rootMargin: "-24% 0px -24% 0px",
+        threshold: [0.24, 0.4, 0.56, 0.72],
+      },
+    );
+
+    sectionRefs.current.forEach((section) => {
+      if (section) {
+        observer.observe(section);
+      }
+    });
+
     return () => {
       root.removeEventListener("scroll", handleScroll);
+      observer.disconnect();
 
       if (frameRef.current != null) {
         window.cancelAnimationFrame(frameRef.current);
         frameRef.current = null;
       }
     };
-  }, [childItems.length]);
+  }, [childItems.length, setBoundedActiveIndex]);
+
+  useEffect(() => {
+    const section = sections[activeIndex];
+    const href = section ? getImmersiveRouteForSection(section.id) : null;
+
+    if (!section || !href) {
+      return;
+    }
+
+    dispatchImmersiveSectionChange({
+      id: section.id,
+      index: activeIndex,
+      label: section.label,
+      href,
+    });
+  }, [activeIndex, sections]);
 
   const goToSection = useCallback((index: number) => {
     const root = containerRef.current;
@@ -89,8 +147,31 @@ export function SectionScroller({ sections, children }: SectionScrollerProps) {
       behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
     });
 
-    setActiveIndex(nextIndex);
-  }, [childItems.length]);
+    setBoundedActiveIndex(nextIndex);
+  }, [childItems.length, setBoundedActiveIndex]);
+
+  useEffect(() => {
+    const handleNavigate = (event: Event) => {
+      const detail = (event as CustomEvent<{ id?: string }>).detail;
+      const sectionId = detail?.id;
+
+      if (!sectionId || !isImmersiveSectionId(sectionId)) {
+        return;
+      }
+
+      const nextIndex = sections.findIndex((section) => section.id === sectionId);
+
+      if (nextIndex !== -1) {
+        goToSection(nextIndex);
+      }
+    };
+
+    window.addEventListener(IMMERSIVE_SECTION_NAVIGATE_EVENT, handleNavigate);
+
+    return () => {
+      window.removeEventListener(IMMERSIVE_SECTION_NAVIGATE_EVENT, handleNavigate);
+    };
+  }, [goToSection, sections]);
 
   return (
     <ImmersiveScrollProvider>
@@ -108,6 +189,7 @@ export function SectionScroller({ sections, children }: SectionScrollerProps) {
               <section
                 key={section.id}
                 id={section.id}
+                data-section-active={isActive ? "true" : "false"}
                 data-section-index={index}
                 ref={(node) => {
                   sectionRefs.current[index] = node;

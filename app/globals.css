@@ -414,6 +414,10 @@
   box-shadow: 0 18px 34px rgba(152, 169, 189, 0.2);
 }
 
+.scene-step-chip-suggested {
+  position: relative;
+}
+
 .scene-media-overlay {
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(232, 239, 246, 0.18));
 }
@@ -3286,6 +3290,18 @@ html[data-theme="dark"] body {
   box-shadow: 0 16px 38px var(--glow), var(--glass-inner-highlight);
 }
 
+.public-visual-scope .scene-step-chip-suggested:not(.scene-step-chip-active) {
+  border-color: color-mix(in srgb, var(--accent) 54%, var(--border-strong));
+  background:
+    radial-gradient(circle at 18% 0%, color-mix(in srgb, var(--accent-soft) 74%, transparent), transparent 44%),
+    linear-gradient(180deg, color-mix(in srgb, var(--surface-strong) 80%, var(--accent-soft)), color-mix(in srgb, var(--surface) 82%, transparent));
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--accent) 22%, transparent),
+    0 0 26px color-mix(in srgb, var(--glow) 78%, transparent),
+    var(--glass-inner-highlight);
+  animation: capsoulSuggestedNextGlow 5.6s var(--ease-measured) infinite;
+}
+
 .public-visual-scope .header-nav-pill-inactive,
 .public-visual-scope .header-mobile-nav-inactive,
 .public-visual-scope .nav-pill {
@@ -3303,6 +3319,47 @@ html[data-theme="dark"] body {
 .public-visual-scope .eyebrow::before {
   background: var(--accent);
   box-shadow: 0 0 0 4px var(--accent-soft), 0 0 24px var(--glow);
+}
+
+.public-visual-scope .scene-intro-group {
+  width: 100%;
+  align-self: center;
+  margin-inline: auto;
+  margin-block-end: clamp(0.1rem, 0.35vw, 0.35rem);
+}
+
+.public-visual-scope .scene-intro-copy {
+  width: min(100%, 36rem);
+}
+
+[data-scene-mode="tabletPortrait"] .scene-intro-group {
+  width: min(100%, var(--scene-content-max-width, 58rem));
+}
+
+[data-scene-mode="tabletLandscape"] .scene-intro-group {
+  width: min(100%, var(--scene-stage-max-tablet-landscape, 73.75rem));
+}
+
+[data-scene-mode="desktop"] .scene-intro-group,
+[data-scene-mode="desktopShortHeight"] .scene-intro-group {
+  width: min(100%, var(--scene-stage-max-desktop, 85rem));
+}
+
+@keyframes capsoulSuggestedNextGlow {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--accent) 18%, transparent),
+      0 0 20px color-mix(in srgb, var(--glow) 58%, transparent),
+      var(--glass-inner-highlight);
+  }
+
+  50% {
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--accent) 28%, transparent),
+      0 0 30px color-mix(in srgb, var(--glow) 84%, transparent),
+      var(--glass-inner-highlight);
+  }
 }
 
 .public-visual-scope .field-label {
@@ -3813,6 +3870,7 @@ html[data-theme="dark"] {
   .cinematic-blob,
   .cinematic-mist,
   .vanta-fog-atmosphere,
+  .public-visual-scope .scene-step-chip-suggested,
   .public-visual-scope .button-primary::after,
   .public-visual-scope .button-secondary::after {
     animation: none;

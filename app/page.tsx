@@ -1,6 +1,7 @@
 import { InquiryScene } from "@/components/inquiry-scene";
 import { SceneScreen } from "@/components/scene-screen";
 import { SectionScroller } from "@/components/SectionScroller";
+import type { ImmersiveSectionId } from "@/components/immersive-scroll-context";
 import {
   getResolvedExperienceScene,
   getResolvedHomeScene,
@@ -22,11 +23,11 @@ export default async function HomePage() {
   const preserveScene = await getResolvedPreserveScene(locale);
   const inquiryScene = await getResolvedInquiryScene(locale);
 
-  const sections = [
+  const sections: Array<{ id: ImmersiveSectionId; label: string }> = [
     { id: "home", label: siteContent.global.navigation.home },
-    { id: "experience", label: siteContent.global.navigation.experience },
-    { id: "process", label: siteContent.global.navigation.process },
-    { id: "preserve", label: siteContent.global.navigation.preserve },
+    { id: "the-experience", label: siteContent.global.navigation.experience },
+    { id: "how-it-works", label: siteContent.global.navigation.process },
+    { id: "what-we-preserve", label: siteContent.global.navigation.preserve },
     { id: "inquire", label: siteContent.global.navigation.inquire },
   ];
 
