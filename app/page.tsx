@@ -32,7 +32,7 @@ export default async function HomePage() {
   ];
 
   return (
-    <SectionScroller sections={sections}>
+    <SectionScroller sections={sections} routeLabels={siteContent.global.routeLabels}>
       <SceneScreen {...homeScene} tone="warm" immersiveSectionMode />
       <SceneScreen {...experienceScene} tone="cool" immersiveSectionMode />
       <SceneScreen {...processScene} tone="cool" immersiveSectionMode />

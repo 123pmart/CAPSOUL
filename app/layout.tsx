@@ -19,6 +19,34 @@ import {
 
 import "./globals.css";
 
+const siteThemeInitScript = `
+(() => {
+  const fallbackTheme = "light";
+  const storageKey = "capsoul-theme";
+  const cookieName = "capsoul-theme";
+  const isTheme = (value) => value === "light" || value === "dark";
+
+  try {
+    const storedTheme = window.localStorage.getItem(storageKey);
+    const cookieTheme = document.cookie
+      .split("; ")
+      .find((entry) => entry.startsWith(cookieName + "="))
+      ?.split("=")[1];
+    const theme = isTheme(storedTheme)
+      ? storedTheme
+      : isTheme(cookieTheme)
+        ? cookieTheme
+        : fallbackTheme;
+
+    document.documentElement.dataset.theme = theme;
+    document.documentElement.style.colorScheme = theme;
+  } catch {
+    document.documentElement.dataset.theme = document.documentElement.dataset.theme || fallbackTheme;
+    document.documentElement.style.colorScheme = document.documentElement.dataset.theme;
+  }
+})();
+`;
+
 export const metadata: Metadata = {
   title: {
     default: `${company.name} | ${company.descriptor}`,
@@ -44,7 +72,9 @@ export default async function RootLayout({
 
   return (
     <html lang={locale} data-theme={initialTheme} suppressHydrationWarning>
-      <head />
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: siteThemeInitScript }} />
+      </head>
       <body>
         <a
           href="#main-content"

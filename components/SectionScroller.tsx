@@ -7,6 +7,7 @@ import {
   useMemo,
   useRef,
   useState,
+  type TouchEvent as ReactTouchEvent,
   type ReactNode,
 } from "react";
 import { motion, useReducedMotion } from "framer-motion";
@@ -28,6 +29,10 @@ type SectionScrollerSection = {
 type SectionScrollerProps = {
   sections: SectionScrollerSection[];
   children: ReactNode;
+  routeLabels?: {
+    previous: string;
+    next: string;
+  };
 };
 
 const revealTransition = {
@@ -35,13 +40,110 @@ const revealTransition = {
   ease: [0.22, 1, 0.36, 1],
 } as const;
 
-export function SectionScroller({ sections, children }: SectionScrollerProps) {
+const scrollBoundaryTolerance = 6;
+const wheelNavigationThreshold = 56;
+const touchNavigationThreshold = 48;
+const sectionNavigationLockMs = 660;
+
+type InnerScrollPosition = "start" | "end" | "preserve";
+
+type BoundaryWheelEvent = {
+  target: EventTarget | null;
+  deltaY: number;
+  cancelable?: boolean;
+  nativeEvent?: {
+    cancelable?: boolean;
+  };
+  preventDefault: () => void;
+};
+
+function clampIndex(index: number, length: number) {
+  if (length <= 0) {
+    return 0;
+  }
+
+  return Math.min(length - 1, Math.max(0, index));
+}
+
+function getScrollableDistance(element: HTMLElement) {
+  return Math.max(0, element.scrollHeight - element.clientHeight);
+}
+
+function canScrollInDirection(
+  element: HTMLElement,
+  direction: 1 | -1,
+  tolerance = scrollBoundaryTolerance,
+) {
+  const maxScroll = getScrollableDistance(element);
+
+  if (maxScroll <= tolerance) {
+    return false;
+  }
+
+  if (direction > 0) {
+    return element.scrollTop < maxScroll - tolerance;
+  }
+
+  return element.scrollTop > tolerance;
+}
+
+function isScrollableElement(element: HTMLElement) {
+  const style = window.getComputedStyle(element);
+  return (
+    /(auto|scroll|overlay)/.test(style.overflowY) &&
+    getScrollableDistance(element) > scrollBoundaryTolerance
+  );
+}
+
+function findNestedScrollableTarget(
+  target: EventTarget | null,
+  boundary: HTMLElement,
+) {
+  if (!(target instanceof Element)) {
+    return null;
+  }
+
+  let element: Element | null = target;
+
+  while (element && element !== boundary) {
+    if (element instanceof HTMLElement && isScrollableElement(element)) {
+      return element;
+    }
+
+    element = element.parentElement;
+  }
+
+  return null;
+}
+
+function isFormControlTarget(target: EventTarget | null) {
+  return target instanceof Element
+    ? Boolean(target.closest("input, textarea, select, option, [role='slider']"))
+    : false;
+}
+
+export function SectionScroller({
+  sections,
+  children,
+  routeLabels = { previous: "Previous", next: "Next" },
+}: SectionScrollerProps) {
   const reduceMotion = useReducedMotion();
   const containerRef = useRef<HTMLDivElement | null>(null);
   const sectionRefs = useRef<Array<HTMLElement | null>>([]);
+  const contentRefs = useRef<Array<HTMLDivElement | null>>([]);
   const frameRef = useRef<number | null>(null);
+  const activeIndexRef = useRef(0);
+  const wheelBufferRef = useRef(0);
+  const wheelDirectionRef = useRef<1 | -1 | null>(null);
+  const touchStartRef = useRef<{ y: number; index: number } | null>(null);
+  const navigationLockRef = useRef(false);
+  const navigationLockTimerRef = useRef<number | null>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const childItems = useMemo(() => Children.toArray(children), [children]);
+
+  useEffect(() => {
+    activeIndexRef.current = activeIndex;
+  }, [activeIndex]);
 
   const syncBackgroundMotion = useCallback((root: HTMLDivElement) => {
     if (reduceMotion) {
@@ -74,9 +176,47 @@ export function SectionScroller({ sections, children }: SectionScrollerProps) {
   }, [reduceMotion]);
 
   const setBoundedActiveIndex = useCallback((index: number) => {
-    const nextIndex = Math.min(childItems.length - 1, Math.max(0, index));
+    const nextIndex = clampIndex(index, childItems.length);
     setActiveIndex((current) => (current === nextIndex ? current : nextIndex));
   }, [childItems.length]);
+
+  const clearNavigationLock = useCallback(() => {
+    if (navigationLockTimerRef.current != null) {
+      window.clearTimeout(navigationLockTimerRef.current);
+      navigationLockTimerRef.current = null;
+    }
+
+    navigationLockRef.current = false;
+  }, []);
+
+  const armNavigationLock = useCallback(() => {
+    clearNavigationLock();
+    navigationLockRef.current = true;
+
+    navigationLockTimerRef.current = window.setTimeout(() => {
+      navigationLockRef.current = false;
+      navigationLockTimerRef.current = null;
+    }, sectionNavigationLockMs);
+  }, [clearNavigationLock]);
+
+  const positionInnerScroll = useCallback((
+    index: number,
+    position: InnerScrollPosition,
+  ) => {
+    if (position === "preserve") {
+      return;
+    }
+
+    window.requestAnimationFrame(() => {
+      const content = contentRefs.current[index];
+
+      if (!content) {
+        return;
+      }
+
+      content.scrollTop = position === "end" ? getScrollableDistance(content) : 0;
+    });
+  }, []);
 
   useEffect(() => {
     const root = containerRef.current;
@@ -147,6 +287,8 @@ export function SectionScroller({ sections, children }: SectionScrollerProps) {
         frameRef.current = null;
       }
 
+      clearNavigationLock();
+
       const rootStyle = document.documentElement.style;
       rootStyle.removeProperty("--immersive-bg-progress");
       rootStyle.removeProperty("--immersive-bg-drift-x");
@@ -159,7 +301,7 @@ export function SectionScroller({ sections, children }: SectionScrollerProps) {
       rootStyle.removeProperty("--immersive-canvas-y");
       rootStyle.removeProperty("--immersive-canvas-scale");
     };
-  }, [childItems.length, setBoundedActiveIndex, syncBackgroundMotion]);
+  }, [childItems.length, clearNavigationLock, setBoundedActiveIndex, syncBackgroundMotion]);
 
   useEffect(() => {
     const section = sections[activeIndex];
@@ -177,9 +319,12 @@ export function SectionScroller({ sections, children }: SectionScrollerProps) {
     });
   }, [activeIndex, sections]);
 
-  const goToSection = useCallback((index: number) => {
+  const goToSection = useCallback((
+    index: number,
+    innerScrollPosition: InnerScrollPosition = "start",
+  ) => {
     const root = containerRef.current;
-    const nextIndex = Math.min(childItems.length - 1, Math.max(0, index));
+    const nextIndex = clampIndex(index, childItems.length);
 
     if (!root || !sectionRefs.current[nextIndex]) {
       return;
@@ -191,8 +336,153 @@ export function SectionScroller({ sections, children }: SectionScrollerProps) {
     });
 
     setBoundedActiveIndex(nextIndex);
+    positionInnerScroll(nextIndex, innerScrollPosition);
     syncBackgroundMotion(root);
-  }, [childItems.length, setBoundedActiveIndex, syncBackgroundMotion]);
+  }, [childItems.length, positionInnerScroll, setBoundedActiveIndex, syncBackgroundMotion]);
+
+  const navigateFromBoundary = useCallback((
+    direction: 1 | -1,
+    innerScrollPosition: InnerScrollPosition,
+  ) => {
+    if (navigationLockRef.current) {
+      return false;
+    }
+
+    const nextIndex = activeIndexRef.current + direction;
+
+    if (nextIndex < 0 || nextIndex >= childItems.length) {
+      return false;
+    }
+
+    wheelBufferRef.current = 0;
+    wheelDirectionRef.current = null;
+    touchStartRef.current = null;
+    armNavigationLock();
+    goToSection(nextIndex, innerScrollPosition);
+    return true;
+  }, [armNavigationLock, childItems.length, goToSection]);
+
+  const getActiveScrollTarget = useCallback((
+    eventTarget: EventTarget | null,
+    direction: 1 | -1,
+  ) => {
+    const content = contentRefs.current[activeIndexRef.current];
+
+    if (!content) {
+      return null;
+    }
+
+    const nestedScrollable = findNestedScrollableTarget(eventTarget, content);
+
+    if (nestedScrollable && canScrollInDirection(nestedScrollable, direction)) {
+      return nestedScrollable;
+    }
+
+    return canScrollInDirection(content, direction) ? content : null;
+  }, []);
+
+  const activeContentCanScroll = useCallback((
+    eventTarget: EventTarget | null,
+    direction: 1 | -1,
+  ) => Boolean(getActiveScrollTarget(eventTarget, direction)), [getActiveScrollTarget]);
+
+  const handleWheelBoundary = useCallback((event: BoundaryWheelEvent) => {
+    if (isFormControlTarget(event.target)) {
+      return;
+    }
+
+    const direction: 1 | -1 = event.deltaY > 0 ? 1 : -1;
+
+    const scrollTarget = getActiveScrollTarget(event.target, direction);
+
+    if (Math.abs(event.deltaY) < 1) {
+      wheelBufferRef.current = 0;
+      wheelDirectionRef.current = null;
+      return;
+    }
+
+    if (scrollTarget) {
+      if (event.nativeEvent?.cancelable ?? event.cancelable ?? true) {
+        event.preventDefault();
+      }
+
+      scrollTarget.scrollTop += event.deltaY;
+      wheelBufferRef.current = 0;
+      wheelDirectionRef.current = null;
+      return;
+    }
+
+    if (event.nativeEvent?.cancelable ?? event.cancelable ?? true) {
+      event.preventDefault();
+    }
+
+    if (wheelDirectionRef.current !== direction) {
+      wheelBufferRef.current = 0;
+      wheelDirectionRef.current = direction;
+    }
+
+    wheelBufferRef.current += event.deltaY;
+
+    if (Math.abs(wheelBufferRef.current) < wheelNavigationThreshold) {
+      return;
+    }
+
+    navigateFromBoundary(direction, direction > 0 ? "start" : "end");
+  }, [getActiveScrollTarget, navigateFromBoundary]);
+
+  useEffect(() => {
+    const root = containerRef.current;
+
+    if (!root) {
+      return;
+    }
+
+    const handleNativeWheel = (event: globalThis.WheelEvent) => {
+      handleWheelBoundary(event);
+    };
+
+    root.addEventListener("wheel", handleNativeWheel, { capture: true, passive: false });
+
+    return () => {
+      root.removeEventListener("wheel", handleNativeWheel, { capture: true });
+    };
+  }, [handleWheelBoundary]);
+
+  const handleTouchStartCapture = useCallback((event: ReactTouchEvent<HTMLDivElement>) => {
+    if (isFormControlTarget(event.target)) {
+      touchStartRef.current = null;
+      return;
+    }
+
+    touchStartRef.current = {
+      y: event.touches[0]?.clientY ?? 0,
+      index: activeIndexRef.current,
+    };
+  }, []);
+
+  const handleTouchEndCapture = useCallback((event: ReactTouchEvent<HTMLDivElement>) => {
+    const start = touchStartRef.current;
+    touchStartRef.current = null;
+
+    if (!start || start.index !== activeIndexRef.current || isFormControlTarget(event.target)) {
+      return;
+    }
+
+    const endY = event.changedTouches[0]?.clientY ?? start.y;
+    const delta = start.y - endY;
+
+    if (Math.abs(delta) < touchNavigationThreshold) {
+      return;
+    }
+
+    const direction: 1 | -1 = delta > 0 ? 1 : -1;
+
+    if (activeContentCanScroll(event.target, direction)) {
+      return;
+    }
+
+    navigateFromBoundary(direction, direction > 0 ? "start" : "end");
+  }, [activeContentCanScroll, navigateFromBoundary]);
 
   useEffect(() => {
     const handleNavigate = (event: Event) => {
@@ -224,6 +514,8 @@ export function SectionScroller({ sections, children }: SectionScrollerProps) {
           ref={containerRef}
           className="section-scroller"
           aria-label="CAPSOUL public sections"
+          onTouchStartCapture={handleTouchStartCapture}
+          onTouchEndCapture={handleTouchEndCapture}
         >
           {sections.map((section, index) => {
             const isActive = activeIndex === index;
@@ -242,6 +534,9 @@ export function SectionScroller({ sections, children }: SectionScrollerProps) {
                 aria-label={section.label}
               >
                 <motion.div
+                  ref={(node) => {
+                    contentRefs.current[index] = node;
+                  }}
                   className="section-scroller-content"
                   data-section-active={isActive ? "true" : "false"}
                   initial={false}
@@ -254,7 +549,34 @@ export function SectionScroller({ sections, children }: SectionScrollerProps) {
                   }
                   transition={reduceMotion ? { duration: 0 } : revealTransition}
                 >
-                  {content}
+                  <div className="section-scroller-content-main">
+                    {content}
+                  </div>
+                  <nav
+                    className="section-page-controls"
+                    aria-label={`${section.label} section controls`}
+                  >
+                    <button
+                      type="button"
+                      className="section-page-control section-page-control-previous"
+                      disabled={index === 0}
+                      aria-label={index === 0 ? routeLabels.previous : `${routeLabels.previous}: ${sections[index - 1]?.label}`}
+                      onClick={() => goToSection(index - 1, "start")}
+                    >
+                      <span aria-hidden="true">&larr;</span>
+                      <span>{routeLabels.previous}</span>
+                    </button>
+                    <button
+                      type="button"
+                      className="section-page-control section-page-control-next"
+                      disabled={index === childItems.length - 1}
+                      aria-label={index === childItems.length - 1 ? routeLabels.next : `${routeLabels.next}: ${sections[index + 1]?.label}`}
+                      onClick={() => goToSection(index + 1, "start")}
+                    >
+                      <span>{routeLabels.next}</span>
+                      <span aria-hidden="true">&rarr;</span>
+                    </button>
+                  </nav>
                 </motion.div>
               </section>
             );
