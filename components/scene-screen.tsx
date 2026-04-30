@@ -108,7 +108,7 @@ export function SceneScreen({
       ? { opacity: 0, y: -12 }
       : { opacity: 0, y: -8 };
 
-  const mobileProgressionNote = usesViewportProgression
+  const mobileProgressionNote = immersiveSectionMode || usesViewportProgression
     ? compactNote
     : globalContent.sceneLabels.arrowInstruction;
   const mobileSceneSwapTransition = reduceMotion
@@ -121,12 +121,12 @@ export function SceneScreen({
       amount={0.25}
     >
       <RevealItem variant="hero">
-        <div className="scene-intro-copy max-w-[36rem] flex flex-col items-start">
+        <div className="scene-intro-copy flex max-w-[47.5rem] flex-col items-center text-center">
           <span className="eyebrow">{eyebrow}</span>
-          <h1 className="page-heading headline-display mt-[var(--mobile-label-heading-gap)]">
+          <h1 className="scene-intro-title page-heading headline-display mt-[var(--mobile-label-heading-gap)]">
             {title}
           </h1>
-          <p className="mt-[var(--mobile-heading-body-gap)] max-w-[32rem] text-[0.94rem] leading-6 text-[var(--text-secondary)] sm:text-[1.02rem] sm:leading-7">
+          <p className="scene-intro-subtitle mt-[var(--mobile-heading-body-gap)] max-w-[44rem] text-[0.94rem] leading-6 text-[var(--text-secondary)] sm:text-[1.02rem] sm:leading-7">
             {description}
           </p>
         </div>
