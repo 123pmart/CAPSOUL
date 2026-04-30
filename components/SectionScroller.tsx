@@ -52,18 +52,25 @@ export function SectionScroller({ sections, children }: SectionScrollerProps) {
     const progress = Math.min(1, Math.max(0, root.scrollTop / maxScroll));
     const wave = Math.sin(progress * Math.PI * 2);
     const counterWave = Math.cos(progress * Math.PI * 2);
-    const driftX = wave * 34;
-    const shiftY = (progress - 0.5) * -118;
-    const scale = 1.012 + Math.abs(counterWave) * 0.018 + progress * 0.012;
-    const glow = 0.045 + Math.abs(wave) * 0.055;
+    const driftX = wave * 68;
+    const shiftY = (progress - 0.5) * -190;
+    const scale = 1.022 + Math.abs(counterWave) * 0.026 + progress * 0.018;
+    const glow = 0.08 + Math.abs(wave) * 0.09;
+    const canvasX = counterWave * 18;
+    const canvasY = (progress - 0.5) * 52;
+    const canvasScale = 1.04 + Math.abs(wave) * 0.018;
     const rootStyle = document.documentElement.style;
 
+    rootStyle.setProperty("--immersive-bg-progress", progress.toFixed(3));
     rootStyle.setProperty("--immersive-bg-drift-x", `${driftX.toFixed(2)}px`);
     rootStyle.setProperty("--immersive-bg-shift-y", `${shiftY.toFixed(2)}px`);
     rootStyle.setProperty("--immersive-bg-scale", scale.toFixed(3));
     rootStyle.setProperty("--immersive-bg-glow", glow.toFixed(3));
-    rootStyle.setProperty("--immersive-bg-counter-x", `${(counterWave * -28).toFixed(2)}px`);
-    rootStyle.setProperty("--immersive-bg-counter-y", `${(wave * 24).toFixed(2)}px`);
+    rootStyle.setProperty("--immersive-bg-counter-x", `${(counterWave * -54).toFixed(2)}px`);
+    rootStyle.setProperty("--immersive-bg-counter-y", `${(wave * 44).toFixed(2)}px`);
+    rootStyle.setProperty("--immersive-canvas-x", `${canvasX.toFixed(2)}px`);
+    rootStyle.setProperty("--immersive-canvas-y", `${canvasY.toFixed(2)}px`);
+    rootStyle.setProperty("--immersive-canvas-scale", canvasScale.toFixed(3));
   }, [reduceMotion]);
 
   const setBoundedActiveIndex = useCallback((index: number) => {
@@ -141,12 +148,16 @@ export function SectionScroller({ sections, children }: SectionScrollerProps) {
       }
 
       const rootStyle = document.documentElement.style;
+      rootStyle.removeProperty("--immersive-bg-progress");
       rootStyle.removeProperty("--immersive-bg-drift-x");
       rootStyle.removeProperty("--immersive-bg-shift-y");
       rootStyle.removeProperty("--immersive-bg-scale");
       rootStyle.removeProperty("--immersive-bg-glow");
       rootStyle.removeProperty("--immersive-bg-counter-x");
       rootStyle.removeProperty("--immersive-bg-counter-y");
+      rootStyle.removeProperty("--immersive-canvas-x");
+      rootStyle.removeProperty("--immersive-canvas-y");
+      rootStyle.removeProperty("--immersive-canvas-scale");
     };
   }, [childItems.length, setBoundedActiveIndex, syncBackgroundMotion]);
 
