@@ -51,16 +51,19 @@ export function SectionScroller({ sections, children }: SectionScrollerProps) {
     const maxScroll = Math.max(root.scrollHeight - root.clientHeight, 1);
     const progress = Math.min(1, Math.max(0, root.scrollTop / maxScroll));
     const wave = Math.sin(progress * Math.PI * 2);
-    const driftX = wave * 18;
-    const shiftY = (progress - 0.5) * -64;
-    const scale = 1 + progress * 0.018;
-    const glow = 0.018 + Math.abs(wave) * 0.028;
+    const counterWave = Math.cos(progress * Math.PI * 2);
+    const driftX = wave * 34;
+    const shiftY = (progress - 0.5) * -118;
+    const scale = 1.012 + Math.abs(counterWave) * 0.018 + progress * 0.012;
+    const glow = 0.045 + Math.abs(wave) * 0.055;
     const rootStyle = document.documentElement.style;
 
     rootStyle.setProperty("--immersive-bg-drift-x", `${driftX.toFixed(2)}px`);
     rootStyle.setProperty("--immersive-bg-shift-y", `${shiftY.toFixed(2)}px`);
     rootStyle.setProperty("--immersive-bg-scale", scale.toFixed(3));
     rootStyle.setProperty("--immersive-bg-glow", glow.toFixed(3));
+    rootStyle.setProperty("--immersive-bg-counter-x", `${(counterWave * -28).toFixed(2)}px`);
+    rootStyle.setProperty("--immersive-bg-counter-y", `${(wave * 24).toFixed(2)}px`);
   }, [reduceMotion]);
 
   const setBoundedActiveIndex = useCallback((index: number) => {
@@ -142,6 +145,8 @@ export function SectionScroller({ sections, children }: SectionScrollerProps) {
       rootStyle.removeProperty("--immersive-bg-shift-y");
       rootStyle.removeProperty("--immersive-bg-scale");
       rootStyle.removeProperty("--immersive-bg-glow");
+      rootStyle.removeProperty("--immersive-bg-counter-x");
+      rootStyle.removeProperty("--immersive-bg-counter-y");
     };
   }, [childItems.length, setBoundedActiveIndex, syncBackgroundMotion]);
 

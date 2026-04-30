@@ -3090,9 +3090,9 @@ html[data-theme="dark"] body {
 .cinematic-mist {
   opacity: var(--cinematic-mist-opacity);
   background:
-    repeating-linear-gradient(118deg, transparent 0 12%, rgba(255, 255, 255, 0.08) 14%, transparent 25%),
-    radial-gradient(ellipse at 22% 40%, rgba(255, 255, 255, 0.12), transparent 38%),
-    radial-gradient(ellipse at 76% 38%, rgba(154, 201, 251, 0.14), transparent 42%);
+    radial-gradient(ellipse at 18% 34%, rgba(255, 255, 255, 0.12), transparent 42%),
+    radial-gradient(ellipse at 76% 38%, rgba(154, 201, 251, 0.14), transparent 46%),
+    radial-gradient(ellipse at 54% 76%, var(--cinematic-bg-d), transparent 52%);
   mix-blend-mode: var(--cinematic-blend);
   animation: capsoulCinematicMist 58s var(--ease-measured) infinite alternate;
 }
@@ -3360,6 +3360,11 @@ html[data-theme="dark"] body {
 }
 
 .public-visual-scope .scene-step-chip-active[class~="rounded-full"]::after {
+  content: none;
+}
+
+.public-visual-scope .inquiry-step-tabs .scene-step-chip-active::after,
+.public-visual-scope .inquiry-step-tabs .scene-step-chip-suggested::after {
   content: none;
 }
 
@@ -3634,6 +3639,11 @@ html[data-theme="dark"] body {
   content: none;
 }
 
+.public-visual-scope .inquiry-step-tabs .scene-step-chip-active::after,
+.public-visual-scope .inquiry-step-tabs .scene-step-chip-suggested::after {
+  content: none;
+}
+
 .public-visual-scope .scene-media-overlay {
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), color-mix(in srgb, var(--bg) 16%, transparent));
 }
@@ -3814,6 +3824,7 @@ html[data-theme="dark"] body {
 }
 
 .vanta-fog-atmosphere,
+.vanta-fog-scroll-depth,
 .vanta-fog-scroll-glow,
 .vanta-fog-grain {
   position: absolute;
@@ -3824,11 +3835,28 @@ html[data-theme="dark"] body {
   z-index: 1;
   opacity: var(--vanta-atmosphere-opacity, 0.46);
   background:
-    linear-gradient(115deg, transparent 0%, var(--vanta-streak-a, rgba(255, 255, 255, 0.12)) 16%, transparent 34%),
-    radial-gradient(circle at 34% 72%, var(--vanta-glow-c, rgba(134, 178, 231, 0.16)), transparent 38%),
-    repeating-linear-gradient(108deg, transparent 0 4.8rem, var(--vanta-streak-b, rgba(255, 255, 255, 0.045)) 5.2rem, transparent 9rem);
+    radial-gradient(ellipse at 24% 28%, var(--vanta-glow-a, rgba(160, 195, 255, 0.22)), transparent 42%),
+    radial-gradient(ellipse at 74% 34%, var(--vanta-glow-b, rgba(90, 130, 190, 0.18)), transparent 46%),
+    radial-gradient(ellipse at 42% 76%, var(--vanta-glow-c, rgba(134, 178, 231, 0.16)), transparent 48%);
   mix-blend-mode: var(--vanta-atmosphere-blend, soft-light);
   animation: vantaAtmosphereDrift 42s var(--ease-premium) infinite alternate;
+}
+
+.vanta-fog-scroll-depth {
+  z-index: 1;
+  inset: -18%;
+  opacity: calc(var(--vanta-depth-opacity, 0.15) + var(--immersive-bg-glow, 0));
+  background:
+    radial-gradient(ellipse at 32% 24%, var(--vanta-depth-glow-a, rgba(190, 222, 255, 0.16)), transparent 44%),
+    radial-gradient(ellipse at 68% 70%, var(--vanta-depth-glow-b, rgba(72, 128, 194, 0.14)), transparent 48%),
+    radial-gradient(ellipse at 54% 50%, var(--vanta-depth-glow-c, rgba(255, 255, 255, 0.1)), transparent 58%);
+  mix-blend-mode: var(--vanta-depth-blend, soft-light);
+  transform: translate3d(var(--immersive-bg-counter-x, 0px), var(--immersive-bg-counter-y, 0px), 0) scale(var(--immersive-bg-scale, 1));
+  transform-origin: center;
+  transition:
+    opacity 280ms var(--ease-luxury),
+    transform 180ms linear;
+  will-change: transform, opacity;
 }
 
 .vanta-fog-scroll-glow {
@@ -3836,9 +3864,9 @@ html[data-theme="dark"] body {
   inset: -14%;
   opacity: calc(var(--vanta-scroll-glow-opacity, 0.18) + var(--immersive-bg-glow, 0));
   background:
-    radial-gradient(circle at 24% 24%, var(--vanta-scroll-glow-a, rgba(184, 220, 255, 0.2)), transparent 36%),
-    radial-gradient(circle at 76% 70%, var(--vanta-scroll-glow-b, rgba(76, 134, 202, 0.16)), transparent 42%),
-    linear-gradient(118deg, transparent 0 16%, var(--vanta-scroll-streak, rgba(255, 255, 255, 0.08)) 25%, transparent 38%);
+    radial-gradient(ellipse at 18% 22%, var(--vanta-scroll-glow-a, rgba(184, 220, 255, 0.2)), transparent 38%),
+    radial-gradient(ellipse at 82% 68%, var(--vanta-scroll-glow-b, rgba(76, 134, 202, 0.16)), transparent 44%),
+    radial-gradient(ellipse at 54% 42%, var(--vanta-scroll-glow-c, rgba(210, 232, 255, 0.12)), transparent 52%);
   mix-blend-mode: var(--vanta-scroll-blend, soft-light);
   transform: translate3d(var(--immersive-bg-drift-x, 0px), var(--immersive-bg-shift-y, 0px), 0) scale(var(--immersive-bg-scale, 1));
   transform-origin: center;
@@ -3865,13 +3893,16 @@ html[data-theme="light"] {
   --vanta-glow-a: rgba(212, 234, 255, 0.92);
   --vanta-glow-b: rgba(86, 139, 197, 0.36);
   --vanta-glow-c: rgba(126, 181, 238, 0.42);
-  --vanta-streak-a: rgba(255, 255, 255, 0.42);
-  --vanta-streak-b: rgba(74, 122, 182, 0.11);
   --vanta-atmosphere-blend: multiply;
-  --vanta-scroll-glow-opacity: 0.2;
-  --vanta-scroll-glow-a: rgba(255, 255, 255, 0.58);
-  --vanta-scroll-glow-b: rgba(90, 145, 210, 0.3);
-  --vanta-scroll-streak: rgba(77, 128, 189, 0.12);
+  --vanta-depth-opacity: 0.2;
+  --vanta-depth-glow-a: rgba(255, 255, 255, 0.62);
+  --vanta-depth-glow-b: rgba(71, 132, 203, 0.24);
+  --vanta-depth-glow-c: rgba(170, 209, 249, 0.26);
+  --vanta-depth-blend: multiply;
+  --vanta-scroll-glow-opacity: 0.28;
+  --vanta-scroll-glow-a: rgba(255, 255, 255, 0.72);
+  --vanta-scroll-glow-b: rgba(83, 141, 209, 0.36);
+  --vanta-scroll-glow-c: rgba(151, 198, 247, 0.34);
   --vanta-scroll-blend: multiply;
 }
 
@@ -3882,13 +3913,16 @@ html[data-theme="dark"] {
   --vanta-glow-a: rgba(119, 178, 255, 0.26);
   --vanta-glow-b: rgba(60, 112, 171, 0.24);
   --vanta-glow-c: rgba(183, 216, 255, 0.16);
-  --vanta-streak-a: rgba(255, 255, 255, 0.12);
-  --vanta-streak-b: rgba(255, 255, 255, 0.045);
   --vanta-atmosphere-blend: soft-light;
-  --vanta-scroll-glow-opacity: 0.16;
-  --vanta-scroll-glow-a: rgba(121, 184, 255, 0.22);
-  --vanta-scroll-glow-b: rgba(39, 91, 146, 0.24);
-  --vanta-scroll-streak: rgba(210, 232, 255, 0.08);
+  --vanta-depth-opacity: 0.16;
+  --vanta-depth-glow-a: rgba(150, 202, 255, 0.16);
+  --vanta-depth-glow-b: rgba(25, 72, 124, 0.2);
+  --vanta-depth-glow-c: rgba(220, 240, 255, 0.08);
+  --vanta-depth-blend: screen;
+  --vanta-scroll-glow-opacity: 0.24;
+  --vanta-scroll-glow-a: rgba(121, 184, 255, 0.28);
+  --vanta-scroll-glow-b: rgba(39, 91, 146, 0.32);
+  --vanta-scroll-glow-c: rgba(188, 221, 255, 0.18);
   --vanta-scroll-blend: screen;
 }
 
@@ -4151,6 +4185,7 @@ html[data-theme="dark"] {
   .cinematic-blob,
   .cinematic-mist,
   .vanta-fog-atmosphere,
+  .vanta-fog-scroll-depth,
   .vanta-fog-scroll-glow,
   .public-visual-scope .scene-step-chip-suggested,
   .public-visual-scope .button-primary::after,
@@ -4158,6 +4193,7 @@ html[data-theme="dark"] {
     animation: none;
   }
 
+  .vanta-fog-scroll-depth,
   .vanta-fog-scroll-glow {
     transform: none;
     transition: none;

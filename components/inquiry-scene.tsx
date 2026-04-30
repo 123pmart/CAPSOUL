@@ -119,8 +119,6 @@ export function InquiryScene({ sceneData, immersiveSectionMode = false }: Inquir
 
   const activeSupport = sceneData.supportStates[activeIndex] ?? sceneData.supportStates[0];
   const activeFormStep = sceneData.formSteps[activeIndex] ?? sceneData.formSteps[0];
-  const suggestedNextIndex =
-    activeIndex < sceneData.formSteps.length - 1 ? activeIndex + 1 : -1;
   const fieldCopy = sceneData.fieldCopy;
   const estimatedBudgetValue = parseBudgetValue(formState.estimatedBudget);
   const estimatedBudgetProgress =
@@ -505,10 +503,9 @@ export function InquiryScene({ sceneData, immersiveSectionMode = false }: Inquir
             renderSuccessContent(false)
           ) : (
             <form className="inquiry-tablet-form-shell flex h-full flex-col gap-3.5 md:min-h-0" onSubmit={handleSubmit}>
-              <div className="inquiry-tablet-tabs grid gap-2 sm:grid-cols-3">
+              <div className="inquiry-step-tabs inquiry-tablet-tabs grid gap-2 sm:grid-cols-3">
                 {sceneData.formSteps.map((step, index) => {
                   const isActive = index === activeIndex;
-                  const isSuggestedNext = index === suggestedNextIndex;
 
                   return (
                     <motion.button
@@ -525,12 +522,10 @@ export function InquiryScene({ sceneData, immersiveSectionMode = false }: Inquir
                       transition={cardStateTransition}
                       whileHover={reduceMotion || isActive ? undefined : subtleHoverLift}
                       whileTap={reduceMotion ? undefined : subtleTapPress}
-                      data-suggested-next={isSuggestedNext ? "true" : undefined}
                       className={`rounded-full border px-2.5 py-1.5 text-center text-[0.68rem] uppercase tracking-[0.15em] ${
                         isActive
                           ? "scene-step-chip-active text-[var(--text-primary)]"
                           : "scene-step-chip text-[var(--text-secondary)]"
-                      } ${isSuggestedNext ? "scene-step-chip-suggested" : ""
                       }`}
                     >
                       {step.chip}
@@ -846,10 +841,9 @@ export function InquiryScene({ sceneData, immersiveSectionMode = false }: Inquir
                       <RevealItem variant="card">
                         <div className="panel-strong rounded-[1.35rem] p-4">
                           <form className="grid gap-[var(--mobile-card-gap)]" onSubmit={handleSubmit}>
-                            <div className="grid grid-cols-3 gap-2">
+                            <div className="inquiry-step-tabs grid grid-cols-3 gap-2">
                               {sceneData.formSteps.map((step, index) => {
                                 const isActive = index === activeIndex;
-                                const isSuggestedNext = index === suggestedNextIndex;
 
                                 return (
                                   <motion.button
@@ -866,12 +860,10 @@ export function InquiryScene({ sceneData, immersiveSectionMode = false }: Inquir
                                     transition={cardStateTransition}
                                     whileHover={reduceMotion || isActive ? undefined : subtleHoverLift}
                                     whileTap={reduceMotion ? undefined : subtleTapPress}
-                                    data-suggested-next={isSuggestedNext ? "true" : undefined}
                                     className={`rounded-[0.95rem] px-3 py-2.5 text-center ${
                                       isActive
                                         ? "scene-step-chip-active text-[var(--text-primary)]"
                                         : "scene-step-chip text-[var(--text-secondary)]"
-                                    } ${isSuggestedNext ? "scene-step-chip-suggested" : ""
                                     }`}
                                   >
                                     <p className="text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-[var(--accent-deep)]">
@@ -1007,10 +999,9 @@ export function InquiryScene({ sceneData, immersiveSectionMode = false }: Inquir
                         renderSuccessContent(false)
                       ) : (
                         <form className="inquiry-form-shell flex flex-col gap-5 md:min-h-0" onSubmit={handleSubmit}>
-                          <div className="grid gap-2.5 sm:grid-cols-3">
+                          <div className="inquiry-step-tabs grid gap-2.5 sm:grid-cols-3">
                             {sceneData.formSteps.map((step, index) => {
                               const isActive = index === activeIndex;
-                              const isSuggestedNext = index === suggestedNextIndex;
 
                               return (
                                 <motion.button
@@ -1027,12 +1018,10 @@ export function InquiryScene({ sceneData, immersiveSectionMode = false }: Inquir
                                   transition={cardStateTransition}
                                   whileHover={reduceMotion || isActive ? undefined : subtleHoverLift}
                                   whileTap={reduceMotion ? undefined : subtleTapPress}
-                                  data-suggested-next={isSuggestedNext ? "true" : undefined}
                                   className={`rounded-full border px-3 py-2 text-center text-[0.75rem] uppercase tracking-[0.16em] ${
                                     isActive
                                       ? "scene-step-chip-active text-[var(--text-primary)]"
                                       : "scene-step-chip text-[var(--text-secondary)]"
-                                  } ${isSuggestedNext ? "scene-step-chip-suggested" : ""
                                   }`}
                                 >
                                   {step.chip}
