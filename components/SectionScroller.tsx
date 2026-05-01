@@ -545,7 +545,7 @@ export function SectionScroller({
                       ? { opacity: 1, filter: "blur(0px)", scale: 1, y: 0 }
                       : isActive
                         ? { opacity: 1, filter: "blur(0px)", scale: 1, y: 0 }
-                        : { opacity: 0.12, filter: "blur(8px)", scale: 0.985, y: 20 }
+                        : { opacity: 0.16, filter: "blur(2px)", scale: 0.992, y: 14 }
                   }
                   transition={reduceMotion ? { duration: 0 } : revealTransition}
                 >

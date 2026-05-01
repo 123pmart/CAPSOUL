@@ -47,12 +47,12 @@ export function CompactSceneControls({
   className = "",
 }: CompactSceneControlsProps) {
   return (
-    <div className={`flex items-center justify-center gap-3 ${className}`.trim()}>
+    <div className={`compact-scene-controls flex items-center justify-center gap-3 ${className}`.trim()}>
       {showArrows ? (
         <button
           type="button"
-          aria-label="Previous scene"
-          className="button-secondary !h-10 !w-10 !min-h-0 shrink-0 !px-0 !py-0"
+          aria-label="Previous scene detail"
+          className="compact-scene-arrow compact-scene-arrow-previous button-secondary !h-10 !w-10 !min-h-0 shrink-0 !px-0 !py-0"
           disabled={previousDisabled}
           onClick={onPrevious}
         >
@@ -60,7 +60,7 @@ export function CompactSceneControls({
         </button>
       ) : null}
 
-      <div className="flex items-center justify-center gap-1.5">
+      <div className="compact-scene-progress flex items-center justify-center gap-1.5">
         {labels.map((label, index) => {
           const isActive = index === activeIndex;
 
@@ -71,9 +71,9 @@ export function CompactSceneControls({
               aria-label={`Show ${label}`}
               aria-pressed={isActive}
               onClick={() => onSelect(index)}
-              className={`h-2.5 rounded-full transition-all duration-300 ${
+              className={`compact-scene-dot h-2.5 rounded-full transition-all duration-300 ${
                 isActive
-                  ? "w-7 bg-[var(--accent-deep)]"
+                  ? "compact-scene-dot-active w-7 bg-[var(--accent-deep)]"
                   : "w-2.5 bg-[rgba(158,179,200,0.34)]"
               }`}
             />
@@ -84,8 +84,8 @@ export function CompactSceneControls({
       {showArrows ? (
         <button
           type="button"
-          aria-label="Next scene"
-          className="button-secondary !h-10 !w-10 !min-h-0 shrink-0 !px-0 !py-0"
+          aria-label="Next scene detail"
+          className="compact-scene-arrow compact-scene-arrow-next button-secondary !h-10 !w-10 !min-h-0 shrink-0 !px-0 !py-0"
           disabled={nextDisabled}
           onClick={onNext}
         >

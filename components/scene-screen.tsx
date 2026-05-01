@@ -435,7 +435,7 @@ export function SceneScreen({
                         onNext={goNext}
                         previousDisabled={isFirst}
                         nextDisabled={isLast}
-                        showArrows={!immersiveSectionMode}
+                        showArrows
                       />
 
                       <p className="mt-3 text-[0.74rem] uppercase tracking-[0.14em] text-[var(--text-tertiary)]">
