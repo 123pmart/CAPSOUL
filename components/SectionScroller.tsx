@@ -41,10 +41,11 @@ const revealTransition = {
 } as const;
 
 const SCROLL_BOUNDARY_TOLERANCE = 6;
-const DESKTOP_WHEEL_DELTA_THRESHOLD = 104;
-const MOBILE_SECTION_SWIPE_THRESHOLD = 92;
-const SECTION_TRANSITION_LOCK_MS = 780;
-const WHEEL_INTENT_IDLE_MS = 220;
+const DESKTOP_WHEEL_DELTA_THRESHOLD = 156;
+const MOBILE_SECTION_SWIPE_THRESHOLD = 132;
+const SECTION_TRANSITION_LOCK_MS = 880;
+const WHEEL_INTENT_IDLE_MS = 260;
+const TOUCH_VERTICAL_INTENT_RATIO = 1.25;
 
 type InnerScrollPosition = "start" | "end" | "preserve";
 
@@ -155,7 +156,7 @@ export function SectionScroller({
   const wheelBufferRef = useRef(0);
   const wheelDirectionRef = useRef<1 | -1 | null>(null);
   const wheelIdleTimerRef = useRef<number | null>(null);
-  const touchStartRef = useRef<{ y: number; index: number } | null>(null);
+  const touchStartRef = useRef<{ x: number; y: number; index: number } | null>(null);
   const navigationLockRef = useRef(false);
   const navigationLockTimerRef = useRef<number | null>(null);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -495,6 +496,7 @@ export function SectionScroller({
     }
 
     touchStartRef.current = {
+      x: event.touches[0]?.clientX ?? 0,
       y: event.touches[0]?.clientY ?? 0,
       index: activeIndexRef.current,
     };
@@ -508,10 +510,15 @@ export function SectionScroller({
       return;
     }
 
+    const endX = event.changedTouches[0]?.clientX ?? start.x;
     const endY = event.changedTouches[0]?.clientY ?? start.y;
+    const deltaX = endX - start.x;
     const delta = start.y - endY;
 
-    if (Math.abs(delta) < MOBILE_SECTION_SWIPE_THRESHOLD) {
+    if (
+      Math.abs(delta) < MOBILE_SECTION_SWIPE_THRESHOLD ||
+      Math.abs(delta) < Math.abs(deltaX) * TOUCH_VERTICAL_INTENT_RATIO
+    ) {
       return;
     }
 
@@ -594,28 +601,6 @@ export function SectionScroller({
                   </div>
                   <nav
                     data-section-navigation-control="true"
-                    className="section-mobile-progress-nav"
-                    aria-label="Mobile section navigation"
-                  >
-                    {sections.map((progressSection, progressIndex) => {
-                      const progressIsActive = activeIndex === progressIndex;
-
-                      return (
-                        <button
-                          key={`${section.id}-${progressSection.id}-mobile-progress`}
-                          type="button"
-                          className={`section-mobile-progress-segment ${progressIsActive ? "section-mobile-progress-segment-active" : ""}`.trim()}
-                          aria-label={`Go to ${progressSection.label} section`}
-                          aria-current={progressIsActive ? "page" : undefined}
-                          onClick={() => goToSection(progressIndex)}
-                        >
-                          <span className="sr-only">{progressSection.label}</span>
-                        </button>
-                      );
-                    })}
-                  </nav>
-                  <nav
-                    data-section-navigation-control="true"
                     className="section-page-controls"
                     aria-label={`${section.label} section controls`}
                   >
@@ -629,6 +614,29 @@ export function SectionScroller({
                       <span aria-hidden="true">&larr;</span>
                       <span>{routeLabels.previous}</span>
                     </button>
+                    <div
+                      data-section-navigation-control="true"
+                      className="section-mobile-progress-nav"
+                      role="group"
+                      aria-label="Mobile section navigation"
+                    >
+                      {sections.map((progressSection, progressIndex) => {
+                        const progressIsActive = activeIndex === progressIndex;
+
+                        return (
+                          <button
+                            key={`${section.id}-${progressSection.id}-mobile-progress`}
+                            type="button"
+                            className={`section-mobile-progress-segment ${progressIsActive ? "section-mobile-progress-segment-active" : ""}`.trim()}
+                            aria-label={`Go to ${progressSection.label} section`}
+                            aria-current={progressIsActive ? "page" : undefined}
+                            onClick={() => goToSection(progressIndex)}
+                          >
+                            <span className="sr-only">{progressSection.label}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
                     <button
                       type="button"
                       className="section-page-control section-page-control-next"

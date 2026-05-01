@@ -4366,23 +4366,39 @@ html[data-theme="dark"] {
 
   .section-mobile-progress-nav {
     display: flex;
-    position: sticky;
-    z-index: 21;
-    bottom: calc(var(--safe-bottom) + 6.95rem);
-    margin-block-start: 0.28rem;
-    margin-block-end: 0.3rem;
+    position: relative;
+    z-index: 1;
+    width: auto;
+    max-width: none;
+    flex: 0 0 auto;
+    gap: 0.3rem;
+    margin: 0;
+    padding: 0.34rem 0.42rem;
   }
 
   .section-page-controls {
     bottom: calc(var(--safe-bottom) + 3.95rem);
+    display: grid;
+    grid-template-columns: minmax(4.8rem, 1fr) auto minmax(4.8rem, 1fr);
     width: min(100% - 2.15rem, 23rem);
+    align-items: center;
     margin-block-start: 0.28rem;
     margin-block-end: calc(var(--safe-bottom) + 4.35rem);
     padding: 0.3rem;
   }
 
+  .section-mobile-progress-segment {
+    inline-size: 0.54rem;
+    block-size: 0.26rem;
+  }
+
+  .section-mobile-progress-segment-active {
+    inline-size: 1.18rem;
+  }
+
   .section-page-control {
     min-height: 2.28rem;
+    padding-inline: 0.64rem;
     font-size: 0.74rem;
   }
 }
