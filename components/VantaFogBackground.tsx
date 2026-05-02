@@ -41,8 +41,8 @@ const fogThemes = {
     lowlightColor: 0x4f7da9,
     baseColor: 0xe2edf8,
     blurFactor: 0.48,
-    speed: 0.48,
-    zoom: 0.72,
+    speed: 0.34,
+    zoom: 0.66,
   },
   dark: {
     highlightColor: 0xc4e0ff,
@@ -50,8 +50,8 @@ const fogThemes = {
     lowlightColor: 0x07111f,
     baseColor: 0x040912,
     blurFactor: 0.54,
-    speed: 0.52,
-    zoom: 0.72,
+    speed: 0.36,
+    zoom: 0.66,
   },
 } as const;
 
@@ -93,9 +93,9 @@ export default function VantaFogBackground() {
           minHeight: 200.0,
           minWidth: 200.0,
           backgroundAlpha: 0,
-          forceAnimate: true,
-          scale: 1.15,
-          scaleMobile: 1.35,
+          forceAnimate: false,
+          scale: 1.08,
+          scaleMobile: 1.18,
           ...fogThemes[theme],
         });
       } catch {

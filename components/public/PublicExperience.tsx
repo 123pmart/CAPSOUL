@@ -357,6 +357,7 @@ function ArchiveHero({
 
 function EmotionalValue({ home }: { home: ResolvedSceneContent }) {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
   const pillars = home.steps.slice(0, 4);
   const activePillar = pillars[activeIndex] ?? pillars[0];
 
@@ -385,16 +386,26 @@ function EmotionalValue({ home }: { home: ResolvedSceneContent }) {
       </motion.div>
       <motion.div className="apple-value-grid" variants={archiveChildReveal}>
         {pillars.map((pillar, index) => {
-          const isOpen = index === activeIndex;
+          const isActive = index === activeIndex;
+          const isOpen = index === expandedIndex;
 
           return (
             <motion.button
               type="button"
-              className={isOpen ? "apple-value-card apple-value-card-active" : "apple-value-card"}
+              className={[
+                "apple-value-card",
+                isActive ? "apple-value-card-active" : "",
+                isOpen ? "apple-value-card-expanded" : "",
+              ].filter(Boolean).join(" ")}
               key={pillar.label}
               variants={archiveChildReveal}
               aria-expanded={isOpen}
-              onClick={() => setActiveIndex(index)}
+              onClick={() => {
+                setActiveIndex(index);
+                setExpandedIndex((current) => (current === index ? null : index));
+              }}
+              onFocus={() => setActiveIndex(index)}
+              onMouseEnter={() => setActiveIndex(index)}
             >
               <span>Archive {String(index + 1).padStart(2, "0")}</span>
               <h3>{pillar.label}</h3>
@@ -418,6 +429,46 @@ function EmotionalValue({ home }: { home: ResolvedSceneContent }) {
         })}
       </motion.div>
     </motion.div>
+  );
+}
+
+function ArchiveIndexLine({
+  sections,
+  activeId,
+}: {
+  sections: Array<{ id: ImmersiveSectionId; label: string }>;
+  activeId: ImmersiveSectionId;
+}) {
+  const activeIndex = Math.max(0, sections.findIndex((section) => section.id === activeId));
+
+  return (
+    <div
+      className="apple-archive-index"
+      aria-hidden="true"
+      style={{ "--archive-section-index": activeIndex } as CSSProperties}
+    >
+      <span className="apple-archive-index-label">Archive index</span>
+      <div className="apple-archive-index-track">
+        <i className="apple-archive-index-marker" />
+        {sections.map((section, index) => (
+          <span
+            key={section.id}
+            className={activeId === section.id ? "apple-archive-index-step apple-archive-index-step-active" : "apple-archive-index-step"}
+            style={{ "--archive-step-index": index } as CSSProperties}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function PublicAdminAccess({ label }: { label: string }) {
+  return (
+    <div className="apple-admin-access">
+      <a href="/admin" aria-label={`${label} access`}>
+        {label}
+      </a>
+    </div>
   );
 }
 
@@ -846,6 +897,8 @@ export function PublicExperience({
 
   return (
     <div className="apple-archive-experience">
+      <ArchiveIndexLine sections={sections} activeId={activeId} />
+
       <nav className="apple-side-nav" aria-label="Section navigation">
         {sections.map((section) => (
           <button
@@ -901,6 +954,7 @@ export function PublicExperience({
         className="apple-section-inquiry"
       >
         <InquiryArchiveForm inquiry={inquiry} />
+        <PublicAdminAccess label={globalContent.adminEntryLabel} />
       </ArchiveSection>
     </div>
   );
