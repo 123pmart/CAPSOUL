@@ -1,12 +1,39 @@
 ▲ Next.js 16.2.1 (Turbopack)
 - Local:         http://127.0.0.1:3000
 - Network:       http://127.0.0.1:3000
-✓ Ready in 404ms
+✓ Ready in 405ms
 
- GET / 200 in 711ms (next.js: 177ms, application-code: 534ms)
-✓ Compiled in 114ms
- GET / 200 in 382ms (next.js: 82ms, application-code: 300ms)
- GET /the-experience 200 in 92ms (next.js: 51ms, application-code: 41ms)
- GET /how-it-works 200 in 105ms (next.js: 53ms, application-code: 52ms)
- GET / 200 in 112ms (next.js: 3ms, application-code: 109ms)
-[?25h
+ GET / 200 in 656ms (next.js: 170ms, application-code: 487ms)
+ GET / 200 in 157ms (next.js: 5ms, application-code: 152ms)
+ GET / 200 in 166ms (next.js: 3ms, application-code: 164ms)
+✓ Compiled in 165ms
+ GET / 200 in 474ms (next.js: 108ms, application-code: 366ms)
+✓ Compiled in 350ms
+✓ Compiled in 136ms
+✓ Compiled in 453ms
+✓ Compiled in 460ms
+✓ Compiled in 345ms
+✓ Compiled in 379ms
+✓ Compiled in 439ms
+✓ Compiled in 425ms
+✓ Compiled in 104ms
+ GET / 200 in 469ms (next.js: 122ms, application-code: 347ms)
+ GET / 200 in 219ms (next.js: 5ms, application-code: 214ms)
+✓ Compiled in 163ms
+✓ Compiled in 385ms
+ GET / 200 in 466ms (next.js: 124ms, application-code: 342ms)
+✓ Compiled in 185ms
+✓ Compiled in 121ms
+✓ Compiled in 449ms
+✓ Compiled in 146ms
+✓ Compiled in 285ms
+✓ Compiled in 271ms
+✓ Compiled in 110ms
+✓ Compiled in 269ms
+✓ Compiled in 258ms
+✓ Compiled in 219ms
+✓ Compiled in 363ms
+✓ Compiled in 321ms
+✓ Compiled in 366ms
+ GET / 200 in 457ms (next.js: 146ms, application-code: 311ms)
+ GET / 200 in 223ms (next.js: 3ms, application-code: 219ms)

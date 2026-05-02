@@ -31,6 +31,16 @@ function readCurrentTheme(): SiteTheme {
     return DEFAULT_SITE_THEME;
   }
 
+  try {
+    const storedTheme = window.localStorage.getItem(SITE_THEME_STORAGE_KEY);
+
+    if (isSiteTheme(storedTheme)) {
+      return storedTheme;
+    }
+  } catch {
+    // Fall back to the server-rendered theme when storage is unavailable.
+  }
+
   const currentTheme = document.documentElement.dataset.theme;
 
   return isSiteTheme(currentTheme) ? currentTheme : DEFAULT_SITE_THEME;
@@ -65,10 +75,11 @@ export function SiteThemeProvider({
 
   useEffect(() => {
     const nextTheme = readCurrentTheme();
-    setThemeState((currentTheme) => (currentTheme === nextTheme ? currentTheme : nextTheme));
-  }, []);
+    if (nextTheme !== theme) {
+      setThemeState(nextTheme);
+      return;
+    }
 
-  useEffect(() => {
     applySiteTheme(theme);
   }, [theme]);
 

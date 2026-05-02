@@ -216,7 +216,7 @@ const defaultEnglishGlobalContent: GlobalSiteContent = {
   },
   sceneLabels: {
     tapImageHint: "Tap image to view details.",
-    arrowInstruction: "Use the arrows to move through the scene.",
+    arrowInstruction: "Use the scene controls to move through the states.",
     activeState: "Active state",
   },
   languageLabels: {
@@ -245,7 +245,7 @@ const defaultSpanishGlobalContent: GlobalSiteContent = {
   },
   sceneLabels: {
     tapImageHint: "Toca la imagen para ver detalles.",
-    arrowInstruction: "Usa las flechas para recorrer la escena.",
+    arrowInstruction: "Usa los controles de escena para recorrer los estados.",
     activeState: "Estado activo",
   },
   languageLabels: {
