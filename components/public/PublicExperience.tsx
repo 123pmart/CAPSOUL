@@ -75,13 +75,33 @@ const budgetSliderMax = 25000;
 const budgetSliderStep = 500;
 const budgetSliderDefault = 12500;
 
+const revealEase = [0.22, 1, 0.36, 1] as const;
+
 const sectionReveal = {
-  hidden: { opacity: 0, y: 28, scale: 0.985 },
+  hidden: { opacity: 0, y: 36, scale: 0.985 },
   visible: {
     opacity: 1,
     y: 0,
     scale: 1,
-    transition: { duration: 0.68, ease: [0.22, 1, 0.36, 1] },
+    transition: { duration: 0.72, ease: revealEase, staggerChildren: 0.08, delayChildren: 0.04 },
+  },
+} as const;
+
+const archiveChildReveal = {
+  hidden: { opacity: 0, y: 28, scale: 0.992 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: { duration: 0.62, ease: revealEase },
+  },
+} as const;
+
+const heroReveal = {
+  hidden: { opacity: 1 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.09, delayChildren: 0.05 },
   },
 } as const;
 
@@ -245,10 +265,10 @@ function ArchiveSection({
         whileInView="visible"
         viewport={{ once: true, amount: 0.2 }}
       >
-        <div className="apple-section-kicker">{eyebrow}</div>
-        <h2 className="apple-section-title">{title}</h2>
-        <p className="apple-section-copy">{description}</p>
-        {children}
+        <motion.div className="apple-section-kicker" variants={archiveChildReveal}>{eyebrow}</motion.div>
+        <motion.h2 className="apple-section-title" variants={archiveChildReveal}>{title}</motion.h2>
+        <motion.p className="apple-section-copy" variants={archiveChildReveal}>{description}</motion.p>
+        <motion.div className="apple-section-body" variants={archiveChildReveal}>{children}</motion.div>
       </motion.div>
     </section>
   );
@@ -292,14 +312,14 @@ function ArchiveHero({
     <section id="home" data-archive-section className="apple-hero">
       <motion.div
         className="apple-hero-inner"
-        initial={{ opacity: 0, y: 24, scale: 0.99 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ duration: 0.72, ease: [0.22, 1, 0.36, 1] }}
+        variants={heroReveal}
+        initial="hidden"
+        animate="visible"
       >
-        <div className="apple-section-kicker">{home.eyebrow}</div>
-        <h1 className="apple-hero-title">{home.title}</h1>
-        <p className="apple-hero-copy">{home.description}</p>
-        <div className="apple-hero-actions">
+        <motion.div className="apple-section-kicker" variants={archiveChildReveal}>{home.eyebrow}</motion.div>
+        <motion.h1 className="apple-hero-title" variants={archiveChildReveal}>{home.title}</motion.h1>
+        <motion.p className="apple-hero-copy" variants={archiveChildReveal}>{home.description}</motion.p>
+        <motion.div className="apple-hero-actions" variants={archiveChildReveal}>
           {home.primaryAction ? (
             <a className="apple-cta apple-cta-primary" href={home.primaryAction.href} onClick={(event) => handleLink(home.primaryAction?.href ?? "", event)}>
               {home.primaryAction.label}
@@ -310,8 +330,8 @@ function ArchiveHero({
               {home.secondaryAction.label}
             </a>
           ) : null}
-        </div>
-        <div className="apple-hero-stage">
+        </motion.div>
+        <motion.div className="apple-hero-stage" variants={archiveChildReveal}>
           <div className="apple-hero-record">
             <ArchiveVisualFrame
               image={heroStep.image}
@@ -329,7 +349,7 @@ function ArchiveHero({
               </div>
             ))}
           </div>
-        </div>
+        </motion.div>
       </motion.div>
     </section>
   );
@@ -339,21 +359,27 @@ function EmotionalValue({ home }: { home: ResolvedSceneContent }) {
   const pillars = home.steps.slice(0, 3);
 
   return (
-    <div className="apple-value-band">
-      <div className="apple-value-statement">
+    <motion.div
+      className="apple-value-band"
+      variants={sectionReveal}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.22 }}
+    >
+      <motion.div className="apple-value-statement" variants={archiveChildReveal}>
         <span>Private memory archive</span>
         <h2>{home.steps[3]?.summary ?? home.title}</h2>
-      </div>
-      <div className="apple-value-grid">
+      </motion.div>
+      <motion.div className="apple-value-grid" variants={archiveChildReveal}>
         {pillars.map((pillar) => (
-          <article className="apple-value-card" key={pillar.label}>
+          <motion.article className="apple-value-card" key={pillar.label} variants={archiveChildReveal}>
             <span>{pillar.label}</span>
             <h3>{pillar.title}</h3>
             <p>{pillar.detail}</p>
-          </article>
+          </motion.article>
         ))}
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }
 
