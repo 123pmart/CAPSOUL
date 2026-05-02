@@ -44,7 +44,7 @@ export const navigation: NavItem[] = [
 export const homepage = {
   hero: {
     eyebrow: "Premium legacy documentaries",
-    title: "Preserve the voice.",
+    title: "Preserve their voice.",
     description:
       "Bespoke legacy documentaries for families who want to preserve a parent, grandparent, or loved one in their own voice while that presence can still be felt in full.",
     primaryCta: {

@@ -3258,40 +3258,6 @@ html[data-theme="dark"] body {
   transform: translateY(-1px);
 }
 
-.public-visual-scope .scene-step-chip-active::before {
-  content: "";
-  position: absolute;
-  z-index: 2;
-  top: 0.54rem;
-  left: 0.64rem;
-  width: clamp(2.6rem, 34%, 5.75rem);
-  height: 0.16rem;
-  border-radius: var(--radius-pill);
-  background: linear-gradient(90deg, var(--accent-ice-strong), color-mix(in srgb, var(--accent) 32%, transparent));
-  opacity: 0.62;
-  pointer-events: none;
-}
-
-.public-visual-scope .scene-step-chip-active::after {
-  content: "";
-  position: absolute;
-  z-index: 2;
-  top: 0.58rem;
-  right: 0.64rem;
-  width: 0.46rem;
-  height: 0.46rem;
-  border-radius: 50%;
-  background: linear-gradient(180deg, var(--accent-ice-strong), var(--accent));
-  box-shadow:
-    0 0 0 4px color-mix(in srgb, var(--accent-soft) 76%, transparent),
-    0 0 20px color-mix(in srgb, var(--glow) 84%, transparent);
-  pointer-events: none;
-}
-
-.public-visual-scope .scene-step-chip-active[class~="rounded-full"]::after {
-  content: none;
-}
-
 .public-visual-scope .inquiry-step-tabs .scene-step-chip-active::after,
 .public-visual-scope .inquiry-step-tabs .scene-step-chip-suggested::after {
   content: none;
@@ -3299,40 +3265,6 @@ html[data-theme="dark"] body {
 
 .public-visual-scope .inquiry-step-tabs .scene-step-chip-active::before {
   content: none;
-}
-
-.public-visual-scope .scene-step-chip-suggested:not(.scene-step-chip-active)::after {
-  content: "Next";
-  position: absolute;
-  z-index: 2;
-  top: 0.48rem;
-  right: 0.55rem;
-  border-radius: var(--radius-pill);
-  border: 1px solid color-mix(in srgb, var(--accent) 28%, var(--border));
-  background: color-mix(in srgb, var(--surface-strong) 84%, transparent);
-  color: color-mix(in srgb, var(--accent) 82%, var(--text));
-  box-shadow: var(--glass-inner-highlight);
-  padding: 0.16rem 0.38rem;
-  font-size: 0.52rem;
-  font-weight: 800;
-  letter-spacing: 0.11em;
-  line-height: 1;
-  text-transform: uppercase;
-  pointer-events: none;
-}
-
-.public-visual-scope .scene-step-chip-suggested[class~="rounded-full"]:not(.scene-step-chip-active)::after {
-  content: "";
-  top: 0.5rem;
-  right: 0.64rem;
-  width: 0.42rem;
-  height: 0.42rem;
-  padding: 0;
-  border-radius: 50%;
-  background: color-mix(in srgb, var(--accent) 72%, var(--surface-strong));
-  box-shadow:
-    0 0 0 3px color-mix(in srgb, var(--accent-soft) 62%, transparent),
-    0 0 16px color-mix(in srgb, var(--glow) 52%, transparent);
 }
 
 .public-visual-scope .header-nav-pill-inactive,
@@ -3453,23 +3385,6 @@ html[data-theme="dark"] body {
 .public-visual-scope [data-scene-mode="desktopShortHeight"] .scene-wide-support-card,
 .public-visual-scope [data-scene-mode="tabletLandscape"] .scene-wide-support-card {
   padding-block: clamp(0.95rem, 1.15vw, 1.22rem);
-}
-
-@keyframes capsoulSuggestedNextGlow {
-  0%,
-  100% {
-    box-shadow:
-      0 0 0 1px color-mix(in srgb, var(--accent) 18%, transparent),
-      0 0 20px color-mix(in srgb, var(--glow) 58%, transparent),
-      var(--glass-inner-highlight);
-  }
-
-  50% {
-    box-shadow:
-      0 0 0 1px color-mix(in srgb, var(--accent) 28%, transparent),
-      0 0 30px color-mix(in srgb, var(--glow) 84%, transparent),
-      var(--glass-inner-highlight);
-  }
 }
 
 .public-visual-scope .field-label {
@@ -3672,34 +3587,6 @@ html[data-theme="dark"] body {
 .public-visual-scope .scene-focus::before,
 .public-visual-scope .scene-focus::after {
   border-radius: inherit;
-}
-
-.public-visual-scope .scene-step-chip-suggested:not(.scene-step-chip-active)::after {
-  border-radius: var(--radius-pill);
-}
-
-.public-visual-scope .scene-step-chip-suggested[class~="rounded-full"]:not(.scene-step-chip-active)::after {
-  border-radius: 50%;
-}
-
-.public-visual-scope .scene-step-chip-active::after {
-  content: "";
-  position: absolute;
-  z-index: 2;
-  top: 0.58rem;
-  right: 0.64rem;
-  width: 0.46rem;
-  height: 0.46rem;
-  border-radius: 50%;
-  background: linear-gradient(180deg, var(--accent-ice-strong), var(--accent));
-  box-shadow:
-    0 0 0 4px color-mix(in srgb, var(--accent-soft) 76%, transparent),
-    0 0 20px color-mix(in srgb, var(--glow) 84%, transparent);
-  pointer-events: none;
-}
-
-.public-visual-scope .scene-step-chip-active[class~="rounded-full"]::after {
-  content: none;
 }
 
 .public-visual-scope .inquiry-step-tabs .scene-step-chip-active::after,
@@ -4538,7 +4425,6 @@ html[data-theme="dark"] body {
 }
 
 .apple-value-grid {
-  --archive-index: 0;
   display: grid;
   position: relative;
   width: min(100%, 980px);
@@ -4547,40 +4433,6 @@ html[data-theme="dark"] body {
   gap: clamp(0.58rem, 1vw, 0.82rem);
   align-items: start;
   margin-inline: auto;
-  padding-top: 0.8rem;
-}
-
-.apple-value-grid::before,
-.apple-value-grid::after {
-  content: "";
-  position: absolute;
-  pointer-events: none;
-}
-
-.apple-value-grid::before {
-  inset-inline: clamp(1rem, 1.7vw, 1.35rem);
-  top: 0.18rem;
-  height: 1px;
-  border-radius: var(--radius-pill);
-  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--border-strong) 58%, transparent), transparent);
-}
-
-.apple-value-grid::after {
-  top: -0.08rem;
-  left: calc(var(--archive-index-x, 0%) + 12.5%);
-  width: 0.62rem;
-  height: 0.62rem;
-  border: 1px solid color-mix(in srgb, var(--accent) 58%, white);
-  border-radius: 50%;
-  background: color-mix(in srgb, var(--surface-strong) 78%, white);
-  box-shadow:
-    0 0 0 5px var(--accent-soft),
-    0 0 28px color-mix(in srgb, var(--glow) 72%, transparent);
-  transform: translate3d(-50%, 0, 0) scale(1);
-  transition:
-    left 340ms var(--ease-luxury),
-    transform var(--duration-med) var(--ease-luxury),
-    box-shadow var(--duration-med) var(--ease-luxury);
 }
 
 .apple-value-card {
@@ -4634,21 +4486,6 @@ html[data-theme="dark"] body {
   -webkit-line-clamp: 3;
 }
 
-.apple-value-card i {
-  position: absolute;
-  top: 0.92rem;
-  right: 0.92rem;
-  width: 1.32rem;
-  height: 1.32rem;
-  border: 1px solid color-mix(in srgb, var(--border-strong) 46%, transparent);
-  border-radius: 50%;
-  background:
-    linear-gradient(var(--text-muted), var(--text-muted)) center / 0.58rem 1px no-repeat,
-    linear-gradient(var(--text-muted), var(--text-muted)) center / 1px 0.58rem no-repeat,
-    color-mix(in srgb, var(--surface-strong) 58%, transparent);
-  transition: transform var(--duration-med) var(--ease-luxury), background-color var(--duration-fast) var(--ease-luxury);
-}
-
 .apple-value-card-active {
   min-height: clamp(12rem, 13.5vw, 15.25rem);
   transform: translateY(-0.18rem);
@@ -4673,14 +4510,6 @@ html[data-theme="dark"] body {
     0 0 0 4px var(--accent-soft),
     0 24px 64px color-mix(in srgb, var(--shadow-color, #4f6f91) 16%, transparent),
     var(--glass-inner-highlight);
-}
-
-.apple-value-card-active i {
-  transform: rotate(45deg);
-  background:
-    linear-gradient(var(--accent), var(--accent)) center / 0.58rem 1px no-repeat,
-    linear-gradient(var(--accent), var(--accent)) center / 1px 0.58rem no-repeat,
-    var(--accent-soft);
 }
 
 .apple-value-card-detail {
@@ -4821,21 +4650,6 @@ html[data-theme="dark"] body {
 .apple-record-card-active:hover::after,
 .apple-record-card-active:focus-visible::after {
   transform: translate3d(42%, 0, 0);
-}
-
-.apple-record-card em {
-  position: absolute;
-  top: 0.76rem;
-  right: 0.76rem;
-  border: 1px solid color-mix(in srgb, var(--accent) 34%, var(--border));
-  border-radius: var(--radius-pill);
-  padding: 0.18rem 0.42rem;
-  color: color-mix(in srgb, var(--accent) 82%, var(--text));
-  font-size: 0.56rem;
-  font-style: normal;
-  font-weight: 850;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
 }
 
 .apple-record-feature {
@@ -5448,9 +5262,7 @@ html[data-theme="dark"] body {
   .apple-record-card.apple-liquid-surface[data-liquid-active="true"],
   .apple-preserve-card.apple-liquid-surface[data-liquid-active="true"],
   .apple-process-card.apple-liquid-surface[data-liquid-active="true"],
-  .apple-hero-chapter.apple-liquid-surface[data-liquid-active="true"],
-  .apple-inquiry-form.apple-liquid-surface[data-liquid-active="true"],
-  .apple-inquiry-support.apple-liquid-surface[data-liquid-active="true"] {
+  .apple-hero-chapter.apple-liquid-surface[data-liquid-active="true"] {
     transform: translate3d(var(--liquid-shift-x), calc(var(--liquid-shift-y) - 5px), 0) scale(1.012);
   }
 
@@ -5574,11 +5386,6 @@ html[data-theme="dark"] .apple-inquiry-tab-active {
   .apple-value-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-
-  .apple-value-grid::before,
-  .apple-value-grid::after {
-    display: none;
-  }
 }
 
 @media (min-width: 768px) {
@@ -5660,7 +5467,6 @@ html[data-theme="dark"] .apple-inquiry-tab-active {
     grid-template-columns: 1fr;
     grid-auto-rows: minmax(7.8rem, auto);
     gap: 0.58rem;
-    padding-top: 0;
   }
 
   .apple-value-card {
@@ -5763,7 +5569,6 @@ html[data-theme="dark"] .apple-inquiry-tab-active {
   .apple-inquiry-tab::before,
   .apple-budget-shell::before,
   .apple-admin-access a::before,
-  .apple-value-grid::after,
   .apple-value-card::after,
   .apple-visual-image-wrap img,
   .apple-record-card-active::after {
@@ -6704,7 +6509,6 @@ html[data-theme="dark"] {
   .vanta-fog-atmosphere,
   .vanta-fog-scroll-depth,
   .vanta-fog-scroll-glow,
-  .public-visual-scope .scene-step-chip-suggested,
   .public-visual-scope .button-primary::after,
   .public-visual-scope .button-secondary::after {
     animation: none;

@@ -23,7 +23,7 @@ export type InquirySupportState = {
 
 export const homeScene = {
   eyebrow: "Legacy Documentary Studio",
-  title: "Preserve the voice.",
+  title: "Preserve their voice.",
   description:
     "Private documentary films that keep presence, humor, conviction, and message in the voice a family will want again.",
   primaryAction: { label: "Begin Here", href: "/inquire" },

@@ -396,7 +396,7 @@ export const defaultSpanishSiteContent: SiteContent = {
   global: defaultSpanishGlobalContent,
   home: {
     eyebrow: "Estudio Documental de Legado",
-    title: "Preserva la voz.",
+    title: "Preserva su voz.",
     description:
       "Películas documentales privadas que conservan presencia, humor, convicción y mensaje en la voz que una familia querrá volver a escuchar.",
     primaryAction: { label: "Comenzar aquí", href: "/inquire" },

@@ -79,22 +79,22 @@ const budgetSliderDefault = 12500;
 const revealEase = [0.22, 1, 0.36, 1] as const;
 
 const sectionReveal = {
-  hidden: { opacity: 0, y: 36, scale: 0.985 },
+  hidden: { opacity: 0, y: 44, scale: 0.982 },
   visible: {
     opacity: 1,
     y: 0,
     scale: 1,
-    transition: { duration: 0.72, ease: revealEase, staggerChildren: 0.08, delayChildren: 0.04 },
+    transition: { duration: 0.84, ease: revealEase, staggerChildren: 0.1, delayChildren: 0.05 },
   },
 } as const;
 
 const archiveChildReveal = {
-  hidden: { opacity: 0, y: 28, scale: 0.992 },
+  hidden: { opacity: 0, y: 34, scale: 0.988 },
   visible: {
     opacity: 1,
     y: 0,
     scale: 1,
-    transition: { duration: 0.62, ease: revealEase },
+    transition: { duration: 0.72, ease: revealEase },
   },
 } as const;
 
@@ -102,7 +102,7 @@ const heroReveal = {
   hidden: { opacity: 1 },
   visible: {
     opacity: 1,
-    transition: { staggerChildren: 0.09, delayChildren: 0.05 },
+    transition: { staggerChildren: 0.11, delayChildren: 0.06 },
   },
 } as const;
 
@@ -132,8 +132,10 @@ function useLiquidGlassPointer() {
       return;
     }
 
-    const clearActiveTarget = () => {
+    function clearActiveTarget(_event?: Event) {
       if (activeTargetRef.current) {
+        activeTargetRef.current.removeEventListener("pointermove", handleTargetPointerMove);
+        activeTargetRef.current.removeEventListener("pointerleave", clearActiveTarget);
         activeTargetRef.current.removeAttribute("data-liquid-active");
         activeTargetRef.current.style.removeProperty("--pointer-x");
         activeTargetRef.current.style.removeProperty("--pointer-y");
@@ -147,7 +149,7 @@ function useLiquidGlassPointer() {
 
       activeTargetRef.current = null;
       latestPointerRef.current = null;
-    };
+    }
 
     const updatePointerVars = () => {
       frameRef.current = null;
@@ -167,13 +169,11 @@ function useLiquidGlassPointer() {
 
       const x = Math.min(Math.max(event.clientX - rect.left, 0), rect.width);
       const y = Math.min(Math.max(event.clientY - rect.top, 0), rect.height);
-      const xPercent = (x / rect.width) * 100;
-      const yPercent = (y / rect.height) * 100;
       const normalizedX = x / rect.width - 0.5;
       const normalizedY = y / rect.height - 0.5;
 
-      target.style.setProperty("--pointer-x", `${xPercent.toFixed(2)}%`);
-      target.style.setProperty("--pointer-y", `${yPercent.toFixed(2)}%`);
+      target.style.setProperty("--pointer-x", `${x.toFixed(1)}px`);
+      target.style.setProperty("--pointer-y", `${y.toFixed(1)}px`);
       target.style.setProperty("--liquid-shift-x", `${(normalizedX * 5).toFixed(2)}px`);
       target.style.setProperty("--liquid-shift-y", `${(normalizedY * 5).toFixed(2)}px`);
       target.style.setProperty("--liquid-inverse-x", `${(-normalizedX * 5).toFixed(2)}px`);
@@ -182,22 +182,7 @@ function useLiquidGlassPointer() {
       target.style.setProperty("--liquid-tilt-y", `${(normalizedX * 1.8).toFixed(2)}deg`);
     };
 
-    const handlePointerMove = (event: PointerEvent) => {
-      const target = event.target instanceof Element
-        ? event.target.closest<HTMLElement>(liquidTargetSelector)
-        : null;
-
-      if (!target) {
-        clearActiveTarget();
-        return;
-      }
-
-      if (activeTargetRef.current !== target) {
-        clearActiveTarget();
-        activeTargetRef.current = target;
-        target.setAttribute("data-liquid-active", "true");
-      }
-
+    const schedulePointerUpdate = (event: PointerEvent) => {
       latestPointerRef.current = event;
 
       if (frameRef.current === null) {
@@ -205,23 +190,34 @@ function useLiquidGlassPointer() {
       }
     };
 
-    const handlePointerOut = (event: PointerEvent) => {
-      const target = activeTargetRef.current;
-      const related = event.relatedTarget;
+    function handleTargetPointerMove(event: PointerEvent) {
+      schedulePointerUpdate(event);
+    }
 
-      if (!target || (related instanceof Node && target.contains(related))) {
+    const handlePointerOver = (event: PointerEvent) => {
+      const target = event.target instanceof Element
+        ? event.target.closest<HTMLElement>(liquidTargetSelector)
+        : null;
+
+      if (!target) {
         return;
       }
 
-      clearActiveTarget();
+      if (activeTargetRef.current !== target) {
+        clearActiveTarget();
+        activeTargetRef.current = target;
+        target.addEventListener("pointermove", handleTargetPointerMove, { passive: true });
+        target.addEventListener("pointerleave", clearActiveTarget, { passive: true });
+        target.setAttribute("data-liquid-active", "true");
+      }
+
+      schedulePointerUpdate(event);
     };
 
-    window.addEventListener("pointermove", handlePointerMove, { passive: true });
-    window.addEventListener("pointerout", handlePointerOut, { passive: true });
+    document.addEventListener("pointerover", handlePointerOver, { passive: true });
 
     return () => {
-      window.removeEventListener("pointermove", handlePointerMove);
-      window.removeEventListener("pointerout", handlePointerOut);
+      document.removeEventListener("pointerover", handlePointerOver);
 
       if (frameRef.current !== null) {
         window.cancelAnimationFrame(frameRef.current);
@@ -515,7 +511,6 @@ function EmotionalValue({ home }: { home: ResolvedSceneContent }) {
       <motion.div
         className="apple-value-grid"
         variants={archiveChildReveal}
-        style={{ "--archive-index": activeIndex, "--archive-index-x": `${activeIndex * 25}%` } as CSSProperties}
       >
         {pillars.map((pillar, index) => {
           const isActive = index === activeIndex;
@@ -555,7 +550,6 @@ function EmotionalValue({ home }: { home: ResolvedSceneContent }) {
                   </motion.div>
                 ) : null}
               </AnimatePresence>
-              <i aria-hidden="true" />
             </motion.button>
           );
         })}
@@ -614,7 +608,6 @@ function ArchiveSceneModule({
   const [activeIndex, setActiveIndex] = useState(0);
   const reduceMotion = useReducedMotion();
   const active = scene.steps[activeIndex] ?? scene.steps[0];
-  const suggestedNextIndex = activeIndex < scene.steps.length - 1 ? activeIndex + 1 : -1;
   const transition = reduceMotion ? { duration: 0 } : contentSwapTransition;
 
   const previous = () => setActiveIndex((current) => Math.max(0, current - 1));
@@ -635,18 +628,16 @@ function ArchiveSceneModule({
         </div>
         {scene.steps.map((step, index) => {
           const isActive = index === activeIndex;
-          const isSuggested = index === suggestedNextIndex;
 
           return (
             <button
               key={step.label}
               type="button"
-              className={`apple-record-card apple-liquid-surface ${isActive ? "apple-record-card-active" : ""} ${isSuggested ? "apple-record-card-next" : ""}`.trim()}
+              className={`apple-record-card apple-liquid-surface ${isActive ? "apple-record-card-active" : ""}`.trim()}
               onClick={() => setActiveIndex(index)}
             >
               <span className="apple-liquid-layer" aria-hidden="true" />
               <span>{step.label}</span>
-              {isSuggested ? <em>Next</em> : null}
               <strong>{step.title}</strong>
               <p>{step.summary}</p>
             </button>
@@ -915,8 +906,7 @@ function InquiryArchiveForm({
 
   return (
     <div className="apple-inquiry-layout">
-      <form className="apple-inquiry-form apple-liquid-surface" onSubmit={handleSubmit}>
-        <span className="apple-liquid-layer" aria-hidden="true" />
+      <form className="apple-inquiry-form" onSubmit={handleSubmit}>
         <div className="apple-inquiry-tabs" role="tablist" aria-label={inquiry.progressionLabel}>
           {inquiry.formSteps.map((step, index) => (
             <button
@@ -974,8 +964,7 @@ function InquiryArchiveForm({
         <p className="apple-inquiry-note">{inquiry.footerNote}</p>
       </form>
 
-      <aside className="apple-inquiry-support apple-liquid-surface">
-        <span className="apple-liquid-layer" aria-hidden="true" />
+      <aside className="apple-inquiry-support">
         {activeSupport ? (
           <ArchiveVisualFrame
             image={activeSupport.image}
