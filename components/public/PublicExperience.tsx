@@ -4,6 +4,7 @@ import {
   useCallback,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ChangeEvent,
   type CSSProperties,
@@ -104,6 +105,132 @@ const heroReveal = {
     transition: { staggerChildren: 0.09, delayChildren: 0.05 },
   },
 } as const;
+
+const liquidTargetSelector = [
+  ".apple-liquid-surface",
+  ".apple-cta",
+  ".apple-inquiry-tab",
+  ".apple-input",
+  ".apple-budget-shell",
+  ".apple-admin-access a",
+  ".nav-pill",
+  ".button-primary",
+  ".theme-toggle",
+  ".apple-side-dot",
+].join(",");
+
+function useLiquidGlassPointer() {
+  const frameRef = useRef<number | null>(null);
+  const activeTargetRef = useRef<HTMLElement | null>(null);
+  const latestPointerRef = useRef<PointerEvent | null>(null);
+
+  useEffect(() => {
+    const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+    if (!finePointer.matches || reduceMotion.matches) {
+      return;
+    }
+
+    const clearActiveTarget = () => {
+      if (activeTargetRef.current) {
+        activeTargetRef.current.removeAttribute("data-liquid-active");
+        activeTargetRef.current.style.removeProperty("--pointer-x");
+        activeTargetRef.current.style.removeProperty("--pointer-y");
+        activeTargetRef.current.style.removeProperty("--liquid-shift-x");
+        activeTargetRef.current.style.removeProperty("--liquid-shift-y");
+        activeTargetRef.current.style.removeProperty("--liquid-inverse-x");
+        activeTargetRef.current.style.removeProperty("--liquid-inverse-y");
+        activeTargetRef.current.style.removeProperty("--liquid-tilt-x");
+        activeTargetRef.current.style.removeProperty("--liquid-tilt-y");
+      }
+
+      activeTargetRef.current = null;
+      latestPointerRef.current = null;
+    };
+
+    const updatePointerVars = () => {
+      frameRef.current = null;
+
+      const event = latestPointerRef.current;
+      const target = activeTargetRef.current;
+
+      if (!event || !target) {
+        return;
+      }
+
+      const rect = target.getBoundingClientRect();
+
+      if (!rect.width || !rect.height) {
+        return;
+      }
+
+      const x = Math.min(Math.max(event.clientX - rect.left, 0), rect.width);
+      const y = Math.min(Math.max(event.clientY - rect.top, 0), rect.height);
+      const xPercent = (x / rect.width) * 100;
+      const yPercent = (y / rect.height) * 100;
+      const normalizedX = x / rect.width - 0.5;
+      const normalizedY = y / rect.height - 0.5;
+
+      target.style.setProperty("--pointer-x", `${xPercent.toFixed(2)}%`);
+      target.style.setProperty("--pointer-y", `${yPercent.toFixed(2)}%`);
+      target.style.setProperty("--liquid-shift-x", `${(normalizedX * 5).toFixed(2)}px`);
+      target.style.setProperty("--liquid-shift-y", `${(normalizedY * 5).toFixed(2)}px`);
+      target.style.setProperty("--liquid-inverse-x", `${(-normalizedX * 5).toFixed(2)}px`);
+      target.style.setProperty("--liquid-inverse-y", `${(-normalizedY * 5).toFixed(2)}px`);
+      target.style.setProperty("--liquid-tilt-x", `${(-normalizedY * 1.6).toFixed(2)}deg`);
+      target.style.setProperty("--liquid-tilt-y", `${(normalizedX * 1.8).toFixed(2)}deg`);
+    };
+
+    const handlePointerMove = (event: PointerEvent) => {
+      const target = event.target instanceof Element
+        ? event.target.closest<HTMLElement>(liquidTargetSelector)
+        : null;
+
+      if (!target) {
+        clearActiveTarget();
+        return;
+      }
+
+      if (activeTargetRef.current !== target) {
+        clearActiveTarget();
+        activeTargetRef.current = target;
+        target.setAttribute("data-liquid-active", "true");
+      }
+
+      latestPointerRef.current = event;
+
+      if (frameRef.current === null) {
+        frameRef.current = window.requestAnimationFrame(updatePointerVars);
+      }
+    };
+
+    const handlePointerOut = (event: PointerEvent) => {
+      const target = activeTargetRef.current;
+      const related = event.relatedTarget;
+
+      if (!target || (related instanceof Node && target.contains(related))) {
+        return;
+      }
+
+      clearActiveTarget();
+    };
+
+    window.addEventListener("pointermove", handlePointerMove, { passive: true });
+    window.addEventListener("pointerout", handlePointerOut, { passive: true });
+
+    return () => {
+      window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("pointerout", handlePointerOut);
+
+      if (frameRef.current !== null) {
+        window.cancelAnimationFrame(frameRef.current);
+      }
+
+      clearActiveTarget();
+    };
+  }, []);
+}
 
 function formatBudgetValue(value: number) {
   if (value >= budgetSliderMax) {
@@ -286,7 +413,8 @@ function ArchiveVisualFrame({
   indexLabel?: string;
 }) {
   return (
-    <div className="apple-visual-frame">
+    <div className="apple-visual-frame apple-liquid-surface">
+      <span className="apple-liquid-layer" aria-hidden="true" />
       <div className="apple-visual-toolbar">
         <span>{label}</span>
         {indexLabel ? <span>{indexLabel}</span> : null}
@@ -342,7 +470,8 @@ function ArchiveHero({
           </div>
           <div className="apple-hero-chapters" aria-label="Opening archive chapters">
             {home.steps.map((step, index) => (
-              <div className="apple-hero-chapter" key={step.label}>
+              <div className="apple-hero-chapter apple-liquid-surface" key={step.label}>
+                <span className="apple-liquid-layer" aria-hidden="true" />
                 <span>{String(index + 1).padStart(2, "0")}</span>
                 <strong>{step.label}</strong>
                 <p>{step.title}</p>
@@ -357,7 +486,6 @@ function ArchiveHero({
 
 function EmotionalValue({ home }: { home: ResolvedSceneContent }) {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
   const pillars = home.steps.slice(0, 4);
   const activePillar = pillars[activeIndex] ?? pillars[0];
 
@@ -379,40 +507,44 @@ function EmotionalValue({ home }: { home: ResolvedSceneContent }) {
           <span>Private memory archive</span>
           <h2>{home.steps[3]?.summary ?? home.title}</h2>
           <div className="apple-archive-record-line" aria-hidden="true">
-            <span style={{ "--archive-index": activeIndex } as CSSProperties} />
+            <span style={{ "--archive-index-x": `${activeIndex * 100}%` } as CSSProperties} />
           </div>
           <p>{activePillar?.summary ?? home.description}</p>
         </div>
       </motion.div>
-      <motion.div className="apple-value-grid" variants={archiveChildReveal}>
+      <motion.div
+        className="apple-value-grid"
+        variants={archiveChildReveal}
+        style={{ "--archive-index": activeIndex, "--archive-index-x": `${activeIndex * 25}%` } as CSSProperties}
+      >
         {pillars.map((pillar, index) => {
           const isActive = index === activeIndex;
-          const isOpen = index === expandedIndex;
+          const detailId = `archive-card-detail-${index + 1}`;
 
           return (
             <motion.button
               type="button"
               className={[
-                "apple-value-card",
+                "apple-value-card apple-liquid-surface",
                 isActive ? "apple-value-card-active" : "",
-                isOpen ? "apple-value-card-expanded" : "",
               ].filter(Boolean).join(" ")}
               key={pillar.label}
               variants={archiveChildReveal}
-              aria-expanded={isOpen}
+              aria-controls={detailId}
+              aria-expanded={isActive}
               onClick={() => {
                 setActiveIndex(index);
-                setExpandedIndex((current) => (current === index ? null : index));
               }}
               onFocus={() => setActiveIndex(index)}
-              onMouseEnter={() => setActiveIndex(index)}
             >
+              <span className="apple-liquid-layer" aria-hidden="true" />
               <span>Archive {String(index + 1).padStart(2, "0")}</span>
               <h3>{pillar.label}</h3>
               <p>{pillar.summary}</p>
               <AnimatePresence initial={false}>
-                {isOpen ? (
+                {isActive ? (
                   <motion.div
+                    id={detailId}
                     className="apple-value-card-detail"
                     initial={{ opacity: 0, height: 0, y: -4 }}
                     animate={{ opacity: 1, height: "auto", y: 0 }}
@@ -509,9 +641,10 @@ function ArchiveSceneModule({
             <button
               key={step.label}
               type="button"
-              className={`apple-record-card ${isActive ? "apple-record-card-active" : ""} ${isSuggested ? "apple-record-card-next" : ""}`.trim()}
+              className={`apple-record-card apple-liquid-surface ${isActive ? "apple-record-card-active" : ""} ${isSuggested ? "apple-record-card-next" : ""}`.trim()}
               onClick={() => setActiveIndex(index)}
             >
+              <span className="apple-liquid-layer" aria-hidden="true" />
               <span>{step.label}</span>
               {isSuggested ? <em>Next</em> : null}
               <strong>{step.title}</strong>
@@ -568,7 +701,8 @@ function ProcessTimeline({ process }: { process: ResolvedSceneContent }) {
   return (
     <div className="apple-process-grid">
       {process.steps.map((step, index) => (
-        <article className="apple-process-card" key={step.label}>
+        <article className="apple-process-card apple-liquid-surface" key={step.label}>
+          <span className="apple-liquid-layer" aria-hidden="true" />
           <span>{String(index + 1).padStart(2, "0")}</span>
           <h3>{step.label}</h3>
           <p>{step.detail}</p>
@@ -585,7 +719,8 @@ function PreserveEditorial({ preserve }: { preserve: ResolvedSceneContent }) {
   return (
     <div className="apple-preserve-layout">
       {featured ? (
-        <article className="apple-preserve-feature">
+        <article className="apple-preserve-feature apple-liquid-surface">
+          <span className="apple-liquid-layer" aria-hidden="true" />
           <span>{featured.mediaLabel}</span>
           <h3>{featured.title}</h3>
           <p>{featured.detail}</p>
@@ -598,7 +733,8 @@ function PreserveEditorial({ preserve }: { preserve: ResolvedSceneContent }) {
       ) : null}
       <div className="apple-preserve-grid">
         {remaining.map((step) => (
-          <article className="apple-preserve-card" key={step.label}>
+          <article className="apple-preserve-card apple-liquid-surface" key={step.label}>
+            <span className="apple-liquid-layer" aria-hidden="true" />
             <span>{step.label}</span>
             <h3>{step.title}</h3>
             <p>{step.summary}</p>
@@ -779,7 +915,8 @@ function InquiryArchiveForm({
 
   return (
     <div className="apple-inquiry-layout">
-      <form className="apple-inquiry-form" onSubmit={handleSubmit}>
+      <form className="apple-inquiry-form apple-liquid-surface" onSubmit={handleSubmit}>
+        <span className="apple-liquid-layer" aria-hidden="true" />
         <div className="apple-inquiry-tabs" role="tablist" aria-label={inquiry.progressionLabel}>
           {inquiry.formSteps.map((step, index) => (
             <button
@@ -837,7 +974,8 @@ function InquiryArchiveForm({
         <p className="apple-inquiry-note">{inquiry.footerNote}</p>
       </form>
 
-      <aside className="apple-inquiry-support">
+      <aside className="apple-inquiry-support apple-liquid-surface">
+        <span className="apple-liquid-layer" aria-hidden="true" />
         {activeSupport ? (
           <ArchiveVisualFrame
             image={activeSupport.image}
@@ -894,6 +1032,7 @@ export function PublicExperience({
     [globalContent.navigation],
   );
   const activeId = usePublicActiveSection(sections);
+  useLiquidGlassPointer();
 
   return (
     <div className="apple-archive-experience">
