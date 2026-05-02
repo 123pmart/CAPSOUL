@@ -1,7 +1,4 @@
-import { InquiryScene } from "@/components/inquiry-scene";
-import { SceneScreen } from "@/components/scene-screen";
-import { SectionScroller } from "@/components/SectionScroller";
-import type { ImmersiveSectionId } from "@/components/immersive-scroll-context";
+import { PublicExperience } from "@/components/public/PublicExperience";
 import {
   getResolvedExperienceScene,
   getResolvedHomeScene,
@@ -23,21 +20,14 @@ export default async function HomePage() {
   const preserveScene = await getResolvedPreserveScene(locale);
   const inquiryScene = await getResolvedInquiryScene(locale);
 
-  const sections: Array<{ id: ImmersiveSectionId; label: string }> = [
-    { id: "home", label: siteContent.global.navigation.home },
-    { id: "the-experience", label: siteContent.global.navigation.experience },
-    { id: "how-it-works", label: siteContent.global.navigation.process },
-    { id: "what-we-preserve", label: siteContent.global.navigation.preserve },
-    { id: "inquire", label: siteContent.global.navigation.inquire },
-  ];
-
   return (
-    <SectionScroller sections={sections} routeLabels={siteContent.global.routeLabels}>
-      <SceneScreen {...homeScene} tone="warm" immersiveSectionMode />
-      <SceneScreen {...experienceScene} tone="cool" immersiveSectionMode />
-      <SceneScreen {...processScene} tone="cool" immersiveSectionMode />
-      <SceneScreen {...preserveScene} tone="warm" immersiveSectionMode />
-      <InquiryScene sceneData={inquiryScene} immersiveSectionMode />
-    </SectionScroller>
+    <PublicExperience
+      globalContent={siteContent.global}
+      home={homeScene}
+      experience={experienceScene}
+      process={processScene}
+      preserve={preserveScene}
+      inquiry={inquiryScene}
+    />
   );
 }
