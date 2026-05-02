@@ -4061,13 +4061,13 @@ html[data-theme="dark"] {
   --section-scroller-height: max(0px, calc(100dvh - var(--header-offset-mobile)));
   box-sizing: border-box;
   block-size: var(--section-scroller-height);
-  max-block-size: var(--section-scroller-height);
+  max-block-size: none;
   min-width: 0;
   overflow-x: clip;
-  overflow-y: hidden;
-  overscroll-behavior-y: contain;
+  overflow-y: auto;
+  overscroll-behavior-y: auto;
   scroll-behavior: smooth;
-  scroll-padding-block: 0;
+  scroll-padding-block: clamp(0.75rem, 2svh, 1.5rem);
   scroll-snap-type: none;
   scrollbar-width: none;
   touch-action: pan-y;
@@ -4080,17 +4080,17 @@ html[data-theme="dark"] {
 
 .section-scroller-section {
   box-sizing: border-box;
-  block-size: var(--section-scroller-height);
+  block-size: auto;
   min-block-size: var(--section-scroller-height);
   min-width: 0;
   display: grid;
   align-items: start;
   justify-items: center;
   overflow-x: clip;
-  overflow-y: clip;
+  overflow-y: visible;
   scroll-snap-align: none;
   scroll-snap-stop: normal;
-  padding-block: 0;
+  padding-block: clamp(0.6rem, 1.6svh, 1.2rem) clamp(1.25rem, 3svh, 2.4rem);
   touch-action: pan-y;
 }
 
@@ -4101,16 +4101,16 @@ html[data-theme="dark"] {
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 100%;
+  height: auto;
+  min-height: calc(var(--section-scroller-height) - clamp(1.5rem, 3.6svh, 2.8rem));
   min-width: 0;
   overflow-x: clip;
-  overflow-y: auto;
+  overflow-y: visible;
   overscroll-behavior-y: auto;
   touch-action: pan-y;
   scrollbar-width: none;
-  will-change: opacity, transform, filter;
+  will-change: opacity, transform;
   transform-origin: center center;
-  transform-style: preserve-3d;
   -webkit-overflow-scrolling: touch;
 }
 
@@ -4334,7 +4334,7 @@ html[data-theme="dark"] {
 }
 
 .section-scroller-content[data-section-active="false"] {
-  pointer-events: none;
+  pointer-events: auto;
 }
 
 .section-scroller .scene-shell,
@@ -4424,15 +4424,14 @@ html[data-theme="dark"] {
 }
 
 .section-page-controls {
-  position: sticky;
+  position: relative;
   z-index: 20;
-  bottom: calc(var(--safe-bottom) + 0.72rem);
   display: flex;
   width: min(100% - 2rem, 31rem);
   align-items: center;
   justify-content: center;
   gap: clamp(0.5rem, 1.2vw, 0.75rem);
-  margin: clamp(0.45rem, 1svh, 0.85rem) auto calc(var(--safe-bottom) + 0.8rem);
+  margin: clamp(0.45rem, 1svh, 0.85rem) auto 0;
   padding: 0.34rem;
   border: 1px solid var(--border);
   border-radius: var(--radius-pill);
@@ -4614,7 +4613,7 @@ html[data-theme="dark"] {
   }
 
   .section-mobile-progress-nav {
-    display: flex;
+    display: none;
     position: relative;
     z-index: 1;
     width: auto;
@@ -4631,14 +4630,7 @@ html[data-theme="dark"] {
   }
 
   .section-page-controls {
-    bottom: calc(var(--safe-bottom) + 3.95rem);
-    display: grid;
-    grid-template-columns: minmax(4.8rem, 1fr) auto minmax(4.8rem, 1fr);
-    width: min(100% - 2.15rem, 23rem);
-    align-items: center;
-    margin-block-start: 0.28rem;
-    margin-block-end: calc(var(--safe-bottom) + 4.35rem);
-    padding: 0.3rem;
+    display: none;
   }
 
   .section-mobile-progress-segment {
@@ -4664,9 +4656,9 @@ html[data-theme="dark"] {
 
 @media (max-width: 767px), (max-height: 720px) {
   .section-scroller-content {
-    max-block-size: var(--section-scroller-height);
+    max-block-size: none;
     overflow-x: clip;
-    overflow-y: auto;
+    overflow-y: visible;
     overscroll-behavior-y: auto;
     touch-action: pan-y;
     scrollbar-width: none;
