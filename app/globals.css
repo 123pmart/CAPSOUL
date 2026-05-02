@@ -4016,24 +4016,24 @@ html[data-theme="dark"] body {
 
 .apple-hero-title,
 .apple-section-title {
-  max-width: 12.5ch;
+  max-width: calc(100vw - (2 * var(--shell-gutter)) - 0.5rem);
   margin: clamp(0.82rem, 1.7vw, 1.35rem) auto 0;
   font-family: var(--font-sans);
   font-weight: 860;
-  line-height: 0.86;
-  letter-spacing: -0.048em;
+  line-height: 0.92;
+  letter-spacing: -0.052em;
   color: var(--text);
   text-align: center;
   text-transform: uppercase;
-  text-wrap: balance;
+  white-space: nowrap;
 }
 
 .apple-hero-title {
-  font-size: clamp(3.8rem, 7.8vw, 7.8rem);
+  font-size: clamp(2rem, 7.9vw, 8rem);
 }
 
 .apple-section-title {
-  font-size: clamp(3.05rem, 5.9vw, 6.3rem);
+  font-size: clamp(1.9rem, 6.2vw, 6.2rem);
 }
 
 .apple-hero-copy,
@@ -4278,20 +4278,89 @@ html[data-theme="dark"] body {
 
 .apple-value-band {
   display: grid;
-  grid-template-columns: minmax(0, 0.86fr) minmax(0, 1.14fr);
-  gap: clamp(0.9rem, 2.4vw, 2rem);
-  align-items: stretch;
-  padding: clamp(2rem, 4.8vw, 4.7rem) var(--shell-gutter) clamp(2.6rem, 5.6vw, 5.6rem);
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(0.82rem, 1.9vw, 1.55rem);
+  align-items: center;
+  padding: clamp(1.7rem, 4vw, 4rem) var(--shell-gutter) clamp(2.2rem, 4.8vw, 4.7rem);
+}
+
+.apple-value-archive-shell {
+  position: relative;
+  width: min(100%, 980px);
+  margin-inline: auto;
 }
 
 .apple-value-statement {
+  position: relative;
   display: grid;
   align-content: center;
-  min-height: clamp(17rem, 30vw, 27rem);
+  justify-items: center;
+  min-height: clamp(13rem, 20vw, 20rem);
   border-radius: clamp(2rem, 4vw, 3.4rem);
-  padding: clamp(1.3rem, 3vw, 2.8rem);
+  padding: clamp(1.25rem, 2.4vw, 2.35rem);
   background: linear-gradient(180deg, color-mix(in srgb, var(--text) 92%, var(--accent)), color-mix(in srgb, var(--text) 78%, #000));
   box-shadow: 0 34px 110px color-mix(in srgb, var(--shadow-color, #4f6f91) 28%, transparent);
+  overflow: hidden;
+  text-align: center;
+  isolation: isolate;
+}
+
+.apple-value-statement::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255, 255, 255, 0.18), transparent 34%),
+    linear-gradient(115deg, transparent 20%, rgba(255, 255, 255, 0.12) 48%, transparent 70%);
+  opacity: 0.62;
+  transform: translate3d(-22%, 0, 0);
+  animation: appleArchiveSweep 6.5s var(--ease-luxury) infinite alternate;
+}
+
+.apple-archive-sheets {
+  position: absolute;
+  inset: auto 4% -0.72rem;
+  height: 2.8rem;
+  pointer-events: none;
+}
+
+.apple-archive-sheet {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 100%;
+  border: 1px solid color-mix(in srgb, var(--border) 50%, transparent);
+  border-radius: clamp(1.35rem, 2.2vw, 2rem);
+  background: color-mix(in srgb, var(--surface-glass-strong) 42%, transparent);
+  box-shadow: 0 18px 40px color-mix(in srgb, var(--shadow-color, #4f6f91) 12%, transparent);
+  transform-origin: center;
+  transition: transform var(--duration-slow) var(--ease-luxury), opacity var(--duration-med) var(--ease-luxury);
+}
+
+.apple-archive-sheet-one {
+  opacity: 0.5;
+  transform: translate3d(-0.65rem, 0, 0) rotate(-1deg);
+}
+
+.apple-archive-sheet-two {
+  opacity: 0.42;
+  transform: translate3d(0.55rem, 0.42rem, 0) rotate(0.7deg);
+}
+
+.apple-archive-sheet-three {
+  opacity: 0.28;
+  transform: translate3d(0, 0.86rem, 0) scaleX(0.96);
+}
+
+.apple-archive-sheets[data-active-index="1"] .apple-archive-sheet-one,
+.apple-archive-sheets[data-active-index="3"] .apple-archive-sheet-one {
+  transform: translate3d(-1rem, -0.08rem, 0) rotate(-1.7deg);
+}
+
+.apple-archive-sheets[data-active-index="2"] .apple-archive-sheet-two,
+.apple-archive-sheets[data-active-index="3"] .apple-archive-sheet-two {
+  transform: translate3d(0.9rem, 0.34rem, 0) rotate(1.35deg);
 }
 
 .apple-value-statement span {
@@ -4303,11 +4372,11 @@ html[data-theme="dark"] body {
 }
 
 .apple-value-statement h2 {
-  max-width: 13ch;
+  max-width: 22ch;
   margin-top: 0.86rem;
   color: white;
   font-family: var(--font-sans);
-  font-size: clamp(2rem, 2.9vw, 3.55rem);
+  font-size: clamp(1.55rem, 2.75vw, 3.15rem);
   font-weight: 850;
   line-height: 0.93;
   letter-spacing: -0.04em;
@@ -4315,14 +4384,59 @@ html[data-theme="dark"] body {
   overflow-wrap: break-word;
 }
 
+.apple-value-statement p {
+  max-width: 46rem;
+  margin-top: clamp(0.8rem, 1.5vw, 1.15rem);
+  color: rgba(242, 248, 255, 0.78);
+  font-size: clamp(0.92rem, 1.15vw, 1.05rem);
+  line-height: 1.52;
+}
+
+.apple-archive-record-line {
+  position: relative;
+  width: min(100%, 31rem);
+  height: 0.36rem;
+  margin-top: clamp(0.82rem, 1.5vw, 1.15rem);
+  overflow: hidden;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.13);
+}
+
+.apple-archive-record-line span {
+  position: absolute;
+  inset-block: 0;
+  left: 0;
+  width: 25%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, rgba(212, 235, 255, 0.88), rgba(96, 166, 226, 0.96));
+  box-shadow: 0 0 22px rgba(155, 203, 255, 0.34);
+  transform: translate3d(calc(var(--archive-index, 0) * 100%), 0, 0);
+  transition: transform 340ms var(--ease-luxury);
+}
+
 .apple-value-grid {
   display: grid;
-  gap: clamp(0.72rem, 1.35vw, 0.95rem);
+  width: min(100%, 980px);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(0.58rem, 1vw, 0.82rem);
+  align-items: start;
+  margin-inline: auto;
 }
 
 .apple-value-card {
+  position: relative;
+  display: grid;
+  min-height: clamp(6.75rem, 8vw, 8.65rem);
+  gap: 0.28rem;
+  align-content: start;
+  overflow: hidden;
+  appearance: none;
   border-radius: clamp(1.4rem, 2.8vw, 2.1rem);
   padding: clamp(1rem, 1.7vw, 1.35rem);
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
   transition:
     transform var(--duration-fast) var(--ease-luxury),
     border-color var(--duration-fast) var(--ease-luxury),
@@ -4330,9 +4444,65 @@ html[data-theme="dark"] body {
 }
 
 .apple-value-card h3 {
-  margin-top: 0.5rem;
-  font-size: clamp(1.65rem, 2.7vw, 2.45rem);
+  margin-top: 0.35rem;
+  font-size: clamp(1.25rem, 1.8vw, 1.85rem);
   line-height: 0.96;
+}
+
+.apple-value-card p {
+  margin: 0;
+  font-size: clamp(0.92rem, 1vw, 1rem);
+  line-height: 1.42;
+}
+
+.apple-value-card i {
+  position: absolute;
+  top: 0.92rem;
+  right: 0.92rem;
+  width: 1.32rem;
+  height: 1.32rem;
+  border: 1px solid color-mix(in srgb, var(--border-strong) 46%, transparent);
+  border-radius: 50%;
+  background:
+    linear-gradient(var(--text-muted), var(--text-muted)) center / 0.58rem 1px no-repeat,
+    linear-gradient(var(--text-muted), var(--text-muted)) center / 1px 0.58rem no-repeat,
+    color-mix(in srgb, var(--surface-strong) 58%, transparent);
+  transition: transform var(--duration-med) var(--ease-luxury), background-color var(--duration-fast) var(--ease-luxury);
+}
+
+.apple-value-card-active {
+  border-color: color-mix(in srgb, var(--accent) 58%, var(--border-strong));
+  background:
+    radial-gradient(circle at 0% 0%, color-mix(in srgb, var(--accent-soft) 90%, transparent), transparent 42%),
+    linear-gradient(180deg, color-mix(in srgb, var(--surface-strong) 90%, transparent), color-mix(in srgb, var(--surface) 76%, transparent));
+  box-shadow:
+    0 24px 64px color-mix(in srgb, var(--shadow-color, #4f6f91) 16%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--accent) 20%, transparent),
+    var(--glass-inner-highlight);
+}
+
+.apple-value-card:focus-visible {
+  outline: none;
+  border-color: color-mix(in srgb, var(--accent) 66%, var(--border-strong));
+  box-shadow:
+    0 0 0 4px var(--accent-soft),
+    0 24px 64px color-mix(in srgb, var(--shadow-color, #4f6f91) 16%, transparent),
+    var(--glass-inner-highlight);
+}
+
+.apple-value-card-active i {
+  transform: rotate(45deg);
+  background:
+    linear-gradient(var(--accent), var(--accent)) center / 0.58rem 1px no-repeat,
+    linear-gradient(var(--accent), var(--accent)) center / 1px 0.58rem no-repeat,
+    var(--accent-soft);
+}
+
+.apple-value-card-detail {
+  overflow: hidden;
+  color: var(--text-muted);
+  font-size: clamp(0.9rem, 1vw, 0.98rem);
+  line-height: 1.48;
 }
 
 .apple-section {
@@ -4870,6 +5040,18 @@ html[data-theme="dark"] body {
   }
 }
 
+@keyframes appleArchiveSweep {
+  0%, 38% {
+    transform: translate3d(-38%, 0, 0);
+    opacity: 0.2;
+  }
+
+  100% {
+    transform: translate3d(38%, 0, 0);
+    opacity: 0.62;
+  }
+}
+
 @media (hover: hover) and (pointer: fine) {
   .apple-cta:hover,
   .apple-inquiry-tab:hover,
@@ -4923,6 +5105,7 @@ html[data-theme="dark"] .apple-hero-chapter {
 }
 
 html[data-theme="dark"] .apple-record-card-active,
+html[data-theme="dark"] .apple-value-card-active,
 html[data-theme="dark"] .apple-inquiry-tab-active {
   background: linear-gradient(180deg, rgba(31, 48, 69, 0.96), rgba(19, 31, 46, 0.99));
   border-color: rgba(222, 238, 255, 0.24);
@@ -4939,6 +5122,10 @@ html[data-theme="dark"] .apple-inquiry-tab-active {
   .apple-inquiry-layout,
   .apple-value-band {
     grid-template-columns: 1fr;
+  }
+
+  .apple-value-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
@@ -4961,15 +5148,15 @@ html[data-theme="dark"] .apple-inquiry-tab-active {
   }
 
   .apple-hero-title {
-    font-size: clamp(2.65rem, 12.4vw, 4rem);
-    line-height: 0.88;
-    letter-spacing: -0.038em;
+    font-size: clamp(1.9rem, 7.8vw, 3rem);
+    line-height: 0.94;
+    letter-spacing: -0.044em;
   }
 
   .apple-section-title {
-    font-size: clamp(2.35rem, 11vw, 3.65rem);
-    line-height: 0.88;
-    letter-spacing: -0.038em;
+    font-size: clamp(1.72rem, 7.15vw, 2.75rem);
+    line-height: 0.94;
+    letter-spacing: -0.044em;
   }
 
   .apple-hero-copy,
@@ -4987,15 +5174,42 @@ html[data-theme="dark"] .apple-inquiry-tab-active {
   }
 
   .apple-value-band {
-    padding-inline: var(--shell-gutter);
+    gap: 0.78rem;
+    padding: clamp(1.55rem, 6vw, 2.6rem) var(--shell-gutter) clamp(1.95rem, 7vw, 3rem);
   }
 
   .apple-value-statement {
-    min-height: 14.5rem;
+    min-height: 12rem;
+    border-radius: clamp(1.45rem, 7vw, 2rem);
+    padding: clamp(1.05rem, 5vw, 1.45rem);
   }
 
   .apple-value-statement h2 {
-    font-size: clamp(1.95rem, 8.7vw, 3.25rem);
+    font-size: clamp(1.35rem, 6vw, 2rem);
+    max-width: 21ch;
+  }
+
+  .apple-value-statement p {
+    font-size: 0.92rem;
+  }
+
+  .apple-archive-sheets {
+    inset-inline: 6%;
+    height: 1.9rem;
+  }
+
+  .apple-value-grid {
+    grid-template-columns: 1fr;
+    gap: 0.58rem;
+  }
+
+  .apple-value-card {
+    min-height: auto;
+    padding: 0.92rem 1rem;
+  }
+
+  .apple-value-card h3 {
+    font-size: clamp(1.22rem, 6vw, 1.75rem);
   }
 
   .apple-process-grid,
@@ -5054,12 +5268,18 @@ html[data-theme="dark"] .apple-inquiry-tab-active {
     animation: none;
   }
 
+  .apple-value-statement::after {
+    animation: none;
+  }
+
   .apple-cta,
   .apple-inquiry-tab,
   .apple-record-card,
+  .apple-archive-sheet,
   .apple-preserve-card,
   .apple-value-card,
   .apple-process-card,
+  .apple-archive-record-line span,
   .apple-record-card-active::after {
     transition: none;
   }

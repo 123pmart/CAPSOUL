@@ -356,7 +356,9 @@ function ArchiveHero({
 }
 
 function EmotionalValue({ home }: { home: ResolvedSceneContent }) {
-  const pillars = home.steps.slice(0, 3);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const pillars = home.steps.slice(0, 4);
+  const activePillar = pillars[activeIndex] ?? pillars[0];
 
   return (
     <motion.div
@@ -366,18 +368,54 @@ function EmotionalValue({ home }: { home: ResolvedSceneContent }) {
       whileInView="visible"
       viewport={{ once: true, amount: 0.22 }}
     >
-      <motion.div className="apple-value-statement" variants={archiveChildReveal}>
-        <span>Private memory archive</span>
-        <h2>{home.steps[3]?.summary ?? home.title}</h2>
+      <motion.div className="apple-value-archive-shell" variants={archiveChildReveal}>
+        <div className="apple-archive-sheets" aria-hidden="true" data-active-index={activeIndex}>
+          <span className="apple-archive-sheet apple-archive-sheet-one" />
+          <span className="apple-archive-sheet apple-archive-sheet-two" />
+          <span className="apple-archive-sheet apple-archive-sheet-three" />
+        </div>
+        <div className="apple-value-statement">
+          <span>Private memory archive</span>
+          <h2>{home.steps[3]?.summary ?? home.title}</h2>
+          <div className="apple-archive-record-line" aria-hidden="true">
+            <span style={{ "--archive-index": activeIndex } as CSSProperties} />
+          </div>
+          <p>{activePillar?.summary ?? home.description}</p>
+        </div>
       </motion.div>
       <motion.div className="apple-value-grid" variants={archiveChildReveal}>
-        {pillars.map((pillar) => (
-          <motion.article className="apple-value-card" key={pillar.label} variants={archiveChildReveal}>
-            <span>{pillar.label}</span>
-            <h3>{pillar.title}</h3>
-            <p>{pillar.detail}</p>
-          </motion.article>
-        ))}
+        {pillars.map((pillar, index) => {
+          const isOpen = index === activeIndex;
+
+          return (
+            <motion.button
+              type="button"
+              className={isOpen ? "apple-value-card apple-value-card-active" : "apple-value-card"}
+              key={pillar.label}
+              variants={archiveChildReveal}
+              aria-expanded={isOpen}
+              onClick={() => setActiveIndex(index)}
+            >
+              <span>Archive {String(index + 1).padStart(2, "0")}</span>
+              <h3>{pillar.label}</h3>
+              <p>{pillar.summary}</p>
+              <AnimatePresence initial={false}>
+                {isOpen ? (
+                  <motion.div
+                    className="apple-value-card-detail"
+                    initial={{ opacity: 0, height: 0, y: -4 }}
+                    animate={{ opacity: 1, height: "auto", y: 0 }}
+                    exit={{ opacity: 0, height: 0, y: -4 }}
+                    transition={{ duration: 0.28, ease: measuredEase }}
+                  >
+                    {pillar.detail}
+                  </motion.div>
+                ) : null}
+              </AnimatePresence>
+              <i aria-hidden="true" />
+            </motion.button>
+          );
+        })}
       </motion.div>
     </motion.div>
   );
