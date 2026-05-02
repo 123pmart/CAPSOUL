@@ -36,7 +36,7 @@ type SectionScrollerProps = {
 };
 
 const revealTransition = {
-  duration: 0.58,
+  duration: 0.68,
   ease: [0.22, 1, 0.36, 1],
 } as const;
 
@@ -69,6 +69,26 @@ function clampIndex(index: number, length: number) {
 
 function getScrollableDistance(element: HTMLElement) {
   return Math.max(0, element.scrollHeight - element.clientHeight);
+}
+
+function positionSectionContent(
+  content: HTMLElement,
+  position: Exclude<InnerScrollPosition, "preserve">,
+) {
+  const nextTop = position === "end" ? getScrollableDistance(content) : 0;
+  content.scrollTop = nextTop;
+
+  content
+    .querySelectorAll<HTMLElement>(
+      [
+        ".scene-detail-scroll",
+        ".inquiry-tablet-field-stage",
+        ".scene-mobile-field-stage",
+      ].join(", "),
+    )
+    .forEach((nestedScrollTarget) => {
+      nestedScrollTarget.scrollTop = 0;
+    });
 }
 
 function canScrollInDirection(
@@ -159,12 +179,24 @@ export function SectionScroller({
   const touchStartRef = useRef<{ x: number; y: number; index: number } | null>(null);
   const navigationLockRef = useRef(false);
   const navigationLockTimerRef = useRef<number | null>(null);
+  const sectionSettleTimerRef = useRef<number | null>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const childItems = useMemo(() => Children.toArray(children), [children]);
 
   useEffect(() => {
     activeIndexRef.current = activeIndex;
-  }, [activeIndex]);
+
+    const sectionCount = Math.max(childItems.length - 1, 1);
+    const archiveProgress = activeIndex / sectionCount;
+    const centeredIndex = activeIndex - (childItems.length - 1) / 2;
+    const rootStyle = document.documentElement.style;
+
+    rootStyle.setProperty("--section-index", String(activeIndex));
+    rootStyle.setProperty("--archive-depth", archiveProgress.toFixed(3));
+    rootStyle.setProperty("--archive-shift", `${(centeredIndex * 8).toFixed(2)}px`);
+    rootStyle.setProperty("--archive-atmosphere-x", `${(centeredIndex * 26).toFixed(2)}px`);
+    rootStyle.setProperty("--archive-atmosphere-y", `${((archiveProgress - 0.5) * -86).toFixed(2)}px`);
+  }, [activeIndex, childItems.length]);
 
   const syncBackgroundMotion = useCallback((root: HTMLDivElement) => {
     if (reduceMotion) {
@@ -220,6 +252,13 @@ export function SectionScroller({
     wheelDirectionRef.current = null;
   }, []);
 
+  const clearSectionSettleTimer = useCallback(() => {
+    if (sectionSettleTimerRef.current != null) {
+      window.clearTimeout(sectionSettleTimerRef.current);
+      sectionSettleTimerRef.current = null;
+    }
+  }, []);
+
   const armWheelIdleReset = useCallback(() => {
     if (wheelIdleTimerRef.current != null) {
       window.clearTimeout(wheelIdleTimerRef.current);
@@ -248,15 +287,18 @@ export function SectionScroller({
       return;
     }
 
-    window.requestAnimationFrame(() => {
+    const applyPosition = () => {
       const content = contentRefs.current[index];
 
       if (!content) {
         return;
       }
 
-      content.scrollTop = position === "end" ? getScrollableDistance(content) : 0;
-    });
+      positionSectionContent(content, position);
+    };
+
+    applyPosition();
+    window.requestAnimationFrame(applyPosition);
   }, []);
 
   useEffect(() => {
@@ -269,11 +311,21 @@ export function SectionScroller({
     const syncActiveSection = () => {
       frameRef.current = null;
 
-      const viewportHeight = root.clientHeight || 1;
-      const nextIndex = Math.min(
-        childItems.length - 1,
-        Math.max(0, Math.round(root.scrollTop / viewportHeight)),
-      );
+      let nextIndex = activeIndexRef.current;
+      let nearestDistance = Number.POSITIVE_INFINITY;
+
+      sectionRefs.current.forEach((section, index) => {
+        if (!section) {
+          return;
+        }
+
+        const distance = Math.abs(section.offsetTop - root.scrollTop);
+
+        if (distance < nearestDistance) {
+          nearestDistance = distance;
+          nextIndex = index;
+        }
+      });
 
       setBoundedActiveIndex(nextIndex);
       syncBackgroundMotion(root);
@@ -330,6 +382,7 @@ export function SectionScroller({
 
       clearNavigationLock();
       resetWheelIntent();
+      clearSectionSettleTimer();
 
       const rootStyle = document.documentElement.style;
       rootStyle.removeProperty("--immersive-bg-progress");
@@ -342,8 +395,13 @@ export function SectionScroller({
       rootStyle.removeProperty("--immersive-canvas-x");
       rootStyle.removeProperty("--immersive-canvas-y");
       rootStyle.removeProperty("--immersive-canvas-scale");
+      rootStyle.removeProperty("--section-index");
+      rootStyle.removeProperty("--archive-depth");
+      rootStyle.removeProperty("--archive-shift");
+      rootStyle.removeProperty("--archive-atmosphere-x");
+      rootStyle.removeProperty("--archive-atmosphere-y");
     };
-  }, [childItems.length, clearNavigationLock, resetWheelIntent, setBoundedActiveIndex, syncBackgroundMotion]);
+  }, [childItems.length, clearNavigationLock, clearSectionSettleTimer, resetWheelIntent, setBoundedActiveIndex, syncBackgroundMotion]);
 
   useEffect(() => {
     const section = sections[activeIndex];
@@ -367,20 +425,45 @@ export function SectionScroller({
   ) => {
     const root = containerRef.current;
     const nextIndex = clampIndex(index, childItems.length);
+    const targetSection = sectionRefs.current[nextIndex];
 
-    if (!root || !sectionRefs.current[nextIndex]) {
+    if (!root || !targetSection) {
       return;
     }
 
+    const prefersReducedMotion = reduceMotion || window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const targetTop = targetSection.offsetTop;
+    const targetInnerPosition = innerScrollPosition === "preserve" ? "preserve" : "start";
+
+    activeIndexRef.current = nextIndex;
+    resetWheelIntent();
+    touchStartRef.current = null;
+    armNavigationLock();
+    clearSectionSettleTimer();
+    positionInnerScroll(nextIndex, targetInnerPosition);
+
     root.scrollTo({
-      top: nextIndex * root.clientHeight,
-      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+      top: targetTop,
+      behavior: prefersReducedMotion ? "auto" : "smooth",
     });
 
     setBoundedActiveIndex(nextIndex);
-    positionInnerScroll(nextIndex, innerScrollPosition);
     syncBackgroundMotion(root);
-  }, [childItems.length, positionInnerScroll, setBoundedActiveIndex, syncBackgroundMotion]);
+
+    sectionSettleTimerRef.current = window.setTimeout(() => {
+      positionInnerScroll(nextIndex, targetInnerPosition);
+      sectionSettleTimerRef.current = null;
+    }, prefersReducedMotion ? 0 : 420);
+  }, [
+    armNavigationLock,
+    childItems.length,
+    clearSectionSettleTimer,
+    positionInnerScroll,
+    reduceMotion,
+    resetWheelIntent,
+    setBoundedActiveIndex,
+    syncBackgroundMotion,
+  ]);
 
   const navigateFromBoundary = useCallback((
     direction: 1 | -1,
@@ -467,7 +550,7 @@ export function SectionScroller({
       return;
     }
 
-    navigateFromBoundary(direction, direction > 0 ? "start" : "end");
+    navigateFromBoundary(direction, "start");
   }, [armWheelIdleReset, getActiveScrollTarget, navigateFromBoundary, resetWheelIntent]);
 
   useEffect(() => {
@@ -528,7 +611,7 @@ export function SectionScroller({
       return;
     }
 
-    navigateFromBoundary(direction, direction > 0 ? "start" : "end");
+    navigateFromBoundary(direction, "start");
   }, [activeContentCanScroll, navigateFromBoundary]);
 
   useEffect(() => {
@@ -589,10 +672,10 @@ export function SectionScroller({
                   initial={false}
                   animate={
                     reduceMotion
-                      ? { opacity: 1, filter: "blur(0px)", scale: 1, y: 0 }
+                      ? { opacity: 1, filter: "blur(0px)", scale: 1, y: 0, rotateX: 0 }
                       : isActive
-                        ? { opacity: 1, filter: "blur(0px)", scale: 1, y: 0 }
-                        : { opacity: 0.16, filter: "blur(2px)", scale: 0.992, y: 14 }
+                        ? { opacity: 1, filter: "blur(0px)", scale: 1, y: 0, rotateX: 0 }
+                        : { opacity: 0.2, filter: "blur(1px)", scale: 0.976, y: 24, rotateX: 1.2 }
                   }
                   transition={reduceMotion ? { duration: 0 } : revealTransition}
                 >

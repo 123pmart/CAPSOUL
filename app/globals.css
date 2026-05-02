@@ -3255,6 +3255,21 @@ html[data-theme="dark"] body {
     0 20px 46px color-mix(in srgb, var(--glow) 96%, transparent),
     0 0 42px color-mix(in srgb, var(--accent-soft) 88%, transparent),
     var(--glass-inner-highlight);
+  transform: translateY(-1px);
+}
+
+.public-visual-scope .scene-step-chip-active::before {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  top: 0.54rem;
+  left: 0.64rem;
+  width: clamp(2.6rem, 34%, 5.75rem);
+  height: 0.16rem;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(90deg, var(--accent-ice-strong), color-mix(in srgb, var(--accent) 32%, transparent));
+  opacity: 0.62;
+  pointer-events: none;
 }
 
 .public-visual-scope .scene-step-chip-active::after {
@@ -3279,6 +3294,10 @@ html[data-theme="dark"] body {
 
 .public-visual-scope .inquiry-step-tabs .scene-step-chip-active::after,
 .public-visual-scope .inquiry-step-tabs .scene-step-chip-suggested::after {
+  content: none;
+}
+
+.public-visual-scope .inquiry-step-tabs .scene-step-chip-active::before {
   content: none;
 }
 
@@ -3625,8 +3644,29 @@ html[data-theme="dark"] body {
 }
 
 .public-visual-scope .scene-media-frame {
+  position: relative;
   display: grid;
   place-items: center;
+}
+
+.public-visual-scope .film-frame {
+  position: relative;
+}
+
+.public-visual-scope .scene-media-frame::after,
+.public-visual-scope .film-frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--glass-highlight) 36%, transparent), transparent 38%),
+    linear-gradient(90deg, color-mix(in srgb, var(--border-strong) 20%, transparent), transparent 12% 88%, color-mix(in srgb, var(--border-strong) 18%, transparent));
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--border-strong) 34%, transparent),
+    inset 0 16px 44px color-mix(in srgb, var(--shadow-color, #4f6f91) 9%, transparent);
+  opacity: 0.72;
 }
 
 .public-visual-scope .scene-media-frame > img,
@@ -3680,6 +3720,15 @@ html[data-theme="dark"] body {
 .public-visual-scope .scene-balanced-row,
 .public-visual-scope .scene-composition-row {
   align-items: stretch;
+}
+
+.public-visual-scope [data-scene-mode="tabletLandscape"] .scene-balanced-composition,
+.public-visual-scope [data-scene-mode="desktop"] .scene-balanced-composition {
+  min-height: clamp(28rem, 58svh, 40rem);
+}
+
+.public-visual-scope [data-scene-mode="desktopShortHeight"] .scene-balanced-composition {
+  min-height: clamp(23.5rem, 51svh, 33rem);
 }
 
 .public-visual-scope .scene-balanced-main,
@@ -3889,7 +3938,11 @@ html[data-theme="dark"] body {
   mix-blend-mode: var(--vanta-depth-blend, soft-light);
   -webkit-mask-image: radial-gradient(ellipse at center, #000 0 72%, transparent 100%);
   mask-image: radial-gradient(ellipse at center, #000 0 72%, transparent 100%);
-  transform: translate3d(var(--immersive-bg-counter-x, 0px), var(--immersive-bg-counter-y, 0px), 0) scale(var(--immersive-bg-scale, 1));
+  transform: translate3d(
+    calc(var(--immersive-bg-counter-x, 0px) + var(--archive-atmosphere-x, 0px)),
+    calc(var(--immersive-bg-counter-y, 0px) + var(--archive-atmosphere-y, 0px)),
+    0
+  ) scale(var(--immersive-bg-scale, 1));
   transform-origin: center;
   transition:
     opacity 280ms var(--ease-luxury),
@@ -3908,7 +3961,11 @@ html[data-theme="dark"] body {
   mix-blend-mode: var(--vanta-scroll-blend, soft-light);
   -webkit-mask-image: radial-gradient(ellipse at center, #000 0 72%, transparent 100%);
   mask-image: radial-gradient(ellipse at center, #000 0 72%, transparent 100%);
-  transform: translate3d(var(--immersive-bg-drift-x, 0px), var(--immersive-bg-shift-y, 0px), 0) scale(var(--immersive-bg-scale, 1));
+  transform: translate3d(
+    calc(var(--immersive-bg-drift-x, 0px) - var(--archive-atmosphere-x, 0px)),
+    calc(var(--immersive-bg-shift-y, 0px) - var(--archive-atmosphere-y, 0px)),
+    0
+  ) scale(var(--immersive-bg-scale, 1));
   transform-origin: center;
   transition:
     opacity 260ms var(--ease-luxury),
@@ -4039,6 +4096,8 @@ html[data-theme="dark"] {
 
 .section-scroller-content {
   box-sizing: border-box;
+  position: relative;
+  isolation: isolate;
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -4051,7 +4110,43 @@ html[data-theme="dark"] {
   scrollbar-width: none;
   will-change: opacity, transform, filter;
   transform-origin: center center;
+  transform-style: preserve-3d;
   -webkit-overflow-scrolling: touch;
+}
+
+.section-scroller-content::before,
+.section-scroller-content::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  z-index: 0;
+  width: min(calc(100% - clamp(1.6rem, 4.5vw, 6.25rem)), 90rem);
+  height: min(calc(var(--section-scroller-height, 100dvh) - clamp(2.6rem, 5.4svh, 4.6rem)), 52rem);
+  max-height: calc(100% - clamp(1.4rem, 4svh, 3.4rem));
+  border: 1px solid color-mix(in srgb, var(--border) 62%, transparent);
+  border-radius: var(--radius-shell);
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--surface-strong) 32%, transparent), color-mix(in srgb, var(--surface) 18%, transparent));
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--glass-highlight) 52%, transparent),
+    0 26px 90px color-mix(in srgb, var(--shadow-color, #4f6f91) 11%, transparent);
+  transform-origin: center top;
+  transition:
+    opacity 520ms var(--ease-luxury),
+    transform 650ms var(--ease-luxury);
+}
+
+.section-scroller-content::before {
+  top: clamp(0.62rem, 1.6svh, 1.18rem);
+  opacity: 0.34;
+  transform: translate3d(calc(-50% + var(--archive-shift, 0px)), clamp(0.62rem, 1.4svh, 1.15rem), -18px) scale(0.985);
+}
+
+.section-scroller-content::after {
+  top: clamp(0.9rem, 2.1svh, 1.55rem);
+  opacity: 0.2;
+  transform: translate3d(calc(-50% - var(--archive-shift, 0px)), clamp(1.12rem, 2.6svh, 2rem), -34px) scale(0.965);
 }
 
 .section-scroller-content::-webkit-scrollbar {
@@ -4060,6 +4155,8 @@ html[data-theme="dark"] {
 
 .section-scroller-content-main {
   box-sizing: border-box;
+  position: relative;
+  z-index: 2;
   flex: 1 0 auto;
   min-width: 0;
   min-height: 0;
@@ -4507,5 +4604,11 @@ html[data-theme="dark"] {
     filter: none !important;
     opacity: 1 !important;
     transform: none !important;
+  }
+
+  .section-scroller-content::before,
+  .section-scroller-content::after {
+    transition: none;
+    transform: translate3d(-50%, 0, 0) scale(0.98);
   }
 }

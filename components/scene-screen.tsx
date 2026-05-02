@@ -223,7 +223,7 @@ export function SceneScreen({
       >
         <RevealItem variant="media" className="portrait-tablet-support-media-item h-full min-h-0">
           <div className="scene-screen-portrait-media-panel portrait-tablet-support-media-panel scene-focus scene-panel-shell flex h-full min-h-[14.9rem] flex-col gap-2.5 p-2.5">
-            <AnimatePresence mode="wait">
+            <AnimatePresence mode="sync">
               <motion.div
                 key={`${active.title}-tablet-portrait`}
                 initial={mediaEnter}
@@ -274,7 +274,7 @@ export function SceneScreen({
         </RevealItem>
 
         <RevealItem variant="card">
-          <AnimatePresence mode="wait">
+          <AnimatePresence mode="sync">
             <motion.div
               key={`${active.label}-${activeIndex}-tablet-portrait-bullets`}
               initial={panelEnter}
@@ -504,7 +504,7 @@ export function SceneScreen({
               <RevealGroup className="scene-balanced-media-stack scene-composition-side scene-media-rail scene-wide-support-stack scene-screen-media-group scene-screen-tablet-media-group md:min-h-0" delay={80} stagger={0.08} amount={0.2}>
                 <RevealItem variant="media" className="scene-screen-tablet-media-item min-h-0">
                   <div className="scene-screen-tablet-media-panel scene-composition-side-panel scene-focus scene-panel-shell flex h-full min-h-[15.8rem] flex-col gap-2.5 p-2.5">
-                    <AnimatePresence mode="wait">
+                    <AnimatePresence mode="sync">
                       <motion.div
                         key={`${active.title}-tablet`}
                         initial={mediaEnter}
@@ -594,7 +594,7 @@ export function SceneScreen({
 
                     <div className="home-divider" />
 
-                    <AnimatePresence mode="wait">
+                    <AnimatePresence mode="sync">
                       <motion.div
                         key={`${active.label}-${activeIndex}-tablet`}
                         initial={panelEnter}
@@ -657,7 +657,7 @@ export function SceneScreen({
               <RevealGroup className="scene-balanced-media-stack scene-composition-side scene-media-rail scene-wide-support-stack scene-screen-media-group h-full min-h-0" delay={80} stagger={0.08} amount={0.2}>
                 <RevealItem variant="media" className="h-full min-h-0">
                   <div className="scene-screen-media-panel scene-composition-side-panel scene-focus scene-panel-shell flex h-full min-h-[19rem] flex-col gap-3 p-3 sm:min-h-[21rem] sm:p-4">
-                    <AnimatePresence mode="wait">
+                    <AnimatePresence mode="sync">
                       <motion.div
                         key={active.title}
                         initial={mediaEnter}
@@ -749,7 +749,7 @@ export function SceneScreen({
 
                     <div className="home-divider" />
 
-                    <AnimatePresence mode="wait">
+                    <AnimatePresence mode="sync">
                       <motion.div
                         key={`${active.label}-${activeIndex}`}
                         initial={panelEnter}

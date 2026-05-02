@@ -613,7 +613,7 @@ export function InquiryScene({ sceneData, immersiveSectionMode = false }: Inquir
       >
         <RevealItem variant="media" className="portrait-tablet-support-media-item h-full min-h-0">
           <div className="inquiry-tablet-media-panel scene-composition-side-panel portrait-tablet-support-media-panel scene-focus scene-panel-shell flex h-full min-h-[14.9rem] flex-col gap-2.5 p-2.5">
-            <AnimatePresence mode="wait">
+            <AnimatePresence mode="sync">
               <motion.div
                 key={`${activeSupport.title}-tablet`}
                 initial={supportEnter}
@@ -1109,7 +1109,7 @@ export function InquiryScene({ sceneData, immersiveSectionMode = false }: Inquir
                   >
                     <RevealItem variant="media" className="min-h-0">
                       <div className="inquiry-support-media-panel scene-composition-side-panel scene-focus scene-panel-shell flex h-full min-h-[18.75rem] flex-col gap-3 p-3 sm:min-h-[20.5rem] sm:p-4">
-                        <AnimatePresence mode="wait">
+                        <AnimatePresence mode="sync">
                           <motion.div
                             key={activeSupport.title}
                             initial={supportEnter}
