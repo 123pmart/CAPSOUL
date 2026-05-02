@@ -36,14 +36,14 @@ type SectionScrollerProps = {
 };
 
 const revealTransition = {
-  duration: 0.68,
+  duration: 0.78,
   ease: [0.22, 1, 0.36, 1],
 } as const;
 
 const SCROLL_BOUNDARY_TOLERANCE = 6;
-const DESKTOP_WHEEL_DELTA_THRESHOLD = 196;
-const MOBILE_SECTION_SWIPE_THRESHOLD = 190;
-const SECTION_TRANSITION_LOCK_MS = 1080;
+const DESKTOP_WHEEL_DELTA_THRESHOLD = 260;
+const MOBILE_SECTION_SWIPE_THRESHOLD = 228;
+const SECTION_TRANSITION_LOCK_MS = 1120;
 const WHEEL_INTENT_IDLE_MS = 300;
 const TOUCH_VERTICAL_INTENT_RATIO = 1.4;
 
@@ -151,8 +151,8 @@ function isSectionNavigationProtectedTarget(target: EventTarget | null) {
         "select",
         "option",
         "a",
-        "button:not(.scene-mobile-card)",
-        "[role='button']:not(.scene-mobile-card)",
+        "button",
+        "[role='button']",
         "[role='slider']",
         "[data-section-navigation-control='true']",
         ".compact-scene-controls",
@@ -194,6 +194,8 @@ export function SectionScroller({
     rootStyle.setProperty("--section-index", String(activeIndex));
     rootStyle.setProperty("--archive-depth", archiveProgress.toFixed(3));
     rootStyle.setProperty("--archive-shift", `${(centeredIndex * 8).toFixed(2)}px`);
+    rootStyle.setProperty("--archive-shift-soft", `${(centeredIndex * 3.6).toFixed(2)}px`);
+    rootStyle.setProperty("--archive-shift-lite", `${(centeredIndex * 2.8).toFixed(2)}px`);
     rootStyle.setProperty("--archive-atmosphere-x", `${(centeredIndex * 26).toFixed(2)}px`);
     rootStyle.setProperty("--archive-atmosphere-y", `${((archiveProgress - 0.5) * -86).toFixed(2)}px`);
   }, [activeIndex, childItems.length]);
@@ -342,38 +344,8 @@ export function SectionScroller({
     syncActiveSection();
     root.addEventListener("scroll", handleScroll, { passive: true });
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const mostVisible = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-
-        if (!mostVisible) {
-          return;
-        }
-
-        const nextIndex = Number((mostVisible.target as HTMLElement).dataset.sectionIndex);
-
-        if (Number.isFinite(nextIndex)) {
-          setBoundedActiveIndex(nextIndex);
-        }
-      },
-      {
-        root,
-        rootMargin: "-24% 0px -24% 0px",
-        threshold: [0.24, 0.4, 0.56, 0.72],
-      },
-    );
-
-    sectionRefs.current.forEach((section) => {
-      if (section) {
-        observer.observe(section);
-      }
-    });
-
     return () => {
       root.removeEventListener("scroll", handleScroll);
-      observer.disconnect();
 
       if (frameRef.current != null) {
         window.cancelAnimationFrame(frameRef.current);
@@ -398,6 +370,8 @@ export function SectionScroller({
       rootStyle.removeProperty("--section-index");
       rootStyle.removeProperty("--archive-depth");
       rootStyle.removeProperty("--archive-shift");
+      rootStyle.removeProperty("--archive-shift-soft");
+      rootStyle.removeProperty("--archive-shift-lite");
       rootStyle.removeProperty("--archive-atmosphere-x");
       rootStyle.removeProperty("--archive-atmosphere-y");
     };
@@ -451,9 +425,19 @@ export function SectionScroller({
     syncBackgroundMotion(root);
 
     sectionSettleTimerRef.current = window.setTimeout(() => {
+      const settledSection = sectionRefs.current[nextIndex];
+
+      if (settledSection && Math.abs(root.scrollTop - settledSection.offsetTop) > SCROLL_BOUNDARY_TOLERANCE) {
+        root.scrollTo({
+          top: settledSection.offsetTop,
+          behavior: "auto",
+        });
+      }
+
       positionInnerScroll(nextIndex, targetInnerPosition);
+      syncBackgroundMotion(root);
       sectionSettleTimerRef.current = null;
-    }, prefersReducedMotion ? 0 : 420);
+    }, prefersReducedMotion ? 0 : 680);
   }, [
     armNavigationLock,
     childItems.length,
@@ -675,62 +659,75 @@ export function SectionScroller({
                       ? { opacity: 1, filter: "blur(0px)", scale: 1, y: 0, rotateX: 0 }
                       : isActive
                         ? { opacity: 1, filter: "blur(0px)", scale: 1, y: 0, rotateX: 0 }
-                        : { opacity: 0.2, filter: "blur(1px)", scale: 0.976, y: 24, rotateX: 1.2 }
+                        : { opacity: 0.22, filter: "blur(0.8px)", scale: 0.972, y: 30, rotateX: 1 }
                   }
                   transition={reduceMotion ? { duration: 0 } : revealTransition}
                 >
-                  <div className="section-scroller-content-main">
-                    {content}
-                  </div>
-                  <nav
-                    data-section-navigation-control="true"
-                    className="section-page-controls"
-                    aria-label={`${section.label} section controls`}
-                  >
-                    <button
-                      type="button"
-                      className="section-page-control section-page-control-previous"
-                      disabled={index === 0}
-                      aria-label={index === 0 ? routeLabels.previous : `${routeLabels.previous}: ${sections[index - 1]?.label}`}
-                      onClick={() => goToSection(index - 1, "start")}
-                    >
-                      <span aria-hidden="true">&larr;</span>
-                      <span>{routeLabels.previous}</span>
-                    </button>
-                    <div
-                      data-section-navigation-control="true"
-                      className="section-mobile-progress-nav"
-                      role="group"
-                      aria-label="Mobile section navigation"
-                    >
-                      {sections.map((progressSection, progressIndex) => {
-                        const progressIsActive = activeIndex === progressIndex;
-
-                        return (
-                          <button
-                            key={`${section.id}-${progressSection.id}-mobile-progress`}
-                            type="button"
-                            className={`section-mobile-progress-segment ${progressIsActive ? "section-mobile-progress-segment-active" : ""}`.trim()}
-                            aria-label={`Go to ${progressSection.label} section`}
-                            aria-current={progressIsActive ? "page" : undefined}
-                            onClick={() => goToSection(progressIndex)}
-                          >
-                            <span className="sr-only">{progressSection.label}</span>
-                          </button>
-                        );
-                      })}
+                  <div className="archive-section-stage">
+                    <div className="archive-stage-depth" aria-hidden="true">
+                      <span className="archive-stage-sheet archive-stage-sheet-back" />
+                      <span className="archive-stage-sheet archive-stage-sheet-mid" />
+                      <span className="archive-stage-sheet archive-stage-sheet-front" />
                     </div>
-                    <button
-                      type="button"
-                      className="section-page-control section-page-control-next"
-                      disabled={index === childItems.length - 1}
-                      aria-label={index === childItems.length - 1 ? routeLabels.next : `${routeLabels.next}: ${sections[index + 1]?.label}`}
-                      onClick={() => goToSection(index + 1, "start")}
-                    >
-                      <span>{routeLabels.next}</span>
-                      <span aria-hidden="true">&rarr;</span>
-                    </button>
-                  </nav>
+                    <div className="archive-section-content">
+                      <div className="archive-stage-meta" aria-hidden="true">
+                        <span>{`Record ${String(index + 1).padStart(2, "0")}`}</span>
+                        <span>{section.label}</span>
+                      </div>
+                      <div className="section-scroller-content-main">
+                        {content}
+                      </div>
+                      <nav
+                        data-section-navigation-control="true"
+                        className="section-page-controls"
+                        aria-label={`${section.label} section controls`}
+                      >
+                        <button
+                          type="button"
+                          className="section-page-control section-page-control-previous"
+                          disabled={index === 0}
+                          aria-label={index === 0 ? routeLabels.previous : `${routeLabels.previous}: ${sections[index - 1]?.label}`}
+                          onClick={() => goToSection(index - 1, "start")}
+                        >
+                          <span aria-hidden="true">&larr;</span>
+                          <span>{routeLabels.previous}</span>
+                        </button>
+                        <div
+                          data-section-navigation-control="true"
+                          className="section-mobile-progress-nav"
+                          role="group"
+                          aria-label="Mobile section navigation"
+                        >
+                          {sections.map((progressSection, progressIndex) => {
+                            const progressIsActive = activeIndex === progressIndex;
+
+                            return (
+                              <button
+                                key={`${section.id}-${progressSection.id}-mobile-progress`}
+                                type="button"
+                                className={`section-mobile-progress-segment ${progressIsActive ? "section-mobile-progress-segment-active" : ""}`.trim()}
+                                aria-label={`Go to ${progressSection.label} section`}
+                                aria-current={progressIsActive ? "page" : undefined}
+                                onClick={() => goToSection(progressIndex)}
+                              >
+                                <span className="sr-only">{progressSection.label}</span>
+                              </button>
+                            );
+                          })}
+                        </div>
+                        <button
+                          type="button"
+                          className="section-page-control section-page-control-next"
+                          disabled={index === childItems.length - 1}
+                          aria-label={index === childItems.length - 1 ? routeLabels.next : `${routeLabels.next}: ${sections[index + 1]?.label}`}
+                          onClick={() => goToSection(index + 1, "start")}
+                        >
+                          <span>{routeLabels.next}</span>
+                          <span aria-hidden="true">&rarr;</span>
+                        </button>
+                      </nav>
+                    </div>
+                  </div>
                 </motion.div>
               </section>
             );

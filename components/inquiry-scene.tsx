@@ -140,23 +140,23 @@ export function InquiryScene({ sceneData, immersiveSectionMode = false }: Inquir
   const contentEnter = reduceMotion
     ? { opacity: 1 }
     : usesViewportProgression
-      ? { opacity: 0, y: 18 }
-      : { opacity: 0, y: 10 };
+      ? { opacity: 0, y: 10 }
+      : { opacity: 0, y: 6 };
   const contentExit = reduceMotion
     ? { opacity: 1 }
     : usesViewportProgression
-      ? { opacity: 0, y: -14 }
-      : { opacity: 0, y: -8 };
+      ? { opacity: 0, y: -8 }
+      : { opacity: 0, y: -4 };
   const supportEnter = reduceMotion
     ? { opacity: 1 }
     : usesViewportProgression
-      ? { opacity: 0, y: 24, scale: 0.985 }
-      : { opacity: 0, y: 14, scale: 0.996 };
+      ? { opacity: 0, y: 14, scale: 0.992 }
+      : { opacity: 0, y: 8, scale: 0.998 };
   const supportExit = reduceMotion
     ? { opacity: 1 }
     : usesViewportProgression
-      ? { opacity: 0, y: -18, scale: 0.992 }
-      : { opacity: 0, y: -10, scale: 0.998 };
+      ? { opacity: 0, y: -10, scale: 0.996 }
+      : { opacity: 0, y: -6, scale: 0.999 };
   const mobileSceneSwapTransition = reduceMotion
     ? { duration: 0 }
     : { duration: 0.24, ease: measuredEase };

@@ -90,23 +90,23 @@ export function SceneScreen({
   const mediaEnter = reduceMotion
     ? { opacity: 1 }
     : usesViewportProgression
-      ? { opacity: 0, y: 24, scale: 0.985 }
-      : { opacity: 0, y: 14, scale: 0.996 };
+      ? { opacity: 0, y: 14, scale: 0.992 }
+      : { opacity: 0, y: 8, scale: 0.998 };
   const mediaExit = reduceMotion
     ? { opacity: 1 }
     : usesViewportProgression
-      ? { opacity: 0, y: -20, scale: 0.992 }
-      : { opacity: 0, y: -10, scale: 0.998 };
+      ? { opacity: 0, y: -10, scale: 0.996 }
+      : { opacity: 0, y: -6, scale: 0.999 };
   const panelEnter = reduceMotion
     ? { opacity: 1 }
     : usesViewportProgression
-      ? { opacity: 0, y: 18 }
-      : { opacity: 0, y: 10 };
+      ? { opacity: 0, y: 10 }
+      : { opacity: 0, y: 6 };
   const panelExit = reduceMotion
     ? { opacity: 1 }
     : usesViewportProgression
-      ? { opacity: 0, y: -12 }
-      : { opacity: 0, y: -8 };
+      ? { opacity: 0, y: -8 }
+      : { opacity: 0, y: -4 };
 
   const mobileProgressionNote = immersiveSectionMode || usesViewportProgression
     ? compactNote
