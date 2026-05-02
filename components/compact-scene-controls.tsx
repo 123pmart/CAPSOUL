@@ -71,11 +71,7 @@ export function CompactSceneControls({
               aria-label={`Show ${label}`}
               aria-pressed={isActive}
               onClick={() => onSelect(index)}
-              className={`compact-scene-dot h-2.5 rounded-full transition-all duration-300 ${
-                isActive
-                  ? "compact-scene-dot-active w-7 bg-[var(--accent-deep)]"
-                  : "w-2.5 bg-[rgba(158,179,200,0.34)]"
-              }`}
+              className={`compact-scene-dot ${isActive ? "compact-scene-dot-active" : ""}`.trim()}
             />
           );
         })}
