@@ -72,7 +72,6 @@ export function SectionScroller({
   routeLabels = { previous: "Previous", next: "Next" },
 }: SectionScrollerProps) {
   const reduceMotion = useReducedMotion();
-  const containerRef = useRef<HTMLDivElement | null>(null);
   const sectionRefs = useRef<Array<HTMLElement | null>>([]);
   const contentRefs = useRef<Array<HTMLDivElement | null>>([]);
   const frameRef = useRef<number | null>(null);
@@ -102,32 +101,39 @@ export function SectionScroller({
     syncArchiveState(nextIndex);
   }, [childItems.length, syncArchiveState]);
 
-  const syncActiveSection = useCallback(() => {
-    const root = containerRef.current;
+  const getHeaderOffset = useCallback(() => {
+    const main = document.getElementById("main-content");
+    const paddingTop = main
+      ? Number.parseFloat(window.getComputedStyle(main).paddingTop)
+      : Number.NaN;
 
-    if (!root || childItems.length === 0) {
+    return Number.isFinite(paddingTop) ? paddingTop : 96;
+  }, []);
+
+  const syncActiveSection = useCallback(() => {
+    if (childItems.length === 0) {
       return;
     }
 
-    const marker = root.scrollTop + root.clientHeight * 0.34;
+    const marker = window.scrollY + getHeaderOffset() + window.innerHeight * 0.26;
     let nextIndex = 0;
 
     sectionRefs.current.forEach((section, index) => {
-      if (section && section.offsetTop <= marker) {
+      if (!section) {
+        return;
+      }
+
+      const sectionTop = section.getBoundingClientRect().top + window.scrollY;
+
+      if (sectionTop <= marker) {
         nextIndex = index;
       }
     });
 
     setBoundedActiveIndex(nextIndex);
-  }, [childItems.length, setBoundedActiveIndex]);
+  }, [childItems.length, getHeaderOffset, setBoundedActiveIndex]);
 
   useEffect(() => {
-    const root = containerRef.current;
-
-    if (!root) {
-      return;
-    }
-
     const handleScroll = () => {
       if (frameRef.current != null) {
         return;
@@ -140,10 +146,14 @@ export function SectionScroller({
     };
 
     syncActiveSection();
-    root.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", handleScroll, { passive: true });
+    window.addEventListener("orientationchange", handleScroll, { passive: true });
 
     return () => {
-      root.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleScroll);
+      window.removeEventListener("orientationchange", handleScroll);
 
       if (frameRef.current != null) {
         window.cancelAnimationFrame(frameRef.current);
@@ -178,11 +188,10 @@ export function SectionScroller({
   }, [activeIndex, sections]);
 
   const goToSection = useCallback((index: number) => {
-    const root = containerRef.current;
     const nextIndex = clampIndex(index, childItems.length);
     const targetSection = sectionRefs.current[nextIndex];
 
-    if (!root || !targetSection) {
+    if (!targetSection) {
       return;
     }
 
@@ -192,15 +201,18 @@ export function SectionScroller({
     resetSectionScroll(contentRefs.current[nextIndex]);
     setBoundedActiveIndex(nextIndex);
 
-    root.scrollTo({
-      top: targetSection.offsetTop,
+    const sectionTop = targetSection.getBoundingClientRect().top + window.scrollY;
+    const top = Math.max(0, sectionTop - getHeaderOffset() + 10);
+
+    window.scrollTo({
+      top,
       behavior: prefersReducedMotion ? "auto" : "smooth",
     });
 
     window.requestAnimationFrame(() => {
       resetSectionScroll(contentRefs.current[nextIndex]);
     });
-  }, [childItems.length, reduceMotion, setBoundedActiveIndex]);
+  }, [childItems.length, getHeaderOffset, reduceMotion, setBoundedActiveIndex]);
 
   useEffect(() => {
     const handleNavigate = (event: Event) => {
@@ -229,7 +241,6 @@ export function SectionScroller({
     <ImmersiveScrollProvider>
       <div className="section-scroller-shell">
         <div
-          ref={containerRef}
           className="section-scroller"
           aria-label="CAPSOUL public sections"
         >
