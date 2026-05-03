@@ -79,65 +79,65 @@ const budgetSliderDefault = 12500;
 const revealEase = [0.22, 1, 0.36, 1] as const;
 
 const sectionReveal = {
-  hidden: { opacity: 0, y: 54, scale: 0.976 },
+  hidden: { opacity: 0, y: 64, scale: 0.965 },
   visible: {
     opacity: 1,
     y: 0,
     scale: 1,
-    transition: { duration: 0.9, ease: revealEase, staggerChildren: 0.12, delayChildren: 0.06 },
+    transition: { duration: 0.98, ease: revealEase, staggerChildren: 0.16, delayChildren: 0.08 },
   },
 } as const;
 
 const archiveChildReveal = {
-  hidden: { opacity: 0, y: 36, scale: 0.984 },
+  hidden: { opacity: 0, y: 42, scale: 0.975 },
   visible: {
     opacity: 1,
     y: 0,
     scale: 1,
-    transition: { duration: 0.78, ease: revealEase },
+    transition: { duration: 0.86, ease: revealEase },
   },
 } as const;
 
 const eyebrowReveal = {
-  hidden: { opacity: 0, y: 14 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.68, ease: revealEase } },
+  hidden: { opacity: 0, y: 18 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.74, ease: revealEase } },
 } as const;
 
 const titleReveal = {
-  hidden: { opacity: 0, y: 28, scale: 0.982 },
-  visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.86, ease: revealEase } },
+  hidden: { opacity: 0, y: 32, scale: 0.97 },
+  visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.94, ease: revealEase } },
 } as const;
 
 const copyReveal = {
-  hidden: { opacity: 0, y: 18 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.74, ease: revealEase } },
+  hidden: { opacity: 0, y: 22 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.82, ease: revealEase } },
 } as const;
 
 const cardGridReveal = {
   hidden: { opacity: 1 },
   visible: {
     opacity: 1,
-    transition: { staggerChildren: 0.09, delayChildren: 0.06, ease: revealEase },
+    transition: { staggerChildren: 0.14, delayChildren: 0.08, ease: revealEase },
   },
 } as const;
 
 const cardReveal = {
-  hidden: { opacity: 0, y: 34, scale: 0.985 },
+  hidden: { opacity: 0, y: 44, scale: 0.97 },
   visible: {
     opacity: 1,
     y: 0,
     scale: 1,
-    transition: { duration: 0.74, ease: revealEase },
+    transition: { duration: 0.86, ease: revealEase },
   },
 } as const;
 
 const mediaReveal = {
-  hidden: { opacity: 0, y: 42, scale: 0.976 },
+  hidden: { opacity: 0, y: 48, scale: 0.96 },
   visible: {
     opacity: 1,
     y: 0,
     scale: 1,
-    transition: { duration: 0.88, ease: revealEase },
+    transition: { duration: 0.98, ease: revealEase },
   },
 } as const;
 
@@ -145,8 +145,21 @@ const heroReveal = {
   hidden: { opacity: 1 },
   visible: {
     opacity: 1,
-    transition: { staggerChildren: 0.12, delayChildren: 0.08 },
+    transition: { staggerChildren: 0.18, delayChildren: 0.1 },
   },
+} as const;
+
+const detailStaggerReveal = {
+  hidden: { opacity: 1 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.07, delayChildren: 0.05, ease: revealEase },
+  },
+} as const;
+
+const detailItemReveal = {
+  hidden: { opacity: 0, y: 14 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.34, ease: revealEase } },
 } as const;
 
 const liquidTargetSelector = [
@@ -637,16 +650,16 @@ function ArchiveHero({
               indexLabel="Archive 01"
             />
           </div>
-          <div className="apple-hero-chapters" aria-label="Opening archive chapters">
+          <motion.div className="apple-hero-chapters" aria-label="Opening archive chapters" variants={cardGridReveal}>
             {home.steps.map((step, index) => (
-              <div className="apple-hero-chapter apple-liquid-surface" key={step.label}>
+              <motion.div className="apple-hero-chapter apple-liquid-surface" key={step.label} variants={cardReveal}>
                 <span className="apple-liquid-layer" aria-hidden="true" />
                 <span>{String(index + 1).padStart(2, "0")}</span>
                 <strong>{step.label}</strong>
                 <p>{step.title}</p>
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </motion.div>
       </motion.div>
     </section>
@@ -685,6 +698,7 @@ function EmotionalValue({ home }: { home: ResolvedSceneContent }) {
       </motion.div>
       <motion.div
         className="apple-value-grid motion-stagger"
+        data-active-index={activeIndex}
         variants={cardGridReveal}
         style={{
           "--active-archive-index": activeIndex,
@@ -708,6 +722,10 @@ function EmotionalValue({ home }: { home: ResolvedSceneContent }) {
               style={{ "--motion-stagger-index": index } as CSSProperties}
               aria-controls={detailId}
               aria-expanded={isActive}
+              aria-pressed={isActive}
+              onPointerDown={() => {
+                setActiveIndex(index);
+              }}
               onClick={() => {
                 setActiveIndex(index);
               }}
@@ -829,6 +847,7 @@ function ArchiveSceneModule({
               variants={cardReveal}
               style={{ "--motion-stagger-index": index } as CSSProperties}
               aria-pressed={isActive}
+              onPointerDown={() => setActiveIndex(index)}
               onClick={() => setActiveIndex(index)}
             >
               <span className="apple-liquid-layer" aria-hidden="true" />
@@ -856,16 +875,21 @@ function ArchiveSceneModule({
               caption={active.mediaCaption}
               indexLabel={active.label}
             />
-            <div className="apple-record-detail">
-              <span>{sectionLabel}</span>
-              <h3>{active.title}</h3>
-              <p>{active.detail}</p>
-              <div className="apple-record-tags">
+            <motion.div
+              className="apple-record-detail"
+              variants={detailStaggerReveal}
+              initial="hidden"
+              animate="visible"
+            >
+              <motion.span variants={detailItemReveal}>{sectionLabel}</motion.span>
+              <motion.h3 variants={detailItemReveal}>{active.title}</motion.h3>
+              <motion.p variants={detailItemReveal}>{active.detail}</motion.p>
+              <motion.div className="apple-record-tags" variants={detailStaggerReveal}>
                 {active.bullets.map((bullet) => (
-                  <span key={bullet}>{bullet}</span>
+                  <motion.span key={bullet} variants={detailItemReveal}>{bullet}</motion.span>
                 ))}
-              </div>
-            </div>
+              </motion.div>
+            </motion.div>
           </motion.div>
         </AnimatePresence>
         <CompactSceneControls
@@ -916,11 +940,11 @@ function PreserveEditorial({ preserve }: { preserve: ResolvedSceneContent }) {
           <span>{featured.mediaLabel}</span>
           <h3>{featured.title}</h3>
           <p>{featured.detail}</p>
-          <div className="apple-record-tags">
+          <motion.div className="apple-record-tags" variants={detailStaggerReveal}>
             {featured.bullets.map((bullet) => (
-              <span key={bullet}>{bullet}</span>
+              <motion.span key={bullet} variants={detailItemReveal}>{bullet}</motion.span>
             ))}
-          </div>
+          </motion.div>
         </motion.article>
       ) : null}
       <motion.div className="apple-preserve-grid" variants={cardGridReveal}>
