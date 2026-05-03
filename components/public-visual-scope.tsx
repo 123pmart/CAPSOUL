@@ -3,7 +3,17 @@
 import type { ReactNode } from "react";
 import { usePathname } from "next/navigation";
 
-import VantaFogBackground from "@/components/VantaFogBackground";
+function ArchiveAtmosphere() {
+  return (
+    <div className="archive-atmosphere" aria-hidden="true">
+      <span className="archive-atmosphere__mesh" />
+      <span className="archive-atmosphere__bloom archive-atmosphere__bloom-one" />
+      <span className="archive-atmosphere__bloom archive-atmosphere__bloom-two" />
+      <span className="archive-atmosphere__section-light" />
+      <span className="archive-atmosphere__grain" />
+    </div>
+  );
+}
 
 export function PublicVisualScope({ children }: { children: ReactNode }) {
   const pathname = usePathname();
@@ -15,7 +25,7 @@ export function PublicVisualScope({ children }: { children: ReactNode }) {
 
   return (
     <div className="public-visual-scope">
-      <VantaFogBackground />
+      <ArchiveAtmosphere />
       {children}
     </div>
   );

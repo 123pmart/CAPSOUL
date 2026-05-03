@@ -79,22 +79,65 @@ const budgetSliderDefault = 12500;
 const revealEase = [0.22, 1, 0.36, 1] as const;
 
 const sectionReveal = {
-  hidden: { opacity: 0, y: 44, scale: 0.982 },
+  hidden: { opacity: 0, y: 54, scale: 0.976 },
   visible: {
     opacity: 1,
     y: 0,
     scale: 1,
-    transition: { duration: 0.84, ease: revealEase, staggerChildren: 0.1, delayChildren: 0.05 },
+    transition: { duration: 0.9, ease: revealEase, staggerChildren: 0.12, delayChildren: 0.06 },
   },
 } as const;
 
 const archiveChildReveal = {
-  hidden: { opacity: 0, y: 34, scale: 0.988 },
+  hidden: { opacity: 0, y: 36, scale: 0.984 },
   visible: {
     opacity: 1,
     y: 0,
     scale: 1,
-    transition: { duration: 0.72, ease: revealEase },
+    transition: { duration: 0.78, ease: revealEase },
+  },
+} as const;
+
+const eyebrowReveal = {
+  hidden: { opacity: 0, y: 14 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.68, ease: revealEase } },
+} as const;
+
+const titleReveal = {
+  hidden: { opacity: 0, y: 28, scale: 0.982 },
+  visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.86, ease: revealEase } },
+} as const;
+
+const copyReveal = {
+  hidden: { opacity: 0, y: 18 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.74, ease: revealEase } },
+} as const;
+
+const cardGridReveal = {
+  hidden: { opacity: 1 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.09, delayChildren: 0.06, ease: revealEase },
+  },
+} as const;
+
+const cardReveal = {
+  hidden: { opacity: 0, y: 34, scale: 0.985 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: { duration: 0.74, ease: revealEase },
+  },
+} as const;
+
+const mediaReveal = {
+  hidden: { opacity: 0, y: 42, scale: 0.976 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: { duration: 0.88, ease: revealEase },
   },
 } as const;
 
@@ -102,7 +145,7 @@ const heroReveal = {
   hidden: { opacity: 1 },
   visible: {
     opacity: 1,
-    transition: { staggerChildren: 0.11, delayChildren: 0.06 },
+    transition: { staggerChildren: 0.12, delayChildren: 0.08 },
   },
 } as const;
 
@@ -118,6 +161,124 @@ const liquidTargetSelector = [
   ".theme-toggle",
   ".apple-side-dot",
 ].join(",");
+
+type ArchiveAtmosphereSection = "hero" | "archive" | "experience" | "process" | "preserve" | "inquire";
+
+function isArchiveAtmosphereSection(value: string | undefined): value is ArchiveAtmosphereSection {
+  return value === "hero"
+    || value === "archive"
+    || value === "experience"
+    || value === "process"
+    || value === "preserve"
+    || value === "inquire";
+}
+
+function getAtmosphereSectionForId(id: ImmersiveSectionId): ArchiveAtmosphereSection {
+  switch (id) {
+    case "the-experience":
+      return "experience";
+    case "how-it-works":
+      return "process";
+    case "what-we-preserve":
+      return "preserve";
+    case "inquire":
+      return "inquire";
+    case "home":
+    default:
+      return "hero";
+  }
+}
+
+function usePublicAtmosphereSection() {
+  const [activeSection, setActiveSection] = useState<ArchiveAtmosphereSection>("hero");
+
+  useEffect(() => {
+    const elements = Array.from(
+      document.querySelectorAll<HTMLElement>("[data-atmosphere-section]"),
+    );
+
+    if (!elements.length) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        const nextSection = visible?.target instanceof HTMLElement
+          ? visible.target.dataset.atmosphereSection
+          : undefined;
+
+        if (isArchiveAtmosphereSection(nextSection)) {
+          setActiveSection(nextSection);
+        }
+      },
+      {
+        root: null,
+        rootMargin: "-30% 0px -46% 0px",
+        threshold: [0.12, 0.28, 0.52],
+      },
+    );
+
+    elements.forEach((element) => observer.observe(element));
+
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.dataset.activeArchiveSection = activeSection;
+
+    return () => {
+      delete document.documentElement.dataset.activeArchiveSection;
+    };
+  }, [activeSection]);
+
+  return activeSection;
+}
+
+function useMotionChoreography() {
+  useEffect(() => {
+    const elements = Array.from(document.querySelectorAll<HTMLElement>("[data-motion-section]"));
+
+    if (!elements.length) {
+      return;
+    }
+
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (reduceMotion) {
+      elements.forEach((element) => {
+        element.dataset.motionVisible = "true";
+        element.classList.add("is-visible");
+      });
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting || !(entry.target instanceof HTMLElement)) {
+            return;
+          }
+
+          entry.target.dataset.motionVisible = "true";
+          entry.target.classList.add("is-visible");
+          observer.unobserve(entry.target);
+        });
+      },
+      {
+        root: null,
+        rootMargin: "-12% 0px -14% 0px",
+        threshold: [0.14, 0.28],
+      },
+    );
+
+    elements.forEach((element) => observer.observe(element));
+
+    return () => observer.disconnect();
+  }, []);
+}
 
 function useLiquidGlassPointer() {
   const frameRef = useRef<number | null>(null);
@@ -380,18 +541,24 @@ function ArchiveSection({
   className?: string;
 }) {
   return (
-    <section id={id} data-archive-section className={`apple-section ${className}`.trim()}>
+    <section
+      id={id}
+      data-archive-section
+      data-atmosphere-section={getAtmosphereSectionForId(id)}
+      data-motion-section
+      className={`apple-section motion-section ${className}`.trim()}
+    >
       <motion.div
-        className="apple-section-inner"
+        className="apple-section-inner motion-section-flow"
         variants={sectionReveal}
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.2 }}
       >
-        <motion.div className="apple-section-kicker" variants={archiveChildReveal}>{eyebrow}</motion.div>
-        <motion.h2 className="apple-section-title" variants={archiveChildReveal}>{title}</motion.h2>
-        <motion.p className="apple-section-copy" variants={archiveChildReveal}>{description}</motion.p>
-        <motion.div className="apple-section-body" variants={archiveChildReveal}>{children}</motion.div>
+        <motion.div className="apple-section-kicker motion-eyebrow" variants={eyebrowReveal}>{eyebrow}</motion.div>
+        <motion.h2 className="apple-section-title motion-title" variants={titleReveal}>{title}</motion.h2>
+        <motion.p className="apple-section-copy motion-copy" variants={copyReveal}>{description}</motion.p>
+        <motion.div className="apple-section-body motion-card" variants={archiveChildReveal}>{children}</motion.div>
       </motion.div>
     </section>
   );
@@ -433,17 +600,23 @@ function ArchiveHero({
   const heroStep = home.steps[0];
 
   return (
-    <section id="home" data-archive-section className="apple-hero">
+    <section
+      id="home"
+      data-archive-section
+      data-atmosphere-section="hero"
+      data-motion-section
+      className="apple-hero motion-section"
+    >
       <motion.div
-        className="apple-hero-inner"
+        className="apple-hero-inner motion-section-flow"
         variants={heroReveal}
         initial="hidden"
         animate="visible"
       >
-        <motion.div className="apple-section-kicker" variants={archiveChildReveal}>{home.eyebrow}</motion.div>
-        <motion.h1 className="apple-hero-title" variants={archiveChildReveal}>{home.title}</motion.h1>
-        <motion.p className="apple-hero-copy" variants={archiveChildReveal}>{home.description}</motion.p>
-        <motion.div className="apple-hero-actions" variants={archiveChildReveal}>
+        <motion.div className="apple-section-kicker motion-eyebrow" variants={eyebrowReveal}>{home.eyebrow}</motion.div>
+        <motion.h1 className="apple-hero-title motion-title" variants={titleReveal}>{home.title}</motion.h1>
+        <motion.p className="apple-hero-copy motion-copy" variants={copyReveal}>{home.description}</motion.p>
+        <motion.div className="apple-hero-actions motion-card" variants={cardReveal}>
           {home.primaryAction ? (
             <a className="apple-cta apple-cta-primary" href={home.primaryAction.href} onClick={(event) => handleLink(home.primaryAction?.href ?? "", event)}>
               {home.primaryAction.label}
@@ -455,7 +628,7 @@ function ArchiveHero({
             </a>
           ) : null}
         </motion.div>
-        <motion.div className="apple-hero-stage" variants={archiveChildReveal}>
+        <motion.div className="apple-hero-stage motion-media" variants={mediaReveal}>
           <div className="apple-hero-record">
             <ArchiveVisualFrame
               image={heroStep.image}
@@ -487,13 +660,15 @@ function EmotionalValue({ home }: { home: ResolvedSceneContent }) {
 
   return (
     <motion.div
-      className="apple-value-band"
+      className="apple-value-band motion-section"
+      data-atmosphere-section="archive"
+      data-motion-section
       variants={sectionReveal}
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.22 }}
     >
-      <motion.div className="apple-value-archive-shell" variants={archiveChildReveal}>
+      <motion.div className="apple-value-archive-shell motion-media" variants={mediaReveal}>
         <div className="apple-archive-sheets" aria-hidden="true" data-active-index={activeIndex}>
           <span className="apple-archive-sheet apple-archive-sheet-one" />
           <span className="apple-archive-sheet apple-archive-sheet-two" />
@@ -509,8 +684,12 @@ function EmotionalValue({ home }: { home: ResolvedSceneContent }) {
         </div>
       </motion.div>
       <motion.div
-        className="apple-value-grid"
-        variants={archiveChildReveal}
+        className="apple-value-grid motion-stagger"
+        variants={cardGridReveal}
+        style={{
+          "--active-archive-index": activeIndex,
+          "--archive-card-index-x": `calc(${12.5 + activeIndex * 25}% - 0.32rem)`,
+        } as CSSProperties}
       >
         {pillars.map((pillar, index) => {
           const isActive = index === activeIndex;
@@ -522,9 +701,11 @@ function EmotionalValue({ home }: { home: ResolvedSceneContent }) {
               className={[
                 "apple-value-card apple-liquid-surface",
                 isActive ? "apple-value-card-active" : "",
+                isActive ? "" : "apple-value-card-inactive",
               ].filter(Boolean).join(" ")}
               key={pillar.label}
-              variants={archiveChildReveal}
+              variants={cardReveal}
+              style={{ "--motion-stagger-index": index } as CSSProperties}
               aria-controls={detailId}
               aria-expanded={isActive}
               onClick={() => {
@@ -618,41 +799,56 @@ function ArchiveSceneModule({
   }
 
   return (
-    <div className="apple-scene-module">
-      <div className="apple-record-list">
+    <motion.div className="apple-scene-module motion-stagger" variants={cardGridReveal}>
+      <motion.div
+        className="apple-record-list"
+        variants={cardGridReveal}
+        style={{
+          "--record-active-index": activeIndex,
+          "--record-total": scene.steps.length,
+          "--record-progress": `${((activeIndex + 1) / scene.steps.length) * 100}%`,
+        } as CSSProperties}
+      >
         <div className="apple-record-list-header">
           <span>{sectionLabel}</span>
           <span>
             {String(activeIndex + 1).padStart(2, "0")} / {String(scene.steps.length).padStart(2, "0")}
           </span>
         </div>
+        <div className="apple-record-sync-rail" aria-hidden="true">
+          <span />
+        </div>
         {scene.steps.map((step, index) => {
           const isActive = index === activeIndex;
 
           return (
-            <button
+            <motion.button
               key={step.label}
               type="button"
               className={`apple-record-card apple-liquid-surface ${isActive ? "apple-record-card-active" : ""}`.trim()}
+              variants={cardReveal}
+              style={{ "--motion-stagger-index": index } as CSSProperties}
+              aria-pressed={isActive}
               onClick={() => setActiveIndex(index)}
             >
               <span className="apple-liquid-layer" aria-hidden="true" />
               <span>{step.label}</span>
               <strong>{step.title}</strong>
               <p>{step.summary}</p>
-            </button>
+            </motion.button>
           );
         })}
-      </div>
+      </motion.div>
 
-      <div className="apple-record-feature">
+      <motion.div className="apple-record-feature motion-media" variants={mediaReveal}>
         <AnimatePresence mode="wait">
           <motion.div
             key={`${active.label}-${activeIndex}`}
-            initial={reduceMotion ? false : { opacity: 0, y: 12, scale: 0.992 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={reduceMotion ? undefined : { opacity: 0, y: -8, scale: 0.996 }}
-            transition={transition}
+            className="apple-record-feature-content"
+            initial={reduceMotion ? false : { opacity: 0, x: 24, y: 14, scale: 0.985 }}
+            animate={{ opacity: 1, x: 0, y: 0, scale: 1 }}
+            exit={reduceMotion ? undefined : { opacity: 0, x: -16, y: -8, scale: 0.992 }}
+            transition={reduceMotion ? { duration: 0 } : { ...transition, duration: 0.36 }}
           >
             <ArchiveVisualFrame
               image={active.image}
@@ -683,23 +879,28 @@ function ArchiveSceneModule({
           nextDisabled={activeIndex === scene.steps.length - 1}
           showArrows
         />
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }
 
 function ProcessTimeline({ process }: { process: ResolvedSceneContent }) {
   return (
-    <div className="apple-process-grid">
+    <motion.div className="apple-process-grid motion-stagger" variants={cardGridReveal}>
       {process.steps.map((step, index) => (
-        <article className="apple-process-card apple-liquid-surface" key={step.label}>
+        <motion.article
+          className="apple-process-card apple-liquid-surface"
+          key={step.label}
+          variants={cardReveal}
+          style={{ "--motion-stagger-index": index } as CSSProperties}
+        >
           <span className="apple-liquid-layer" aria-hidden="true" />
           <span>{String(index + 1).padStart(2, "0")}</span>
           <h3>{step.label}</h3>
           <p>{step.detail}</p>
-        </article>
+        </motion.article>
       ))}
-    </div>
+    </motion.div>
   );
 }
 
@@ -708,9 +909,9 @@ function PreserveEditorial({ preserve }: { preserve: ResolvedSceneContent }) {
   const remaining = preserve.steps.slice(1);
 
   return (
-    <div className="apple-preserve-layout">
+    <motion.div className="apple-preserve-layout motion-stagger" variants={cardGridReveal}>
       {featured ? (
-        <article className="apple-preserve-feature apple-liquid-surface">
+        <motion.article className="apple-preserve-feature apple-liquid-surface motion-media" variants={mediaReveal}>
           <span className="apple-liquid-layer" aria-hidden="true" />
           <span>{featured.mediaLabel}</span>
           <h3>{featured.title}</h3>
@@ -720,19 +921,24 @@ function PreserveEditorial({ preserve }: { preserve: ResolvedSceneContent }) {
               <span key={bullet}>{bullet}</span>
             ))}
           </div>
-        </article>
+        </motion.article>
       ) : null}
-      <div className="apple-preserve-grid">
-        {remaining.map((step) => (
-          <article className="apple-preserve-card apple-liquid-surface" key={step.label}>
+      <motion.div className="apple-preserve-grid" variants={cardGridReveal}>
+        {remaining.map((step, index) => (
+          <motion.article
+            className="apple-preserve-card apple-liquid-surface"
+            key={step.label}
+            variants={cardReveal}
+            style={{ "--motion-stagger-index": index + 1 } as CSSProperties}
+          >
             <span className="apple-liquid-layer" aria-hidden="true" />
             <span>{step.label}</span>
             <h3>{step.title}</h3>
             <p>{step.summary}</p>
-          </article>
+          </motion.article>
         ))}
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }
 
@@ -905,9 +1111,17 @@ function InquiryArchiveForm({
   }
 
   return (
-    <div className="apple-inquiry-layout">
-      <form className="apple-inquiry-form" onSubmit={handleSubmit}>
-        <div className="apple-inquiry-tabs" role="tablist" aria-label={inquiry.progressionLabel}>
+    <motion.div className="apple-inquiry-layout motion-stagger" variants={cardGridReveal}>
+      <motion.form className="apple-inquiry-form" onSubmit={handleSubmit} variants={cardReveal}>
+        <div
+          className="apple-inquiry-tabs"
+          role="tablist"
+          aria-label={inquiry.progressionLabel}
+          style={{
+            "--inquiry-active-index": activeIndex,
+            "--inquiry-active-offset": `calc(${activeIndex} * ((100% - 1.3rem) / 3 + 0.65rem))`,
+          } as CSSProperties}
+        >
           {inquiry.formSteps.map((step, index) => (
             <button
               key={step.chip}
@@ -929,10 +1143,10 @@ function InquiryArchiveForm({
         <AnimatePresence mode="wait">
           <motion.div
             key={`fields-${activeIndex}`}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -6 }}
-            transition={{ duration: 0.24, ease: measuredEase }}
+            initial={{ opacity: 0, y: 16, scale: 0.995 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -8, scale: 0.998 }}
+            transition={{ duration: 0.32, ease: measuredEase }}
           >
             {renderFields()}
           </motion.div>
@@ -962,24 +1176,34 @@ function InquiryArchiveForm({
           )}
         </div>
         <p className="apple-inquiry-note">{inquiry.footerNote}</p>
-      </form>
+      </motion.form>
 
-      <aside className="apple-inquiry-support">
-        {activeSupport ? (
-          <ArchiveVisualFrame
-            image={activeSupport.image}
-            label={activeSupport.label}
-            caption={activeSupport.body}
-            indexLabel={inquiry.progressionLabel}
-          />
-        ) : null}
+      <motion.aside className="apple-inquiry-support motion-media" variants={mediaReveal}>
+        <AnimatePresence mode="wait">
+          {activeSupport ? (
+            <motion.div
+              key={`${activeSupport.label}-${activeIndex}`}
+              initial={{ opacity: 0, y: 16, scale: 0.988 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -8, scale: 0.996 }}
+              transition={{ duration: 0.34, ease: measuredEase }}
+            >
+              <ArchiveVisualFrame
+                image={activeSupport.image}
+                label={activeSupport.label}
+                caption={activeSupport.body}
+                indexLabel={inquiry.progressionLabel}
+              />
+            </motion.div>
+          ) : null}
+        </AnimatePresence>
         <div className="apple-trust-grid">
           {inquiry.trustPoints.map((point) => (
             <span key={point}>{point}</span>
           ))}
         </div>
-      </aside>
-    </div>
+      </motion.aside>
+    </motion.div>
   );
 }
 
@@ -1021,10 +1245,12 @@ export function PublicExperience({
     [globalContent.navigation],
   );
   const activeId = usePublicActiveSection(sections);
+  const activeAtmosphereSection = usePublicAtmosphereSection();
+  useMotionChoreography();
   useLiquidGlassPointer();
 
   return (
-    <div className="apple-archive-experience">
+    <div className="apple-archive-experience" data-active-section={activeAtmosphereSection}>
       <ArchiveIndexLine sections={sections} activeId={activeId} />
 
       <nav className="apple-side-nav" aria-label="Section navigation">
