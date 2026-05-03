@@ -757,29 +757,35 @@ function EmotionalValue({ home }: { home: ResolvedSceneContent }) {
   );
 }
 
+function formatRailLabel(value: string) {
+  return value.replace(/\.$/, "");
+}
+
 function ArchiveIndexLine({
-  sections,
-  activeId,
+  items,
+  activeKey,
 }: {
-  sections: Array<{ id: ImmersiveSectionId; label: string }>;
-  activeId: ImmersiveSectionId;
+  items: Array<{ key: ArchiveAtmosphereSection; label: string }>;
+  activeKey: ArchiveAtmosphereSection;
 }) {
-  const activeIndex = Math.max(0, sections.findIndex((section) => section.id === activeId));
+  const activeIndex = Math.max(0, items.findIndex((item) => item.key === activeKey));
+  const activeLabel = items[activeIndex]?.label ?? items[0]?.label ?? "";
+  const denominator = Math.max(1, items.length - 1);
 
   return (
     <div
       className="apple-archive-index"
       aria-hidden="true"
-      style={{ "--archive-section-index": activeIndex } as CSSProperties}
+      style={{ "--archive-marker-top": `${(activeIndex / denominator) * 100}%` } as CSSProperties}
     >
-      <span className="apple-archive-index-label">Archive index</span>
+      <span className="apple-archive-index-label">{activeLabel}</span>
       <div className="apple-archive-index-track">
         <i className="apple-archive-index-marker" />
-        {sections.map((section, index) => (
+        {items.map((item, index) => (
           <span
-            key={section.id}
-            className={activeId === section.id ? "apple-archive-index-step apple-archive-index-step-active" : "apple-archive-index-step"}
-            style={{ "--archive-step-index": index } as CSSProperties}
+            key={item.key}
+            className={activeKey === item.key ? "apple-archive-index-step apple-archive-index-step-active" : "apple-archive-index-step"}
+            style={{ "--archive-step-top": `${(index / denominator) * 100}%` } as CSSProperties}
           />
         ))}
       </div>
@@ -1270,12 +1276,23 @@ export function PublicExperience({
   );
   const activeId = usePublicActiveSection(sections);
   const activeAtmosphereSection = usePublicAtmosphereSection();
+  const railItems = useMemo<Array<{ key: ArchiveAtmosphereSection; label: string }>>(
+    () => [
+      { key: "hero", label: formatRailLabel(home.title) },
+      { key: "archive", label: "Private Memory Archive" },
+      { key: "experience", label: formatRailLabel(experience.title) },
+      { key: "process", label: formatRailLabel(process.title) },
+      { key: "preserve", label: formatRailLabel(preserve.title) },
+      { key: "inquire", label: formatRailLabel(inquiry.title) },
+    ],
+    [experience.title, home.title, inquiry.title, preserve.title, process.title],
+  );
   useMotionChoreography();
   useLiquidGlassPointer();
 
   return (
     <div className="apple-archive-experience" data-active-section={activeAtmosphereSection}>
-      <ArchiveIndexLine sections={sections} activeId={activeId} />
+      <ArchiveIndexLine items={railItems} activeKey={activeAtmosphereSection} />
 
       <nav className="apple-side-nav" aria-label="Section navigation">
         {sections.map((section) => (
