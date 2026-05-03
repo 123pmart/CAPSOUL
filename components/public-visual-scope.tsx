@@ -6,6 +6,10 @@ import { usePathname } from "next/navigation";
 function ArchiveAtmosphere() {
   return (
     <div className="archive-atmosphere" aria-hidden="true">
+      <span className="archive-atmosphere__plane archive-atmosphere__plane-one" />
+      <span className="archive-atmosphere__plane archive-atmosphere__plane-two" />
+      <span className="archive-atmosphere__plane archive-atmosphere__plane-three" />
+      <span className="archive-atmosphere__frame" />
       <span className="archive-atmosphere__mesh" />
       <span className="archive-atmosphere__bloom archive-atmosphere__bloom-one" />
       <span className="archive-atmosphere__bloom archive-atmosphere__bloom-two" />

@@ -677,11 +677,15 @@ function EmotionalValue({ home }: { home: ResolvedSceneContent }) {
     <motion.div
       className="apple-value-band motion-section"
       data-atmosphere-section="archive"
+      data-active-index={activeIndex}
       data-motion-section
       variants={sectionReveal}
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.22 }}
+      style={{
+        "--active-archive-index": activeIndex,
+      } as CSSProperties}
     >
       <motion.div className="apple-value-archive-shell motion-media" variants={mediaReveal}>
         <div className="apple-archive-sheets" aria-hidden="true" data-active-index={activeIndex}>
