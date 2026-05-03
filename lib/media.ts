@@ -2,7 +2,7 @@ import { promises as fs } from "fs";
 import path from "path";
 import { randomUUID } from "crypto";
 
-import { del, put } from "@vercel/blob";
+import { del, get, put } from "@vercel/blob";
 
 import {
   getMediaSlotDefinition,
@@ -60,6 +60,7 @@ type PersistentMediaRow = {
 };
 
 const MEDIA_ASSIGNMENTS_FILE = path.join(DATA_ROOT, "media-slots.json");
+const PRIVATE_MEDIA_ROUTE_PREFIX = "/api/media/";
 const persistentMediaSeedKey = Symbol.for("capsoul.persistent-media-seed");
 function normalizeMediaObjectPosition(value: unknown): MediaObjectPosition {
   if (
@@ -110,6 +111,14 @@ function toSafeFileStem(slotId: string) {
 
 function toIsoString(value: string | Date) {
   return value instanceof Date ? value.toISOString() : new Date(value).toISOString();
+}
+
+function toPrivateMediaRoute(slotId: string) {
+  return `${PRIVATE_MEDIA_ROUTE_PREFIX}${encodeURIComponent(slotId)}`;
+}
+
+function getPersistentMediaSource(row?: PersistentMediaRow | null) {
+  return row?.blob_pathname || row?.blob_url || null;
 }
 
 async function readLegacyAssignments() {
@@ -272,7 +281,7 @@ async function ensurePersistentMediaSeeded() {
         const extension = getSafeExtension(originalName, mimeType);
         const blobPath = `capsoul/media/${toSafeFileStem(slotId)}/${Date.now()}-${randomUUID().slice(0, 8)}${extension}`;
         const blob = await put(blobPath, fileBuffer, {
-          access: "public",
+          access: "private",
           addRandomSuffix: false,
           contentType: mimeType || undefined,
         });
@@ -314,11 +323,13 @@ function toRowMap(rows: PersistentMediaRow[]) {
 }
 
 function toResolvedMediaSlot(slot: MediaSlotDefinition, row?: PersistentMediaRow): ResolvedMediaSlot {
+  const hasPersistentBlob = Boolean(getPersistentMediaSource(row));
+
   return {
     ...slot,
-    src: row?.blob_url ?? slot.fallbackSrc,
+    src: hasPersistentBlob ? toPrivateMediaRoute(slot.id) : slot.fallbackSrc,
     objectPosition: normalizeMediaObjectPosition(row?.object_position),
-    isCustom: Boolean(row?.blob_url),
+    isCustom: hasPersistentBlob,
     updatedAt: row ? toIsoString(row.updated_at) : null,
     updatedBy: row?.updated_by ?? null,
   };
@@ -340,6 +351,42 @@ async function listPersistentMediaRows() {
       updated_by
     FROM media_slots
   `;
+}
+
+export async function getMediaSlotBlob(slotId: string, requestHeaders?: HeadersInit) {
+  const slot = getMediaSlotDefinition(slotId);
+
+  if (!slot || !hasPersistentDatabase() || !hasBlobStorage()) {
+    return null;
+  }
+
+  await ensurePersistentMediaSeeded();
+  const sql = getDatabaseClient();
+  const rows = await sql<PersistentMediaRow[]>`
+    SELECT
+      slot_id,
+      blob_url,
+      blob_pathname,
+      object_position,
+      content_type,
+      size_bytes,
+      original_name,
+      updated_at,
+      updated_by
+    FROM media_slots
+    WHERE slot_id = ${slotId}
+    LIMIT 1
+  `;
+  const source = getPersistentMediaSource(rows[0]);
+
+  if (!source) {
+    return null;
+  }
+
+  return get(source, {
+    access: "private",
+    headers: requestHeaders,
+  });
 }
 
 export async function resolveMediaSlotSource(slotId: string) {
@@ -377,7 +424,7 @@ export async function resolveMediaSlotPresentation(slotId: string) {
       `;
 
       return {
-        src: rows[0]?.blob_url ?? slot.fallbackSrc,
+        src: getPersistentMediaSource(rows[0]) ? toPrivateMediaRoute(slot.id) : slot.fallbackSrc,
         objectPosition: normalizeMediaObjectPosition(rows[0]?.object_position),
       };
     } catch {
@@ -475,7 +522,7 @@ export async function saveMediaSlotUpload(input: {
     const extension = getSafeExtension(input.fileName, input.mimeType);
     const blobPath = `capsoul/media/${toSafeFileStem(input.slotId)}/${Date.now()}-${randomUUID().slice(0, 8)}${extension}`;
     const blob = await put(blobPath, input.fileBuffer, {
-      access: "public",
+      access: "private",
       addRandomSuffix: false,
       contentType: input.mimeType || undefined,
     });

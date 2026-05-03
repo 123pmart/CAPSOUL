@@ -667,8 +667,10 @@ function ArchiveHero({
 }
 
 function EmotionalValue({ home }: { home: ResolvedSceneContent }) {
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [hoverIndex, setHoverIndex] = useState<number | null>(null);
   const pillars = home.steps.slice(0, 4);
+  const activeIndex = hoverIndex ?? selectedIndex;
   const activePillar = pillars[activeIndex] ?? pillars[0];
 
   return (
@@ -700,6 +702,11 @@ function EmotionalValue({ home }: { home: ResolvedSceneContent }) {
         className="apple-value-grid motion-stagger"
         data-active-index={activeIndex}
         variants={cardGridReveal}
+        onPointerLeave={(event) => {
+          if (event.pointerType === "mouse") {
+            setHoverIndex(null);
+          }
+        }}
         style={{
           "--active-archive-index": activeIndex,
           "--archive-card-index-x": `calc(${12.5 + activeIndex * 25}% - 0.32rem)`,
@@ -723,13 +730,20 @@ function EmotionalValue({ home }: { home: ResolvedSceneContent }) {
               aria-controls={detailId}
               aria-expanded={isActive}
               aria-pressed={isActive}
-              onPointerDown={() => {
-                setActiveIndex(index);
+              onPointerEnter={(event) => {
+                if (event.pointerType === "mouse") {
+                  setHoverIndex(index);
+                }
+              }}
+              onPointerDown={(event) => {
+                if (event.pointerType !== "mouse") {
+                  setSelectedIndex(index);
+                }
               }}
               onClick={() => {
-                setActiveIndex(index);
+                setSelectedIndex(index);
               }}
-              onFocus={() => setActiveIndex(index)}
+              onFocus={() => setSelectedIndex(index)}
             >
               <span className="apple-liquid-layer" aria-hidden="true" />
               <span>Archive {String(index + 1).padStart(2, "0")}</span>
