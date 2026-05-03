@@ -113,12 +113,18 @@ function toIsoString(value: string | Date) {
   return value instanceof Date ? value.toISOString() : new Date(value).toISOString();
 }
 
-function toPrivateMediaRoute(slotId: string) {
-  return `${PRIVATE_MEDIA_ROUTE_PREFIX}${encodeURIComponent(slotId)}`;
+function toPrivateMediaRoute(slotId: string, version?: string | null) {
+  const route = `${PRIVATE_MEDIA_ROUTE_PREFIX}${encodeURIComponent(slotId)}`;
+
+  return version ? `${route}?v=${encodeURIComponent(version)}` : route;
 }
 
 function getPersistentMediaSource(row?: PersistentMediaRow | null) {
   return row?.blob_pathname || row?.blob_url || null;
+}
+
+function getPersistentMediaVersion(row?: PersistentMediaRow | null) {
+  return row ? toIsoString(row.updated_at) : null;
 }
 
 async function readLegacyAssignments() {
@@ -324,10 +330,11 @@ function toRowMap(rows: PersistentMediaRow[]) {
 
 function toResolvedMediaSlot(slot: MediaSlotDefinition, row?: PersistentMediaRow): ResolvedMediaSlot {
   const hasPersistentBlob = Boolean(getPersistentMediaSource(row));
+  const version = getPersistentMediaVersion(row);
 
   return {
     ...slot,
-    src: hasPersistentBlob ? toPrivateMediaRoute(slot.id) : slot.fallbackSrc,
+    src: hasPersistentBlob ? toPrivateMediaRoute(slot.id, version) : slot.fallbackSrc,
     objectPosition: normalizeMediaObjectPosition(row?.object_position),
     isCustom: hasPersistentBlob,
     updatedAt: row ? toIsoString(row.updated_at) : null,
@@ -424,7 +431,9 @@ export async function resolveMediaSlotPresentation(slotId: string) {
       `;
 
       return {
-        src: getPersistentMediaSource(rows[0]) ? toPrivateMediaRoute(slot.id) : slot.fallbackSrc,
+        src: getPersistentMediaSource(rows[0])
+          ? toPrivateMediaRoute(slot.id, getPersistentMediaVersion(rows[0]))
+          : slot.fallbackSrc,
         objectPosition: normalizeMediaObjectPosition(rows[0]?.object_position),
       };
     } catch {

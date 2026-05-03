@@ -17,6 +17,7 @@ type AdminDashboardProps = {
 };
 
 type DashboardTab = "leads" | "media" | "content" | "settings";
+const mediaLoadErrorMessage = "Saved image could not be loaded. Try uploading it again.";
 
 function formatTimestamp(value: string) {
   return new Intl.DateTimeFormat("en-US", {
@@ -247,6 +248,10 @@ export function AdminDashboard({
       setMediaObjectPositions((current) => ({
         ...current,
         [slotId]: updatedSlot.objectPosition,
+      }));
+      setUploadErrors((current) => ({
+        ...current,
+        [slotId]: "",
       }));
     } catch {
       setUploadErrors((current) => ({
@@ -710,6 +715,16 @@ export function AdminDashboard({
                             src={slot.src}
                             alt={slot.alt}
                             className="h-full w-full object-cover"
+                            onError={() => {
+                              if (!slot.isCustom) {
+                                return;
+                              }
+
+                              setUploadErrors((current) => ({
+                                ...current,
+                                [slot.id]: current[slot.id] || mediaLoadErrorMessage,
+                              }));
+                            }}
                             style={{
                               objectPosition:
                                 mediaObjectPositions[slot.id] ?? slot.objectPosition,

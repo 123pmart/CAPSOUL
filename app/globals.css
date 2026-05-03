@@ -2877,15 +2877,15 @@ html[data-theme="light"] {
   --glass-inner-highlight: inset 0 1px 0 var(--glass-highlight), inset 0 -1px 0 rgba(0, 0, 0, 0.08);
   --glass-blur: 22px;
   --glass-blur-strong: 30px;
-  --button-primary-bg: linear-gradient(135deg, #111 0%, #2a2a2a 100%);
+  --button-primary-bg: #111111;
   --button-primary-text: #fff;
   --button-primary-border: rgba(0, 0, 0, 0.24);
-  --button-secondary-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(232, 231, 226, 0.74));
+  --button-secondary-bg: rgba(255, 255, 255, 0.74);
   --button-secondary-text: var(--text-muted);
   --button-secondary-border: rgba(0, 0, 0, 0.16);
   --focus-ring: rgba(0, 0, 0, 0.18);
-  --control-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(232, 231, 226, 0.78));
-  --control-bg-active: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(242, 241, 237, 0.9));
+  --control-bg: rgba(255, 255, 255, 0.74);
+  --control-bg-active: rgba(255, 255, 255, 0.9);
   --control-border: rgba(0, 0, 0, 0.16);
   --control-border-active: rgba(0, 0, 0, 0.28);
   --control-text: #151515;
@@ -2950,15 +2950,15 @@ html[data-theme="dark"] {
   --glass-saturation: 135%;
   --glass-highlight: rgba(255, 255, 255, 0.16);
   --glass-inner-highlight: inset 0 1px 0 var(--glass-highlight), inset 0 -1px 0 rgba(0, 0, 0, 0.4);
-  --button-primary-bg: linear-gradient(135deg, #ffffff 0%, #dedede 100%);
+  --button-primary-bg: #f5f5f5;
   --button-primary-text: #050505;
   --button-primary-border: rgba(255, 255, 255, 0.72);
-  --button-secondary-bg: linear-gradient(180deg, rgba(28, 28, 31, 0.8), rgba(7, 7, 8, 0.72));
+  --button-secondary-bg: rgba(18, 18, 18, 0.82);
   --button-secondary-text: var(--text-muted);
   --button-secondary-border: rgba(255, 255, 255, 0.18);
   --focus-ring: rgba(255, 255, 255, 0.22);
-  --control-bg: linear-gradient(180deg, rgba(30, 30, 33, 0.82), rgba(8, 8, 9, 0.74));
-  --control-bg-active: linear-gradient(180deg, rgba(50, 50, 54, 0.9), rgba(18, 18, 20, 0.82));
+  --control-bg: rgba(18, 18, 18, 0.78);
+  --control-bg-active: rgba(36, 36, 36, 0.86);
   --control-border: rgba(255, 255, 255, 0.16);
   --control-border-active: rgba(255, 255, 255, 0.3);
   --control-text: #f5f5f5;
@@ -6780,6 +6780,112 @@ html[data-theme="dark"] .apple-inquiry-tab-active {
   box-shadow:
     0 0 0 4px color-mix(in srgb, var(--focus-ring) 82%, transparent),
     var(--control-shadow-active);
+}
+
+/* Flat control corrective layer: remove legacy bevels, glossy reflections, and heavy control depth. */
+.public-visual-scope :is(.button-primary, .button-secondary, .nav-pill, .theme-toggle, .header-menu-button, .archive-chip, .scene-step-chip, .budget-slider-value),
+.admin-visual-scope :is(.button-primary, .button-secondary, .archive-chip, .theme-toggle, .field-input, .field-select),
+.apple-cta,
+.apple-inquiry-tab,
+.apple-admin-access a,
+.compact-scene-progress,
+.compact-scene-arrow,
+.section-page-controls,
+.section-page-control,
+.section-mobile-progress-nav {
+  border: 1px solid var(--control-border);
+  background: var(--control-bg);
+  box-shadow: var(--control-shadow);
+  color: var(--control-muted);
+}
+
+.public-visual-scope :is(.button-primary, .button-secondary)::before,
+.public-visual-scope :is(.button-primary, .button-secondary)::after,
+.admin-visual-scope :is(.button-primary, .button-secondary)::before,
+.admin-visual-scope :is(.button-primary, .button-secondary)::after {
+  content: none;
+  display: none;
+  animation: none;
+}
+
+.public-visual-scope .button-primary,
+.admin-visual-scope .button-primary,
+.apple-cta-primary {
+  border-color: var(--button-primary-border);
+  background: var(--button-primary-bg);
+  box-shadow: var(--control-shadow-active);
+  color: var(--button-primary-text);
+}
+
+.public-visual-scope :is(.button-secondary, .nav-pill, .theme-toggle, .header-menu-button, .archive-chip, .scene-step-chip),
+.admin-visual-scope :is(.button-secondary, .archive-chip, .theme-toggle),
+.apple-cta-secondary,
+.compact-scene-arrow,
+.section-page-control {
+  border-color: var(--control-border);
+  background: var(--control-bg);
+  box-shadow: var(--control-shadow);
+  color: var(--control-text);
+}
+
+.public-visual-scope :is(.header-nav-pill-active, .header-mobile-nav-active, .locale-pill-active, .scene-step-chip-active),
+.admin-visual-scope :is(.button-secondary[aria-pressed="true"], .archive-chip[aria-pressed="true"]),
+.apple-inquiry-tab-active,
+.section-page-control:not(:disabled):hover,
+.section-page-control:focus-visible {
+  border-color: var(--control-border-active);
+  background: var(--control-bg-active);
+  box-shadow: var(--control-shadow-active);
+  color: var(--control-text);
+}
+
+.public-visual-scope :is(.scene-step-chip-suggested:not(.scene-step-chip-active), .scene-step-chip-active),
+.section-mobile-progress-segment-active,
+.compact-scene-dot-active {
+  background: var(--control-bg-active);
+  box-shadow: var(--control-shadow-active);
+  color: var(--control-text);
+  transform: none;
+}
+
+.public-visual-scope :is(.button-primary, .button-secondary):hover,
+.admin-visual-scope :is(.button-primary, .button-secondary):hover,
+.apple-cta:hover,
+.apple-inquiry-tab:hover,
+.compact-scene-arrow:not(:disabled):hover {
+  border-color: var(--control-border-active);
+  box-shadow: var(--control-shadow-active);
+  transform: translateY(-1px);
+}
+
+.public-visual-scope :is(.button-primary, .button-secondary):active,
+.admin-visual-scope :is(.button-primary, .button-secondary):active,
+.apple-cta:active,
+.apple-inquiry-tab:active,
+.compact-scene-arrow:not(:disabled):active {
+  transform: translateY(1px) scale(0.99);
+}
+
+.public-visual-scope .budget-slider-input::-webkit-slider-thumb,
+.admin-visual-scope .budget-slider-input::-webkit-slider-thumb {
+  border-color: var(--button-primary-border);
+  background: var(--button-primary-bg);
+  box-shadow: var(--control-shadow-active);
+}
+
+.public-visual-scope .budget-slider-input::-moz-range-thumb,
+.admin-visual-scope .budget-slider-input::-moz-range-thumb {
+  border-color: var(--button-primary-border);
+  background: var(--button-primary-bg);
+  box-shadow: var(--control-shadow-active);
+}
+
+.admin-visual-scope input[type="file"]::file-selector-button {
+  border: 1px solid var(--control-border);
+  border-radius: var(--radius-pill);
+  background: var(--control-bg);
+  color: var(--control-text);
+  box-shadow: none;
 }
 
 .section-scroller-content[data-section-active="false"] {
