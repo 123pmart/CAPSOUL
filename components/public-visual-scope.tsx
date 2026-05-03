@@ -14,9 +14,12 @@ function ArchiveAtmosphere() {
       <span className="archive-atmosphere__mesh" />
       <span className="archive-atmosphere__beam archive-atmosphere__beam-one" />
       <span className="archive-atmosphere__beam archive-atmosphere__beam-two" />
+      <span className="archive-atmosphere__veil archive-atmosphere__veil-one" />
+      <span className="archive-atmosphere__veil archive-atmosphere__veil-two" />
       <span className="archive-atmosphere__bloom archive-atmosphere__bloom-one" />
       <span className="archive-atmosphere__bloom archive-atmosphere__bloom-two" />
       <span className="archive-atmosphere__section-light" />
+      <span className="archive-atmosphere__handoff" />
       <span className="archive-atmosphere__contour" />
       <span className="archive-atmosphere__grain" />
       <span className="archive-atmosphere__vignette" />

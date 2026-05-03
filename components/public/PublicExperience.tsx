@@ -131,6 +131,10 @@ const cardReveal = {
   },
 } as const;
 
+function isFineHoverPointer(event: { pointerType: string }) {
+  return event.pointerType === "mouse" || event.pointerType === "pen";
+}
+
 const mediaReveal = {
   hidden: { opacity: 0, y: 48, scale: 0.96 },
   visible: {
@@ -652,7 +656,7 @@ function ArchiveHero({
           </div>
           <motion.div className="apple-hero-chapters" aria-label="Opening archive chapters" variants={cardGridReveal}>
             {home.steps.map((step, index) => (
-              <motion.div className="apple-hero-chapter apple-liquid-surface" key={step.label} variants={cardReveal}>
+              <motion.div className="apple-hero-chapter apple-liquid-surface" key={`hero-chapter-${index}`} variants={cardReveal}>
                 <span className="apple-liquid-layer" aria-hidden="true" />
                 <span>{String(index + 1).padStart(2, "0")}</span>
                 <strong>{step.label}</strong>
@@ -707,7 +711,7 @@ function EmotionalValue({ home }: { home: ResolvedSceneContent }) {
         data-active-index={activeIndex}
         variants={cardGridReveal}
         onPointerLeave={(event) => {
-          if (event.pointerType === "mouse") {
+          if (isFineHoverPointer(event)) {
             setHoverIndex(null);
           }
         }}
@@ -728,19 +732,19 @@ function EmotionalValue({ home }: { home: ResolvedSceneContent }) {
                 isActive ? "apple-value-card-active" : "",
                 isActive ? "" : "apple-value-card-inactive",
               ].filter(Boolean).join(" ")}
-              key={pillar.label}
+              key={`archive-value-card-${index}`}
               variants={cardReveal}
               style={{ "--motion-stagger-index": index } as CSSProperties}
               aria-controls={detailId}
               aria-expanded={isActive}
               aria-pressed={isActive}
               onPointerEnter={(event) => {
-                if (event.pointerType === "mouse") {
+                if (isFineHoverPointer(event)) {
                   setHoverIndex(index);
                 }
               }}
               onPointerDown={(event) => {
-                if (event.pointerType !== "mouse") {
+                if (!isFineHoverPointer(event)) {
                   setSelectedIndex(index);
                 }
               }}
@@ -865,7 +869,7 @@ function ArchiveSceneModule({
 
           return (
             <motion.button
-              key={step.label}
+              key={`experience-state-${index}`}
               type="button"
               className={`apple-record-card apple-liquid-surface ${isActive ? "apple-record-card-active" : ""}`.trim()}
               variants={cardReveal}
@@ -884,9 +888,9 @@ function ArchiveSceneModule({
       </motion.div>
 
       <motion.div className="apple-record-feature motion-media" variants={mediaReveal}>
-        <AnimatePresence mode="wait">
+        <AnimatePresence initial={false}>
           <motion.div
-            key={`${active.label}-${activeIndex}`}
+            key={`experience-feature-${activeIndex}`}
             className="apple-record-feature-content"
             initial={reduceMotion ? false : { opacity: 0, x: 24, y: 14, scale: 0.985 }}
             animate={{ opacity: 1, x: 0, y: 0, scale: 1 }}
@@ -909,8 +913,8 @@ function ArchiveSceneModule({
               <motion.h3 variants={detailItemReveal}>{active.title}</motion.h3>
               <motion.p variants={detailItemReveal}>{active.detail}</motion.p>
               <motion.div className="apple-record-tags" variants={detailStaggerReveal}>
-                {active.bullets.map((bullet) => (
-                  <motion.span key={bullet} variants={detailItemReveal}>{bullet}</motion.span>
+                {active.bullets.map((bullet, index) => (
+                  <motion.span key={`experience-tag-${activeIndex}-${index}`} variants={detailItemReveal}>{bullet}</motion.span>
                 ))}
               </motion.div>
             </motion.div>
@@ -938,7 +942,7 @@ function ProcessTimeline({ process }: { process: ResolvedSceneContent }) {
       {process.steps.map((step, index) => (
         <motion.article
           className="apple-process-card apple-liquid-surface"
-          key={step.label}
+          key={`process-step-${index}`}
           variants={cardReveal}
           style={{ "--motion-stagger-index": index } as CSSProperties}
         >
@@ -965,8 +969,8 @@ function PreserveEditorial({ preserve }: { preserve: ResolvedSceneContent }) {
           <h3>{featured.title}</h3>
           <p>{featured.detail}</p>
           <motion.div className="apple-record-tags" variants={detailStaggerReveal}>
-            {featured.bullets.map((bullet) => (
-              <motion.span key={bullet} variants={detailItemReveal}>{bullet}</motion.span>
+            {featured.bullets.map((bullet, index) => (
+              <motion.span key={`preserve-feature-tag-${index}`} variants={detailItemReveal}>{bullet}</motion.span>
             ))}
           </motion.div>
         </motion.article>
@@ -975,7 +979,7 @@ function PreserveEditorial({ preserve }: { preserve: ResolvedSceneContent }) {
         {remaining.map((step, index) => (
           <motion.article
             className="apple-preserve-card apple-liquid-surface"
-            key={step.label}
+            key={`preserve-card-${index}`}
             variants={cardReveal}
             style={{ "--motion-stagger-index": index + 1 } as CSSProperties}
           >
@@ -1172,7 +1176,7 @@ function InquiryArchiveForm({
         >
           {inquiry.formSteps.map((step, index) => (
             <button
-              key={step.chip}
+              key={`inquiry-tab-${index}`}
               type="button"
               role="tab"
               aria-selected={activeIndex === index}
@@ -1188,7 +1192,7 @@ function InquiryArchiveForm({
           <h3>{activeFormStep?.title}</h3>
           <p>{activeFormStep?.description}</p>
         </div>
-        <AnimatePresence mode="wait">
+        <AnimatePresence initial={false}>
           <motion.div
             key={`fields-${activeIndex}`}
             initial={{ opacity: 0, y: 16, scale: 0.995 }}
@@ -1227,10 +1231,10 @@ function InquiryArchiveForm({
       </motion.form>
 
       <motion.aside className="apple-inquiry-support motion-media" variants={mediaReveal}>
-        <AnimatePresence mode="wait">
+        <AnimatePresence initial={false}>
           {activeSupport ? (
             <motion.div
-              key={`${activeSupport.label}-${activeIndex}`}
+              key={`inquiry-support-${activeIndex}`}
               initial={{ opacity: 0, y: 16, scale: 0.988 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -8, scale: 0.996 }}
@@ -1246,8 +1250,8 @@ function InquiryArchiveForm({
           ) : null}
         </AnimatePresence>
         <div className="apple-trust-grid">
-          {inquiry.trustPoints.map((point) => (
-            <span key={point}>{point}</span>
+          {inquiry.trustPoints.map((point, index) => (
+            <span key={`trust-point-${index}`}>{point}</span>
           ))}
         </div>
       </motion.aside>
