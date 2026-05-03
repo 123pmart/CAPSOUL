@@ -3015,8 +3015,13 @@ html[data-theme="dark"] body {
 @media (prefers-reduced-motion: no-preference) {
   body,
   .archive-atmosphere,
+  .archive-atmosphere__tone,
+  .archive-atmosphere__plane,
   .archive-atmosphere__mesh,
+  .archive-atmosphere__beam,
   .archive-atmosphere__section-light,
+  .archive-atmosphere__contour,
+  .archive-atmosphere__vignette,
   .public-visual-scope :is(.scene-shell, .scene-detail-panel, .scene-card, .scene-step-chip, .header-nav-shell, .header-menu-button, .theme-toggle, .nav-pill, .button-primary, .button-secondary, .field-input, .field-textarea, .field-select),
   .apple-liquid-surface,
   .apple-cta,
@@ -3869,6 +3874,17 @@ html[data-theme="dark"] body {
   --archive-plane-three-x: 0vw;
   --archive-plane-three-y: 0vh;
   --archive-plane-rotation: 0deg;
+  --archive-beam-opacity: 0.22;
+  --archive-beam-angle: -14deg;
+  --archive-beam-x: 0vw;
+  --archive-beam-y: 0vh;
+  --archive-contour-opacity: 0.24;
+  --archive-contour-x: 0vw;
+  --archive-contour-y: 0vh;
+  --archive-tone-opacity: 0.92;
+  --archive-vignette-opacity: 0.2;
+  --archive-studio-light: rgba(255, 255, 255, 0.7);
+  --archive-studio-shadow: rgba(0, 0, 0, 0.08);
   position: fixed;
   inset: -16%;
   z-index: 0;
@@ -3884,13 +3900,29 @@ html[data-theme="dark"] body {
 .archive-atmosphere__section-light,
 .archive-atmosphere__plane,
 .archive-atmosphere__frame,
-.archive-atmosphere__grain {
+.archive-atmosphere__beam,
+.archive-atmosphere__contour,
+.archive-atmosphere__tone,
+.archive-atmosphere__grain,
+.archive-atmosphere__vignette {
   position: absolute;
   inset: 0;
   transform: translate3d(0, 0, 0);
 }
 
+.archive-atmosphere__tone {
+  z-index: 0;
+  background:
+    radial-gradient(ellipse at 48% -10%, color-mix(in srgb, var(--archive-studio-light) 72%, transparent), transparent 42%),
+    radial-gradient(ellipse at 12% 24%, color-mix(in srgb, var(--archive-plane-fill) 66%, transparent), transparent 34%),
+    radial-gradient(ellipse at 86% 74%, color-mix(in srgb, var(--archive-studio-shadow) 58%, transparent), transparent 42%),
+    linear-gradient(180deg, color-mix(in srgb, var(--bg-soft) 84%, #fff), color-mix(in srgb, var(--bg) 92%, #fff));
+  opacity: var(--archive-tone-opacity);
+  animation: archiveToneBreath 28s var(--ease-luxury) infinite alternate;
+}
+
 .archive-atmosphere__plane {
+  z-index: 1;
   width: min(78rem, 78vw);
   height: min(42rem, 54vh);
   border: 1px solid var(--archive-plane-line);
@@ -3939,6 +3971,7 @@ html[data-theme="dark"] body {
 }
 
 .archive-atmosphere__frame {
+  z-index: 2;
   inset: 8% 7%;
   border: 1px solid color-mix(in srgb, var(--archive-plane-line) 86%, transparent);
   border-radius: clamp(2.8rem, 6vw, 6rem);
@@ -3957,6 +3990,7 @@ html[data-theme="dark"] body {
 }
 
 .archive-atmosphere__mesh {
+  z-index: 3;
   background:
     radial-gradient(ellipse at 18% 18%, var(--archive-ice-color), transparent 40%),
     radial-gradient(ellipse at 84% 24%, color-mix(in srgb, var(--surface-strong) 58%, transparent), transparent 38%),
@@ -3968,7 +4002,41 @@ html[data-theme="dark"] body {
   animation: archiveAtmosphereMeshDrift 26s var(--ease-luxury) infinite alternate;
 }
 
+.archive-atmosphere__beam {
+  z-index: 4;
+  width: min(42rem, 42vw);
+  height: 155vh;
+  top: -28vh;
+  border-radius: 999px;
+  background:
+    linear-gradient(90deg, transparent 0 12%, color-mix(in srgb, var(--archive-studio-light) 16%, transparent) 34%, color-mix(in srgb, var(--archive-studio-light) 30%, transparent) 50%, color-mix(in srgb, var(--archive-studio-light) 12%, transparent) 66%, transparent 88%),
+    linear-gradient(180deg, transparent, color-mix(in srgb, var(--archive-studio-light) 18%, transparent), transparent);
+  opacity: calc(var(--archive-beam-opacity) * var(--atmosphere-intensity));
+  mix-blend-mode: soft-light;
+  filter: blur(0.4px);
+  transform-origin: center;
+  transition:
+    opacity 720ms var(--ease-luxury),
+    transform 980ms var(--ease-luxury);
+  will-change: transform, opacity;
+}
+
+.archive-atmosphere__beam-one {
+  left: 8%;
+  transform: translate3d(calc(var(--archive-beam-x) - 4vw), calc(var(--archive-beam-y) - 2vh), 0) rotate(var(--archive-beam-angle));
+  animation: archiveBeamDriftOne 36s var(--ease-luxury) infinite alternate;
+}
+
+.archive-atmosphere__beam-two {
+  right: 4%;
+  width: min(36rem, 36vw);
+  opacity: calc(var(--archive-beam-opacity) * 0.58 * var(--atmosphere-intensity));
+  transform: translate3d(calc(var(--archive-beam-x) * -0.5), calc(var(--archive-beam-y) * 0.45), 0) rotate(calc(var(--archive-beam-angle) * -0.7));
+  animation: archiveBeamDriftTwo 44s var(--ease-luxury) infinite alternate;
+}
+
 .archive-atmosphere__bloom {
+  z-index: 5;
   width: min(72rem, 76vw);
   height: min(72rem, 76vw);
   border-radius: 999px;
@@ -3993,6 +4061,7 @@ html[data-theme="dark"] body {
 }
 
 .archive-atmosphere__section-light {
+  z-index: 6;
   background:
     radial-gradient(ellipse at var(--atmosphere-x) var(--atmosphere-y), var(--archive-light-color), transparent 42%),
     linear-gradient(180deg, transparent 0 64%, color-mix(in srgb, var(--bg) 58%, transparent));
@@ -4003,7 +4072,24 @@ html[data-theme="dark"] body {
     opacity 520ms var(--ease-luxury);
 }
 
+.archive-atmosphere__contour {
+  z-index: 7;
+  inset: -4%;
+  background:
+    repeating-linear-gradient(0deg, transparent 0 6.8rem, color-mix(in srgb, var(--archive-plane-line) 24%, transparent) 6.82rem 6.88rem, transparent 6.94rem 13.6rem),
+    repeating-linear-gradient(90deg, transparent 0 8.8rem, color-mix(in srgb, var(--archive-plane-line) 18%, transparent) 8.82rem 8.88rem, transparent 8.94rem 17.6rem),
+    radial-gradient(ellipse at var(--atmosphere-x) var(--atmosphere-y), color-mix(in srgb, var(--archive-plane-line) 58%, transparent), transparent 46%);
+  opacity: calc(var(--archive-contour-opacity) * var(--atmosphere-intensity));
+  mask-image: radial-gradient(ellipse at 50% 46%, black 0 52%, transparent 84%);
+  transform: translate3d(var(--archive-contour-x), var(--archive-contour-y), 0) rotate(-0.25deg);
+  transition:
+    opacity 720ms var(--ease-luxury),
+    transform 980ms var(--ease-luxury);
+  animation: archiveContourSettle 50s var(--ease-luxury) infinite alternate;
+}
+
 .archive-atmosphere__grain {
+  z-index: 8;
   inset: 0;
   background-image:
     radial-gradient(circle at 24% 36%, rgba(255, 255, 255, 0.65) 0 0.55px, transparent 0.8px),
@@ -4013,14 +4099,30 @@ html[data-theme="dark"] body {
   mix-blend-mode: overlay;
 }
 
+.archive-atmosphere__vignette {
+  z-index: 9;
+  background:
+    radial-gradient(ellipse at 50% 35%, transparent 0 56%, color-mix(in srgb, var(--archive-studio-shadow) 26%, transparent) 100%),
+    linear-gradient(180deg, color-mix(in srgb, var(--archive-studio-shadow) 8%, transparent), transparent 20% 76%, color-mix(in srgb, var(--archive-studio-shadow) 18%, transparent));
+  opacity: var(--archive-vignette-opacity);
+}
+
 html[data-active-archive-section="archive"] .archive-atmosphere,
 .apple-archive-experience[data-active-section="archive"] {
   --atmosphere-x: 46%;
   --atmosphere-y: 48%;
-  --atmosphere-intensity: 1.16;
+  --atmosphere-intensity: 1.32;
   --archive-light-color: rgba(255, 255, 255, 0.68);
-  --archive-plane-opacity: 0.46;
-  --archive-frame-opacity: 0.44;
+  --archive-plane-opacity: 0.58;
+  --archive-frame-opacity: 0.54;
+  --archive-beam-opacity: 0.34;
+  --archive-beam-angle: -8deg;
+  --archive-beam-x: -1.2vw;
+  --archive-beam-y: 2vh;
+  --archive-contour-opacity: 0.42;
+  --archive-contour-x: -0.7vw;
+  --archive-contour-y: 0.5vh;
+  --archive-vignette-opacity: 0.26;
   --archive-plane-one-x: -1.4vw;
   --archive-plane-one-y: 1.6vh;
   --archive-plane-two-x: -2vw;
@@ -4032,12 +4134,20 @@ html[data-active-archive-section="archive"] .archive-atmosphere,
 
 html[data-active-archive-section="experience"] .archive-atmosphere,
 .apple-archive-experience[data-active-section="experience"] {
-  --atmosphere-x: 30%;
+  --atmosphere-x: 34%;
   --atmosphere-y: 40%;
-  --atmosphere-intensity: 1.12;
+  --atmosphere-intensity: 1.18;
   --archive-light-color: rgba(255, 255, 255, 0.6);
-  --archive-plane-opacity: 0.4;
-  --archive-frame-opacity: 0.38;
+  --archive-plane-opacity: 0.46;
+  --archive-frame-opacity: 0.45;
+  --archive-beam-opacity: 0.3;
+  --archive-beam-angle: 1deg;
+  --archive-beam-x: -2.2vw;
+  --archive-beam-y: -0.4vh;
+  --archive-contour-opacity: 0.36;
+  --archive-contour-x: -1.4vw;
+  --archive-contour-y: 0.4vh;
+  --archive-vignette-opacity: 0.22;
   --archive-plane-one-x: 1.2vw;
   --archive-plane-one-y: 0.8vh;
   --archive-plane-two-x: -0.8vw;
@@ -4051,10 +4161,18 @@ html[data-active-archive-section="process"] .archive-atmosphere,
 .apple-archive-experience[data-active-section="process"] {
   --atmosphere-x: 70%;
   --atmosphere-y: 38%;
-  --atmosphere-intensity: 1.04;
+  --atmosphere-intensity: 1.1;
   --archive-light-color: rgba(246, 245, 240, 0.62);
-  --archive-plane-opacity: 0.34;
-  --archive-frame-opacity: 0.34;
+  --archive-plane-opacity: 0.4;
+  --archive-frame-opacity: 0.42;
+  --archive-beam-opacity: 0.28;
+  --archive-beam-angle: 8deg;
+  --archive-beam-x: 2.2vw;
+  --archive-beam-y: -1vh;
+  --archive-contour-opacity: 0.4;
+  --archive-contour-x: 1.4vw;
+  --archive-contour-y: -0.6vh;
+  --archive-vignette-opacity: 0.18;
   --archive-plane-one-x: -0.4vw;
   --archive-plane-one-y: -0.8vh;
   --archive-plane-two-x: 1.4vw;
@@ -4068,10 +4186,18 @@ html[data-active-archive-section="preserve"] .archive-atmosphere,
 .apple-archive-experience[data-active-section="preserve"] {
   --atmosphere-x: 40%;
   --atmosphere-y: 66%;
-  --atmosphere-intensity: 1.1;
+  --atmosphere-intensity: 1.18;
   --archive-light-color: rgba(255, 255, 255, 0.64);
-  --archive-plane-opacity: 0.39;
-  --archive-frame-opacity: 0.4;
+  --archive-plane-opacity: 0.48;
+  --archive-frame-opacity: 0.44;
+  --archive-beam-opacity: 0.32;
+  --archive-beam-angle: -18deg;
+  --archive-beam-x: -1vw;
+  --archive-beam-y: 2.2vh;
+  --archive-contour-opacity: 0.34;
+  --archive-contour-x: 0.6vw;
+  --archive-contour-y: 1vh;
+  --archive-vignette-opacity: 0.22;
   --archive-plane-one-x: 0.8vw;
   --archive-plane-one-y: -0.4vh;
   --archive-plane-two-x: -1.3vw;
@@ -4085,10 +4211,18 @@ html[data-active-archive-section="inquire"] .archive-atmosphere,
 .apple-archive-experience[data-active-section="inquire"] {
   --atmosphere-x: 64%;
   --atmosphere-y: 72%;
-  --atmosphere-intensity: 0.98;
+  --atmosphere-intensity: 1.02;
   --archive-light-color: rgba(244, 242, 236, 0.6);
   --archive-plane-opacity: 0.32;
   --archive-frame-opacity: 0.28;
+  --archive-beam-opacity: 0.2;
+  --archive-beam-angle: -4deg;
+  --archive-beam-x: 0.8vw;
+  --archive-beam-y: 1vh;
+  --archive-contour-opacity: 0.22;
+  --archive-contour-x: 0.4vw;
+  --archive-contour-y: 0.8vh;
+  --archive-vignette-opacity: 0.16;
   --archive-plane-one-x: 0.2vw;
   --archive-plane-one-y: -1vh;
   --archive-plane-two-x: 0.8vw;
@@ -4096,6 +4230,28 @@ html[data-active-archive-section="inquire"] .archive-atmosphere,
   --archive-plane-three-x: -1vw;
   --archive-plane-three-y: 1.2vh;
   --archive-plane-rotation: 0.15deg;
+}
+
+html[data-active-archive-section="hero"] .archive-atmosphere,
+.apple-archive-experience[data-active-section="hero"] {
+  --atmosphere-x: 52%;
+  --atmosphere-y: 28%;
+  --atmosphere-intensity: 1.26;
+  --archive-plane-opacity: 0.5;
+  --archive-frame-opacity: 0.42;
+  --archive-beam-opacity: 0.38;
+  --archive-beam-angle: -15deg;
+  --archive-beam-x: 0.5vw;
+  --archive-beam-y: -1.4vh;
+  --archive-contour-opacity: 0.3;
+  --archive-vignette-opacity: 0.2;
+  --archive-plane-one-x: 0.4vw;
+  --archive-plane-one-y: -0.8vh;
+  --archive-plane-two-x: -0.6vw;
+  --archive-plane-two-y: 0.7vh;
+  --archive-plane-three-x: 1.1vw;
+  --archive-plane-three-y: 0.2vh;
+  --archive-plane-rotation: -0.28deg;
 }
 
 .apple-hero,
@@ -4128,6 +4284,39 @@ html[data-active-archive-section="inquire"] .archive-atmosphere,
   min-height: min(54rem, calc(100svh - var(--header-offset-mobile) + 4.5rem));
   align-items: start;
   padding: clamp(2.1rem, 5svh, 3.6rem) var(--shell-gutter) clamp(2.65rem, 5.8vw, 5.2rem);
+  isolation: isolate;
+}
+
+.apple-hero::before,
+.apple-hero::after {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.apple-hero::before {
+  inset: clamp(0.8rem, 2vw, 1.8rem) max(var(--shell-gutter), calc((100% - 1280px) / 2)) clamp(0.3rem, 1.5vw, 1.1rem);
+  border: 1px solid color-mix(in srgb, var(--border) 34%, transparent);
+  border-radius: clamp(2.4rem, 6vw, 5.6rem);
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--surface-glass-strong) 24%, transparent), transparent 26% 74%, color-mix(in srgb, var(--surface-glass-strong) 16%, transparent)),
+    radial-gradient(ellipse at 50% 2%, color-mix(in srgb, var(--glass-highlight) 48%, transparent), transparent 46%);
+  opacity: 0.78;
+  transform: translate3d(0, 0.85rem, 0) scale(0.99);
+  animation: appleHeroAtmosphereBreath 12s var(--ease-luxury) infinite alternate;
+}
+
+.apple-hero::after {
+  left: max(var(--shell-gutter), calc((100% - 1040px) / 2));
+  right: max(var(--shell-gutter), calc((100% - 1040px) / 2));
+  top: clamp(5.6rem, 13svh, 8.8rem);
+  height: clamp(12rem, 26vw, 23rem);
+  border-radius: 999px;
+  background: linear-gradient(100deg, transparent 4%, color-mix(in srgb, var(--glass-highlight) 30%, transparent) 44%, transparent 82%);
+  opacity: 0.5;
+  transform: rotate(-5deg) translate3d(0, -0.5rem, 0);
+  mix-blend-mode: soft-light;
 }
 
 .apple-hero-inner,
@@ -4138,6 +4327,8 @@ html[data-active-archive-section="inquire"] .archive-atmosphere,
 }
 
 .apple-hero-inner {
+  position: relative;
+  z-index: 1;
   display: grid;
   justify-items: center;
   text-align: center;
@@ -5218,6 +5409,39 @@ html[data-active-archive-section="inquire"] .archive-atmosphere,
     linear-gradient(180deg, color-mix(in srgb, var(--surface-strong) 78%, transparent), color-mix(in srgb, var(--surface-glass) 58%, transparent));
 }
 
+.apple-record-list::before,
+.apple-record-feature::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+}
+
+.apple-record-list::before {
+  inset: 0.75rem;
+  border: 1px solid color-mix(in srgb, var(--border) 26%, transparent);
+  border-radius: calc(clamp(1.8rem, 3.4vw, 2.8rem) - 0.75rem);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--glass-highlight) 12%, transparent), transparent 34%),
+    repeating-linear-gradient(180deg, transparent 0 4.2rem, color-mix(in srgb, var(--border) 18%, transparent) 4.22rem 4.28rem, transparent 4.34rem 8.4rem);
+  opacity: 0.58;
+}
+
+.apple-record-feature::after {
+  inset: 0.82rem;
+  border-radius: calc(clamp(1.8rem, 3.4vw, 2.8rem) - 0.82rem);
+  background:
+    linear-gradient(90deg, transparent, color-mix(in srgb, var(--border-strong) 30%, transparent), transparent),
+    radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--glass-highlight) 20%, transparent), transparent 38%);
+  opacity: 0.46;
+  mask-image: linear-gradient(180deg, black, transparent 72%);
+}
+
+.apple-record-list > *,
+.apple-record-feature > * {
+  position: relative;
+  z-index: 1;
+}
+
 .apple-record-feature::before {
   inset: 0.72rem;
   border: 1px solid color-mix(in srgb, var(--border) 42%, transparent);
@@ -5885,6 +6109,62 @@ html[data-active-archive-section="inquire"] .archive-atmosphere,
   }
 }
 
+@keyframes archiveToneBreath {
+  0% {
+    transform: translate3d(-0.5%, -0.35%, 0) scale(1);
+    opacity: calc(var(--archive-tone-opacity) * 0.92);
+  }
+
+  100% {
+    transform: translate3d(0.55%, 0.42%, 0) scale(1.018);
+    opacity: var(--archive-tone-opacity);
+  }
+}
+
+@keyframes archiveBeamDriftOne {
+  0% {
+    translate: -1.1% -0.6%;
+  }
+
+  100% {
+    translate: 1.4% 0.75%;
+  }
+}
+
+@keyframes archiveBeamDriftTwo {
+  0% {
+    translate: 0.8% 0.55%;
+  }
+
+  100% {
+    translate: -1.2% -0.7%;
+  }
+}
+
+@keyframes archiveContourSettle {
+  0% {
+    translate: -0.35% 0.2%;
+    opacity: calc(var(--archive-contour-opacity) * var(--atmosphere-intensity) * 0.72);
+  }
+
+  100% {
+    translate: 0.4% -0.25%;
+    opacity: calc(var(--archive-contour-opacity) * var(--atmosphere-intensity));
+  }
+}
+
+@keyframes appleHeroAtmosphereBreath {
+  0% {
+    opacity: 0.58;
+    transform: translate3d(0, 0.95rem, 0) scale(0.988);
+  }
+
+  100% {
+    opacity: 0.86;
+    transform: translate3d(0, 0.15rem, 0) scale(1);
+  }
+}
+
 @keyframes archivePlaneDriftOne {
   0% {
     translate: -0.35% -0.22%;
@@ -6174,9 +6454,23 @@ html[data-theme="dark"] .archive-atmosphere {
   --archive-plane-shadow: rgba(0, 0, 0, 0.28);
   --archive-plane-opacity: 0.34;
   --archive-frame-opacity: 0.22;
+  --archive-beam-opacity: 0.24;
+  --archive-contour-opacity: 0.24;
+  --archive-tone-opacity: 0.98;
+  --archive-vignette-opacity: 0.34;
+  --archive-studio-light: rgba(255, 255, 255, 0.18);
+  --archive-studio-shadow: rgba(0, 0, 0, 0.72);
   background:
     radial-gradient(ellipse at 50% 0%, rgba(255, 255, 255, 0.065), transparent 48%),
     linear-gradient(180deg, #000, #030303 48%, #070707);
+}
+
+html[data-theme="dark"] .archive-atmosphere__tone {
+  background:
+    radial-gradient(ellipse at 50% -8%, rgba(255, 255, 255, 0.07), transparent 42%),
+    radial-gradient(ellipse at 18% 26%, rgba(255, 255, 255, 0.035), transparent 34%),
+    radial-gradient(ellipse at 86% 78%, rgba(255, 255, 255, 0.025), transparent 38%),
+    linear-gradient(180deg, #000, #050505 58%, #090909);
 }
 
 html[data-theme="dark"] .archive-atmosphere__plane {
@@ -6186,6 +6480,17 @@ html[data-theme="dark"] .archive-atmosphere__plane {
   box-shadow:
     0 28px 110px color-mix(in srgb, var(--archive-plane-shadow) 88%, transparent),
     inset 0 1px 0 rgba(255, 255, 255, 0.055);
+}
+
+html[data-theme="dark"] .archive-atmosphere__beam {
+  mix-blend-mode: screen;
+  background:
+    linear-gradient(90deg, transparent 0 14%, rgba(255, 255, 255, 0.018) 34%, rgba(255, 255, 255, 0.075) 50%, rgba(255, 255, 255, 0.018) 66%, transparent 88%),
+    linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.035), transparent);
+}
+
+html[data-theme="dark"] .archive-atmosphere__contour {
+  mix-blend-mode: screen;
 }
 
 html[data-theme="dark"] .archive-atmosphere__mesh {
@@ -6206,8 +6511,11 @@ html[data-theme="dark"][data-active-archive-section="archive"] .archive-atmosphe
   --atmosphere-y: 48%;
   --atmosphere-intensity: 1.05;
   --archive-light-color: rgba(255, 255, 255, 0.18);
-  --archive-plane-opacity: 0.42;
-  --archive-frame-opacity: 0.32;
+  --archive-plane-opacity: 0.5;
+  --archive-frame-opacity: 0.4;
+  --archive-beam-opacity: 0.34;
+  --archive-contour-opacity: 0.34;
+  --archive-vignette-opacity: 0.42;
 }
 
 html[data-theme="dark"][data-active-archive-section="experience"] .archive-atmosphere {
@@ -6215,8 +6523,10 @@ html[data-theme="dark"][data-active-archive-section="experience"] .archive-atmos
   --atmosphere-y: 44%;
   --atmosphere-intensity: 1;
   --archive-light-color: rgba(255, 255, 255, 0.16);
-  --archive-plane-opacity: 0.38;
-  --archive-frame-opacity: 0.28;
+  --archive-plane-opacity: 0.44;
+  --archive-frame-opacity: 0.34;
+  --archive-beam-opacity: 0.28;
+  --archive-contour-opacity: 0.3;
 }
 
 html[data-theme="dark"][data-active-archive-section="process"] .archive-atmosphere {
@@ -6224,8 +6534,10 @@ html[data-theme="dark"][data-active-archive-section="process"] .archive-atmosphe
   --atmosphere-y: 42%;
   --atmosphere-intensity: 0.94;
   --archive-light-color: rgba(255, 255, 255, 0.14);
-  --archive-plane-opacity: 0.32;
-  --archive-frame-opacity: 0.22;
+  --archive-plane-opacity: 0.36;
+  --archive-frame-opacity: 0.3;
+  --archive-beam-opacity: 0.24;
+  --archive-contour-opacity: 0.32;
 }
 
 html[data-theme="dark"][data-active-archive-section="preserve"] .archive-atmosphere {
@@ -6233,8 +6545,10 @@ html[data-theme="dark"][data-active-archive-section="preserve"] .archive-atmosph
   --atmosphere-y: 58%;
   --atmosphere-intensity: 0.98;
   --archive-light-color: rgba(255, 255, 255, 0.16);
-  --archive-plane-opacity: 0.36;
-  --archive-frame-opacity: 0.27;
+  --archive-plane-opacity: 0.42;
+  --archive-frame-opacity: 0.34;
+  --archive-beam-opacity: 0.3;
+  --archive-contour-opacity: 0.28;
 }
 
 html[data-theme="dark"][data-active-archive-section="inquire"] .archive-atmosphere {
@@ -6244,6 +6558,9 @@ html[data-theme="dark"][data-active-archive-section="inquire"] .archive-atmosphe
   --archive-light-color: rgba(255, 255, 255, 0.12);
   --archive-plane-opacity: 0.28;
   --archive-frame-opacity: 0.2;
+  --archive-beam-opacity: 0.16;
+  --archive-contour-opacity: 0.18;
+  --archive-vignette-opacity: 0.28;
 }
 
 html[data-theme="dark"] .apple-cta-primary {
@@ -6380,6 +6697,14 @@ html[data-theme="dark"] .apple-inquiry-tab-active {
     inset: -10%;
     --archive-plane-opacity: 0.22;
     --archive-frame-opacity: 0.18;
+    --archive-beam-opacity: 0.12;
+    --archive-contour-opacity: 0.14;
+    --archive-tone-opacity: 0.86;
+    --archive-vignette-opacity: 0.1;
+  }
+
+  .archive-atmosphere__tone {
+    animation-duration: 42s;
   }
 
   .archive-atmosphere__frame {
@@ -6403,6 +6728,18 @@ html[data-theme="dark"] .apple-inquiry-tab-active {
     animation-duration: 34s;
   }
 
+  .archive-atmosphere__beam {
+    width: 70vw;
+    height: 132vh;
+    top: -22vh;
+    filter: none;
+    animation-duration: 72s;
+  }
+
+  .archive-atmosphere__beam-two {
+    display: none;
+  }
+
   .archive-atmosphere__bloom {
     width: 92vw;
     height: 92vw;
@@ -6411,6 +6748,17 @@ html[data-theme="dark"] .apple-inquiry-tab-active {
 
   .archive-atmosphere__section-light {
     opacity: calc(0.42 * var(--atmosphere-intensity));
+  }
+
+  .archive-atmosphere__contour {
+    inset: -18%;
+    opacity: calc(var(--archive-contour-opacity) * var(--atmosphere-intensity) * 0.58);
+    mask-image: radial-gradient(ellipse at 50% 42%, black 0 36%, transparent 78%);
+    animation-duration: 84s;
+  }
+
+  .archive-atmosphere__vignette {
+    opacity: calc(var(--archive-vignette-opacity) * 0.72);
   }
 
   .apple-value-grid::before,
@@ -6568,8 +6916,13 @@ html[data-theme="dark"] .apple-inquiry-tab-active {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .archive-atmosphere__tone,
+  .archive-atmosphere__plane,
   .archive-atmosphere__mesh,
+  .archive-atmosphere__beam,
   .archive-atmosphere__bloom,
+  .archive-atmosphere__contour,
+  .apple-hero::before,
   .apple-hero-title,
   .apple-hero-stage {
     animation: none;
@@ -6578,8 +6931,11 @@ html[data-theme="dark"] .apple-inquiry-tab-active {
     scale: 1;
   }
 
+  .apple-hero::after,
   .apple-hero-stage::before,
   .apple-hero-stage::after,
+  .apple-record-list::before,
+  .apple-record-feature::after,
   .apple-record-feature::before,
   .apple-inquiry-layout::before {
     animation: none;
@@ -6630,7 +6986,11 @@ html[data-theme="dark"] .apple-inquiry-tab-active {
     content: none;
   }
 
+  .archive-atmosphere__tone,
+  .archive-atmosphere__beam,
   .archive-atmosphere__section-light,
+  .archive-atmosphere__contour,
+  .archive-atmosphere__vignette,
   .apple-value-grid::before,
   .apple-value-grid::after,
   .apple-process-grid::before,
@@ -7602,17 +7962,25 @@ html[data-theme="dark"] .apple-inquiry-tab-active {
   }
 
   .archive-atmosphere__mesh,
+  .archive-atmosphere__tone,
+  .archive-atmosphere__beam,
   .archive-atmosphere__bloom,
+  .archive-atmosphere__contour,
   .public-visual-scope .button-primary::after,
   .public-visual-scope .button-secondary::after {
     animation: none;
   }
 
   .archive-atmosphere__mesh,
+  .archive-atmosphere__tone,
+  .archive-atmosphere__beam,
   .archive-atmosphere__bloom,
-  .archive-atmosphere__section-light {
+  .archive-atmosphere__section-light,
+  .archive-atmosphere__contour,
+  .archive-atmosphere__vignette {
     transform: none;
     transition: none;
+    translate: none;
   }
 
   .archive-atmosphere__plane,
