@@ -11,7 +11,13 @@ import {
   type MouseEvent,
   type ReactNode,
 } from "react";
-import { AnimatePresence, motion, useReducedMotion, type HTMLMotionProps } from "framer-motion";
+import {
+  AnimatePresence,
+  motion,
+  useReducedMotion,
+  type HTMLMotionProps,
+  type MotionStyle,
+} from "framer-motion";
 
 import { CompactSceneControls } from "@/components/compact-scene-controls";
 import {
@@ -23,7 +29,7 @@ import {
   type ImmersiveSectionId,
 } from "@/components/immersive-scroll-context";
 import { contentSwapTransition, measuredEase } from "@/components/motion-config";
-import { useMagneticMotion } from "@/components/use-magnetic-motion";
+import { useCardTiltMotion, useMagneticMotion } from "@/components/use-magnetic-motion";
 import type {
   GlobalSiteContent,
   ResolvedInquiryContent,
@@ -38,6 +44,8 @@ type PublicExperienceProps = {
   preserve: ResolvedSceneContent;
   inquiry: ResolvedInquiryContent;
 };
+
+type PublicSceneStep = ResolvedSceneContent["steps"][number];
 
 type InquiryFormState = {
   fullName: string;
@@ -608,6 +616,80 @@ function ArchiveHero({
   );
 }
 
+function ArchiveValueCard({
+  pillar,
+  index,
+  isActive,
+  detailId,
+  reduceMotion,
+  onHover,
+  onSelect,
+}: {
+  pillar: PublicSceneStep;
+  index: number;
+  isActive: boolean;
+  detailId: string;
+  reduceMotion: boolean;
+  onHover: (index: number) => void;
+  onSelect: (index: number) => void;
+}) {
+  const tilt = useCardTiltMotion(4);
+
+  return (
+    <motion.button
+      type="button"
+      className={[
+        "apple-value-card apple-liquid-surface",
+        isActive ? "apple-value-card-active" : "",
+        isActive ? "" : "apple-value-card-inactive",
+      ].filter(Boolean).join(" ")}
+      key={`archive-value-card-${index}`}
+      variants={cardReveal}
+      whileHover={reduceMotion ? undefined : { y: -5, scale: 1.006 }}
+      whileTap={reduceMotion ? undefined : { scale: 0.985 }}
+      style={{ "--motion-stagger-index": index, ...tilt.style } as MotionStyle}
+      aria-controls={detailId}
+      aria-expanded={isActive}
+      aria-pressed={isActive}
+      onPointerMove={tilt.onPointerMove}
+      onPointerLeave={tilt.onPointerLeave}
+      onPointerEnter={(event) => {
+        if (isFineHoverPointer(event)) {
+          onHover(index);
+        }
+      }}
+      onPointerDown={(event) => {
+        if (!isFineHoverPointer(event)) {
+          onSelect(index);
+        }
+      }}
+      onClick={() => {
+        onSelect(index);
+      }}
+      onFocus={() => onSelect(index)}
+    >
+      <span className="apple-liquid-layer" aria-hidden="true" />
+      <span>Archive {String(index + 1).padStart(2, "0")}</span>
+      <h3>{pillar.label}</h3>
+      <p>{pillar.summary}</p>
+      <AnimatePresence initial={false}>
+        {isActive ? (
+          <motion.div
+            id={detailId}
+            className="apple-value-card-detail"
+            initial={{ opacity: 0, height: 0, y: -4 }}
+            animate={{ opacity: 1, height: "auto", y: 0 }}
+            exit={{ opacity: 0, height: 0, y: -4 }}
+            transition={{ duration: 0.28, ease: measuredEase }}
+          >
+            {pillar.detail}
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
+    </motion.button>
+  );
+}
+
 function EmotionalValue({ home }: { home: ResolvedSceneContent }) {
   const reduceMotion = useReducedMotion();
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -664,55 +746,16 @@ function EmotionalValue({ home }: { home: ResolvedSceneContent }) {
           const detailId = `archive-card-detail-${index + 1}`;
 
           return (
-            <motion.button
-              type="button"
-              className={[
-                "apple-value-card apple-liquid-surface",
-                isActive ? "apple-value-card-active" : "",
-                isActive ? "" : "apple-value-card-inactive",
-              ].filter(Boolean).join(" ")}
+            <ArchiveValueCard
               key={`archive-value-card-${index}`}
-              variants={cardReveal}
-              whileHover={reduceMotion ? undefined : { y: -5, scale: 1.006 }}
-              whileTap={reduceMotion ? undefined : { scale: 0.985 }}
-              style={{ "--motion-stagger-index": index } as CSSProperties}
-              aria-controls={detailId}
-              aria-expanded={isActive}
-              aria-pressed={isActive}
-              onPointerEnter={(event) => {
-                if (isFineHoverPointer(event)) {
-                  setHoverIndex(index);
-                }
-              }}
-              onPointerDown={(event) => {
-                if (!isFineHoverPointer(event)) {
-                  setSelectedIndex(index);
-                }
-              }}
-              onClick={() => {
-                setSelectedIndex(index);
-              }}
-              onFocus={() => setSelectedIndex(index)}
-            >
-              <span className="apple-liquid-layer" aria-hidden="true" />
-              <span>Archive {String(index + 1).padStart(2, "0")}</span>
-              <h3>{pillar.label}</h3>
-              <p>{pillar.summary}</p>
-              <AnimatePresence initial={false}>
-                {isActive ? (
-                  <motion.div
-                    id={detailId}
-                    className="apple-value-card-detail"
-                    initial={{ opacity: 0, height: 0, y: -4 }}
-                    animate={{ opacity: 1, height: "auto", y: 0 }}
-                    exit={{ opacity: 0, height: 0, y: -4 }}
-                    transition={{ duration: 0.28, ease: measuredEase }}
-                  >
-                    {pillar.detail}
-                  </motion.div>
-                ) : null}
-              </AnimatePresence>
-            </motion.button>
+              pillar={pillar}
+              index={index}
+              isActive={isActive}
+              detailId={detailId}
+              reduceMotion={Boolean(reduceMotion)}
+              onHover={setHoverIndex}
+              onSelect={setSelectedIndex}
+            />
           );
         })}
       </motion.div>
@@ -837,39 +880,41 @@ function ArchiveSceneModule({
       </motion.div>
 
       <motion.div className="apple-record-feature motion-media" variants={mediaReveal}>
-        <AnimatePresence initial={false} custom={direction}>
-          <motion.div
-            key={`experience-feature-${activeIndex}`}
-            className="apple-record-feature-content"
-            custom={direction}
-            initial={reduceMotion ? false : { opacity: 0, x: direction > 0 ? 28 : -28, y: 8, scale: 0.992 }}
-            animate={{ opacity: 1, x: 0, y: 0, scale: 1 }}
-            exit={reduceMotion ? undefined : { opacity: 0, x: direction > 0 ? -20 : 20, y: -6, scale: 0.996 }}
-            transition={reduceMotion ? { duration: 0 } : { ...transition, duration: 0.36 }}
-          >
-            <ArchiveVisualFrame
-              image={active.image}
-              label={active.mediaLabel}
-              caption={active.mediaCaption}
-              indexLabel={active.label}
-            />
+        <div className="experience-content-container">
+          <AnimatePresence initial={false} custom={direction} mode="wait">
             <motion.div
-              className="apple-record-detail"
-              variants={detailStaggerReveal}
-              initial="hidden"
-              animate="visible"
+              key={`experience-feature-${activeIndex}`}
+              className="apple-record-feature-content"
+              custom={direction}
+              initial={reduceMotion ? false : { opacity: 0, x: direction > 0 ? 28 : -28, y: 8, scale: 0.992 }}
+              animate={{ opacity: 1, x: 0, y: 0, scale: 1 }}
+              exit={reduceMotion ? undefined : { opacity: 0, x: direction > 0 ? -20 : 20, y: -6, scale: 0.996 }}
+              transition={reduceMotion ? { duration: 0 } : { ...transition, duration: 0.36 }}
             >
-              <motion.span variants={detailItemReveal}>{sectionLabel}</motion.span>
-              <motion.h3 variants={detailItemReveal}>{active.title}</motion.h3>
-              <motion.p variants={detailItemReveal}>{active.detail}</motion.p>
-              <motion.div className="apple-record-tags" variants={detailStaggerReveal}>
-                {active.bullets.map((bullet, index) => (
-                  <motion.span key={`experience-tag-${activeIndex}-${index}`} variants={detailItemReveal}>{bullet}</motion.span>
-                ))}
+              <ArchiveVisualFrame
+                image={active.image}
+                label={active.mediaLabel}
+                caption={active.mediaCaption}
+                indexLabel={active.label}
+              />
+              <motion.div
+                className="apple-record-detail"
+                variants={detailStaggerReveal}
+                initial="hidden"
+                animate="visible"
+              >
+                <motion.span variants={detailItemReveal}>{sectionLabel}</motion.span>
+                <motion.h3 variants={detailItemReveal}>{active.title}</motion.h3>
+                <motion.p variants={detailItemReveal}>{active.detail}</motion.p>
+                <motion.div className="apple-record-tags" variants={detailStaggerReveal}>
+                  {active.bullets.map((bullet, index) => (
+                    <motion.span key={`experience-tag-${activeIndex}-${index}`} variants={detailItemReveal}>{bullet}</motion.span>
+                  ))}
+                </motion.div>
               </motion.div>
             </motion.div>
-          </motion.div>
-        </AnimatePresence>
+          </AnimatePresence>
+        </div>
         <CompactSceneControls
           className="apple-scene-controls"
           labels={scene.steps.map((step) => step.title)}
@@ -886,28 +931,51 @@ function ArchiveSceneModule({
   );
 }
 
+function ProcessStepCard({
+  step,
+  index,
+  reduceMotion,
+}: {
+  step: PublicSceneStep;
+  index: number;
+  reduceMotion: boolean;
+}) {
+  const tilt = useCardTiltMotion(4);
+
+  return (
+    <motion.article
+      className="apple-process-card apple-liquid-surface how-it-works-card premium-card"
+      key={`process-step-${index}`}
+      variants={processStepReveal}
+      initial="hidden"
+      whileInView="visible"
+      whileHover={reduceMotion ? undefined : { y: -5, scale: 1.006 }}
+      whileTap={reduceMotion ? undefined : { scale: 0.99 }}
+      viewport={{ once: true, amount: 0.35 }}
+      style={{ "--motion-stagger-index": index, ...tilt.style } as MotionStyle}
+      onPointerMove={tilt.onPointerMove}
+      onPointerLeave={tilt.onPointerLeave}
+    >
+      <span className="apple-liquid-layer" aria-hidden="true" />
+      <span>{String(index + 1).padStart(2, "0")}</span>
+      <h3>{step.label}</h3>
+      <p>{step.detail}</p>
+    </motion.article>
+  );
+}
+
 function ProcessTimeline({ process }: { process: ResolvedSceneContent }) {
   const reduceMotion = useReducedMotion();
 
   return (
     <motion.div className="apple-process-grid motion-stagger" variants={cardGridReveal}>
       {process.steps.map((step, index) => (
-        <motion.article
-          className="apple-process-card apple-liquid-surface"
+        <ProcessStepCard
           key={`process-step-${index}`}
-          variants={processStepReveal}
-          initial="hidden"
-          whileInView="visible"
-          whileHover={reduceMotion ? undefined : { y: -5, scale: 1.006 }}
-          whileTap={reduceMotion ? undefined : { scale: 0.99 }}
-          viewport={{ once: true, amount: 0.35 }}
-          style={{ "--motion-stagger-index": index } as CSSProperties}
-        >
-          <span className="apple-liquid-layer" aria-hidden="true" />
-          <span>{String(index + 1).padStart(2, "0")}</span>
-          <h3>{step.label}</h3>
-          <p>{step.detail}</p>
-        </motion.article>
+          step={step}
+          index={index}
+          reduceMotion={Boolean(reduceMotion)}
+        />
       ))}
     </motion.div>
   );
