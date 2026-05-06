@@ -16,7 +16,6 @@ import {
   motion,
   useReducedMotion,
   type HTMLMotionProps,
-  type MotionStyle,
 } from "framer-motion";
 
 import { CompactSceneControls } from "@/components/compact-scene-controls";
@@ -29,7 +28,7 @@ import {
   type ImmersiveSectionId,
 } from "@/components/immersive-scroll-context";
 import { contentSwapTransition, measuredEase } from "@/components/motion-config";
-import { useCardTiltMotion, useMagneticMotion } from "@/components/use-magnetic-motion";
+import { useMagneticMotion } from "@/components/use-magnetic-motion";
 import type {
   GlobalSiteContent,
   ResolvedInquiryContent,
@@ -633,8 +632,6 @@ function ArchiveValueCard({
   onHover: (index: number) => void;
   onSelect: (index: number) => void;
 }) {
-  const tilt = useCardTiltMotion(4);
-
   return (
     <motion.button
       type="button"
@@ -645,14 +642,12 @@ function ArchiveValueCard({
       ].filter(Boolean).join(" ")}
       key={`archive-value-card-${index}`}
       variants={cardReveal}
-      whileHover={reduceMotion ? undefined : { y: -5, scale: 1.006 }}
+      whileHover={reduceMotion ? undefined : { y: -2 }}
       whileTap={reduceMotion ? undefined : { scale: 0.985 }}
-      style={{ "--motion-stagger-index": index, ...tilt.style } as MotionStyle}
+      style={{ "--motion-stagger-index": index } as CSSProperties}
       aria-controls={detailId}
       aria-expanded={isActive}
       aria-pressed={isActive}
-      onPointerMove={tilt.onPointerMove}
-      onPointerLeave={tilt.onPointerLeave}
       onPointerEnter={(event) => {
         if (isFineHoverPointer(event)) {
           onHover(index);
@@ -940,21 +935,17 @@ function ProcessStepCard({
   index: number;
   reduceMotion: boolean;
 }) {
-  const tilt = useCardTiltMotion(4);
-
   return (
     <motion.article
-      className="apple-process-card apple-liquid-surface how-it-works-card premium-card"
+      className="apple-process-card apple-liquid-surface how-it-works-card"
       key={`process-step-${index}`}
       variants={processStepReveal}
       initial="hidden"
       whileInView="visible"
-      whileHover={reduceMotion ? undefined : { y: -5, scale: 1.006 }}
+      whileHover={reduceMotion ? undefined : { y: -2 }}
       whileTap={reduceMotion ? undefined : { scale: 0.99 }}
       viewport={{ once: true, amount: 0.35 }}
-      style={{ "--motion-stagger-index": index, ...tilt.style } as MotionStyle}
-      onPointerMove={tilt.onPointerMove}
-      onPointerLeave={tilt.onPointerLeave}
+      style={{ "--motion-stagger-index": index } as CSSProperties}
     >
       <span className="apple-liquid-layer" aria-hidden="true" />
       <span>{String(index + 1).padStart(2, "0")}</span>

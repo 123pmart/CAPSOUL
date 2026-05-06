@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   motion,
   useMotionValue,
@@ -12,6 +12,7 @@ import {
 
 export function Atmosphere() {
   const reduceMotion = useReducedMotion();
+  const [enhancedMotion, setEnhancedMotion] = useState(false);
   const pointerX = useMotionValue(0);
   const pointerY = useMotionValue(0);
   const springX = useSpring(pointerX, { stiffness: 34, damping: 28, mass: 1.1 });
@@ -23,7 +24,19 @@ export function Atmosphere() {
   const smoothRotate = useSpring(rotate, { stiffness: 45, damping: 32 });
 
   useEffect(() => {
-    if (reduceMotion || !window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+    const media = window.matchMedia("(hover: hover) and (pointer: fine) and (min-width: 768px)");
+    const updateMotion = () => setEnhancedMotion(!reduceMotion && media.matches);
+
+    updateMotion();
+    media.addEventListener("change", updateMotion);
+
+    return () => {
+      media.removeEventListener("change", updateMotion);
+    };
+  }, [reduceMotion]);
+
+  useEffect(() => {
+    if (!enhancedMotion) {
       return;
     }
 
@@ -46,7 +59,7 @@ export function Atmosphere() {
       cancelAnimationFrame(frame);
       window.removeEventListener("pointermove", handlePointerMove);
     };
-  }, [pointerX, pointerY, reduceMotion]);
+  }, [enhancedMotion, pointerX, pointerY]);
 
   return (
     <div className="ambient-background" aria-hidden="true">
@@ -54,12 +67,12 @@ export function Atmosphere() {
         className="atmosphere-svg"
         viewBox="0 0 100 100"
         preserveAspectRatio="none"
-        style={reduceMotion ? undefined : {
+        style={enhancedMotion ? {
           x: springX,
           y: springY,
           scale: smoothScale,
           rotate: smoothRotate,
-        }}
+        } : undefined}
       >
         <defs>
           <filter id="atmosphere-blur" x="-60%" y="-60%" width="220%" height="220%">
@@ -73,11 +86,11 @@ export function Atmosphere() {
           rx="46"
           ry="34"
           filter="url(#atmosphere-blur)"
-          animate={reduceMotion ? undefined : {
+          animate={enhancedMotion ? {
             opacity: [0.28, 0.52, 0.34],
             cx: [22, 26, 21],
             cy: [30, 26, 32],
-          }}
+          } : undefined}
           transition={{ duration: 22, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" }}
         />
         <motion.ellipse
@@ -87,11 +100,11 @@ export function Atmosphere() {
           rx="44"
           ry="32"
           filter="url(#atmosphere-blur)"
-          animate={reduceMotion ? undefined : {
+          animate={enhancedMotion ? {
             opacity: [0.2, 0.44, 0.28],
             cx: [78, 73, 80],
             cy: [72, 76, 69],
-          }}
+          } : undefined}
           transition={{ duration: 28, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" }}
         />
         <motion.ellipse
@@ -101,11 +114,11 @@ export function Atmosphere() {
           rx="30"
           ry="24"
           filter="url(#atmosphere-blur)"
-          animate={reduceMotion ? undefined : {
+          animate={enhancedMotion ? {
             opacity: [0.16, 0.34, 0.22],
             cx: [52, 57, 49],
             cy: [48, 43, 52],
-          }}
+          } : undefined}
           transition={{ duration: 34, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" }}
         />
       </motion.svg>
