@@ -130,19 +130,33 @@ export function SiteHeader() {
 
             <div className="hidden min-w-0 items-center justify-end gap-2 lg:flex lg:w-full lg:justify-self-end xl:gap-2.5">
               <LanguageToggle compact className="w-auto min-w-[6.5rem] xl:min-w-[7.1rem]" />
-              <TransitionLink className="button-primary px-3.5 py-2 text-[0.84rem] xl:px-4 xl:text-[0.88rem]" href="/inquire" scroll>
-                {globalContent.headerInquireLabel}
-              </TransitionLink>
+              <motion.div
+                className="inline-flex"
+                whileHover={reduceMotion ? undefined : { scale: 1.02 }}
+                whileTap={reduceMotion ? undefined : { scale: 0.98 }}
+                transition={{ duration: 0.16, ease: measuredEase }}
+              >
+                <TransitionLink className="button-primary px-3.5 py-2 text-[0.84rem] xl:px-4 xl:text-[0.88rem]" href="/inquire" scroll>
+                  {globalContent.headerInquireLabel}
+                </TransitionLink>
+              </motion.div>
             </div>
 
             <div className="flex shrink-0 items-center gap-2 lg:hidden">
-              <TransitionLink
-                className="button-primary !min-h-0 !w-auto shrink-0 px-3.5 py-2 text-[0.78rem] sm:px-4 sm:text-[0.84rem]"
-                href="/inquire"
-                scroll
+              <motion.div
+                className="inline-flex shrink-0"
+                whileHover={reduceMotion ? undefined : { scale: 1.02 }}
+                whileTap={reduceMotion ? undefined : { scale: 0.98 }}
+                transition={{ duration: 0.16, ease: measuredEase }}
               >
-                {globalContent.mobileHeaderInquireLabel}
-              </TransitionLink>
+                <TransitionLink
+                  className="button-primary !min-h-0 !w-auto shrink-0 px-3.5 py-2 text-[0.78rem] sm:px-4 sm:text-[0.84rem]"
+                  href="/inquire"
+                  scroll
+                >
+                  {globalContent.mobileHeaderInquireLabel}
+                </TransitionLink>
+              </motion.div>
 
               <button
                 type="button"

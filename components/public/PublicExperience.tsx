@@ -4,7 +4,6 @@ import {
   useCallback,
   useEffect,
   useMemo,
-  useRef,
   useState,
   type ChangeEvent,
   type CSSProperties,
@@ -131,6 +130,21 @@ const cardReveal = {
   },
 } as const;
 
+const processStepReveal = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.58, ease: revealEase },
+  },
+} as const;
+
+const primaryButtonMotion = {
+  whileHover: { scale: 1.02 },
+  whileTap: { scale: 0.98 },
+  transition: { duration: 0.16, ease: measuredEase },
+} as const;
+
 function isFineHoverPointer(event: { pointerType: string }) {
   return event.pointerType === "mouse" || event.pointerType === "pen";
 }
@@ -149,7 +163,7 @@ const heroReveal = {
   hidden: { opacity: 1 },
   visible: {
     opacity: 1,
-    transition: { staggerChildren: 0.18, delayChildren: 0.1 },
+    transition: { staggerChildren: 0.2, delayChildren: 0.1 },
   },
 } as const;
 
@@ -165,19 +179,6 @@ const detailItemReveal = {
   hidden: { opacity: 0, y: 14 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.34, ease: revealEase } },
 } as const;
-
-const liquidTargetSelector = [
-  ".apple-liquid-surface",
-  ".apple-cta",
-  ".apple-inquiry-tab",
-  ".apple-input",
-  ".apple-budget-shell",
-  ".apple-admin-access a",
-  ".nav-pill",
-  ".button-primary",
-  ".theme-toggle",
-  ".apple-side-dot",
-].join(",");
 
 type ArchiveAtmosphereSection = "hero" | "archive" | "experience" | "process" | "preserve" | "inquire";
 
@@ -252,158 +253,6 @@ function usePublicAtmosphereSection() {
   }, [activeSection]);
 
   return activeSection;
-}
-
-function useMotionChoreography() {
-  useEffect(() => {
-    const elements = Array.from(document.querySelectorAll<HTMLElement>("[data-motion-section]"));
-
-    if (!elements.length) {
-      return;
-    }
-
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    if (reduceMotion) {
-      elements.forEach((element) => {
-        element.dataset.motionVisible = "true";
-        element.classList.add("is-visible");
-      });
-      return;
-    }
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting || !(entry.target instanceof HTMLElement)) {
-            return;
-          }
-
-          entry.target.dataset.motionVisible = "true";
-          entry.target.classList.add("is-visible");
-          observer.unobserve(entry.target);
-        });
-      },
-      {
-        root: null,
-        rootMargin: "-12% 0px -14% 0px",
-        threshold: [0.14, 0.28],
-      },
-    );
-
-    elements.forEach((element) => observer.observe(element));
-
-    return () => observer.disconnect();
-  }, []);
-}
-
-function useLiquidGlassPointer() {
-  const frameRef = useRef<number | null>(null);
-  const activeTargetRef = useRef<HTMLElement | null>(null);
-  const latestPointerRef = useRef<PointerEvent | null>(null);
-
-  useEffect(() => {
-    const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-
-    if (!finePointer.matches || reduceMotion.matches) {
-      return;
-    }
-
-    function clearActiveTarget(_event?: Event) {
-      if (activeTargetRef.current) {
-        activeTargetRef.current.removeEventListener("pointermove", handleTargetPointerMove);
-        activeTargetRef.current.removeEventListener("pointerleave", clearActiveTarget);
-        activeTargetRef.current.removeAttribute("data-liquid-active");
-        activeTargetRef.current.style.removeProperty("--pointer-x");
-        activeTargetRef.current.style.removeProperty("--pointer-y");
-        activeTargetRef.current.style.removeProperty("--liquid-shift-x");
-        activeTargetRef.current.style.removeProperty("--liquid-shift-y");
-        activeTargetRef.current.style.removeProperty("--liquid-inverse-x");
-        activeTargetRef.current.style.removeProperty("--liquid-inverse-y");
-        activeTargetRef.current.style.removeProperty("--liquid-tilt-x");
-        activeTargetRef.current.style.removeProperty("--liquid-tilt-y");
-      }
-
-      activeTargetRef.current = null;
-      latestPointerRef.current = null;
-    }
-
-    const updatePointerVars = () => {
-      frameRef.current = null;
-
-      const event = latestPointerRef.current;
-      const target = activeTargetRef.current;
-
-      if (!event || !target) {
-        return;
-      }
-
-      const rect = target.getBoundingClientRect();
-
-      if (!rect.width || !rect.height) {
-        return;
-      }
-
-      const x = Math.min(Math.max(event.clientX - rect.left, 0), rect.width);
-      const y = Math.min(Math.max(event.clientY - rect.top, 0), rect.height);
-      const normalizedX = x / rect.width - 0.5;
-      const normalizedY = y / rect.height - 0.5;
-
-      target.style.setProperty("--pointer-x", `${x.toFixed(1)}px`);
-      target.style.setProperty("--pointer-y", `${y.toFixed(1)}px`);
-      target.style.setProperty("--liquid-shift-x", `${(normalizedX * 5).toFixed(2)}px`);
-      target.style.setProperty("--liquid-shift-y", `${(normalizedY * 5).toFixed(2)}px`);
-      target.style.setProperty("--liquid-inverse-x", `${(-normalizedX * 5).toFixed(2)}px`);
-      target.style.setProperty("--liquid-inverse-y", `${(-normalizedY * 5).toFixed(2)}px`);
-      target.style.setProperty("--liquid-tilt-x", `${(-normalizedY * 1.6).toFixed(2)}deg`);
-      target.style.setProperty("--liquid-tilt-y", `${(normalizedX * 1.8).toFixed(2)}deg`);
-    };
-
-    const schedulePointerUpdate = (event: PointerEvent) => {
-      latestPointerRef.current = event;
-
-      if (frameRef.current === null) {
-        frameRef.current = window.requestAnimationFrame(updatePointerVars);
-      }
-    };
-
-    function handleTargetPointerMove(event: PointerEvent) {
-      schedulePointerUpdate(event);
-    }
-
-    const handlePointerOver = (event: PointerEvent) => {
-      const target = event.target instanceof Element
-        ? event.target.closest<HTMLElement>(liquidTargetSelector)
-        : null;
-
-      if (!target) {
-        return;
-      }
-
-      if (activeTargetRef.current !== target) {
-        clearActiveTarget();
-        activeTargetRef.current = target;
-        target.addEventListener("pointermove", handleTargetPointerMove, { passive: true });
-        target.addEventListener("pointerleave", clearActiveTarget, { passive: true });
-        target.setAttribute("data-liquid-active", "true");
-      }
-
-      schedulePointerUpdate(event);
-    };
-
-    document.addEventListener("pointerover", handlePointerOver, { passive: true });
-
-    return () => {
-      document.removeEventListener("pointerover", handlePointerOver);
-
-      if (frameRef.current !== null) {
-        window.cancelAnimationFrame(frameRef.current);
-      }
-
-      clearActiveTarget();
-    };
-  }, []);
 }
 
 function formatBudgetValue(value: number) {
@@ -558,7 +407,7 @@ function ArchiveSection({
   className?: string;
 }) {
   return (
-    <section
+    <motion.section
       id={id}
       data-archive-section
       data-atmosphere-section={getAtmosphereSectionForId(id)}
@@ -577,7 +426,7 @@ function ArchiveSection({
         <motion.p className="apple-section-copy motion-copy" variants={copyReveal}>{description}</motion.p>
         <motion.div className="apple-section-body motion-card" variants={archiveChildReveal}>{children}</motion.div>
       </motion.div>
-    </section>
+    </motion.section>
   );
 }
 
@@ -617,7 +466,7 @@ function ArchiveHero({
   const heroStep = home.steps[0];
 
   return (
-    <section
+    <motion.section
       id="home"
       data-archive-section
       data-atmosphere-section="hero"
@@ -635,9 +484,14 @@ function ArchiveHero({
         <motion.p className="apple-hero-copy motion-copy" variants={copyReveal}>{home.description}</motion.p>
         <motion.div className="apple-hero-actions motion-card" variants={cardReveal}>
           {home.primaryAction ? (
-            <a className="apple-cta apple-cta-primary" href={home.primaryAction.href} onClick={(event) => handleLink(home.primaryAction?.href ?? "", event)}>
+            <motion.a
+              className="apple-cta apple-cta-primary"
+              href={home.primaryAction.href}
+              onClick={(event) => handleLink(home.primaryAction?.href ?? "", event)}
+              {...primaryButtonMotion}
+            >
               {home.primaryAction.label}
-            </a>
+            </motion.a>
           ) : null}
           {home.secondaryAction ? (
             <a className="apple-cta apple-cta-secondary" href={home.secondaryAction.href} onClick={(event) => handleLink(home.secondaryAction?.href ?? "", event)}>
@@ -666,7 +520,7 @@ function ArchiveHero({
           </motion.div>
         </motion.div>
       </motion.div>
-    </section>
+    </motion.section>
   );
 }
 
@@ -678,7 +532,7 @@ function EmotionalValue({ home }: { home: ResolvedSceneContent }) {
   const activePillar = pillars[activeIndex] ?? pillars[0];
 
   return (
-    <motion.div
+    <motion.section
       className="apple-value-band motion-section"
       data-atmosphere-section="archive"
       data-active-index={activeIndex}
@@ -775,7 +629,7 @@ function EmotionalValue({ home }: { home: ResolvedSceneContent }) {
           );
         })}
       </motion.div>
-    </motion.div>
+    </motion.section>
   );
 }
 
@@ -833,12 +687,20 @@ function ArchiveSceneModule({
   sectionLabel: string;
 }) {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [direction, setDirection] = useState(1);
   const reduceMotion = useReducedMotion();
   const active = scene.steps[activeIndex] ?? scene.steps[0];
   const transition = reduceMotion ? { duration: 0 } : contentSwapTransition;
 
-  const previous = () => setActiveIndex((current) => Math.max(0, current - 1));
-  const next = () => setActiveIndex((current) => Math.min(scene.steps.length - 1, current + 1));
+  const selectIndex = useCallback((nextIndex: number) => {
+    const clamped = Math.min(scene.steps.length - 1, Math.max(0, nextIndex));
+
+    setDirection(clamped >= activeIndex ? 1 : -1);
+    setActiveIndex(clamped);
+  }, [activeIndex, scene.steps.length]);
+
+  const previous = () => selectIndex(activeIndex - 1);
+  const next = () => selectIndex(activeIndex + 1);
 
   if (!active) {
     return null;
@@ -875,8 +737,8 @@ function ArchiveSceneModule({
               variants={cardReveal}
               style={{ "--motion-stagger-index": index } as CSSProperties}
               aria-pressed={isActive}
-              onPointerDown={() => setActiveIndex(index)}
-              onClick={() => setActiveIndex(index)}
+              onPointerDown={() => selectIndex(index)}
+              onClick={() => selectIndex(index)}
             >
               <span className="apple-liquid-layer" aria-hidden="true" />
               <span>{step.label}</span>
@@ -888,13 +750,14 @@ function ArchiveSceneModule({
       </motion.div>
 
       <motion.div className="apple-record-feature motion-media" variants={mediaReveal}>
-        <AnimatePresence initial={false}>
+        <AnimatePresence initial={false} custom={direction}>
           <motion.div
             key={`experience-feature-${activeIndex}`}
             className="apple-record-feature-content"
-            initial={reduceMotion ? false : { opacity: 0, x: 24, y: 14, scale: 0.985 }}
+            custom={direction}
+            initial={reduceMotion ? false : { opacity: 0, x: direction > 0 ? 28 : -28, y: 8, scale: 0.992 }}
             animate={{ opacity: 1, x: 0, y: 0, scale: 1 }}
-            exit={reduceMotion ? undefined : { opacity: 0, x: -16, y: -8, scale: 0.992 }}
+            exit={reduceMotion ? undefined : { opacity: 0, x: direction > 0 ? -20 : 20, y: -6, scale: 0.996 }}
             transition={reduceMotion ? { duration: 0 } : { ...transition, duration: 0.36 }}
           >
             <ArchiveVisualFrame
@@ -924,7 +787,7 @@ function ArchiveSceneModule({
           className="apple-scene-controls"
           labels={scene.steps.map((step) => step.title)}
           activeIndex={activeIndex}
-          onSelect={setActiveIndex}
+          onSelect={selectIndex}
           onPrevious={previous}
           onNext={next}
           previousDisabled={activeIndex === 0}
@@ -943,7 +806,10 @@ function ProcessTimeline({ process }: { process: ResolvedSceneContent }) {
         <motion.article
           className="apple-process-card apple-liquid-surface"
           key={`process-step-${index}`}
-          variants={cardReveal}
+          variants={processStepReveal}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.35 }}
           style={{ "--motion-stagger-index": index } as CSSProperties}
         >
           <span className="apple-liquid-layer" aria-hidden="true" />
@@ -1147,7 +1013,7 @@ function InquiryArchiveForm({
         <span>{inquiry.successEyebrow}</span>
         <h3>{inquiry.successTitle}</h3>
         <p>{inquiry.successBody}</p>
-        <button
+        <motion.button
           type="button"
           className="apple-cta apple-cta-primary"
           onClick={() => {
@@ -1155,9 +1021,10 @@ function InquiryArchiveForm({
             setActiveIndex(0);
             setFormState(initialInquiryState);
           }}
+          {...primaryButtonMotion}
         >
           {inquiry.successResetLabel}
-        </button>
+        </motion.button>
       </div>
     );
   }
@@ -1214,17 +1081,23 @@ function InquiryArchiveForm({
             {inquiry.previousButtonLabel}
           </button>
           {activeIndex < inquiry.formSteps.length - 1 ? (
-            <button
+            <motion.button
               type="button"
               className="apple-cta apple-cta-primary"
               onClick={() => setActiveIndex((current) => Math.min(inquiry.formSteps.length - 1, current + 1))}
+              {...primaryButtonMotion}
             >
               {inquiry.nextButtonLabel}
-            </button>
+            </motion.button>
           ) : (
-            <button className="apple-cta apple-cta-primary" disabled={isSubmitting} type="submit">
+            <motion.button
+              className="apple-cta apple-cta-primary"
+              disabled={isSubmitting}
+              type="submit"
+              {...primaryButtonMotion}
+            >
               {isSubmitting ? fieldCopy.submittingLabel : inquiry.submitButtonLabel}
-            </button>
+            </motion.button>
           )}
         </div>
         <p className="apple-inquiry-note">{inquiry.footerNote}</p>
@@ -1309,8 +1182,6 @@ export function PublicExperience({
     ],
     [experience.title, home.title, inquiry.title, preserve.title, process.title],
   );
-  useMotionChoreography();
-  useLiquidGlassPointer();
 
   return (
     <div className="apple-archive-experience" data-active-section={activeAtmosphereSection}>

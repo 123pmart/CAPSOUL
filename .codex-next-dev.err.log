@@ -1,0 +1,14 @@
+[browser] Uncaught ReferenceError: useMotionChoreography is not defined
+    at PublicExperience (components/public/PublicExperience.tsx:1146:3)
+    at Set.forEach (<anonymous>)
+    at HomePage (app\page.tsx:24:5)
+  1144 |     [experience.title, home.title, inquiry.title, preserve.title, process.title],
+  1145 |   );
+> 1146 |   useMotionChoreography();
+       |   ^
+  1147 |   useLiquidGlassPointer();
+  1148 |
+  1149 |   return (
+⚠ Fast Refresh had to perform a full reload due to a runtime error.
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+    at Set.forEach (<anonymous>) (<anonymous>)
