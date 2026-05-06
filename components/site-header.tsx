@@ -16,6 +16,7 @@ import { heroRevealTransition, measuredEase } from "@/components/motion-config";
 import { useSiteLocale } from "@/components/site-locale-provider";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { TransitionLink } from "@/components/transition-link";
+import { useMagneticMotion } from "@/components/use-magnetic-motion";
 import { isSceneRouteActive, sceneRouteEntries } from "@/lib/scene-route-order";
 
 export function SiteHeader() {
@@ -23,6 +24,8 @@ export function SiteHeader() {
   const [isOpen, setIsOpen] = useState(false);
   const [immersiveActiveHref, setImmersiveActiveHref] = useState<string | null>(null);
   const reduceMotion = useReducedMotion();
+  const desktopInquireMagnetic = useMagneticMotion(6);
+  const mobileInquireMagnetic = useMagneticMotion(5);
   const { globalContent } = useSiteLocale();
 
   const navigationItems = useMemo(
@@ -132,6 +135,9 @@ export function SiteHeader() {
               <LanguageToggle compact className="w-auto min-w-[6.5rem] xl:min-w-[7.1rem]" />
               <motion.div
                 className="inline-flex"
+                style={desktopInquireMagnetic.style}
+                onPointerMove={desktopInquireMagnetic.onPointerMove}
+                onPointerLeave={desktopInquireMagnetic.onPointerLeave}
                 whileHover={reduceMotion ? undefined : { scale: 1.02 }}
                 whileTap={reduceMotion ? undefined : { scale: 0.98 }}
                 transition={{ duration: 0.16, ease: measuredEase }}
@@ -145,6 +151,9 @@ export function SiteHeader() {
             <div className="flex shrink-0 items-center gap-2 lg:hidden">
               <motion.div
                 className="inline-flex shrink-0"
+                style={mobileInquireMagnetic.style}
+                onPointerMove={mobileInquireMagnetic.onPointerMove}
+                onPointerLeave={mobileInquireMagnetic.onPointerLeave}
                 whileHover={reduceMotion ? undefined : { scale: 1.02 }}
                 whileTap={reduceMotion ? undefined : { scale: 0.98 }}
                 transition={{ duration: 0.16, ease: measuredEase }}

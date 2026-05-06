@@ -11,7 +11,7 @@ import {
   type MouseEvent,
   type ReactNode,
 } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion, type HTMLMotionProps } from "framer-motion";
 
 import { CompactSceneControls } from "@/components/compact-scene-controls";
 import {
@@ -23,6 +23,7 @@ import {
   type ImmersiveSectionId,
 } from "@/components/immersive-scroll-context";
 import { contentSwapTransition, measuredEase } from "@/components/motion-config";
+import { useMagneticMotion } from "@/components/use-magnetic-motion";
 import type {
   GlobalSiteContent,
   ResolvedInquiryContent,
@@ -107,6 +108,15 @@ const titleReveal = {
   visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.94, ease: revealEase } },
 } as const;
 
+const heroTitleCharacterReveal = {
+  hidden: { opacity: 0, y: "112%" },
+  visible: (index: number) => ({
+    opacity: 1,
+    y: "0%",
+    transition: { duration: 0.68, delay: index * 0.018, ease: revealEase },
+  }),
+} as const;
+
 const copyReveal = {
   hidden: { opacity: 0, y: 22 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.82, ease: revealEase } },
@@ -144,6 +154,48 @@ const primaryButtonMotion = {
   whileTap: { scale: 0.98 },
   transition: { duration: 0.16, ease: measuredEase },
 } as const;
+
+function MagneticPrimaryAnchor({
+  children,
+  className = "",
+  ...props
+}: HTMLMotionProps<"a">) {
+  const magnetic = useMagneticMotion(6);
+
+  return (
+    <motion.a
+      {...props}
+      className={`apple-cta apple-cta-primary ${className}`.trim()}
+      style={magnetic.style}
+      onPointerMove={magnetic.onPointerMove}
+      onPointerLeave={magnetic.onPointerLeave}
+      {...primaryButtonMotion}
+    >
+      {children}
+    </motion.a>
+  );
+}
+
+function MagneticPrimaryButton({
+  children,
+  className = "",
+  ...props
+}: HTMLMotionProps<"button">) {
+  const magnetic = useMagneticMotion(6);
+
+  return (
+    <motion.button
+      {...props}
+      className={`apple-cta apple-cta-primary ${className}`.trim()}
+      style={magnetic.style}
+      onPointerMove={magnetic.onPointerMove}
+      onPointerLeave={magnetic.onPointerLeave}
+      {...primaryButtonMotion}
+    >
+      {children}
+    </motion.button>
+  );
+}
 
 function isFineHoverPointer(event: { pointerType: string }) {
   return event.pointerType === "mouse" || event.pointerType === "pen";
@@ -457,6 +509,40 @@ function ArchiveVisualFrame({
   );
 }
 
+function HeroHeadline({ title }: { title: string }) {
+  const reduceMotion = useReducedMotion();
+
+  if (reduceMotion) {
+    return (
+      <motion.h1 className="apple-hero-title motion-title" variants={titleReveal}>
+        {title}
+      </motion.h1>
+    );
+  }
+
+  return (
+    <motion.h1
+      className="apple-hero-title apple-hero-title-mask motion-title"
+      variants={titleReveal}
+      aria-label={title}
+    >
+      <span className="apple-hero-title-characters" aria-hidden="true">
+        {Array.from(title).map((character, index) => (
+          <span className="apple-hero-title-character-window" key={`hero-title-character-${index}`}>
+            <motion.span
+              className="apple-hero-title-character"
+              custom={index}
+              variants={heroTitleCharacterReveal}
+            >
+              {character === " " ? "\u00A0" : character}
+            </motion.span>
+          </span>
+        ))}
+      </span>
+    </motion.h1>
+  );
+}
+
 function ArchiveHero({
   home,
 }: {
@@ -480,18 +566,16 @@ function ArchiveHero({
         animate="visible"
       >
         <motion.div className="apple-section-kicker motion-eyebrow" variants={eyebrowReveal}>{home.eyebrow}</motion.div>
-        <motion.h1 className="apple-hero-title motion-title" variants={titleReveal}>{home.title}</motion.h1>
+        <HeroHeadline title={home.title} />
         <motion.p className="apple-hero-copy motion-copy" variants={copyReveal}>{home.description}</motion.p>
         <motion.div className="apple-hero-actions motion-card" variants={cardReveal}>
           {home.primaryAction ? (
-            <motion.a
-              className="apple-cta apple-cta-primary"
+            <MagneticPrimaryAnchor
               href={home.primaryAction.href}
               onClick={(event) => handleLink(home.primaryAction?.href ?? "", event)}
-              {...primaryButtonMotion}
             >
               {home.primaryAction.label}
-            </motion.a>
+            </MagneticPrimaryAnchor>
           ) : null}
           {home.secondaryAction ? (
             <a className="apple-cta apple-cta-secondary" href={home.secondaryAction.href} onClick={(event) => handleLink(home.secondaryAction?.href ?? "", event)}>
@@ -525,6 +609,7 @@ function ArchiveHero({
 }
 
 function EmotionalValue({ home }: { home: ResolvedSceneContent }) {
+  const reduceMotion = useReducedMotion();
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [hoverIndex, setHoverIndex] = useState<number | null>(null);
   const pillars = home.steps.slice(0, 4);
@@ -588,6 +673,8 @@ function EmotionalValue({ home }: { home: ResolvedSceneContent }) {
               ].filter(Boolean).join(" ")}
               key={`archive-value-card-${index}`}
               variants={cardReveal}
+              whileHover={reduceMotion ? undefined : { y: -5, scale: 1.006 }}
+              whileTap={reduceMotion ? undefined : { scale: 0.985 }}
               style={{ "--motion-stagger-index": index } as CSSProperties}
               aria-controls={detailId}
               aria-expanded={isActive}
@@ -800,6 +887,8 @@ function ArchiveSceneModule({
 }
 
 function ProcessTimeline({ process }: { process: ResolvedSceneContent }) {
+  const reduceMotion = useReducedMotion();
+
   return (
     <motion.div className="apple-process-grid motion-stagger" variants={cardGridReveal}>
       {process.steps.map((step, index) => (
@@ -809,6 +898,8 @@ function ProcessTimeline({ process }: { process: ResolvedSceneContent }) {
           variants={processStepReveal}
           initial="hidden"
           whileInView="visible"
+          whileHover={reduceMotion ? undefined : { y: -5, scale: 1.006 }}
+          whileTap={reduceMotion ? undefined : { scale: 0.99 }}
           viewport={{ once: true, amount: 0.35 }}
           style={{ "--motion-stagger-index": index } as CSSProperties}
         >
@@ -1013,18 +1104,16 @@ function InquiryArchiveForm({
         <span>{inquiry.successEyebrow}</span>
         <h3>{inquiry.successTitle}</h3>
         <p>{inquiry.successBody}</p>
-        <motion.button
+        <MagneticPrimaryButton
           type="button"
-          className="apple-cta apple-cta-primary"
           onClick={() => {
             setSubmitted(false);
             setActiveIndex(0);
             setFormState(initialInquiryState);
           }}
-          {...primaryButtonMotion}
         >
           {inquiry.successResetLabel}
-        </motion.button>
+        </MagneticPrimaryButton>
       </div>
     );
   }
@@ -1081,23 +1170,19 @@ function InquiryArchiveForm({
             {inquiry.previousButtonLabel}
           </button>
           {activeIndex < inquiry.formSteps.length - 1 ? (
-            <motion.button
+            <MagneticPrimaryButton
               type="button"
-              className="apple-cta apple-cta-primary"
               onClick={() => setActiveIndex((current) => Math.min(inquiry.formSteps.length - 1, current + 1))}
-              {...primaryButtonMotion}
             >
               {inquiry.nextButtonLabel}
-            </motion.button>
+            </MagneticPrimaryButton>
           ) : (
-            <motion.button
-              className="apple-cta apple-cta-primary"
+            <MagneticPrimaryButton
               disabled={isSubmitting}
               type="submit"
-              {...primaryButtonMotion}
             >
               {isSubmitting ? fieldCopy.submittingLabel : inquiry.submitButtonLabel}
-            </motion.button>
+            </MagneticPrimaryButton>
           )}
         </div>
         <p className="apple-inquiry-note">{inquiry.footerNote}</p>
