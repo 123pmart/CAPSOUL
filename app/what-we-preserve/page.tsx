@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 
-import { SceneScreen } from "@/components/scene-screen";
-import { getResolvedPreserveScene } from "@/lib/live-scenes";
-import { getRequestSiteLocale } from "@/lib/site-locale";
+import { PublicExperiencePage } from "@/components/public/public-experience-page";
 
 export const metadata: Metadata = {
   title: "What We Preserve",
@@ -13,7 +11,5 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 export default async function WhatWePreservePage() {
-  const locale = await getRequestSiteLocale();
-  const preserveScene = await getResolvedPreserveScene(locale);
-  return <SceneScreen {...preserveScene} tone="warm" />;
+  return <PublicExperiencePage />;
 }

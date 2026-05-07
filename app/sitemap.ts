@@ -5,7 +5,6 @@ const baseUrl = "https://capsoulfilms.com";
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
     "",
-    "/faq",
     "/the-experience",
     "/how-it-works",
     "/what-we-preserve",

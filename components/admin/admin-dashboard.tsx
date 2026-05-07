@@ -32,6 +32,10 @@ function statusTone(status: LeadStatus) {
   return "text-[var(--text-primary)]";
 }
 
+function adminTabClass(active: boolean) {
+  return `admin-tab nav-pill ${active ? "admin-tab-active" : ""}`.trim();
+}
+
 export function AdminDashboard({
   currentAdmin,
   initialLeads,
@@ -431,7 +435,7 @@ export function AdminDashboard({
   }
 
   return (
-    <section className="shell section-space-tight">
+    <section className="shell section-space-tight admin-dashboard">
       <div className="scene-shell scene-shell-cool scene-pad admin-dashboard-shell">
         <div className="content-frame-wide relative z-10 grid gap-4">
           <div className="panel-strong rounded-[1.9rem] p-5 sm:p-6">
@@ -449,11 +453,7 @@ export function AdminDashboard({
                     <button
                       key={tab.key}
                       type="button"
-                      className={`nav-pill rounded-full px-4 py-2.5 text-[0.84rem] font-medium tracking-[-0.01em] ${
-                        active
-                          ? "border border-white/84 bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(228,237,246,0.98))] text-[var(--text-primary)] shadow-[0_14px_28px_rgba(154,170,190,0.18)]"
-                          : "archive-chip text-[var(--text-secondary)]"
-                      }`}
+                      className={adminTabClass(active)}
                       onClick={() => setActiveTab(tab.key)}
                     >
                       {tab.label}

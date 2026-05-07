@@ -94,6 +94,10 @@ function parseFieldValue(rawValue: string, fieldType: SiteContentFieldConfig["ty
   return rawValue;
 }
 
+function adminTabClass(active: boolean) {
+  return `admin-tab nav-pill ${active ? "admin-tab-active" : ""}`.trim();
+}
+
 export function AdminContentEditor({ initialContent }: AdminContentEditorProps) {
   const router = useRouter();
   const [activeLocale, setActiveLocale] = useState<SiteLocale>("en");
@@ -176,11 +180,7 @@ export function AdminContentEditor({ initialContent }: AdminContentEditorProps) 
               <button
                 key={locale}
                 type="button"
-                className={`nav-pill rounded-full px-4 py-2.5 text-[0.84rem] font-medium tracking-[-0.01em] ${
-                  active
-                    ? "border border-white/84 bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(228,237,246,0.98))] text-[var(--text-primary)] shadow-[0_14px_28px_rgba(154,170,190,0.18)]"
-                    : "archive-chip text-[var(--text-secondary)]"
-                }`}
+                className={adminTabClass(active)}
                 onClick={() => setActiveLocale(locale)}
               >
                 {label}
@@ -197,11 +197,7 @@ export function AdminContentEditor({ initialContent }: AdminContentEditorProps) 
               <button
                 key={page.key}
                 type="button"
-                className={`nav-pill rounded-full px-4 py-2.5 text-[0.84rem] font-medium tracking-[-0.01em] ${
-                  active
-                    ? "border border-white/84 bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(228,237,246,0.98))] text-[var(--text-primary)] shadow-[0_14px_28px_rgba(154,170,190,0.18)]"
-                    : "archive-chip text-[var(--text-secondary)]"
-                }`}
+                className={adminTabClass(active)}
                 onClick={() => setActivePage(page.key)}
               >
                 {page.label}

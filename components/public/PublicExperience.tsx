@@ -4,6 +4,7 @@ import {
   useCallback,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ChangeEvent,
   type CSSProperties,
@@ -11,6 +12,8 @@ import {
   type MouseEvent,
   type ReactNode,
 } from "react";
+import Image from "next/image";
+import { usePathname } from "next/navigation";
 import {
   AnimatePresence,
   motion,
@@ -339,7 +342,7 @@ function getHeaderOffset() {
   return Number.isFinite(paddingTop) ? paddingTop : 96;
 }
 
-function scrollToPublicSection(id: ImmersiveSectionId) {
+function scrollToPublicSection(id: ImmersiveSectionId, behavior?: ScrollBehavior) {
   const target = document.getElementById(id);
 
   if (!target) {
@@ -351,7 +354,7 @@ function scrollToPublicSection(id: ImmersiveSectionId) {
 
   window.scrollTo({
     top,
-    behavior: prefersReducedMotion ? "auto" : "smooth",
+    behavior: behavior ?? (prefersReducedMotion ? "auto" : "smooth"),
   });
 }
 
@@ -498,6 +501,8 @@ function ArchiveVisualFrame({
   indexLabel?: string;
   priority?: boolean;
 }) {
+  const isSvg = image.split("?")[0]?.endsWith(".svg") ?? false;
+
   return (
     <div className="apple-visual-frame apple-liquid-surface">
       <span className="apple-liquid-layer" aria-hidden="true" />
@@ -506,12 +511,18 @@ function ArchiveVisualFrame({
         {indexLabel ? <span>{indexLabel}</span> : null}
       </div>
       <div className="apple-visual-image-wrap">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
+        <Image
           src={image}
           alt={`${label} visual`}
-          decoding={priority ? "sync" : "async"}
-          loading={priority ? "eager" : "lazy"}
+          className="apple-visual-image"
+          fill
+          priority={priority}
+          sizes={
+            priority
+              ? "(max-width: 767px) 92vw, (max-width: 1180px) 86vw, 62vw"
+              : "(max-width: 767px) 88vw, (max-width: 1180px) 82vw, 50vw"
+          }
+          unoptimized={isSvg}
         />
       </div>
       <p>{caption}</p>
@@ -529,8 +540,10 @@ function HeroHeadline({ title }: { title: string }) {
 
 function ArchiveHero({
   home,
+  stepLabelPrefix,
 }: {
   home: ResolvedSceneContent;
+  stepLabelPrefix: string;
 }) {
   const handleLink = useSectionLink();
   const heroStep = home.steps[0];
@@ -573,7 +586,7 @@ function ArchiveHero({
               image={heroStep.image}
               label={heroStep.mediaLabel}
               caption={heroStep.mediaCaption}
-              indexLabel="Archive 01"
+              indexLabel={`${stepLabelPrefix} 1`}
               priority
             />
           </div>
@@ -596,6 +609,7 @@ function ArchiveHero({
 function ArchiveValueCard({
   pillar,
   index,
+  stepLabelPrefix,
   isActive,
   detailId,
   reduceMotion,
@@ -604,6 +618,7 @@ function ArchiveValueCard({
 }: {
   pillar: PublicSceneStep;
   index: number;
+  stepLabelPrefix: string;
   isActive: boolean;
   detailId: string;
   reduceMotion: boolean;
@@ -642,7 +657,7 @@ function ArchiveValueCard({
       onFocus={() => onSelect(index)}
     >
       <span className="apple-liquid-layer" aria-hidden="true" />
-      <span>Archive {String(index + 1).padStart(2, "0")}</span>
+      <span>{stepLabelPrefix} {index + 1}</span>
       <h3>{pillar.label}</h3>
       <p>{pillar.summary}</p>
       <AnimatePresence initial={false}>
@@ -663,7 +678,13 @@ function ArchiveValueCard({
   );
 }
 
-function EmotionalValue({ home }: { home: ResolvedSceneContent }) {
+function EmotionalValue({
+  home,
+  stepLabelPrefix,
+}: {
+  home: ResolvedSceneContent;
+  stepLabelPrefix: string;
+}) {
   const reduceMotion = useReducedMotion();
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [hoverIndex, setHoverIndex] = useState<number | null>(null);
@@ -723,6 +744,7 @@ function EmotionalValue({ home }: { home: ResolvedSceneContent }) {
               key={`archive-value-card-${index}`}
               pillar={pillar}
               index={index}
+              stepLabelPrefix={stepLabelPrefix}
               isActive={isActive}
               detailId={detailId}
               reduceMotion={Boolean(reduceMotion)}
@@ -935,18 +957,75 @@ function ProcessStepCard({
 
 function ProcessTimeline({ process }: { process: ResolvedSceneContent }) {
   const reduceMotion = useReducedMotion();
+  const scrollerRef = useRef<HTMLDivElement>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const progress = process.steps.length > 1
+    ? (activeIndex / (process.steps.length - 1)) * 100
+    : 0;
+
+  const syncActiveIndex = useCallback(() => {
+    const scroller = scrollerRef.current;
+
+    if (!scroller) {
+      return;
+    }
+
+    const cards = Array.from(scroller.querySelectorAll<HTMLElement>(".apple-process-card"));
+    const center = scroller.scrollLeft + scroller.clientWidth / 2;
+    let nextIndex = 0;
+    let closestDistance = Number.POSITIVE_INFINITY;
+
+    cards.forEach((card, index) => {
+      const cardCenter = card.offsetLeft + card.offsetWidth / 2;
+      const distance = Math.abs(cardCenter - center);
+
+      if (distance < closestDistance) {
+        closestDistance = distance;
+        nextIndex = index;
+      }
+    });
+
+    setActiveIndex(nextIndex);
+  }, []);
+
+  useEffect(() => {
+    syncActiveIndex();
+  }, [process.steps.length, syncActiveIndex]);
 
   return (
-    <motion.div className="apple-process-grid motion-stagger" variants={cardGridReveal}>
-      {process.steps.map((step, index) => (
-        <ProcessStepCard
-          key={`process-step-${index}`}
-          step={step}
-          index={index}
-          reduceMotion={Boolean(reduceMotion)}
-        />
-      ))}
-    </motion.div>
+    <div
+      className="apple-process-shell"
+      style={{ "--process-scroll-progress": `${progress}%` } as CSSProperties}
+    >
+      <motion.div
+        ref={scrollerRef}
+        className="apple-process-grid motion-stagger"
+        variants={cardGridReveal}
+        onScroll={syncActiveIndex}
+      >
+        {process.steps.map((step, index) => (
+          <ProcessStepCard
+            key={`process-step-${index}`}
+            step={step}
+            index={index}
+            reduceMotion={Boolean(reduceMotion)}
+          />
+        ))}
+      </motion.div>
+      <div className="apple-process-scroll-cue" aria-hidden="true">
+        <span className="apple-process-scroll-track">
+          <i />
+        </span>
+        <span className="apple-process-scroll-dots">
+          {process.steps.map((step, index) => (
+            <span
+              key={`process-cue-${step.label}-${index}`}
+              className={index === activeIndex ? "apple-process-scroll-dot apple-process-scroll-dot-active" : "apple-process-scroll-dot"}
+            />
+          ))}
+        </span>
+      </div>
+    </div>
   );
 }
 
@@ -1281,6 +1360,7 @@ export function PublicExperience({
   preserve,
   inquiry,
 }: PublicExperienceProps) {
+  const pathname = usePathname();
   const sections = useMemo<Array<{ id: ImmersiveSectionId; label: string }>>(
     () => [
       { id: "home", label: globalContent.navigation.home },
@@ -1293,6 +1373,7 @@ export function PublicExperience({
   );
   const activeId = usePublicActiveSection(sections);
   const activeAtmosphereSection = usePublicAtmosphereSection();
+  const archiveStepLabelPrefix = globalContent.navigation.home === "Inicio" ? "Paso" : "Step";
   const railItems = useMemo<Array<{ key: PublicSectionKey; label: string }>>(
     () => [
       { key: "hero", label: formatRailLabel(home.title) },
@@ -1304,6 +1385,20 @@ export function PublicExperience({
     ],
     [experience.title, home.title, inquiry.title, preserve.title, process.title],
   );
+
+  useEffect(() => {
+    const sectionId = getImmersiveSectionForRoute(pathname ?? "/");
+
+    if (!sectionId || sectionId === "home") {
+      return;
+    }
+
+    const frame = window.requestAnimationFrame(() => {
+      scrollToPublicSection(sectionId, "auto");
+    });
+
+    return () => window.cancelAnimationFrame(frame);
+  }, [pathname]);
 
   return (
     <div className="apple-archive-experience" data-active-section={activeAtmosphereSection}>
@@ -1324,8 +1419,8 @@ export function PublicExperience({
         ))}
       </nav>
 
-      <ArchiveHero home={home} />
-      <EmotionalValue home={home} />
+      <ArchiveHero home={home} stepLabelPrefix={archiveStepLabelPrefix} />
+      <EmotionalValue home={home} stepLabelPrefix={archiveStepLabelPrefix} />
 
       <ArchiveSection
         id="the-experience"

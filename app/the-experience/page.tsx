@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 
-import { SceneScreen } from "@/components/scene-screen";
-import { getResolvedExperienceScene } from "@/lib/live-scenes";
-import { getRequestSiteLocale } from "@/lib/site-locale";
+import { PublicExperiencePage } from "@/components/public/public-experience-page";
 
 export const metadata: Metadata = {
   title: "The Experience",
@@ -13,7 +11,5 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 export default async function ExperiencePage() {
-  const locale = await getRequestSiteLocale();
-  const experienceScene = await getResolvedExperienceScene(locale);
-  return <SceneScreen {...experienceScene} tone="cool" />;
+  return <PublicExperiencePage />;
 }

@@ -8068,6 +8068,295 @@ html[data-theme="dark"] .public-visual-scope::before {
   white-space: nowrap;
 }
 
+/* Current public layout surgical fixes. */
+.apple-visual-image-wrap {
+  position: relative;
+}
+
+.apple-visual-image-wrap .apple-visual-image {
+  box-sizing: border-box;
+  padding: clamp(0.7rem, 2vw, 1.8rem);
+  object-fit: contain;
+  object-position: center;
+}
+
+.apple-process-shell {
+  display: grid;
+  width: min(100%, 980px);
+  justify-items: center;
+  margin-inline: auto;
+}
+
+.apple-process-shell .apple-process-grid {
+  margin-inline: auto;
+}
+
+.apple-process-scroll-cue {
+  display: none;
+  width: min(100%, 18rem);
+  justify-items: center;
+  gap: 0.54rem;
+  margin-top: 0.18rem;
+}
+
+.apple-process-scroll-track {
+  position: relative;
+  display: block;
+  width: min(100%, 12rem);
+  height: 0.22rem;
+  overflow: hidden;
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--control-border) 70%, transparent);
+}
+
+.apple-process-scroll-track i {
+  position: absolute;
+  inset-block: 0;
+  left: 0;
+  width: max(20%, var(--process-scroll-progress, 0%));
+  border-radius: inherit;
+  background: var(--control-text);
+  transform-origin: left center;
+  transition: width 180ms var(--ease-luxury);
+}
+
+.apple-process-scroll-dots {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.36rem;
+}
+
+.apple-process-scroll-dot {
+  display: block;
+  width: 0.42rem;
+  height: 0.42rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--control-muted) 42%, transparent);
+  transition:
+    transform 180ms var(--ease-luxury),
+    background-color 180ms var(--ease-luxury);
+}
+
+.apple-process-scroll-dot-active {
+  background: var(--control-text);
+  transform: scale(1.18);
+}
+
+.apple-inquiry-tabs::before {
+  content: none;
+  display: none;
+}
+
+.apple-inquiry-tab {
+  z-index: auto;
+}
+
+.apple-inquiry-tab-active {
+  border-color: var(--control-border-active);
+  background: var(--control-bg-active);
+  box-shadow: var(--control-shadow-active);
+  color: var(--control-text);
+}
+
+.apple-scene-module,
+.apple-preserve-layout,
+.apple-inquiry-layout,
+.apple-hero-stage,
+.apple-value-grid,
+.apple-process-grid {
+  justify-content: center;
+  margin-inline: auto;
+}
+
+.apple-scene-module {
+  width: min(100%, 1120px);
+}
+
+.apple-preserve-layout,
+.apple-inquiry-layout {
+  width: min(100%, 1080px);
+}
+
+.apple-process-grid {
+  width: min(100%, 940px);
+}
+
+.apple-record-tags,
+.apple-trust-grid {
+  align-items: center;
+}
+
+.apple-record-tags span,
+.apple-trust-grid span {
+  justify-content: center;
+  max-width: min(100%, 24rem);
+  overflow-wrap: break-word;
+  text-align: center;
+  white-space: normal;
+}
+
+@media (min-width: 768px) {
+  .apple-record-detail .apple-record-tags,
+  .apple-preserve-feature .apple-record-tags {
+    justify-content: flex-start;
+  }
+
+  .apple-trust-grid {
+    justify-content: center;
+  }
+}
+
+@media (min-width: 1024px) {
+  .apple-process-grid {
+    gap: clamp(0.5rem, 0.72vw, 0.64rem);
+  }
+}
+
+@media (max-width: 1023px) {
+  .apple-process-scroll-cue {
+    display: grid;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .apple-process-shell {
+    width: min(100%, 42rem);
+  }
+
+  .apple-process-grid {
+    grid-auto-columns: minmax(13rem, min(42vw, 17.5rem));
+    padding-inline: max(var(--shell-gutter), calc((100% - min(42vw, 17.5rem)) / 2));
+    scroll-padding-inline: max(var(--shell-gutter), calc((100% - min(42vw, 17.5rem)) / 2));
+  }
+}
+
+@media (max-width: 767px) {
+  .apple-record-tags,
+  .apple-trust-grid {
+    flex-direction: column;
+    justify-content: center;
+    margin-inline: auto;
+    text-align: center;
+  }
+
+  .apple-record-tags span,
+  .apple-trust-grid span {
+    width: fit-content;
+  }
+
+  .apple-process-shell {
+    width: 100%;
+  }
+
+  .apple-process-grid {
+    grid-auto-columns: minmax(13rem, min(78vw, 21rem));
+    padding-inline: max(var(--shell-gutter), calc((100% - min(78vw, 21rem)) / 2));
+    scroll-padding-inline: max(var(--shell-gutter), calc((100% - min(78vw, 21rem)) / 2));
+    mask-image: linear-gradient(90deg, transparent 0, #000 1rem, #000 calc(100% - 1rem), transparent 100%);
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 1rem, #000 calc(100% - 1rem), transparent 100%);
+  }
+}
+
+/* Admin visual refresh, scoped away from public behavior and data flows. */
+.admin-visual-scope {
+  color: var(--text);
+}
+
+.admin-visual-scope .scene-shell {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-2xl);
+  background:
+    radial-gradient(circle at 18% 0%, color-mix(in srgb, var(--glass-highlight) 42%, transparent), transparent 34%),
+    linear-gradient(180deg, color-mix(in srgb, var(--surface-strong) 84%, transparent), color-mix(in srgb, var(--surface) 72%, transparent));
+  box-shadow: var(--shadow-soft), var(--glass-inner-highlight);
+  backdrop-filter: blur(18px) saturate(var(--glass-saturation));
+  -webkit-backdrop-filter: blur(18px) saturate(var(--glass-saturation));
+}
+
+.admin-visual-scope .panel,
+.admin-visual-scope .panel-strong,
+.admin-visual-scope .archive-chip,
+.admin-visual-scope .media-caption,
+.admin-visual-scope .film-frame {
+  border-color: var(--border);
+  background:
+    radial-gradient(circle at 18% 0%, color-mix(in srgb, var(--glass-highlight) 34%, transparent), transparent 38%),
+    linear-gradient(180deg, color-mix(in srgb, var(--surface-strong) 80%, transparent), color-mix(in srgb, var(--surface) 68%, transparent));
+  box-shadow: var(--control-shadow), var(--glass-inner-highlight);
+  color: var(--text);
+}
+
+.admin-visual-scope .panel,
+.admin-visual-scope .panel-strong {
+  border-radius: var(--radius-lg);
+}
+
+.admin-visual-scope .archive-chip {
+  border-radius: var(--radius-pill);
+}
+
+.admin-visual-scope :is(.button-primary, .button-secondary, .admin-tab, .field-input, .field-select, .field-textarea) {
+  border: 1px solid var(--control-border);
+  box-shadow: none;
+  transition-property: transform, opacity, background-color, border-color, color;
+  transition-duration: 180ms;
+  transition-timing-function: var(--ease-luxury);
+}
+
+.admin-visual-scope :is(.field-input, .field-select, .field-textarea) {
+  color-scheme: inherit;
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--surface-strong) 78%, transparent);
+  color: var(--text);
+}
+
+.admin-visual-scope :is(.field-input, .field-select, .field-textarea):focus {
+  outline: none;
+  border-color: var(--control-border-active);
+  box-shadow: 0 0 0 4px var(--focus-ring);
+}
+
+.admin-visual-scope .field-label {
+  color: color-mix(in srgb, var(--text-soft) 84%, var(--text));
+}
+
+.admin-tab {
+  min-height: 2.5rem;
+  padding: 0.64rem 1rem;
+  border-radius: var(--radius-pill);
+  background: var(--control-bg);
+  color: var(--control-muted);
+  font-size: 0.84rem;
+  font-weight: 650;
+  line-height: 1;
+}
+
+.admin-tab-active {
+  border-color: var(--control-border-active);
+  background: var(--control-bg-active);
+  color: var(--control-text);
+}
+
+.admin-visual-scope .button-primary {
+  border-color: var(--button-primary-border);
+  background: var(--button-primary-bg);
+  color: var(--button-primary-text);
+}
+
+.admin-visual-scope .button-secondary {
+  border-color: var(--control-border);
+  background: var(--control-bg);
+  color: var(--control-text);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .admin-visual-scope :is(.button-primary, .button-secondary, .admin-tab):not(:disabled):hover {
+    border-color: var(--control-border-active);
+    transform: translateY(-1px);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   body,
   .public-visual-scope::before,
@@ -8104,4 +8393,3 @@ html[data-theme="dark"] .public-visual-scope::before {
     transition: none;
   }
 }
-
