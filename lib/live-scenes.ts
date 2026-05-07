@@ -20,6 +20,7 @@ async function resolveSceneSteps(
       return {
         ...step,
         image: media.src,
+        fallbackImage: media.fallbackSrc,
         objectPosition: media.objectPosition,
       };
     }),
@@ -37,6 +38,7 @@ async function resolveInquirySupportStates(
       return {
         ...state,
         image: media.src,
+        fallbackImage: media.fallbackSrc,
         objectPosition: media.objectPosition,
       };
     }),

@@ -715,7 +715,15 @@ export function AdminDashboard({
                             src={slot.src}
                             alt={slot.alt}
                             className="h-full w-full object-cover"
-                            onError={() => {
+                            onError={(event) => {
+                              const image = event.currentTarget;
+
+                              if (image.src !== new URL(slot.fallbackSrc, window.location.origin).href) {
+                                image.src = slot.fallbackSrc;
+                              } else {
+                                image.style.visibility = "hidden";
+                              }
+
                               if (!slot.isCustom) {
                                 return;
                               }

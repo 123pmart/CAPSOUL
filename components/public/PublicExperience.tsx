@@ -12,7 +12,6 @@ import {
   type MouseEvent,
   type ReactNode,
 } from "react";
-import Image from "next/image";
 import { usePathname } from "next/navigation";
 import {
   AnimatePresence,
@@ -239,6 +238,12 @@ const detailItemReveal = {
 } as const;
 
 type PublicSectionKey = "hero" | "archive" | "experience" | "process" | "preserve" | "inquire";
+const defaultMediaFallbackSrc = "/visuals/hero-frame.svg";
+
+function normalizeMediaImageSource(value?: string | null) {
+  const trimmed = value?.trim();
+  return trimmed || defaultMediaFallbackSrc;
+}
 
 function isPublicSectionKey(value: string | undefined): value is PublicSectionKey {
   return value === "hero"
@@ -490,18 +495,40 @@ function ArchiveSection({
 
 function ArchiveVisualFrame({
   image,
+  fallbackImage,
   label,
   caption,
   indexLabel,
+  objectPosition = "center center",
   priority = false,
 }: {
   image: string;
+  fallbackImage?: string;
   label: string;
   caption: string;
   indexLabel?: string;
+  objectPosition?: string;
   priority?: boolean;
 }) {
-  const isSvg = image.split("?")[0]?.endsWith(".svg") ?? false;
+  const initialImage = normalizeMediaImageSource(image);
+  const fallbackSrc = normalizeMediaImageSource(fallbackImage);
+  const [renderedImage, setRenderedImage] = useState(initialImage);
+  const [imageFailed, setImageFailed] = useState(false);
+
+  useEffect(() => {
+    setRenderedImage(initialImage);
+    setImageFailed(false);
+  }, [initialImage]);
+
+  function handleImageError() {
+    if (renderedImage !== fallbackSrc) {
+      setRenderedImage(fallbackSrc);
+      setImageFailed(false);
+      return;
+    }
+
+    setImageFailed(true);
+  }
 
   return (
     <div className="apple-visual-frame apple-liquid-surface">
@@ -511,19 +538,18 @@ function ArchiveVisualFrame({
         {indexLabel ? <span>{indexLabel}</span> : null}
       </div>
       <div className="apple-visual-image-wrap">
-        <Image
-          src={image}
-          alt={`${label} visual`}
-          className="apple-visual-image"
-          fill
-          priority={priority}
-          sizes={
-            priority
-              ? "(max-width: 767px) 92vw, (max-width: 1180px) 86vw, 62vw"
-              : "(max-width: 767px) 88vw, (max-width: 1180px) 82vw, 50vw"
-          }
-          unoptimized={isSvg}
-        />
+        {imageFailed ? null : (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={renderedImage}
+            alt={`${label} visual`}
+            decoding={priority ? "sync" : "async"}
+            fetchPriority={priority ? "high" : "auto"}
+            loading={priority ? "eager" : "lazy"}
+            onError={handleImageError}
+            style={{ objectPosition }}
+          />
+        )}
       </div>
       <p>{caption}</p>
     </div>
@@ -584,9 +610,11 @@ function ArchiveHero({
           <div className="apple-hero-record">
             <ArchiveVisualFrame
               image={heroStep.image}
+              fallbackImage={heroStep.fallbackImage}
               label={heroStep.mediaLabel}
               caption={heroStep.mediaCaption}
               indexLabel={`${stepLabelPrefix} 1`}
+              objectPosition={heroStep.objectPosition}
               priority
             />
           </div>
@@ -888,9 +916,11 @@ function ArchiveSceneModule({
             >
               <ArchiveVisualFrame
                 image={active.image}
+                fallbackImage={active.fallbackImage}
                 label={active.mediaLabel}
                 caption={active.mediaCaption}
                 indexLabel={active.label}
+                objectPosition={active.objectPosition}
               />
               <motion.div
                 className="apple-record-detail"
@@ -1316,9 +1346,11 @@ function InquiryArchiveForm({
             >
               <ArchiveVisualFrame
                 image={activeSupport.image}
+                fallbackImage={activeSupport.fallbackImage}
                 label={activeSupport.label}
                 caption={activeSupport.body}
                 indexLabel={inquiry.progressionLabel}
+                objectPosition={activeSupport.objectPosition}
               />
             </motion.div>
           ) : null}

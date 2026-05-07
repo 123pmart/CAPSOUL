@@ -122,6 +122,7 @@ export type EditableInquiryContent = {
 
 export type ResolvedSceneStep = EditableSceneStep & {
   image: string;
+  fallbackImage: string;
   objectPosition: string;
 };
 
@@ -131,6 +132,7 @@ export type ResolvedSceneContent = Omit<EditableSceneContent, "steps"> & {
 
 export type ResolvedInquirySupportState = EditableInquirySupportState & {
   image: string;
+  fallbackImage: string;
   objectPosition: string;
 };
 

@@ -119,12 +119,63 @@ function toPrivateMediaRoute(slotId: string, version?: string | null) {
   return version ? `${route}?v=${encodeURIComponent(version)}` : route;
 }
 
+function isAbsoluteBlobUrl(src?: string | null) {
+  if (!src) {
+    return false;
+  }
+
+  try {
+    const url = new URL(src);
+    return (
+      (url.protocol === "https:" || url.protocol === "http:") &&
+      url.hostname.endsWith(".blob.vercel-storage.com")
+    );
+  } catch {
+    return false;
+  }
+}
+
+function withMediaVersion(src: string, version?: string | null) {
+  if (!version) {
+    return src;
+  }
+
+  try {
+    const url = new URL(src);
+    url.searchParams.set("v", version);
+    return url.toString();
+  } catch {
+    return src;
+  }
+}
+
 function getPersistentMediaSource(row?: PersistentMediaRow | null) {
   return row?.blob_pathname || row?.blob_url || null;
 }
 
 function getPersistentMediaVersion(row?: PersistentMediaRow | null) {
   return row ? toIsoString(row.updated_at) : null;
+}
+
+function getPersistentMediaRenderSource(
+  slotId: string,
+  row?: PersistentMediaRow | null,
+) {
+  if (!row) {
+    return null;
+  }
+
+  const version = getPersistentMediaVersion(row);
+
+  if (row.blob_pathname) {
+    return toPrivateMediaRoute(slotId, version);
+  }
+
+  if (isAbsoluteBlobUrl(row.blob_url)) {
+    return withMediaVersion(row.blob_url, version);
+  }
+
+  return row.blob_url || null;
 }
 
 async function readLegacyAssignments() {
@@ -143,19 +194,6 @@ async function resolveLegacyCustomSource(src?: string | null) {
   }
 
   return (await fileExists(filePath)) ? src : null;
-}
-
-async function resolveLegacyMediaSlotSource(slotId: string) {
-  const slot = getMediaSlotDefinition(slotId);
-
-  if (!slot) {
-    return "/visuals/hero-frame.svg";
-  }
-
-  const assignments = await readLegacyAssignments();
-  const customSource = await resolveLegacyCustomSource(assignments[slotId]?.src);
-
-  return customSource ?? slot.fallbackSrc;
 }
 
 async function listLegacyResolvedMediaSlots(): Promise<ResolvedMediaSlot[]> {
@@ -329,14 +367,13 @@ function toRowMap(rows: PersistentMediaRow[]) {
 }
 
 function toResolvedMediaSlot(slot: MediaSlotDefinition, row?: PersistentMediaRow): ResolvedMediaSlot {
-  const hasPersistentBlob = Boolean(getPersistentMediaSource(row));
-  const version = getPersistentMediaVersion(row);
+  const persistentSource = getPersistentMediaRenderSource(slot.id, row);
 
   return {
     ...slot,
-    src: hasPersistentBlob ? toPrivateMediaRoute(slot.id, version) : slot.fallbackSrc,
+    src: persistentSource ?? slot.fallbackSrc,
     objectPosition: normalizeMediaObjectPosition(row?.object_position),
-    isCustom: hasPersistentBlob,
+    isCustom: Boolean(persistentSource),
     updatedAt: row ? toIsoString(row.updated_at) : null,
     updatedBy: row?.updated_by ?? null,
   };
@@ -406,7 +443,9 @@ export async function resolveMediaSlotPresentation(slotId: string) {
   if (!slot) {
     return {
       src: "/visuals/hero-frame.svg",
+      fallbackSrc: "/visuals/hero-frame.svg",
       objectPosition: DEFAULT_MEDIA_OBJECT_POSITION,
+      isCustom: false,
     };
   }
 
@@ -430,31 +469,41 @@ export async function resolveMediaSlotPresentation(slotId: string) {
         LIMIT 1
       `;
 
+      const persistentSource = getPersistentMediaRenderSource(slot.id, rows[0]);
+
       return {
-        src: getPersistentMediaSource(rows[0])
-          ? toPrivateMediaRoute(slot.id, getPersistentMediaVersion(rows[0]))
-          : slot.fallbackSrc,
+        src: persistentSource ?? slot.fallbackSrc,
+        fallbackSrc: slot.fallbackSrc,
         objectPosition: normalizeMediaObjectPosition(rows[0]?.object_position),
+        isCustom: Boolean(persistentSource),
       };
     } catch {
       return {
         src: slot.fallbackSrc,
+        fallbackSrc: slot.fallbackSrc,
         objectPosition: DEFAULT_MEDIA_OBJECT_POSITION,
+        isCustom: false,
       };
     }
   }
 
   if (canUseLegacyMutableFallback()) {
     const assignments = await readLegacyAssignments();
+    const customSource = await resolveLegacyCustomSource(assignments[slotId]?.src);
+
     return {
-      src: await resolveLegacyMediaSlotSource(slotId),
+      src: customSource ?? slot.fallbackSrc,
+      fallbackSrc: slot.fallbackSrc,
       objectPosition: normalizeMediaObjectPosition(assignments[slotId]?.objectPosition),
+      isCustom: Boolean(customSource),
     };
   }
 
   return {
     src: slot.fallbackSrc,
+    fallbackSrc: slot.fallbackSrc,
     objectPosition: DEFAULT_MEDIA_OBJECT_POSITION,
+    isCustom: false,
   };
 }
 
