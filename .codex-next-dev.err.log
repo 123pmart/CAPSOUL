@@ -12,3 +12,543 @@
 ⚠ Fast Refresh had to perform a full reload due to a runtime error.
 [browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
     at Set.forEach (<anonymous>) (<anonymous>)
+⨯ ./components/public-visual-scope.tsx:6:1
+Module not found: Can't resolve '@/components/Atmosphere'
+  [90m4 |[0m [36mimport[0m { usePathname } [36mfrom[0m [32m"next/navigation"[0m;
+  [90m5 |[0m
+[31m[1m>[0m [90m6 |[0m [36mimport[0m { [33mAtmosphere[0m } [36mfrom[0m [32m"@/components/Atmosphere"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m7 |[0m
+  [90m8 |[0m [36mexport[0m [36mfunction[0m [33mPublicVisualScope[0m({ children }: { children: [33mReactNode[0m }) {
+  [90m9 |[0m   [36mconst[0m pathname = usePathname();
+
+Import map: aliased to relative './components/Atmosphere' inside of [project]/
+
+
+Import trace:
+  Server Component:
+    ./components/public-visual-scope.tsx
+    ./app/layout.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./components/public-visual-scope.tsx:6:1
+Module not found: Can't resolve '@/components/Atmosphere'
+  [90m4 |[0m [36mimport[0m { usePathname } [36mfrom[0m [32m"next/navigation"[0m;
+  [90m5 |[0m
+[31m[1m>[0m [90m6 |[0m [36mimport[0m { [33mAtmosphere[0m } [36mfrom[0m [32m"@/components/Atmosphere"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m7 |[0m
+  [90m8 |[0m [36mexport[0m [36mfunction[0m [33mPublicVisualScope[0m({ children }: { children: [33mReactNode[0m }) {
+  [90m9 |[0m   [36mconst[0m pathname = usePathname();
+
+Import map: aliased to relative './components/Atmosphere' inside of [project]/
+
+
+Import trace:
+  Server Component:
+    ./components/public-visual-scope.tsx
+    ./app/layout.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./components/public-visual-scope.tsx:6:1
+Module not found: Can't resolve '@/components/Atmosphere'
+  [90m4 |[0m [36mimport[0m { usePathname } [36mfrom[0m [32m"next/navigation"[0m;
+  [90m5 |[0m
+[31m[1m>[0m [90m6 |[0m [36mimport[0m { [33mAtmosphere[0m } [36mfrom[0m [32m"@/components/Atmosphere"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m7 |[0m
+  [90m8 |[0m [36mexport[0m [36mfunction[0m [33mPublicVisualScope[0m({ children }: { children: [33mReactNode[0m }) {
+  [90m9 |[0m   [36mconst[0m pathname = usePathname();
+
+Import map: aliased to relative './components/Atmosphere' inside of [project]/
+
+
+Import trace:
+  Server Component:
+    ./components/public-visual-scope.tsx
+    ./app/layout.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./components/public-visual-scope.tsx:6:1
+Module not found: Can't resolve '@/components/Atmosphere'
+  [90m4 |[0m [36mimport[0m { usePathname } [36mfrom[0m [32m"next/navigation"[0m;
+  [90m5 |[0m
+[31m[1m>[0m [90m6 |[0m [36mimport[0m { [33mAtmosphere[0m } [36mfrom[0m [32m"@/components/Atmosphere"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m7 |[0m
+  [90m8 |[0m [36mexport[0m [36mfunction[0m [33mPublicVisualScope[0m({ children }: { children: [33mReactNode[0m }) {
+  [90m9 |[0m   [36mconst[0m pathname = usePathname();
+
+Import map: aliased to relative './components/Atmosphere' inside of [project]/
+
+
+Import trace:
+  Server Component:
+    ./components/public-visual-scope.tsx
+    ./app/layout.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./components/public-visual-scope.tsx:6:1
+Module not found: Can't resolve '@/components/Atmosphere'
+  [90m4 |[0m [36mimport[0m { usePathname } [36mfrom[0m [32m"next/navigation"[0m;
+  [90m5 |[0m
+[31m[1m>[0m [90m6 |[0m [36mimport[0m { [33mAtmosphere[0m } [36mfrom[0m [32m"@/components/Atmosphere"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m7 |[0m
+  [90m8 |[0m [36mexport[0m [36mfunction[0m [33mPublicVisualScope[0m({ children }: { children: [33mReactNode[0m }) {
+  [90m9 |[0m   [36mconst[0m pathname = usePathname();
+
+Import map: aliased to relative './components/Atmosphere' inside of [project]/
+
+
+Import trace:
+  Server Component:
+    ./components/public-visual-scope.tsx
+    ./app/layout.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./components/public-visual-scope.tsx:6:1
+Module not found: Can't resolve '@/components/Atmosphere'
+  [90m4 |[0m [36mimport[0m { usePathname } [36mfrom[0m [32m"next/navigation"[0m;
+  [90m5 |[0m
+[31m[1m>[0m [90m6 |[0m [36mimport[0m { [33mAtmosphere[0m } [36mfrom[0m [32m"@/components/Atmosphere"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m7 |[0m
+  [90m8 |[0m [36mexport[0m [36mfunction[0m [33mPublicVisualScope[0m({ children }: { children: [33mReactNode[0m }) {
+  [90m9 |[0m   [36mconst[0m pathname = usePathname();
+
+Import map: aliased to relative './components/Atmosphere' inside of [project]/
+
+
+Import trace:
+  Server Component:
+    ./components/public-visual-scope.tsx
+    ./app/layout.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./components/public-visual-scope.tsx:6:1
+Module not found: Can't resolve '@/components/Atmosphere'
+  [90m4 |[0m [36mimport[0m { usePathname } [36mfrom[0m [32m"next/navigation"[0m;
+  [90m5 |[0m
+[31m[1m>[0m [90m6 |[0m [36mimport[0m { [33mAtmosphere[0m } [36mfrom[0m [32m"@/components/Atmosphere"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m7 |[0m
+  [90m8 |[0m [36mexport[0m [36mfunction[0m [33mPublicVisualScope[0m({ children }: { children: [33mReactNode[0m }) {
+  [90m9 |[0m   [36mconst[0m pathname = usePathname();
+
+Import map: aliased to relative './components/Atmosphere' inside of [project]/
+
+
+Import trace:
+  Server Component:
+    ./components/public-visual-scope.tsx
+    ./app/layout.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./components/public-visual-scope.tsx:6:1
+Module not found: Can't resolve '@/components/Atmosphere'
+  [90m4 |[0m [36mimport[0m { usePathname } [36mfrom[0m [32m"next/navigation"[0m;
+  [90m5 |[0m
+[31m[1m>[0m [90m6 |[0m [36mimport[0m { [33mAtmosphere[0m } [36mfrom[0m [32m"@/components/Atmosphere"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m7 |[0m
+  [90m8 |[0m [36mexport[0m [36mfunction[0m [33mPublicVisualScope[0m({ children }: { children: [33mReactNode[0m }) {
+  [90m9 |[0m   [36mconst[0m pathname = usePathname();
+
+Import map: aliased to relative './components/Atmosphere' inside of [project]/
+
+
+Import trace:
+  Server Component:
+    ./components/public-visual-scope.tsx
+    ./app/layout.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./components/public-visual-scope.tsx:6:1
+Module not found: Can't resolve '@/components/Atmosphere'
+  [90m4 |[0m [36mimport[0m { usePathname } [36mfrom[0m [32m"next/navigation"[0m;
+  [90m5 |[0m
+[31m[1m>[0m [90m6 |[0m [36mimport[0m { [33mAtmosphere[0m } [36mfrom[0m [32m"@/components/Atmosphere"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m7 |[0m
+  [90m8 |[0m [36mexport[0m [36mfunction[0m [33mPublicVisualScope[0m({ children }: { children: [33mReactNode[0m }) {
+  [90m9 |[0m   [36mconst[0m pathname = usePathname();
+
+Import map: aliased to relative './components/Atmosphere' inside of [project]/
+
+
+Import trace:
+  Server Component:
+    ./components/public-visual-scope.tsx
+    ./app/layout.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./components/public-visual-scope.tsx:6:1
+Module not found: Can't resolve '@/components/Atmosphere'
+  [90m4 |[0m [36mimport[0m { usePathname } [36mfrom[0m [32m"next/navigation"[0m;
+  [90m5 |[0m
+[31m[1m>[0m [90m6 |[0m [36mimport[0m { [33mAtmosphere[0m } [36mfrom[0m [32m"@/components/Atmosphere"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m7 |[0m
+  [90m8 |[0m [36mexport[0m [36mfunction[0m [33mPublicVisualScope[0m({ children }: { children: [33mReactNode[0m }) {
+  [90m9 |[0m   [36mconst[0m pathname = usePathname();
+
+Import map: aliased to relative './components/Atmosphere' inside of [project]/
+
+
+Import trace:
+  Server Component:
+    ./components/public-visual-scope.tsx
+    ./app/layout.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./components/public-visual-scope.tsx:6:1
+Module not found: Can't resolve '@/components/Atmosphere'
+  [90m4 |[0m [36mimport[0m { usePathname } [36mfrom[0m [32m"next/navigation"[0m;
+  [90m5 |[0m
+[31m[1m>[0m [90m6 |[0m [36mimport[0m { [33mAtmosphere[0m } [36mfrom[0m [32m"@/components/Atmosphere"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m7 |[0m
+  [90m8 |[0m [36mexport[0m [36mfunction[0m [33mPublicVisualScope[0m({ children }: { children: [33mReactNode[0m }) {
+  [90m9 |[0m   [36mconst[0m pathname = usePathname();
+
+Import map: aliased to relative './components/Atmosphere' inside of [project]/
+
+
+Import trace:
+  Server Component:
+    ./components/public-visual-scope.tsx
+    ./app/layout.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./components/public-visual-scope.tsx:6:1
+Module not found: Can't resolve '@/components/Atmosphere'
+  [90m4 |[0m [36mimport[0m { usePathname } [36mfrom[0m [32m"next/navigation"[0m;
+  [90m5 |[0m
+[31m[1m>[0m [90m6 |[0m [36mimport[0m { [33mAtmosphere[0m } [36mfrom[0m [32m"@/components/Atmosphere"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m7 |[0m
+  [90m8 |[0m [36mexport[0m [36mfunction[0m [33mPublicVisualScope[0m({ children }: { children: [33mReactNode[0m }) {
+  [90m9 |[0m   [36mconst[0m pathname = usePathname();
+
+Import map: aliased to relative './components/Atmosphere' inside of [project]/
+
+
+Import trace:
+  Server Component:
+    ./components/public-visual-scope.tsx
+    ./app/layout.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./components/public-visual-scope.tsx:6:1
+Module not found: Can't resolve '@/components/Atmosphere'
+  [90m4 |[0m [36mimport[0m { usePathname } [36mfrom[0m [32m"next/navigation"[0m;
+  [90m5 |[0m
+[31m[1m>[0m [90m6 |[0m [36mimport[0m { [33mAtmosphere[0m } [36mfrom[0m [32m"@/components/Atmosphere"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m7 |[0m
+  [90m8 |[0m [36mexport[0m [36mfunction[0m [33mPublicVisualScope[0m({ children }: { children: [33mReactNode[0m }) {
+  [90m9 |[0m   [36mconst[0m pathname = usePathname();
+
+Import map: aliased to relative './components/Atmosphere' inside of [project]/
+
+
+Import trace:
+  Server Component:
+    ./components/public-visual-scope.tsx
+    ./app/layout.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./components/public-visual-scope.tsx:6:1
+Module not found: Can't resolve '@/components/Atmosphere'
+  [90m4 |[0m [36mimport[0m { usePathname } [36mfrom[0m [32m"next/navigation"[0m;
+  [90m5 |[0m
+[31m[1m>[0m [90m6 |[0m [36mimport[0m { [33mAtmosphere[0m } [36mfrom[0m [32m"@/components/Atmosphere"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m7 |[0m
+  [90m8 |[0m [36mexport[0m [36mfunction[0m [33mPublicVisualScope[0m({ children }: { children: [33mReactNode[0m }) {
+  [90m9 |[0m   [36mconst[0m pathname = usePathname();
+
+Import map: aliased to relative './components/Atmosphere' inside of [project]/
+
+
+Import trace:
+  Server Component:
+    ./components/public-visual-scope.tsx
+    ./app/layout.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./components/public-visual-scope.tsx:6:1
+Module not found: Can't resolve '@/components/Atmosphere'
+  [90m4 |[0m [36mimport[0m { usePathname } [36mfrom[0m [32m"next/navigation"[0m;
+  [90m5 |[0m
+[31m[1m>[0m [90m6 |[0m [36mimport[0m { [33mAtmosphere[0m } [36mfrom[0m [32m"@/components/Atmosphere"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m7 |[0m
+  [90m8 |[0m [36mexport[0m [36mfunction[0m [33mPublicVisualScope[0m({ children }: { children: [33mReactNode[0m }) {
+  [90m9 |[0m   [36mconst[0m pathname = usePathname();
+
+Import map: aliased to relative './components/Atmosphere' inside of [project]/
+
+
+Import trace:
+  Server Component:
+    ./components/public-visual-scope.tsx
+    ./app/layout.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./components/public-visual-scope.tsx:6:1
+Module not found: Can't resolve '@/components/Atmosphere'
+  [90m4 |[0m [36mimport[0m { usePathname } [36mfrom[0m [32m"next/navigation"[0m;
+  [90m5 |[0m
+[31m[1m>[0m [90m6 |[0m [36mimport[0m { [33mAtmosphere[0m } [36mfrom[0m [32m"@/components/Atmosphere"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m7 |[0m
+  [90m8 |[0m [36mexport[0m [36mfunction[0m [33mPublicVisualScope[0m({ children }: { children: [33mReactNode[0m }) {
+  [90m9 |[0m   [36mconst[0m pathname = usePathname();
+
+Import map: aliased to relative './components/Atmosphere' inside of [project]/
+
+
+Import trace:
+  Server Component:
+    ./components/public-visual-scope.tsx
+    ./app/layout.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./components/public-visual-scope.tsx:6:1
+Module not found: Can't resolve '@/components/Atmosphere'
+  [90m4 |[0m [36mimport[0m { usePathname } [36mfrom[0m [32m"next/navigation"[0m;
+  [90m5 |[0m
+[31m[1m>[0m [90m6 |[0m [36mimport[0m { [33mAtmosphere[0m } [36mfrom[0m [32m"@/components/Atmosphere"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m7 |[0m
+  [90m8 |[0m [36mexport[0m [36mfunction[0m [33mPublicVisualScope[0m({ children }: { children: [33mReactNode[0m }) {
+  [90m9 |[0m   [36mconst[0m pathname = usePathname();
+
+Import map: aliased to relative './components/Atmosphere' inside of [project]/
+
+
+Import trace:
+  Server Component:
+    ./components/public-visual-scope.tsx
+    ./app/layout.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./components/public-visual-scope.tsx:6:1
+Module not found: Can't resolve '@/components/Atmosphere'
+  [90m4 |[0m [36mimport[0m { usePathname } [36mfrom[0m [32m"next/navigation"[0m;
+  [90m5 |[0m
+[31m[1m>[0m [90m6 |[0m [36mimport[0m { [33mAtmosphere[0m } [36mfrom[0m [32m"@/components/Atmosphere"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m7 |[0m
+  [90m8 |[0m [36mexport[0m [36mfunction[0m [33mPublicVisualScope[0m({ children }: { children: [33mReactNode[0m }) {
+  [90m9 |[0m   [36mconst[0m pathname = usePathname();
+
+Import map: aliased to relative './components/Atmosphere' inside of [project]/
+
+
+Import trace:
+  Server Component:
+    ./components/public-visual-scope.tsx
+    ./app/layout.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./components/public-visual-scope.tsx:6:1
+Module not found: Can't resolve '@/components/Atmosphere'
+  [90m4 |[0m [36mimport[0m { usePathname } [36mfrom[0m [32m"next/navigation"[0m;
+  [90m5 |[0m
+[31m[1m>[0m [90m6 |[0m [36mimport[0m { [33mAtmosphere[0m } [36mfrom[0m [32m"@/components/Atmosphere"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m7 |[0m
+  [90m8 |[0m [36mexport[0m [36mfunction[0m [33mPublicVisualScope[0m({ children }: { children: [33mReactNode[0m }) {
+  [90m9 |[0m   [36mconst[0m pathname = usePathname();
+
+Import map: aliased to relative './components/Atmosphere' inside of [project]/
+
+
+Import trace:
+  Server Component:
+    ./components/public-visual-scope.tsx
+    ./app/layout.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./components/public-visual-scope.tsx:6:1
+Module not found: Can't resolve '@/components/Atmosphere'
+  [90m4 |[0m [36mimport[0m { usePathname } [36mfrom[0m [32m"next/navigation"[0m;
+  [90m5 |[0m
+[31m[1m>[0m [90m6 |[0m [36mimport[0m { [33mAtmosphere[0m } [36mfrom[0m [32m"@/components/Atmosphere"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m7 |[0m
+  [90m8 |[0m [36mexport[0m [36mfunction[0m [33mPublicVisualScope[0m({ children }: { children: [33mReactNode[0m }) {
+  [90m9 |[0m   [36mconst[0m pathname = usePathname();
+
+Import map: aliased to relative './components/Atmosphere' inside of [project]/
+
+
+Import trace:
+  Server Component:
+    ./components/public-visual-scope.tsx
+    ./app/layout.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./components/public-visual-scope.tsx:6:1
+Module not found: Can't resolve '@/components/Atmosphere'
+  [90m4 |[0m [36mimport[0m { usePathname } [36mfrom[0m [32m"next/navigation"[0m;
+  [90m5 |[0m
+[31m[1m>[0m [90m6 |[0m [36mimport[0m { [33mAtmosphere[0m } [36mfrom[0m [32m"@/components/Atmosphere"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m7 |[0m
+  [90m8 |[0m [36mexport[0m [36mfunction[0m [33mPublicVisualScope[0m({ children }: { children: [33mReactNode[0m }) {
+  [90m9 |[0m   [36mconst[0m pathname = usePathname();
+
+Import map: aliased to relative './components/Atmosphere' inside of [project]/
+
+
+Import trace:
+  Server Component:
+    ./components/public-visual-scope.tsx
+    ./app/layout.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./components/public-visual-scope.tsx:6:1
+Module not found: Can't resolve '@/components/Atmosphere'
+  [90m4 |[0m [36mimport[0m { usePathname } [36mfrom[0m [32m"next/navigation"[0m;
+  [90m5 |[0m
+[31m[1m>[0m [90m6 |[0m [36mimport[0m { [33mAtmosphere[0m } [36mfrom[0m [32m"@/components/Atmosphere"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m7 |[0m
+  [90m8 |[0m [36mexport[0m [36mfunction[0m [33mPublicVisualScope[0m({ children }: { children: [33mReactNode[0m }) {
+  [90m9 |[0m   [36mconst[0m pathname = usePathname();
+
+Import map: aliased to relative './components/Atmosphere' inside of [project]/
+
+
+Import trace:
+  Server Component:
+    ./components/public-visual-scope.tsx
+    ./app/layout.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./components/public-visual-scope.tsx:6:1
+Module not found: Can't resolve '@/components/Atmosphere'
+  [90m4 |[0m [36mimport[0m { usePathname } [36mfrom[0m [32m"next/navigation"[0m;
+  [90m5 |[0m
+[31m[1m>[0m [90m6 |[0m [36mimport[0m { [33mAtmosphere[0m } [36mfrom[0m [32m"@/components/Atmosphere"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m7 |[0m
+  [90m8 |[0m [36mexport[0m [36mfunction[0m [33mPublicVisualScope[0m({ children }: { children: [33mReactNode[0m }) {
+  [90m9 |[0m   [36mconst[0m pathname = usePathname();
+
+Import map: aliased to relative './components/Atmosphere' inside of [project]/
+
+
+Import trace:
+  Server Component:
+    ./components/public-visual-scope.tsx
+    ./app/layout.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./components/public-visual-scope.tsx:6:1
+Module not found: Can't resolve '@/components/Atmosphere'
+  [90m4 |[0m [36mimport[0m { usePathname } [36mfrom[0m [32m"next/navigation"[0m;
+  [90m5 |[0m
+[31m[1m>[0m [90m6 |[0m [36mimport[0m { [33mAtmosphere[0m } [36mfrom[0m [32m"@/components/Atmosphere"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m7 |[0m
+  [90m8 |[0m [36mexport[0m [36mfunction[0m [33mPublicVisualScope[0m({ children }: { children: [33mReactNode[0m }) {
+  [90m9 |[0m   [36mconst[0m pathname = usePathname();
+
+Import map: aliased to relative './components/Atmosphere' inside of [project]/
+
+
+Import trace:
+  Server Component:
+    ./components/public-visual-scope.tsx
+    ./app/layout.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+[browser] ./components/public-visual-scope.tsx:6:1
+Module not found: Can't resolve '@/components/Atmosphere'
+  4 | import { usePathname } from "next/navigation";
+  5 |
+> 6 | import { Atmosphere } from "@/components/Atmosphere";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  7 |
+  8 | export function PublicVisualScope({ children }: { children: ReactNode }) {
+  9 |   const pathname = usePathname();
+
+Import map: aliased to relative './components/Atmosphere' inside of [project]/
+
+Import trace:
+  Server Component:
+    ./components/public-visual-scope.tsx
+    ./app/layout.tsx
+
+https://nextjs.org/docs/messages/module-not-found 
+[browser] ./components/public-visual-scope.tsx:6:1
+Module not found: Can't resolve '@/components/Atmosphere'
+  4 | import { usePathname } from "next/navigation";
+  5 |
+> 6 | import { Atmosphere } from "@/components/Atmosphere";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  7 |
+  8 | export function PublicVisualScope({ children }: { children: ReactNode }) {
+  9 |   const pathname = usePathname();
+
+Import map: aliased to relative './components/Atmosphere' inside of [project]/
+
+Import trace:
+  Server Component:
+    ./components/public-visual-scope.tsx
+    ./app/layout.tsx
+
+https://nextjs.org/docs/messages/module-not-found 

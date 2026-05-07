@@ -115,13 +115,9 @@ const titleReveal = {
   visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.94, ease: revealEase } },
 } as const;
 
-const heroTitleCharacterReveal = {
-  hidden: { opacity: 0, y: "112%" },
-  visible: (index: number) => ({
-    opacity: 1,
-    y: "0%",
-    transition: { duration: 0.68, delay: index * 0.018, ease: revealEase },
-  }),
+const heroTitleReveal = {
+  hidden: { opacity: 1, y: 0, scale: 1 },
+  visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.01 } },
 } as const;
 
 const copyReveal = {
@@ -239,9 +235,9 @@ const detailItemReveal = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.34, ease: revealEase } },
 } as const;
 
-type ArchiveAtmosphereSection = "hero" | "archive" | "experience" | "process" | "preserve" | "inquire";
+type PublicSectionKey = "hero" | "archive" | "experience" | "process" | "preserve" | "inquire";
 
-function isArchiveAtmosphereSection(value: string | undefined): value is ArchiveAtmosphereSection {
+function isPublicSectionKey(value: string | undefined): value is PublicSectionKey {
   return value === "hero"
     || value === "archive"
     || value === "experience"
@@ -250,7 +246,7 @@ function isArchiveAtmosphereSection(value: string | undefined): value is Archive
     || value === "inquire";
 }
 
-function getAtmosphereSectionForId(id: ImmersiveSectionId): ArchiveAtmosphereSection {
+function getAtmosphereSectionForId(id: ImmersiveSectionId): PublicSectionKey {
   switch (id) {
     case "the-experience":
       return "experience";
@@ -267,7 +263,7 @@ function getAtmosphereSectionForId(id: ImmersiveSectionId): ArchiveAtmosphereSec
 }
 
 function usePublicAtmosphereSection() {
-  const [activeSection, setActiveSection] = useState<ArchiveAtmosphereSection>("hero");
+  const [activeSection, setActiveSection] = useState<PublicSectionKey>("hero");
 
   useEffect(() => {
     const elements = Array.from(
@@ -287,7 +283,7 @@ function usePublicAtmosphereSection() {
           ? visible.target.dataset.atmosphereSection
           : undefined;
 
-        if (isArchiveAtmosphereSection(nextSection)) {
+        if (isPublicSectionKey(nextSection)) {
           setActiveSection(nextSection);
         }
       },
@@ -494,11 +490,13 @@ function ArchiveVisualFrame({
   label,
   caption,
   indexLabel,
+  priority = false,
 }: {
   image: string;
   label: string;
   caption: string;
   indexLabel?: string;
+  priority?: boolean;
 }) {
   return (
     <div className="apple-visual-frame apple-liquid-surface">
@@ -509,7 +507,12 @@ function ArchiveVisualFrame({
       </div>
       <div className="apple-visual-image-wrap">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={image} alt={`${label} visual`} decoding="async" />
+        <img
+          src={image}
+          alt={`${label} visual`}
+          decoding={priority ? "sync" : "async"}
+          loading={priority ? "eager" : "lazy"}
+        />
       </div>
       <p>{caption}</p>
     </div>
@@ -517,35 +520,9 @@ function ArchiveVisualFrame({
 }
 
 function HeroHeadline({ title }: { title: string }) {
-  const reduceMotion = useReducedMotion();
-
-  if (reduceMotion) {
-    return (
-      <motion.h1 className="apple-hero-title motion-title" variants={titleReveal}>
-        {title}
-      </motion.h1>
-    );
-  }
-
   return (
-    <motion.h1
-      className="apple-hero-title apple-hero-title-mask motion-title"
-      variants={titleReveal}
-      aria-label={title}
-    >
-      <span className="apple-hero-title-characters" aria-hidden="true">
-        {Array.from(title).map((character, index) => (
-          <span className="apple-hero-title-character-window" key={`hero-title-character-${index}`}>
-            <motion.span
-              className="apple-hero-title-character"
-              custom={index}
-              variants={heroTitleCharacterReveal}
-            >
-              {character === " " ? "\u00A0" : character}
-            </motion.span>
-          </span>
-        ))}
-      </span>
+    <motion.h1 className="apple-hero-title motion-title" variants={heroTitleReveal}>
+      {title}
     </motion.h1>
   );
 }
@@ -597,6 +574,7 @@ function ArchiveHero({
               label={heroStep.mediaLabel}
               caption={heroStep.mediaCaption}
               indexLabel="Archive 01"
+              priority
             />
           </div>
           <motion.div className="apple-hero-chapters" aria-label="Opening archive chapters" variants={cardGridReveal}>
@@ -766,8 +744,8 @@ function ArchiveIndexLine({
   items,
   activeKey,
 }: {
-  items: Array<{ key: ArchiveAtmosphereSection; label: string }>;
-  activeKey: ArchiveAtmosphereSection;
+  items: Array<{ key: PublicSectionKey; label: string }>;
+  activeKey: PublicSectionKey;
 }) {
   const activeIndex = Math.max(0, items.findIndex((item) => item.key === activeKey));
   const activeLabel = items[activeIndex]?.label ?? items[0]?.label ?? "";
@@ -1315,7 +1293,7 @@ export function PublicExperience({
   );
   const activeId = usePublicActiveSection(sections);
   const activeAtmosphereSection = usePublicAtmosphereSection();
-  const railItems = useMemo<Array<{ key: ArchiveAtmosphereSection; label: string }>>(
+  const railItems = useMemo<Array<{ key: PublicSectionKey; label: string }>>(
     () => [
       { key: "hero", label: formatRailLabel(home.title) },
       { key: "archive", label: "Private Memory Archive" },

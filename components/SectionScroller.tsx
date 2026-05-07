@@ -90,8 +90,6 @@ export function SectionScroller({
     rootStyle.setProperty("--archive-shift", `${(centeredIndex * 5).toFixed(2)}px`);
     rootStyle.setProperty("--archive-shift-soft", `${(centeredIndex * 2.6).toFixed(2)}px`);
     rootStyle.setProperty("--archive-shift-lite", `${(centeredIndex * 1.8).toFixed(2)}px`);
-    rootStyle.setProperty("--archive-atmosphere-x", `${(centeredIndex * 16).toFixed(2)}px`);
-    rootStyle.setProperty("--archive-atmosphere-y", `${((archiveProgress - 0.5) * -48).toFixed(2)}px`);
   }, [childItems.length]);
 
   const setBoundedActiveIndex = useCallback((index: number) => {
@@ -166,8 +164,6 @@ export function SectionScroller({
       rootStyle.removeProperty("--archive-shift");
       rootStyle.removeProperty("--archive-shift-soft");
       rootStyle.removeProperty("--archive-shift-lite");
-      rootStyle.removeProperty("--archive-atmosphere-x");
-      rootStyle.removeProperty("--archive-atmosphere-y");
     };
   }, [syncActiveSection]);
 
