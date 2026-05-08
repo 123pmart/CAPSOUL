@@ -8313,6 +8313,107 @@ html[data-theme="dark"] .public-visual-scope::before {
   }
 }
 
+.apple-record-feature {
+  min-height: auto;
+  padding: clamp(0.72rem, 1.35vw, 1.05rem);
+}
+
+.experience-content-container {
+  min-height: 0;
+  justify-content: start;
+  overflow: visible;
+}
+
+.experience-content-container .apple-record-feature-content {
+  min-height: 0;
+  gap: clamp(0.55rem, 1vw, 0.86rem);
+}
+
+.apple-record-feature .apple-visual-frame {
+  width: 100%;
+  max-width: min(100%, clamp(18rem, 48vw, 34rem));
+  margin-inline: auto;
+  padding: clamp(0.58rem, 1vw, 0.82rem);
+}
+
+.apple-record-feature .apple-visual-image-wrap {
+  aspect-ratio: 16 / 10;
+  max-height: clamp(10rem, 30vw, 18rem);
+}
+
+.apple-record-detail {
+  padding: clamp(0.62rem, 1.1vw, 0.95rem) 0.18rem 0;
+}
+
+.apple-record-detail h3 {
+  margin-top: 0.34rem;
+  font-size: clamp(1.35rem, 2.4vw, 2.35rem);
+  line-height: 1;
+}
+
+.apple-record-detail h3 + p {
+  margin-top: clamp(0.45rem, 0.8vw, 0.72rem);
+}
+
+.apple-record-detail p {
+  font-size: clamp(0.82rem, 0.95vw, 0.95rem);
+  line-height: 1.45;
+}
+
+.apple-record-detail .apple-record-tags {
+  margin-top: 0.65rem;
+}
+
+.apple-record-list {
+  gap: 0.5rem;
+  padding: clamp(0.72rem, 1.25vw, 1rem);
+}
+
+.apple-record-card {
+  min-height: clamp(4.7rem, 6vw, 5.8rem);
+  padding: clamp(0.68rem, 0.95vw, 0.9rem);
+}
+
+@media (min-width: 1181px) {
+  .apple-scene-module {
+    width: min(100%, 1040px);
+    grid-template-columns: minmax(15rem, 0.72fr) minmax(0, 1fr);
+    gap: clamp(0.82rem, 1.8vw, 1.45rem);
+    align-items: start;
+  }
+}
+
+@media (max-width: 1180px) {
+  .apple-scene-module {
+    width: min(100%, 720px);
+    grid-template-columns: 1fr;
+    gap: clamp(0.78rem, 2vw, 1.25rem);
+  }
+}
+
+@media (max-width: 767px) {
+  .apple-scene-module {
+    width: 100%;
+    margin-top: 1rem;
+  }
+
+  .apple-record-feature {
+    padding: 0.68rem;
+  }
+
+  .apple-record-feature .apple-visual-frame {
+    max-width: min(100%, 28rem);
+  }
+
+  .apple-record-feature .apple-visual-image-wrap {
+    max-height: clamp(9rem, 54vw, 15rem);
+  }
+
+  .apple-record-detail h3 {
+    font-size: clamp(1.2rem, 5.6vw, 1.85rem);
+  }
+}
+
 .public-visual-scope :is(h1, h2, h3, h4, h5, h6, p, li, blockquote) {
   hyphens: none;
   word-break: normal;
@@ -8320,8 +8421,11 @@ html[data-theme="dark"] .public-visual-scope::before {
 }
 
 .public-visual-scope :is(.apple-preserve-card h3, .apple-preserve-feature h3) {
+  font-family: var(--font-sans);
+  font-weight: 820;
+  line-height: 0.94;
   text-transform: uppercase;
-  letter-spacing: 0;
+  letter-spacing: -0.032em;
 }
 
 .public-visual-scope :is(.apple-preserve-card p, .apple-preserve-feature p) {

@@ -3,6 +3,7 @@
 import {
   useCallback,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -36,6 +37,8 @@ import type {
   ResolvedInquiryContent,
   ResolvedSceneContent,
 } from "@/lib/site-content-schema";
+
+const useIsomorphicLayoutEffect = typeof window === "undefined" ? useEffect : useLayoutEffect;
 
 type PublicExperienceProps = {
   globalContent: GlobalSiteContent;
@@ -994,6 +997,7 @@ function ProcessTimeline({
 }) {
   const reduceMotion = useReducedMotion();
   const scrollerRef = useRef<HTMLDivElement>(null);
+  const isResettingScrollRef = useRef(true);
   const [activeIndex, setActiveIndex] = useState(0);
 
   const syncActiveIndex = useCallback(() => {
@@ -1006,12 +1010,12 @@ function ProcessTimeline({
     const cards = Array.from(scroller.querySelectorAll<HTMLElement>(".apple-process-card"));
     const scrollerStyle = window.getComputedStyle(scroller);
     const paddingStart = Number.parseFloat(scrollerStyle.paddingInlineStart || scrollerStyle.paddingLeft || "0");
-    const snapStart = scroller.scrollLeft + paddingStart;
+    const scrollerLeft = scroller.getBoundingClientRect().left + paddingStart;
     let nextIndex = 0;
     let closestDistance = Number.POSITIVE_INFINITY;
 
     cards.forEach((card, index) => {
-      const distance = Math.abs(card.offsetLeft - snapStart);
+      const distance = Math.abs(card.getBoundingClientRect().left - scrollerLeft);
 
       if (distance < closestDistance) {
         closestDistance = distance;
@@ -1022,18 +1026,35 @@ function ProcessTimeline({
     setActiveIndex(nextIndex);
   }, []);
 
-  useEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     const scroller = scrollerRef.current;
+    let resetFrame = 0;
+    let releaseFrame = 0;
+
+    isResettingScrollRef.current = true;
 
     if (scroller) {
-      scroller.scrollTo({ left: 0 });
+      scroller.scrollLeft = 0;
     }
 
     setActiveIndex(0);
-    const frame = window.requestAnimationFrame(syncActiveIndex);
 
-    return () => window.cancelAnimationFrame(frame);
-  }, [process.steps.length, syncActiveIndex]);
+    resetFrame = window.requestAnimationFrame(() => {
+      if (scroller) {
+        scroller.scrollLeft = 0;
+      }
+
+      setActiveIndex(0);
+      releaseFrame = window.requestAnimationFrame(() => {
+        isResettingScrollRef.current = false;
+      });
+    });
+
+    return () => {
+      window.cancelAnimationFrame(resetFrame);
+      window.cancelAnimationFrame(releaseFrame);
+    };
+  }, [process.steps.length]);
 
   return (
     <div className="apple-process-shell">
@@ -1041,7 +1062,20 @@ function ProcessTimeline({
         ref={scrollerRef}
         className="apple-process-grid motion-stagger"
         variants={cardGridReveal}
-        onScroll={syncActiveIndex}
+        onScroll={() => {
+          if (isResettingScrollRef.current) {
+            const scroller = scrollerRef.current;
+
+            if (scroller) {
+              scroller.scrollLeft = 0;
+            }
+
+            setActiveIndex(0);
+            return;
+          }
+
+          syncActiveIndex();
+        }}
       >
         {process.steps.map((step, index) => (
           <ProcessStepCard
