@@ -934,9 +934,9 @@ function ArchiveSceneModule({
                 <motion.span variants={detailItemReveal}>{sectionLabel}</motion.span>
                 <motion.h3 variants={detailItemReveal}>{active.title}</motion.h3>
                 <motion.p variants={detailItemReveal}>{active.detail}</motion.p>
-                <motion.div className="apple-record-tags" variants={detailStaggerReveal}>
+                <motion.div className="apple-record-tags chip-row" variants={detailStaggerReveal}>
                   {active.bullets.map((bullet, index) => (
-                    <motion.span key={`experience-tag-${activeIndex}-${index}`} variants={detailItemReveal}>{bullet}</motion.span>
+                    <motion.span className="ui-chip" key={`experience-tag-${activeIndex}-${index}`} variants={detailItemReveal}>{bullet}</motion.span>
                   ))}
                 </motion.div>
               </motion.div>
@@ -1009,20 +1009,18 @@ function ProcessTimeline({
     }
 
     const cards = Array.from(scroller.querySelectorAll<HTMLElement>(".apple-process-card"));
+
+    if (cards.length === 0) {
+      setActiveIndex(0);
+      return;
+    }
+
     const scrollerStyle = window.getComputedStyle(scroller);
-    const paddingStart = Number.parseFloat(scrollerStyle.paddingInlineStart || scrollerStyle.paddingLeft || "0");
-    const scrollerLeft = scroller.getBoundingClientRect().left + paddingStart;
-    let nextIndex = 0;
-    let closestDistance = Number.POSITIVE_INFINITY;
-
-    cards.forEach((card, index) => {
-      const distance = Math.abs(card.getBoundingClientRect().left - scrollerLeft);
-
-      if (distance < closestDistance) {
-        closestDistance = distance;
-        nextIndex = index;
-      }
-    });
+    const gap = Number.parseFloat(scrollerStyle.columnGap || scrollerStyle.gap || "0");
+    const cardWidth = cards[0]?.getBoundingClientRect().width ?? 0;
+    const stepWidth = Math.max(1, cardWidth + gap);
+    const maxIndex = cards.length - 1;
+    const nextIndex = Math.min(maxIndex, Math.max(0, Math.round(scroller.scrollLeft / stepWidth)));
 
     setActiveIndex(nextIndex);
   }, []);
@@ -1117,9 +1115,9 @@ function PreserveEditorial({ preserve }: { preserve: ResolvedSceneContent }) {
           <span>{featured.mediaLabel}</span>
           <h3>{featured.title}</h3>
           <p>{featured.detail}</p>
-          <motion.div className="apple-record-tags" variants={detailStaggerReveal}>
+          <motion.div className="apple-record-tags chip-row" variants={detailStaggerReveal}>
             {featured.bullets.map((bullet, index) => (
-              <motion.span key={`preserve-feature-tag-${index}`} variants={detailItemReveal}>{bullet}</motion.span>
+              <motion.span className="ui-chip" key={`preserve-feature-tag-${index}`} variants={detailItemReveal}>{bullet}</motion.span>
             ))}
           </motion.div>
         </motion.article>
@@ -1401,9 +1399,9 @@ function InquiryArchiveForm({
             </motion.div>
           ) : null}
         </AnimatePresence>
-        <div className="apple-trust-grid">
+        <div className="apple-trust-grid chip-row">
           {inquiry.trustPoints.map((point, index) => (
-            <span key={`trust-point-${index}`}>{point}</span>
+            <span className="ui-chip" key={`trust-point-${index}`}>{point}</span>
           ))}
         </div>
       </motion.aside>

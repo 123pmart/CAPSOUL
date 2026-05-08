@@ -8389,15 +8389,6 @@ html[data-theme="dark"] .public-visual-scope::before {
   max-width: 100%;
   min-width: 0;
   margin-top: 0.65rem;
-  overflow: hidden;
-}
-
-.apple-record-detail .apple-record-tags span {
-  min-width: 0;
-  padding-inline: clamp(0.28rem, 0.7vw, 0.52rem);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .apple-record-list {
@@ -8484,17 +8475,40 @@ html[data-theme="dark"] .public-visual-scope::before {
 
 @media (max-width: 1023px) {
   .apple-process-grid {
+    --process-card-width: clamp(12.75rem, 84vw, 21rem);
+    width: 100%;
+    max-width: 100%;
+    grid-auto-columns: var(--process-card-width);
+    grid-auto-rows: 1fr;
+    align-items: stretch;
     justify-content: start;
-    padding-inline: 0 calc(var(--shell-gutter) + 16vw);
-    scroll-padding-inline: 0;
+    padding-inline: var(--shell-gutter) max(var(--shell-gutter), calc(100% - var(--shell-gutter) - var(--process-card-width)));
+    scroll-padding-inline: var(--shell-gutter);
   }
 
-  .apple-process-card:first-child {
-    margin-left: var(--shell-gutter);
+  .apple-process-card {
+    width: var(--process-card-width);
+    min-width: var(--process-card-width);
+    max-width: var(--process-card-width);
+    min-height: clamp(9.2rem, 30vw, 10.5rem);
+    height: 100%;
+    align-self: stretch;
+    scroll-snap-align: start;
   }
 
+  .apple-process-card:first-child,
   .apple-process-card:last-child {
-    margin-right: calc(var(--shell-gutter) + 16vw);
+    margin-inline: 0;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .apple-process-grid {
+    --process-card-width: clamp(13rem, 58vw, 19rem);
+  }
+
+  .apple-process-card {
+    min-height: clamp(9rem, 24vw, 10.75rem);
   }
 }
 
@@ -8521,6 +8535,72 @@ html[data-theme="dark"] .public-visual-scope::before {
 
 .public-visual-scope :is(.apple-preserve-card h3, .apple-preserve-feature h3) + p {
   margin-top: clamp(0.25rem, 0.55vw, 0.5rem);
+}
+
+.public-visual-scope :is(.chip-row, .apple-record-tags, .apple-trust-grid) {
+  display: flex;
+  max-width: 100%;
+  min-width: 0;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  justify-content: safe center;
+  flex-wrap: nowrap;
+  gap: clamp(0.4rem, 1vw, 0.75rem);
+  overflow-x: auto;
+  overflow-y: visible;
+  padding-block: 0.08rem;
+  padding-inline: 0.25rem;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.public-visual-scope :is(.chip-row, .apple-record-tags, .apple-trust-grid)::-webkit-scrollbar {
+  display: none;
+}
+
+.public-visual-scope :is(.ui-chip, .apple-record-tags > span, .apple-trust-grid > span) {
+  display: inline-flex;
+  width: auto;
+  max-width: none;
+  min-width: max-content;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  padding-block: clamp(0.42rem, 1.1vw, 0.62rem);
+  padding-inline: clamp(0.7rem, 2.2vw, 1.1rem);
+  overflow: visible;
+  text-overflow: clip;
+  white-space: nowrap;
+  font-size: clamp(0.62rem, 1.8vw, 0.78rem);
+  letter-spacing: clamp(0.04em, 0.7vw, 0.12em);
+  line-height: 1;
+}
+
+.public-visual-scope .apple-record-detail {
+  display: grid;
+  justify-items: center;
+  padding-inline: clamp(0.35rem, 1.4vw, 0.9rem);
+  text-align: center;
+}
+
+.public-visual-scope .apple-record-detail :is(h3, p) {
+  width: min(100%, 36rem);
+  text-align: center;
+}
+
+.public-visual-scope .apple-record-detail .chip-row {
+  width: 100%;
+  max-width: 100%;
+}
+
+@media (max-width: 430px) {
+  .public-visual-scope :is(.ui-chip, .apple-record-tags > span, .apple-trust-grid > span) {
+    padding-block: 0.38rem;
+    padding-inline: 0.58rem;
+    font-size: clamp(0.54rem, 2.55vw, 0.64rem);
+    letter-spacing: 0.035em;
+  }
 }
 
 /* Admin visual refresh, scoped away from public behavior and data flows. */
