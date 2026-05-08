@@ -601,6 +601,7 @@ function ArchiveVisualFrame({
   indexLabel,
   objectPosition = "center center",
   priority = false,
+  showToolbar = true,
 }: {
   image: string;
   fallbackImage?: string;
@@ -609,9 +610,11 @@ function ArchiveVisualFrame({
   indexLabel?: string;
   objectPosition?: string;
   priority?: boolean;
+  showToolbar?: boolean;
 }) {
   const initialImage = normalizeMediaImageSource(image);
   const fallbackSrc = normalizeMediaImageSource(fallbackImage);
+  const imageAltLabel = label || indexLabel || caption || "Archive";
   const [renderedImage, setRenderedImage] = useState(initialImage);
   const [imageFailed, setImageFailed] = useState(false);
 
@@ -633,16 +636,18 @@ function ArchiveVisualFrame({
   return (
     <div className="apple-visual-frame apple-liquid-surface">
       <span className="apple-liquid-layer" aria-hidden="true" />
-      <div className="apple-visual-toolbar">
-        <span>{label}</span>
-        {indexLabel ? <span>{indexLabel}</span> : null}
-      </div>
+      {showToolbar ? (
+        <div className="apple-visual-toolbar">
+          <span>{label}</span>
+          {indexLabel ? <span>{indexLabel}</span> : null}
+        </div>
+      ) : null}
       <div className="apple-visual-image-wrap">
         {imageFailed ? null : (
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={renderedImage}
-            alt={`${label} visual`}
+            alt={`${imageAltLabel} visual`}
             decoding={priority ? "sync" : "async"}
             fetchPriority={priority ? "high" : "auto"}
             loading={priority ? "eager" : "lazy"}
@@ -711,11 +716,11 @@ function ArchiveHero({
             <ArchiveVisualFrame
               image={heroStep.image}
               fallbackImage={heroStep.fallbackImage}
-              label={heroStep.title}
+              label={heroStep.mediaLabel}
               caption={heroStep.mediaCaption}
-              indexLabel={heroStep.mediaLabel}
               objectPosition={heroStep.objectPosition}
               priority
+              showToolbar={false}
             />
           </div>
           <motion.div className="apple-hero-chapters" aria-label="Opening archive chapters" variants={cardGridReveal}>
@@ -724,7 +729,7 @@ function ArchiveHero({
                 <span className="apple-liquid-layer" aria-hidden="true" />
                 <span>{stepLabelPrefix} {index + 1}</span>
                 <strong>{step.label}</strong>
-                <p>{step.title}</p>
+                <p>{step.summary}</p>
               </motion.div>
             ))}
           </motion.div>

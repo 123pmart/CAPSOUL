@@ -90,6 +90,96 @@ function mergeSceneContent(value: unknown, fallback: EditableSceneContent): Edit
   };
 }
 
+const legacyHomeArchiveStepLabels = new Set([
+  "reflection",
+  "presence",
+  "structure",
+  "heirloom",
+  "reflexion",
+  "reflexión",
+  "presencia",
+  "estructura",
+  "legado",
+  "reliquia",
+]);
+
+const canonicalHomeArchiveSteps = {
+  en: [
+    {
+      label: "STUDY",
+      title: "STUDY",
+      summary: "We send a simple prep guide so the family can reflect before filming.",
+      detail: "We send a simple prep guide so the family can reflect before filming.",
+    },
+    {
+      label: "PREPARE",
+      title: "PREPARE",
+      summary: "You take time with the questions, memories, and details that matter.",
+      detail: "You take time with the questions, memories, and details that matter.",
+    },
+    {
+      label: "FILM",
+      title: "FILM",
+      summary: "We capture the conversation calmly, with no pressure to perform.",
+      detail: "We capture the conversation calmly, with no pressure to perform.",
+    },
+    {
+      label: "DELIVER",
+      title: "DELIVER",
+      summary: "We finish the edit and send a private film the family can keep.",
+      detail: "We finish the edit and send a private film the family can keep.",
+    },
+  ],
+  es: [
+    {
+      label: "ESTUDIAR",
+      title: "ESTUDIAR",
+      summary: "Enviamos una guía sencilla para que la familia pueda reflexionar antes de filmar.",
+      detail: "Enviamos una guía sencilla para que la familia pueda reflexionar antes de filmar.",
+    },
+    {
+      label: "PREPARAR",
+      title: "PREPARAR",
+      summary: "Toman tiempo con las preguntas, recuerdos y detalles que importan.",
+      detail: "Toman tiempo con las preguntas, recuerdos y detalles que importan.",
+    },
+    {
+      label: "FILMAR",
+      title: "FILMAR",
+      summary: "Grabamos la conversación con calma, sin presión de actuar.",
+      detail: "Grabamos la conversación con calma, sin presión de actuar.",
+    },
+    {
+      label: "ENTREGAR",
+      title: "ENTREGAR",
+      summary: "Terminamos la edición y enviamos una película privada que la familia puede conservar.",
+      detail: "Terminamos la edición y enviamos una película privada que la familia puede conservar.",
+    },
+  ],
+} satisfies Record<SiteLocale, Array<Pick<EditableSceneStep, "label" | "title" | "summary" | "detail">>>;
+
+function normalizeLegacyHomeArchiveContent(
+  scene: EditableSceneContent,
+  fallback: EditableSceneContent,
+): EditableSceneContent {
+  const locale: SiteLocale = fallback.steps[0]?.label === "ESTUDIAR" ? "es" : "en";
+  const shouldReplaceLegacySteps = scene.steps.slice(0, 4).some((step) =>
+    legacyHomeArchiveStepLabels.has(step.label.trim().toLocaleLowerCase()),
+  );
+
+  if (!shouldReplaceLegacySteps) {
+    return scene;
+  }
+
+  const nextSteps = scene.steps.map((step, index) => {
+    const canonicalStep = canonicalHomeArchiveSteps[locale][index];
+
+    return canonicalStep ? { ...step, ...canonicalStep } : step;
+  });
+
+  return { ...scene, steps: nextSteps };
+}
+
 function mergeSupportState(
   value: unknown,
   fallback: EditableInquirySupportState,
@@ -271,9 +361,11 @@ export function normalizeSiteContent(
 ): SiteContent {
   const record = isRecord(value) ? value : {};
 
+  const home = mergeSceneContent(record.home, fallback.home);
+
   return {
     global: mergeGlobalContent(record.global, fallback.global),
-    home: mergeSceneContent(record.home, fallback.home),
+    home: normalizeLegacyHomeArchiveContent(home, fallback.home),
     experience: mergeSceneContent(record.experience, fallback.experience),
     process: mergeSceneContent(record.process, fallback.process),
     preserve: mergeSceneContent(record.preserve, fallback.preserve),

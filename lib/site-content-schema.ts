@@ -408,7 +408,7 @@ export const defaultSpanishSiteContent: SiteContent = {
     steps: [
       {
         label: "ESTUDIAR",
-        title: "Guía antes de filmar.",
+        title: "ESTUDIAR",
         summary: "Enviamos una guía sencilla para que la familia pueda reflexionar antes de filmar.",
         detail:
           "Enviamos una guía sencilla para que la familia pueda reflexionar antes de filmar.",
@@ -418,7 +418,7 @@ export const defaultSpanishSiteContent: SiteContent = {
       },
       {
         label: "PREPARAR",
-        title: "Tiempo con lo importante.",
+        title: "PREPARAR",
         summary: "Toman tiempo con las preguntas, recuerdos y detalles que importan.",
         detail:
           "Toman tiempo con las preguntas, recuerdos y detalles que importan.",
@@ -428,7 +428,7 @@ export const defaultSpanishSiteContent: SiteContent = {
       },
       {
         label: "FILMAR",
-        title: "Una conversación tranquila.",
+        title: "FILMAR",
         summary: "Grabamos la conversación con calma, sin presión de actuar.",
         detail:
           "Grabamos la conversación con calma, sin presión de actuar.",
@@ -438,7 +438,7 @@ export const defaultSpanishSiteContent: SiteContent = {
       },
       {
         label: "ENTREGAR",
-        title: "Una película privada para conservar.",
+        title: "ENTREGAR",
         summary: "Terminamos la edición y enviamos una película privada que la familia puede conservar.",
         detail:
           "Terminamos la edición y enviamos una película privada que la familia puede conservar.",

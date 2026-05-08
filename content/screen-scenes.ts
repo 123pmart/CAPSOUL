@@ -33,7 +33,7 @@ export const homeScene = {
   steps: [
     {
       label: "STUDY",
-      title: "Prep guide sent before filming.",
+      title: "STUDY",
       summary: "We send a simple prep guide so the family can reflect before filming.",
       detail:
         "We send a simple prep guide so the family can reflect before filming.",
@@ -44,7 +44,7 @@ export const homeScene = {
     },
     {
       label: "PREPARE",
-      title: "Time with what matters.",
+      title: "PREPARE",
       summary: "You take time with the questions, memories, and details that matter.",
       detail:
         "You take time with the questions, memories, and details that matter.",
@@ -55,7 +55,7 @@ export const homeScene = {
     },
     {
       label: "FILM",
-      title: "A calm conversation.",
+      title: "FILM",
       summary: "We capture the conversation calmly, with no pressure to perform.",
       detail:
         "We capture the conversation calmly, with no pressure to perform.",
@@ -66,7 +66,7 @@ export const homeScene = {
     },
     {
       label: "DELIVER",
-      title: "A private film to keep.",
+      title: "DELIVER",
       summary: "We finish the edit and send a private film the family can keep.",
       detail:
         "We finish the edit and send a private film the family can keep.",
