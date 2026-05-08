@@ -8315,16 +8315,25 @@ html[data-theme="dark"] .public-visual-scope::before {
 
 .apple-record-feature {
   min-height: auto;
+  max-width: 100%;
+  min-width: 0;
+  overflow: visible;
   padding: clamp(0.72rem, 1.35vw, 1.05rem);
 }
 
 .experience-content-container {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
   min-height: 0;
   justify-content: start;
   overflow: visible;
 }
 
 .experience-content-container .apple-record-feature-content {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
   min-height: 0;
   gap: clamp(0.55rem, 1vw, 0.86rem);
 }
@@ -8332,23 +8341,38 @@ html[data-theme="dark"] .public-visual-scope::before {
 .apple-record-feature .apple-visual-frame {
   width: 100%;
   max-width: min(100%, clamp(18rem, 48vw, 34rem));
+  min-width: 0;
   margin-inline: auto;
   padding: clamp(0.58rem, 1vw, 0.82rem);
+  overflow: visible;
 }
 
 .apple-record-feature .apple-visual-image-wrap {
   aspect-ratio: 16 / 10;
   max-height: clamp(10rem, 30vw, 18rem);
+  overflow: hidden;
+}
+
+.apple-record-feature .apple-visual-image-wrap .apple-visual-image {
+  object-fit: contain;
+  object-position: center;
 }
 
 .apple-record-detail {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
   padding: clamp(0.62rem, 1.1vw, 0.95rem) 0.18rem 0;
 }
 
 .apple-record-detail h3 {
+  max-width: 100%;
   margin-top: 0.34rem;
   font-size: clamp(1.35rem, 2.4vw, 2.35rem);
   line-height: 1;
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: none;
 }
 
 .apple-record-detail h3 + p {
@@ -8356,22 +8380,62 @@ html[data-theme="dark"] .public-visual-scope::before {
 }
 
 .apple-record-detail p {
+  max-width: 100%;
   font-size: clamp(0.82rem, 0.95vw, 0.95rem);
   line-height: 1.45;
 }
 
 .apple-record-detail .apple-record-tags {
+  max-width: 100%;
+  min-width: 0;
   margin-top: 0.65rem;
+  overflow: hidden;
+}
+
+.apple-record-detail .apple-record-tags span {
+  min-width: 0;
+  padding-inline: clamp(0.28rem, 0.7vw, 0.52rem);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .apple-record-list {
+  max-width: 100%;
+  min-width: 0;
   gap: 0.5rem;
   padding: clamp(0.72rem, 1.25vw, 1rem);
 }
 
 .apple-record-card {
+  max-width: 100%;
+  min-width: 0;
   min-height: clamp(4.7rem, 6vw, 5.8rem);
   padding: clamp(0.68rem, 0.95vw, 0.9rem);
+}
+
+.apple-section-contrast .apple-section-inner,
+.apple-section-contrast .apple-section-body,
+.apple-section-contrast .apple-scene-module,
+.apple-section-contrast .apple-record-list,
+.apple-section-contrast .apple-record-feature {
+  max-width: 100%;
+  min-width: 0;
+}
+
+.apple-process-shell {
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+.apple-process-shell .apple-process-grid {
+  justify-content: start;
+  overflow-anchor: none;
+  scroll-behavior: auto;
+}
+
+.apple-process-grid[data-scroll-ready="false"] {
+  scroll-snap-type: none !important;
 }
 
 @media (min-width: 1181px) {
@@ -8412,6 +8476,26 @@ html[data-theme="dark"] .public-visual-scope::before {
   .apple-record-detail h3 {
     font-size: clamp(1.2rem, 5.6vw, 1.85rem);
   }
+
+  .apple-record-detail .apple-record-tags span {
+    font-size: clamp(0.5rem, 2.1vw, 0.64rem);
+  }
+}
+
+@media (max-width: 1023px) {
+  .apple-process-grid {
+    justify-content: start;
+    padding-inline: 0 calc(var(--shell-gutter) + 16vw);
+    scroll-padding-inline: 0;
+  }
+
+  .apple-process-card:first-child {
+    margin-left: var(--shell-gutter);
+  }
+
+  .apple-process-card:last-child {
+    margin-right: calc(var(--shell-gutter) + 16vw);
+  }
 }
 
 .public-visual-scope :is(h1, h2, h3, h4, h5, h6, p, li, blockquote) {
@@ -8433,6 +8517,10 @@ html[data-theme="dark"] .public-visual-scope::before {
   font-style: italic;
   font-weight: 400;
   letter-spacing: 0;
+}
+
+.public-visual-scope :is(.apple-preserve-card h3, .apple-preserve-feature h3) + p {
+  margin-top: clamp(0.25rem, 0.55vw, 0.5rem);
 }
 
 /* Admin visual refresh, scoped away from public behavior and data flows. */

@@ -999,6 +999,7 @@ function ProcessTimeline({
   const scrollerRef = useRef<HTMLDivElement>(null);
   const isResettingScrollRef = useRef(true);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [isScrollReady, setIsScrollReady] = useState(false);
 
   const syncActiveIndex = useCallback(() => {
     const scroller = scrollerRef.current;
@@ -1037,6 +1038,7 @@ function ProcessTimeline({
       scroller.scrollLeft = 0;
     }
 
+    setIsScrollReady(false);
     setActiveIndex(0);
 
     resetFrame = window.requestAnimationFrame(() => {
@@ -1047,6 +1049,7 @@ function ProcessTimeline({
       setActiveIndex(0);
       releaseFrame = window.requestAnimationFrame(() => {
         isResettingScrollRef.current = false;
+        setIsScrollReady(true);
       });
     });
 
@@ -1061,6 +1064,7 @@ function ProcessTimeline({
       <motion.div
         ref={scrollerRef}
         className="apple-process-grid motion-stagger"
+        data-scroll-ready={isScrollReady ? "true" : "false"}
         variants={cardGridReveal}
         onScroll={() => {
           if (isResettingScrollRef.current) {
