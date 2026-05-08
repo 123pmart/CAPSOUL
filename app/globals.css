@@ -8512,6 +8512,26 @@ html[data-theme="dark"] .public-visual-scope::before {
   }
 }
 
+@media (max-width: 767px) {
+  .apple-process-grid {
+    --process-card-width: min(76vw, 340px);
+    --process-side-pad: max(var(--shell-gutter), calc((100vw - var(--process-card-width)) / 2));
+    grid-auto-columns: var(--process-card-width);
+    padding-inline: var(--process-side-pad);
+    scroll-padding-inline: var(--process-side-pad);
+    scroll-snap-type: x mandatory;
+  }
+
+  .apple-process-card {
+    width: var(--process-card-width);
+    min-width: var(--process-card-width);
+    max-width: var(--process-card-width);
+    flex: 0 0 var(--process-card-width);
+    scroll-snap-align: center;
+    scroll-snap-stop: always;
+  }
+}
+
 .public-visual-scope :is(h1, h2, h3, h4, h5, h6, p, li, blockquote) {
   hyphens: none;
   word-break: normal;
@@ -8686,6 +8706,14 @@ html[data-theme="dark"] .public-visual-scope::before {
     animation: none;
     transform: translate3d(0, 0, 0);
   }
+}
+
+.public-visual-scope .apple-trust-grid .ui-chip {
+  font-size: clamp(0.62rem, 1.8vw, 0.78rem);
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  line-height: 1;
+  text-transform: uppercase;
 }
 
 .public-visual-scope .apple-scene-controls {
