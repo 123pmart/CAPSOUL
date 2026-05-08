@@ -711,9 +711,9 @@ function ArchiveHero({
             <ArchiveVisualFrame
               image={heroStep.image}
               fallbackImage={heroStep.fallbackImage}
-              label={heroStep.mediaLabel}
+              label={heroStep.title}
               caption={heroStep.mediaCaption}
-              indexLabel={`${stepLabelPrefix} 1`}
+              indexLabel={heroStep.mediaLabel}
               objectPosition={heroStep.objectPosition}
               priority
             />
