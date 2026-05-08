@@ -8564,17 +8564,86 @@ html[data-theme="dark"] .public-visual-scope::before {
   width: auto;
   max-width: none;
   min-width: max-content;
+  min-height: clamp(1.78rem, 5vw, 2rem);
   flex: 0 0 auto;
   align-items: center;
   justify-content: center;
+  border: 1px solid var(--control-border);
+  border-radius: var(--radius-pill);
   padding-block: clamp(0.42rem, 1.1vw, 0.62rem);
   padding-inline: clamp(0.7rem, 2.2vw, 1.1rem);
+  background: var(--control-bg);
+  box-shadow: var(--control-shadow);
+  color: var(--control-muted);
   overflow: visible;
   text-overflow: clip;
   white-space: nowrap;
   font-size: clamp(0.62rem, 1.8vw, 0.78rem);
   letter-spacing: clamp(0.04em, 0.7vw, 0.12em);
   line-height: 1;
+  text-align: center;
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: none;
+  backdrop-filter: blur(18px) saturate(var(--glass-saturation));
+  -webkit-backdrop-filter: blur(18px) saturate(var(--glass-saturation));
+}
+
+.public-visual-scope .chip-marquee {
+  --chip-marquee-gap: clamp(0.45rem, 1.4vw, 0.75rem);
+  --chip-marquee-duration: 22s;
+  position: relative;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.public-visual-scope .chip-marquee[data-overflow="true"] {
+  justify-content: flex-start;
+  mask-image: linear-gradient(90deg, transparent 0, #000 1.2rem, #000 calc(100% - 1.2rem), transparent 100%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 1.2rem, #000 calc(100% - 1.2rem), transparent 100%);
+}
+
+.public-visual-scope .chip-marquee-track,
+.public-visual-scope .chip-marquee-set {
+  display: flex;
+  align-items: center;
+}
+
+.public-visual-scope .chip-marquee-track {
+  width: max-content;
+  max-width: none;
+  min-width: 0;
+  transform: translate3d(0, 0, 0);
+}
+
+.public-visual-scope .chip-marquee-set {
+  min-width: max-content;
+  flex: 0 0 auto;
+  gap: var(--chip-marquee-gap);
+}
+
+.public-visual-scope .chip-marquee[data-overflow="true"] .chip-marquee-set {
+  padding-right: var(--chip-marquee-gap);
+}
+
+.public-visual-scope .chip-marquee[data-overflow="true"] .chip-marquee-track {
+  animation: chipMarquee var(--chip-marquee-duration) linear infinite;
+  will-change: transform;
+}
+
+.public-visual-scope .chip-marquee:is(:hover, :focus-within, :active) .chip-marquee-track,
+.public-visual-scope .chip-marquee[data-interacting="true"] .chip-marquee-track {
+  animation-play-state: paused;
+}
+
+@keyframes chipMarquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
 }
 
 .public-visual-scope .apple-record-detail {
@@ -8600,6 +8669,47 @@ html[data-theme="dark"] .public-visual-scope::before {
     padding-inline: 0.58rem;
     font-size: clamp(0.54rem, 2.55vw, 0.64rem);
     letter-spacing: 0.035em;
+  }
+}
+
+@media (max-width: 390px) {
+  .public-visual-scope :is(.ui-chip, .apple-record-tags > span, .apple-trust-grid > span) {
+    min-height: 1.72rem;
+    padding-inline: 0.52rem;
+    font-size: clamp(0.52rem, 2.7vw, 0.61rem);
+    letter-spacing: 0.025em;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .public-visual-scope .chip-marquee[data-overflow="true"] .chip-marquee-track {
+    animation: none;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.public-visual-scope .apple-scene-controls {
+  overflow: visible;
+  padding-block: clamp(0.38rem, 1.3vw, 0.62rem);
+}
+
+.public-visual-scope .apple-scene-controls .compact-scene-progress {
+  display: inline-flex;
+  min-height: clamp(1.18rem, 2.6vw, 1.35rem);
+  height: clamp(1.18rem, 2.6vw, 1.35rem);
+  align-items: center;
+  overflow: visible;
+  padding-block: 0;
+  line-height: 1;
+}
+
+.public-visual-scope .apple-scene-controls .compact-scene-dot {
+  flex: 0 0 auto;
+}
+
+@media (max-width: 767px) {
+  .public-visual-scope .apple-record-feature .apple-scene-controls {
+    padding-block: 0.5rem 0.62rem;
   }
 }
 

@@ -240,6 +240,103 @@ const detailItemReveal = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.34, ease: revealEase } },
 } as const;
 
+type ChipMarqueeRowProps = {
+  className: string;
+  items: string[];
+  itemKeyPrefix: string;
+  variants?: HTMLMotionProps<"div">["variants"];
+  itemVariants?: HTMLMotionProps<"span">["variants"];
+};
+
+function ChipMarqueeRow({
+  className,
+  items,
+  itemKeyPrefix,
+  variants,
+  itemVariants,
+}: ChipMarqueeRowProps) {
+  const rowRef = useRef<HTMLDivElement | null>(null);
+  const setRef = useRef<HTMLDivElement | null>(null);
+  const [isOverflowing, setIsOverflowing] = useState(false);
+  const [isInteracting, setIsInteracting] = useState(false);
+
+  useEffect(() => {
+    const row = rowRef.current;
+    const set = setRef.current;
+
+    if (!row || !set) {
+      return;
+    }
+
+    let isMounted = true;
+    const updateOverflow = () => {
+      if (!isMounted) {
+        return;
+      }
+
+      setIsOverflowing(set.scrollWidth > row.clientWidth + 2);
+    };
+
+    updateOverflow();
+
+    if (typeof ResizeObserver === "undefined") {
+      window.addEventListener("resize", updateOverflow);
+
+      return () => {
+        isMounted = false;
+        window.removeEventListener("resize", updateOverflow);
+      };
+    }
+
+    const resizeObserver = new ResizeObserver(updateOverflow);
+    resizeObserver.observe(row);
+    resizeObserver.observe(set);
+    document.fonts?.ready.then(updateOverflow).catch(() => undefined);
+
+    return () => {
+      isMounted = false;
+      resizeObserver.disconnect();
+    };
+  }, [items]);
+
+  const renderChipSet = (isDuplicate = false) => (
+    <div
+      aria-hidden={isDuplicate ? "true" : undefined}
+      className={isDuplicate ? "chip-marquee-set chip-marquee-set-duplicate" : "chip-marquee-set"}
+      ref={isDuplicate ? undefined : setRef}
+    >
+      {items.map((item, index) => (
+        isDuplicate ? (
+          <span className="ui-chip" key={`${itemKeyPrefix}-duplicate-${index}`}>{item}</span>
+        ) : (
+          <motion.span className="ui-chip" key={`${itemKeyPrefix}-${index}`} variants={itemVariants}>
+            {item}
+          </motion.span>
+        )
+      ))}
+    </div>
+  );
+
+  return (
+    <motion.div
+      className={`${className} chip-row chip-marquee`}
+      data-interacting={isInteracting ? "true" : "false"}
+      data-overflow={isOverflowing ? "true" : "false"}
+      ref={rowRef}
+      variants={variants}
+      onPointerCancel={() => setIsInteracting(false)}
+      onPointerDown={() => setIsInteracting(true)}
+      onPointerLeave={() => setIsInteracting(false)}
+      onPointerUp={() => setIsInteracting(false)}
+    >
+      <div className="chip-marquee-track">
+        {renderChipSet()}
+        {isOverflowing ? renderChipSet(true) : null}
+      </div>
+    </motion.div>
+  );
+}
+
 type PublicSectionKey = "hero" | "archive" | "experience" | "process" | "preserve" | "inquire";
 const defaultMediaFallbackSrc = "/visuals/hero-frame.svg";
 
@@ -934,11 +1031,13 @@ function ArchiveSceneModule({
                 <motion.span variants={detailItemReveal}>{sectionLabel}</motion.span>
                 <motion.h3 variants={detailItemReveal}>{active.title}</motion.h3>
                 <motion.p variants={detailItemReveal}>{active.detail}</motion.p>
-                <motion.div className="apple-record-tags chip-row" variants={detailStaggerReveal}>
-                  {active.bullets.map((bullet, index) => (
-                    <motion.span className="ui-chip" key={`experience-tag-${activeIndex}-${index}`} variants={detailItemReveal}>{bullet}</motion.span>
-                  ))}
-                </motion.div>
+                <ChipMarqueeRow
+                  className="apple-record-tags"
+                  itemKeyPrefix={`experience-tag-${activeIndex}`}
+                  itemVariants={detailItemReveal}
+                  items={active.bullets}
+                  variants={detailStaggerReveal}
+                />
               </motion.div>
             </motion.div>
           </AnimatePresence>
@@ -1115,11 +1214,13 @@ function PreserveEditorial({ preserve }: { preserve: ResolvedSceneContent }) {
           <span>{featured.mediaLabel}</span>
           <h3>{featured.title}</h3>
           <p>{featured.detail}</p>
-          <motion.div className="apple-record-tags chip-row" variants={detailStaggerReveal}>
-            {featured.bullets.map((bullet, index) => (
-              <motion.span className="ui-chip" key={`preserve-feature-tag-${index}`} variants={detailItemReveal}>{bullet}</motion.span>
-            ))}
-          </motion.div>
+          <ChipMarqueeRow
+            className="apple-record-tags"
+            itemKeyPrefix="preserve-feature-tag"
+            itemVariants={detailItemReveal}
+            items={featured.bullets}
+            variants={detailStaggerReveal}
+          />
         </motion.article>
       ) : null}
       <motion.div className="apple-preserve-grid" variants={cardGridReveal}>
@@ -1399,11 +1500,11 @@ function InquiryArchiveForm({
             </motion.div>
           ) : null}
         </AnimatePresence>
-        <div className="apple-trust-grid chip-row">
-          {inquiry.trustPoints.map((point, index) => (
-            <span className="ui-chip" key={`trust-point-${index}`}>{point}</span>
-          ))}
-        </div>
+        <ChipMarqueeRow
+          className="apple-trust-grid"
+          itemKeyPrefix="trust-point"
+          items={inquiry.trustPoints}
+        />
       </motion.aside>
     </motion.div>
   );
