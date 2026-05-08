@@ -8538,6 +8538,47 @@ html[data-theme="dark"] .public-visual-scope::before {
   overflow-wrap: normal;
 }
 
+.public-visual-scope .apple-field label {
+  width: 100%;
+  align-self: flex-start;
+  justify-self: start;
+  text-align: left;
+}
+
+.public-visual-scope .apple-record-detail > p,
+.public-visual-scope .apple-inquiry-note {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.012em;
+}
+
+.public-visual-scope .apple-record-detail > p {
+  color: color-mix(in srgb, var(--text-muted) 86%, var(--text));
+  line-height: 1.55;
+}
+
+.public-visual-scope .apple-inquiry-note {
+  color: color-mix(in srgb, var(--text-muted) 86%, var(--text));
+  line-height: 1.5;
+  text-align: center;
+}
+
+.public-visual-scope .apple-visual-frame > p {
+  justify-self: center;
+  max-width: min(100%, 34rem);
+  color: color-mix(in srgb, var(--accent) 76%, var(--text-soft));
+  font-family: var(--font-sans);
+  font-size: clamp(0.62rem, 0.82vw, 0.72rem);
+  font-style: normal;
+  font-weight: 820;
+  letter-spacing: 0.14em;
+  line-height: 1.32;
+  text-align: center;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
 .public-visual-scope :is(.apple-preserve-card h3, .apple-preserve-feature h3) {
   font-family: var(--font-sans);
   font-weight: 820;
