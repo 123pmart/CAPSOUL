@@ -622,7 +622,7 @@ function ArchiveHero({
             {home.steps.map((step, index) => (
               <motion.div className="apple-hero-chapter apple-liquid-surface" key={`hero-chapter-${index}`} variants={cardReveal}>
                 <span className="apple-liquid-layer" aria-hidden="true" />
-                <span>{String(index + 1).padStart(2, "0")}</span>
+                <span>{stepLabelPrefix} {index + 1}</span>
                 <strong>{step.label}</strong>
                 <p>{step.title}</p>
               </motion.div>
@@ -985,13 +985,16 @@ function ProcessStepCard({
   );
 }
 
-function ProcessTimeline({ process }: { process: ResolvedSceneContent }) {
+function ProcessTimeline({
+  process,
+  swipeHint,
+}: {
+  process: ResolvedSceneContent;
+  swipeHint: string;
+}) {
   const reduceMotion = useReducedMotion();
   const scrollerRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
-  const progress = process.steps.length > 1
-    ? (activeIndex / (process.steps.length - 1)) * 100
-    : 0;
 
   const syncActiveIndex = useCallback(() => {
     const scroller = scrollerRef.current;
@@ -1001,13 +1004,14 @@ function ProcessTimeline({ process }: { process: ResolvedSceneContent }) {
     }
 
     const cards = Array.from(scroller.querySelectorAll<HTMLElement>(".apple-process-card"));
-    const center = scroller.scrollLeft + scroller.clientWidth / 2;
+    const scrollerStyle = window.getComputedStyle(scroller);
+    const paddingStart = Number.parseFloat(scrollerStyle.paddingInlineStart || scrollerStyle.paddingLeft || "0");
+    const snapStart = scroller.scrollLeft + paddingStart;
     let nextIndex = 0;
     let closestDistance = Number.POSITIVE_INFINITY;
 
     cards.forEach((card, index) => {
-      const cardCenter = card.offsetLeft + card.offsetWidth / 2;
-      const distance = Math.abs(cardCenter - center);
+      const distance = Math.abs(card.offsetLeft - snapStart);
 
       if (distance < closestDistance) {
         closestDistance = distance;
@@ -1019,14 +1023,20 @@ function ProcessTimeline({ process }: { process: ResolvedSceneContent }) {
   }, []);
 
   useEffect(() => {
-    syncActiveIndex();
+    const scroller = scrollerRef.current;
+
+    if (scroller) {
+      scroller.scrollTo({ left: 0 });
+    }
+
+    setActiveIndex(0);
+    const frame = window.requestAnimationFrame(syncActiveIndex);
+
+    return () => window.cancelAnimationFrame(frame);
   }, [process.steps.length, syncActiveIndex]);
 
   return (
-    <div
-      className="apple-process-shell"
-      style={{ "--process-scroll-progress": `${progress}%` } as CSSProperties}
-    >
+    <div className="apple-process-shell">
       <motion.div
         ref={scrollerRef}
         className="apple-process-grid motion-stagger"
@@ -1043,9 +1053,7 @@ function ProcessTimeline({ process }: { process: ResolvedSceneContent }) {
         ))}
       </motion.div>
       <div className="apple-process-scroll-cue" aria-hidden="true">
-        <span className="apple-process-scroll-track">
-          <i />
-        </span>
+        <span className="apple-process-swipe-hint">{swipeHint}</span>
         <span className="apple-process-scroll-dots">
           {process.steps.map((step, index) => (
             <span
@@ -1406,6 +1414,7 @@ export function PublicExperience({
   const activeId = usePublicActiveSection(sections);
   const activeAtmosphereSection = usePublicAtmosphereSection();
   const archiveStepLabelPrefix = globalContent.navigation.home === "Inicio" ? "Paso" : "Step";
+  const processSwipeHint = globalContent.navigation.home === "Inicio" ? "Desliza" : "Swipe";
   const railItems = useMemo<Array<{ key: PublicSectionKey; label: string }>>(
     () => [
       { key: "hero", label: formatRailLabel(home.title) },
@@ -1470,7 +1479,7 @@ export function PublicExperience({
         title={process.title}
         description={process.description}
       >
-        <ProcessTimeline process={process} />
+        <ProcessTimeline process={process} swipeHint={processSwipeHint} />
       </ArchiveSection>
 
       <ArchiveSection

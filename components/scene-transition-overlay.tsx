@@ -28,23 +28,23 @@ export function SceneTransitionOverlay() {
   const prefersLiteRouteOverlay = responsiveSceneMode.prefersLiteRouteOverlay;
 
   const compactOverlayClass = isDark
-    ? "absolute inset-0 bg-[rgba(7,12,20,0.74)]"
-    : "absolute inset-0 bg-[rgba(244,248,252,0.72)]";
+    ? "absolute inset-0 bg-[rgba(0,0,0,0.76)]"
+    : "absolute inset-0 bg-[rgba(255,255,255,0.76)]";
   const largeBackdropClass = isDark
-    ? "absolute inset-0 bg-[rgba(6,11,20,0.84)]"
-    : "absolute inset-0 bg-[rgba(243,247,252,0.82)]";
+    ? "absolute inset-0 bg-[rgba(0,0,0,0.86)]"
+    : "absolute inset-0 bg-[rgba(255,255,255,0.84)]";
   const largeVeilClass = isDark
-    ? "absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(22,36,52,0.82),rgba(11,18,29,0.88)_44%,rgba(5,10,18,0.94)_100%)] backdrop-blur-[4px]"
-    : "absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.9),rgba(238,244,250,0.82)_44%,rgba(233,240,247,0.76)_100%)] backdrop-blur-[4px]";
+    ? "absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(34,34,34,0.82),rgba(14,14,14,0.9)_44%,rgba(0,0,0,0.94)_100%)] backdrop-blur-[4px]"
+    : "absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.94),rgba(250,250,250,0.86)_44%,rgba(238,238,238,0.78)_100%)] backdrop-blur-[4px]";
   const largePanelClass = isDark
-    ? "absolute inset-[5vh_3vw] rounded-[2.8rem] border border-[rgba(194,219,244,0.16)] bg-[linear-gradient(180deg,rgba(18,29,42,0.9),rgba(9,16,27,0.96))] shadow-[0_28px_64px_rgba(1,6,14,0.28)] backdrop-blur-[6px]"
-    : "absolute inset-[5vh_3vw] rounded-[2.8rem] border border-white/82 bg-[linear-gradient(180deg,rgba(255,255,255,0.62),rgba(236,242,248,0.82))] shadow-[0_28px_64px_rgba(152,169,189,0.16)] backdrop-blur-[6px]";
+    ? "absolute inset-[5vh_3vw] rounded-[2.8rem] border border-white/14 bg-[linear-gradient(180deg,rgba(24,24,24,0.92),rgba(7,7,7,0.96))] shadow-[0_28px_64px_rgba(0,0,0,0.34)] backdrop-blur-[6px]"
+    : "absolute inset-[5vh_3vw] rounded-[2.8rem] border border-black/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.78),rgba(242,242,242,0.86))] shadow-[0_28px_64px_rgba(0,0,0,0.12)] backdrop-blur-[6px]";
   const largePanelHighlightPrimaryClass = isDark
-    ? "absolute inset-0 rounded-[inherit] bg-[radial-gradient(circle_at_top,rgba(116,166,222,0.12),transparent_54%)]"
+    ? "absolute inset-0 rounded-[inherit] bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.08),transparent_54%)]"
     : "absolute inset-0 rounded-[inherit] bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.94),transparent_52%)]";
   const largePanelHighlightSecondaryClass = isDark
-    ? "absolute inset-0 rounded-[inherit] bg-[radial-gradient(circle_at_82%_12%,rgba(78,116,156,0.14),transparent_28%)]"
-    : "absolute inset-0 rounded-[inherit] bg-[radial-gradient(circle_at_82%_12%,rgba(194,210,224,0.22),transparent_28%)]";
+    ? "absolute inset-0 rounded-[inherit] bg-[radial-gradient(circle_at_82%_12%,rgba(255,255,255,0.08),transparent_28%)]"
+    : "absolute inset-0 rounded-[inherit] bg-[radial-gradient(circle_at_82%_12%,rgba(0,0,0,0.06),transparent_28%)]";
 
   if (prefersLiteRouteOverlay) {
     return (

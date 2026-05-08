@@ -4711,7 +4711,9 @@ html[data-theme="dark"] .atmosphere-blob-three {
   line-height: 0.93;
   letter-spacing: -0.04em;
   text-transform: uppercase;
-  overflow-wrap: break-word;
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: none;
 }
 
 .apple-value-statement p {
@@ -5189,22 +5191,34 @@ html[data-theme="dark"] .atmosphere-blob-three {
 .apple-record-tags,
 .apple-trust-grid {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.6rem;
+  flex-wrap: nowrap;
+  justify-content: center;
+  gap: clamp(0.28rem, 0.9vw, 0.6rem);
   margin-top: 1rem;
+  min-width: 0;
+  width: 100%;
 }
 
 .apple-record-tags span,
 .apple-trust-grid span {
   display: inline-flex;
-  min-height: 2.2rem;
+  min-width: 0;
+  min-height: 2rem;
+  flex: 1 1 0;
   align-items: center;
+  justify-content: center;
   border: 1px solid var(--border);
   border-radius: var(--radius-pill);
-  padding: 0.5rem 0.84rem;
+  padding: 0.46rem clamp(0.42rem, 0.9vw, 0.78rem);
   background: color-mix(in srgb, var(--surface-muted) 58%, transparent);
   color: var(--text-muted);
-  font-size: 0.84rem;
+  font-size: clamp(0.62rem, 1.45vw, 0.82rem);
+  letter-spacing: 0.02em;
+  line-height: 1.12;
+  text-align: center;
+  hyphens: none;
+  word-break: normal;
+  overflow-wrap: normal;
 }
 
 .apple-scene-controls {
@@ -5355,6 +5369,7 @@ html[data-theme="dark"] .atmosphere-blob-three {
   margin-top: 0.7rem;
   font-size: clamp(2.55rem, 5.2vw, 5rem);
   line-height: 0.9;
+  text-transform: uppercase;
 }
 
 .apple-preserve-grid {
@@ -5376,6 +5391,15 @@ html[data-theme="dark"] .atmosphere-blob-three {
   margin-top: 0.6rem;
   font-size: clamp(1.7rem, 2.65vw, 2.45rem);
   line-height: 0.94;
+  text-transform: uppercase;
+}
+
+.apple-preserve-card p,
+.apple-preserve-feature p {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: 0;
 }
 
 .apple-inquiry-layout {
@@ -7151,18 +7175,19 @@ html[data-theme="light"] .public-visual-scope :is(
 .how-it-works-card h3 {
   font-size: clamp(1.5rem, 4vw, 2.5rem);
   line-height: 1.1;
-  letter-spacing: -0.02em;
-  overflow-wrap: break-word;
-  word-break: break-word;
-  hyphens: auto;
+  letter-spacing: 0;
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: none;
   text-wrap: balance;
 }
 
 .apple-process-card p,
 .apple-value-card p,
 .apple-value-card-detail {
-  overflow-wrap: anywhere;
-  hyphens: auto;
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: none;
 }
 
 @media (max-width: 767px) {
@@ -7375,10 +7400,10 @@ html[data-theme="dark"] .apple-value-card-active {
   font-size: clamp(1.14rem, 1.45vw, 1.58rem);
   font-weight: 680;
   line-height: 1.05;
-  letter-spacing: -0.022em;
-  overflow-wrap: break-word;
+  letter-spacing: 0;
+  overflow-wrap: normal;
   word-break: normal;
-  hyphens: auto;
+  hyphens: none;
 }
 
 .apple-process-card p {
@@ -7409,7 +7434,7 @@ html[data-theme="dark"] .apple-value-card-active {
     overscroll-behavior-x: contain;
     scroll-padding-inline: var(--shell-gutter);
     scroll-snap-type: x mandatory;
-    touch-action: pan-x;
+    touch-action: pan-x pan-y;
     padding-block: 0.16rem 0.55rem;
     scrollbar-width: none;
     mask-image: linear-gradient(90deg, transparent 0, #000 1.1rem, #000 calc(100% - 1.1rem), transparent 100%);
@@ -7421,7 +7446,7 @@ html[data-theme="dark"] .apple-value-card-active {
   }
 
   .apple-process-card {
-    scroll-snap-align: center;
+    scroll-snap-align: start;
   }
 }
 
@@ -7455,7 +7480,7 @@ html[data-theme="dark"] .apple-value-card-active {
     overscroll-behavior-x: contain;
     scroll-padding-inline: var(--shell-gutter);
     scroll-snap-type: x mandatory;
-    touch-action: pan-x;
+    touch-action: pan-x pan-y;
     padding-block: 0.18rem 0.6rem;
     scrollbar-width: none;
     mask-image: linear-gradient(90deg, transparent 0, #000 1rem, #000 calc(100% - 1rem), transparent 100%);
@@ -7468,7 +7493,7 @@ html[data-theme="dark"] .apple-value-card-active {
 
   .apple-process-card {
     min-height: 9.2rem;
-    scroll-snap-align: center;
+    scroll-snap-align: start;
   }
 }
 
@@ -7963,8 +7988,9 @@ html[data-theme="dark"] .public-visual-scope::before {
 .public-visual-scope :is(.apple-hero-title, .apple-section-title, .apple-value-statement h2) {
   max-width: min(100%, 19ch);
   margin-inline: auto;
-  overflow-wrap: break-word;
-  hyphens: auto;
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: none;
   text-align: center;
   text-wrap: balance;
   white-space: normal;
@@ -7977,7 +8003,9 @@ html[data-theme="dark"] .public-visual-scope::before {
 .public-visual-scope :is(.apple-hero-copy, .apple-section-copy, .apple-value-statement p) {
   max-width: min(100%, 58rem);
   margin-inline: auto;
-  overflow-wrap: break-word;
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: none;
   text-align: center;
   text-wrap: balance;
 }
@@ -7993,8 +8021,9 @@ html[data-theme="dark"] .public-visual-scope::before {
   .apple-value-card h3
 ) {
   max-width: 100%;
-  overflow-wrap: break-word;
-  hyphens: auto;
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: none;
   text-wrap: balance;
 }
 
@@ -8011,8 +8040,9 @@ html[data-theme="dark"] .public-visual-scope::before {
   .apple-visual-frame p
 ) {
   max-width: 100%;
-  overflow-wrap: break-word;
-  hyphens: auto;
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: none;
 }
 
 .public-visual-scope :is(
@@ -8052,7 +8082,9 @@ html[data-theme="dark"] .public-visual-scope::before {
 }
 
 .public-visual-scope :is(.apple-cta, .apple-admin-access a) {
-  overflow-wrap: break-word;
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: none;
   text-align: center;
   white-space: normal;
 }
@@ -8094,30 +8126,27 @@ html[data-theme="dark"] .public-visual-scope::before {
 .apple-process-scroll-cue {
   display: none;
   width: min(100%, 18rem);
+  align-items: center;
   justify-items: center;
-  gap: 0.54rem;
+  gap: 0.42rem;
   margin-top: 0.18rem;
 }
 
 .apple-process-scroll-track {
-  position: relative;
-  display: block;
-  width: min(100%, 12rem);
-  height: 0.22rem;
-  overflow: hidden;
-  border-radius: var(--radius-pill);
-  background: color-mix(in srgb, var(--control-border) 70%, transparent);
+  display: none;
 }
 
 .apple-process-scroll-track i {
-  position: absolute;
-  inset-block: 0;
-  left: 0;
-  width: max(20%, var(--process-scroll-progress, 0%));
-  border-radius: inherit;
-  background: var(--control-text);
-  transform-origin: left center;
-  transition: width 180ms var(--ease-luxury);
+  display: none;
+}
+
+.apple-process-swipe-hint {
+  color: var(--control-muted);
+  font-size: 0.66rem;
+  font-weight: 680;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-transform: uppercase;
 }
 
 .apple-process-scroll-dots {
@@ -8185,13 +8214,22 @@ html[data-theme="dark"] .public-visual-scope::before {
 .apple-record-tags,
 .apple-trust-grid {
   align-items: center;
+  flex-wrap: nowrap;
+  justify-content: center;
+  gap: clamp(0.26rem, 1vw, 0.6rem);
+  min-width: 0;
+  width: 100%;
 }
 
 .apple-record-tags span,
 .apple-trust-grid span {
+  min-width: 0;
+  flex: 1 1 0;
   justify-content: center;
-  max-width: min(100%, 24rem);
-  overflow-wrap: break-word;
+  max-width: none;
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: none;
   text-align: center;
   white-space: normal;
 }
@@ -8199,7 +8237,7 @@ html[data-theme="dark"] .public-visual-scope::before {
 @media (min-width: 768px) {
   .apple-record-detail .apple-record-tags,
   .apple-preserve-feature .apple-record-tags {
-    justify-content: flex-start;
+    justify-content: center;
   }
 
   .apple-trust-grid {
@@ -8225,16 +8263,17 @@ html[data-theme="dark"] .public-visual-scope::before {
   }
 
   .apple-process-grid {
-    grid-auto-columns: minmax(13rem, min(42vw, 17.5rem));
-    padding-inline: max(var(--shell-gutter), calc((100% - min(42vw, 17.5rem)) / 2));
-    scroll-padding-inline: max(var(--shell-gutter), calc((100% - min(42vw, 17.5rem)) / 2));
+    grid-auto-columns: minmax(13rem, min(58vw, 19rem));
+    padding-inline: var(--shell-gutter) calc(var(--shell-gutter) + 14vw);
+    scroll-padding-inline: var(--shell-gutter);
   }
 }
 
 @media (max-width: 767px) {
   .apple-record-tags,
   .apple-trust-grid {
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: nowrap;
     justify-content: center;
     margin-inline: auto;
     text-align: center;
@@ -8242,7 +8281,11 @@ html[data-theme="dark"] .public-visual-scope::before {
 
   .apple-record-tags span,
   .apple-trust-grid span {
-    width: fit-content;
+    width: auto;
+    padding-inline: clamp(0.34rem, 1.5vw, 0.55rem);
+    font-size: clamp(0.55rem, 2.4vw, 0.68rem);
+    letter-spacing: 0.01em;
+    line-height: 1.12;
   }
 
   .apple-process-shell {
@@ -8250,12 +8293,42 @@ html[data-theme="dark"] .public-visual-scope::before {
   }
 
   .apple-process-grid {
-    grid-auto-columns: minmax(13rem, min(78vw, 21rem));
-    padding-inline: max(var(--shell-gutter), calc((100% - min(78vw, 21rem)) / 2));
-    scroll-padding-inline: max(var(--shell-gutter), calc((100% - min(78vw, 21rem)) / 2));
+    grid-auto-columns: minmax(12.75rem, min(84vw, 21rem));
+    padding-inline: var(--shell-gutter) calc(var(--shell-gutter) + 16vw);
+    scroll-padding-inline: var(--shell-gutter);
     mask-image: linear-gradient(90deg, transparent 0, #000 1rem, #000 calc(100% - 1rem), transparent 100%);
     -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 1rem, #000 calc(100% - 1rem), transparent 100%);
   }
+}
+
+@media (max-width: 319px) {
+  .apple-record-tags,
+  .apple-trust-grid {
+    flex-wrap: wrap;
+  }
+
+  .apple-record-tags span,
+  .apple-trust-grid span {
+    flex: 1 1 calc(50% - 0.3rem);
+  }
+}
+
+.public-visual-scope :is(h1, h2, h3, h4, h5, h6, p, li, blockquote) {
+  hyphens: none;
+  word-break: normal;
+  overflow-wrap: normal;
+}
+
+.public-visual-scope :is(.apple-preserve-card h3, .apple-preserve-feature h3) {
+  text-transform: uppercase;
+  letter-spacing: 0;
+}
+
+.public-visual-scope :is(.apple-preserve-card p, .apple-preserve-feature p) {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: 0;
 }
 
 /* Admin visual refresh, scoped away from public behavior and data flows. */

@@ -32,48 +32,48 @@ export const homeScene = {
   compactNote: "Scroll or tap through the chapter states.",
   steps: [
     {
-      label: "Reflection",
-      title: "Stories gathered before filming.",
-      summary: "The strongest films begin with memory and message, not the camera.",
+      label: "STUDY",
+      title: "Prep guide sent before filming.",
+      summary: "We send a simple prep guide so the family can reflect before filming.",
       detail:
-        "We prepare the conversation around values, stories, and the words that matter most.",
-      bullets: ["Memory before production", "Questions shaped with care", "No performance pressure"],
+        "We send a simple prep guide so the family can reflect before filming.",
+      bullets: ["Prep guide", "Family reflection", "Simple start"],
       image: "/visuals/conversation-frame.svg",
-      mediaLabel: "Before the camera",
-      mediaCaption: "The story is clarified first so filming can feel calm and personal.",
+      mediaLabel: "Step 01",
+      mediaCaption: "The family has room to gather thoughts before the camera appears.",
     },
     {
-      label: "Presence",
-      title: "Filmed where they still feel like themselves.",
-      summary: "Home or another meaningful place keeps the tone human and unforced.",
+      label: "PREPARE",
+      title: "Time with what matters.",
+      summary: "You take time with the questions, memories, and details that matter.",
       detail:
-        "The setting supports presence, cadence, and warmth instead of pushing the work toward performance.",
-      bullets: ["Meaningful environment", "Quiet direction", "Voice and character first"],
+        "You take time with the questions, memories, and details that matter.",
+      bullets: ["Questions", "Memories", "Details"],
       image: "/visuals/hero-frame.svg",
-      mediaLabel: "Filming atmosphere",
-      mediaCaption: "The frame is designed to hold real presence rather than create spectacle.",
+      mediaLabel: "Step 02",
+      mediaCaption: "Preparation keeps the conversation personal and unhurried.",
     },
     {
-      label: "Structure",
-      title: "Chapters shaped with restraint.",
-      summary: "The material is organized into a film with narrative clarity and editorial calm.",
+      label: "FILM",
+      title: "A calm conversation.",
+      summary: "We capture the conversation calmly, with no pressure to perform.",
       detail:
-        "The final piece is selective, emotionally clear, and shaped to feel lasting rather than exhaustive.",
-      bullets: ["Story architecture", "Editorial pacing", "Nothing forced"],
+        "We capture the conversation calmly, with no pressure to perform.",
+      bullets: ["Calm capture", "Gentle direction", "No performance"],
       image: "/visuals/heirloom-frame.svg",
-      mediaLabel: "Editorial shaping",
-      mediaCaption: "Each chapter earns its place so the final film feels composed and enduring.",
+      mediaLabel: "Step 03",
+      mediaCaption: "The filming day is guided without turning memory into performance.",
     },
     {
-      label: "Heirloom",
-      title: "A private film the family can return to.",
-      summary: "The finished piece becomes part of the family archive rather than disposable content.",
+      label: "DELIVER",
+      title: "A private film to keep.",
+      summary: "We finish the edit and send a private film the family can keep.",
       detail:
-        "It is built for anniversaries, ordinary days, moments of loss, and the generations still coming.",
-      bullets: ["Private by default", "Built to last", "Revisited across time"],
+        "We finish the edit and send a private film the family can keep.",
+      bullets: ["Finished edit", "Private film", "Family keepsake"],
       image: "/visuals/heirloom-frame.svg",
-      mediaLabel: "After delivery",
-      mediaCaption: "The end result is less a marketing asset and more a preserved relationship.",
+      mediaLabel: "Step 04",
+      mediaCaption: "The finished film is delivered privately for the family archive.",
     },
   ] as ScreenStep[],
 };
@@ -215,7 +215,7 @@ export const preserveScene = {
   steps: [
     {
       label: "Values",
-      title: "What they stood for.",
+      title: "WHAT THEY STOOD FOR.",
       summary: "Values reveal the inner architecture of a life.",
       detail:
         "Convictions, standards, and the way a person chose to live often become the emotional backbone of the film.",
@@ -226,7 +226,7 @@ export const preserveScene = {
     },
     {
       label: "Roots",
-      title: "Where the story began.",
+      title: "WHERE THE STORY BEGAN.",
       summary: "Upbringing and family roots make history tangible in their own voice.",
       detail:
         "This chapter gives later generations the texture of place, family context, and the conditions that shaped a life.",
@@ -237,7 +237,7 @@ export const preserveScene = {
     },
     {
       label: "Love",
-      title: "How they loved.",
+      title: "HOW THEY LOVED.",
       summary: "Marriage, family life, and affection show the style of relationship that endured.",
       detail:
         "This is often where later generations hear how devotion looked in ordinary life, not only in major milestones.",
@@ -248,7 +248,7 @@ export const preserveScene = {
     },
     {
       label: "Belief",
-      title: "What gave life meaning.",
+      title: "WHAT GAVE LIFE MEANING.",
       summary: "Faith, spirituality, and conviction can form the deepest layer of identity.",
       detail:
         "When belief matters to the family, it belongs in the film as a lived reality, not a decorative theme.",
@@ -259,7 +259,7 @@ export const preserveScene = {
     },
     {
       label: "Message",
-      title: "What they want carried forward.",
+      title: "WHAT THEY WANT CARRIED FORWARD.",
       summary: "The final message often becomes the part a family returns to most.",
       detail:
         "Blessing, instruction, perspective, and the words that should travel with the next generation are given a clear place.",
