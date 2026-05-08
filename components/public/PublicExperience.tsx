@@ -50,6 +50,118 @@ type PublicExperienceProps = {
 };
 
 type PublicSceneStep = ResolvedSceneContent["steps"][number];
+type PublicLocale = "en" | "es";
+type HomeProcessCard = Pick<PublicSceneStep, "label" | "summary">;
+type ArchivePillar = {
+  title: string;
+  summary: string;
+  detail: string;
+};
+
+const HOME_PROCESS_CARDS: Record<PublicLocale, HomeProcessCard[]> = {
+  en: [
+    {
+      label: "STUDY",
+      summary: "We send a simple prep guide so the family can reflect before filming.",
+    },
+    {
+      label: "PREPARE",
+      summary: "You take time with the questions, memories, and details that matter.",
+    },
+    {
+      label: "FILM",
+      summary: "We capture the conversation calmly, with no pressure to perform.",
+    },
+    {
+      label: "DELIVER",
+      summary: "We finish the edit and send a private film the family can keep.",
+    },
+  ],
+  es: [
+    {
+      label: "ESTUDIAR",
+      summary: "Enviamos una guía sencilla para que la familia pueda reflexionar antes de filmar.",
+    },
+    {
+      label: "PREPARAR",
+      summary: "Toman tiempo con las preguntas, recuerdos y detalles que importan.",
+    },
+    {
+      label: "FILMAR",
+      summary: "Grabamos la conversación con calma, sin presión de actuar.",
+    },
+    {
+      label: "ENTREGAR",
+      summary: "Terminamos la edición y enviamos una película privada que la familia puede conservar.",
+    },
+  ],
+};
+
+const PRIVATE_MEMORY_ARCHIVE: Record<PublicLocale, {
+  eyebrow: string;
+  headline: string;
+  labelPrefix: string;
+  pillars: ArchivePillar[];
+}> = {
+  en: {
+    eyebrow: "Private memory archive",
+    headline: "THE FINISHED PIECE BECOMES PART OF THE FAMILY ARCHIVE RATHER THAN DISPOSABLE CONTENT.",
+    labelPrefix: "Archive",
+    pillars: [
+      {
+        title: "Reflection",
+        summary: "Reflection gathers the emotional material before filming day arrives.",
+        detail: "The family has room to name the chapters, values, and messages that should not be left to chance.",
+      },
+      {
+        title: "Presence",
+        summary: "Presence keeps the voice, cadence, humor, and pauses intact.",
+        detail: "The finished film preserves the texture of a real person, not a polished performance.",
+      },
+      {
+        title: "Structure",
+        summary: "Structure gives memory a shape the next generation can follow.",
+        detail: "The edit organizes stories into a clear arc while keeping the conversation human and unforced.",
+      },
+      {
+        title: "Heirloom",
+        summary: "Heirloom treatment makes the film feel private, lasting, and easy to return to.",
+        detail: "The archive is prepared as something the family can revisit after loss, on anniversaries, and years later.",
+      },
+    ],
+  },
+  es: {
+    eyebrow: "Archivo privado de memoria",
+    headline: "LA PIEZA FINAL SE CONVIERTE EN PARTE DEL ARCHIVO FAMILIAR EN LUGAR DE CONTENIDO DESECHABLE.",
+    labelPrefix: "Archivo",
+    pillars: [
+      {
+        title: "Reflexión",
+        summary: "La reflexión reúne el material emocional antes del día de filmación.",
+        detail: "La familia tiene espacio para nombrar los capítulos, valores y mensajes que no deben quedar al azar.",
+      },
+      {
+        title: "Presencia",
+        summary: "La presencia conserva la voz, el ritmo, el humor y las pausas.",
+        detail: "La película final preserva la textura de una persona real, no una actuación pulida.",
+      },
+      {
+        title: "Estructura",
+        summary: "La estructura da forma a la memoria para que la próxima generación pueda seguirla.",
+        detail: "La edición organiza las historias en un arco claro sin perder una conversación humana y natural.",
+      },
+      {
+        title: "Legado",
+        summary: "El tratamiento de legado hace que la película se sienta privada, duradera y fácil de volver a ver.",
+        detail: "El archivo queda preparado para que la familia lo visite después de una pérdida, en aniversarios y años más tarde.",
+      },
+    ],
+  },
+};
+
+function getPublicLocale(stepLabelPrefix: string): PublicLocale {
+  return stepLabelPrefix.trim().toLocaleLowerCase().startsWith("paso") ? "es" : "en";
+}
 
 type InquiryFormState = {
   fullName: string;
@@ -677,7 +789,10 @@ function ArchiveHero({
   stepLabelPrefix: string;
 }) {
   const handleLink = useSectionLink();
+  const locale = getPublicLocale(stepLabelPrefix);
   const heroStep = home.steps[0];
+  const processCards = HOME_PROCESS_CARDS[locale];
+  const processStepPrefix = stepLabelPrefix.toLocaleUpperCase();
 
   return (
     <motion.section
@@ -723,11 +838,11 @@ function ArchiveHero({
               showToolbar={false}
             />
           </div>
-          <motion.div className="apple-hero-chapters" aria-label="Opening archive chapters" variants={cardGridReveal}>
-            {home.steps.map((step, index) => (
+          <motion.div className="apple-hero-chapters" aria-label="Opening process steps" variants={cardGridReveal}>
+            {processCards.map((step, index) => (
               <motion.div className="apple-hero-chapter apple-liquid-surface" key={`hero-chapter-${index}`} variants={cardReveal}>
                 <span className="apple-liquid-layer" aria-hidden="true" />
-                <span>{stepLabelPrefix} {index + 1}</span>
+                <span>{processStepPrefix} {index + 1}</span>
                 <strong>{step.label}</strong>
                 <p>{step.summary}</p>
               </motion.div>
@@ -742,16 +857,16 @@ function ArchiveHero({
 function ArchiveValueCard({
   pillar,
   index,
-  stepLabelPrefix,
+  archiveLabelPrefix,
   isActive,
   detailId,
   reduceMotion,
   onHover,
   onSelect,
 }: {
-  pillar: PublicSceneStep;
+  pillar: ArchivePillar;
   index: number;
-  stepLabelPrefix: string;
+  archiveLabelPrefix: string;
   isActive: boolean;
   detailId: string;
   reduceMotion: boolean;
@@ -790,8 +905,8 @@ function ArchiveValueCard({
       onFocus={() => onSelect(index)}
     >
       <span className="apple-liquid-layer" aria-hidden="true" />
-      <span>{stepLabelPrefix} {index + 1}</span>
-      <h3>{pillar.label}</h3>
+      <span>{archiveLabelPrefix} {String(index + 1).padStart(2, "0")}</span>
+      <h3>{pillar.title}</h3>
       <p>{pillar.summary}</p>
       <AnimatePresence initial={false}>
         {isActive ? (
@@ -812,16 +927,15 @@ function ArchiveValueCard({
 }
 
 function EmotionalValue({
-  home,
   stepLabelPrefix,
 }: {
-  home: ResolvedSceneContent;
   stepLabelPrefix: string;
 }) {
   const reduceMotion = useReducedMotion();
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [hoverIndex, setHoverIndex] = useState<number | null>(null);
-  const pillars = home.steps.slice(0, 4);
+  const archive = PRIVATE_MEMORY_ARCHIVE[getPublicLocale(stepLabelPrefix)];
+  const pillars = archive.pillars;
   const activeIndex = hoverIndex ?? selectedIndex;
   const activePillar = pillars[activeIndex] ?? pillars[0];
 
@@ -846,12 +960,12 @@ function EmotionalValue({
           <span className="apple-archive-sheet apple-archive-sheet-three" />
         </div>
         <div className="apple-value-statement">
-          <span>Private memory archive</span>
-          <h2>{home.steps[3]?.summary ?? home.title}</h2>
+          <span>{archive.eyebrow}</span>
+          <h2>{archive.headline}</h2>
           <div className="apple-archive-record-line" aria-hidden="true">
             <span style={{ "--archive-index-x": `${activeIndex * 100}%` } as CSSProperties} />
           </div>
-          <p>{activePillar?.summary ?? home.description}</p>
+          <p>{activePillar?.summary ?? archive.headline}</p>
         </div>
       </motion.div>
       <motion.div
@@ -877,7 +991,7 @@ function EmotionalValue({
               key={`archive-value-card-${index}`}
               pillar={pillar}
               index={index}
-              stepLabelPrefix={stepLabelPrefix}
+              archiveLabelPrefix={archive.labelPrefix}
               isActive={isActive}
               detailId={detailId}
               reduceMotion={Boolean(reduceMotion)}
@@ -1603,7 +1717,7 @@ export function PublicExperience({
       </nav>
 
       <ArchiveHero home={home} stepLabelPrefix={archiveStepLabelPrefix} />
-      <EmotionalValue home={home} stepLabelPrefix={archiveStepLabelPrefix} />
+      <EmotionalValue stepLabelPrefix={archiveStepLabelPrefix} />
 
       <ArchiveSection
         id="the-experience"

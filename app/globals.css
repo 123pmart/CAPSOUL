@@ -4479,6 +4479,13 @@ html[data-theme="dark"] .atmosphere-blob-three {
   letter-spacing: -0.018em;
 }
 
+.apple-hero-chapter strong {
+  font-family: var(--font-sans);
+  font-weight: 850;
+  letter-spacing: 0.015em;
+  text-transform: uppercase;
+}
+
 .apple-hero-chapter p,
 .apple-record-card p,
 .apple-process-card p,
