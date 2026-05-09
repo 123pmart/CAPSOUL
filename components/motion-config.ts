@@ -1,13 +1,5 @@
-import { premiumEase } from "@/components/motion/motion-config";
-
-export {
-  ENABLE_CINEMATIC_MOTION,
-  MOTION_BREAKPOINTS,
-  MOTION_INTENSITY,
-  motionDurations,
-  premiumEase,
-  softEase,
-} from "@/components/motion/motion-config";
+export const premiumEase = [0.22, 1, 0.36, 1] as const;
+export const softEase = [0.16, 1, 0.3, 1] as const;
 
 export const measuredEase = [0.16, 1, 0.3, 1] as const;
 export const floatingEase = [0.16, 1, 0.3, 1] as const;

@@ -170,7 +170,7 @@
   html,
   body {
     transition:
-      background var(--motion-base) var(--ease-premium),
+      background-color var(--motion-base) var(--ease-premium),
       color var(--motion-fast) var(--ease-premium);
   }
 
@@ -589,7 +589,6 @@
   transition:
     transform var(--motion-slow) var(--ease-premium),
     border-color var(--motion-fast) var(--ease-premium),
-    background var(--motion-base) var(--ease-premium),
     background-color var(--motion-fast) var(--ease-premium),
     color var(--motion-fast) var(--ease-premium),
     opacity var(--motion-fast) var(--ease-premium);
@@ -3977,69 +3976,51 @@ html[data-theme="dark"] .atmosphere-blob-three {
   --motion-section-visible: 0;
 }
 
-.motion-section[data-motion-visible="true"] {
+.motion-section.is-visible {
   --motion-section-visible: 1;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .apple-archive-experience > :is(.apple-hero, .apple-section, .apple-value-band).motion-section {
-    opacity: 0;
-    transform: translate3d(0, 48px, 0) scale(0.97);
-    transform-origin: center top;
-    backface-visibility: hidden;
-    transition-property: opacity, transform;
-    transition-duration: 800ms;
-    transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+[data-reveal] {
+  opacity: 0;
+  transform: translate3d(0, 44px, 0) scale(0.97);
+  transform-origin: center top;
+  transition-property: opacity, transform;
+  transition-duration: 850ms;
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+[data-reveal].is-visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+.apple-value-archive-shell[data-reveal] {
+  transform: translate3d(0, 56px, 0) scale(0.95);
+  transition-duration: 1000ms;
+}
+
+.apple-value-archive-shell[data-reveal].is-visible {
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+@media (max-width: 767px) {
+  [data-reveal] {
+    transform: translate3d(0, 26px, 0) scale(0.985);
+    transition-duration: 620ms;
   }
 
-  .apple-archive-experience > :is(.apple-hero, .apple-section, .apple-value-band).motion-section[data-motion-visible="true"] {
-    opacity: 1;
+  [data-reveal].is-visible {
     transform: translate3d(0, 0, 0) scale(1);
-  }
-
-  .apple-value-band .apple-value-archive-shell {
-    opacity: 0;
-    transform: translate3d(0, 56px, 0) scale(0.95);
-    transform-origin: center top;
-    backface-visibility: hidden;
-    transition-property: opacity, transform;
-    transition-duration: 1000ms;
-    transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
-  }
-
-  .apple-value-band[data-motion-visible="true"] .apple-value-archive-shell {
-    opacity: 1;
-    transform: translate3d(0, 0, 0) scale(1);
-  }
-
-  .apple-value-band .apple-value-card,
-  .apple-preserve-layout > *,
-  .apple-preserve-grid > * {
-    backface-visibility: hidden;
-    transform: translateZ(0);
-    transition-property: opacity, transform, background-color, border-color, color;
-    transition-duration: 800ms;
-    transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
-  }
-
-  @media (max-width: 767px) {
-    .apple-archive-experience > :is(.apple-hero, .apple-section, .apple-value-band).motion-section {
-      transform: translate3d(0, 28px, 0) scale(1);
-    }
-
-    .apple-value-band .apple-value-archive-shell {
-      transform: translate3d(0, 32px, 0) scale(1);
-    }
   }
 }
 
-.motion-gpu {
-  transform: translateZ(0);
-  backface-visibility: hidden;
-}
-
-.motion-layer {
-  contain: paint;
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
 }
 
 .motion-eyebrow,
@@ -4656,11 +4637,11 @@ html[data-theme="dark"] .atmosphere-blob-three {
   transform: scaleX(0.76);
 }
 
-.apple-value-band[data-motion-visible="true"]::before {
+.apple-value-band.is-visible::before {
   transform: translate3d(0, 0, 0) scale(1);
 }
 
-.apple-value-band[data-motion-visible="true"]::after {
+.apple-value-band.is-visible::after {
   transform: scaleX(1);
 }
 
@@ -4862,12 +4843,12 @@ html[data-theme="dark"] .atmosphere-blob-three {
     transform 540ms var(--ease-luxury);
 }
 
-.apple-value-band[data-motion-visible="true"] .apple-value-grid::before {
+.apple-value-band.is-visible .apple-value-grid::before {
   opacity: 0.82;
   transform: scaleX(1);
 }
 
-.apple-value-band[data-motion-visible="true"] .apple-value-grid::after {
+.apple-value-band.is-visible .apple-value-grid::after {
   opacity: 1;
   transform: scale(1);
 }
@@ -5078,11 +5059,11 @@ html[data-theme="dark"] .atmosphere-blob-three {
   transform: translate3d(0, -50%, 0) scaleX(0.72);
 }
 
-.motion-section[data-motion-visible="true"] .apple-scene-module::before {
+.motion-section.is-visible .apple-scene-module::before {
   transform: translate3d(0, 0, 0) scale(1);
 }
 
-.motion-section[data-motion-visible="true"] .apple-scene-module::after {
+.motion-section.is-visible .apple-scene-module::after {
   transform: translate3d(0, -50%, 0) scaleX(1);
 }
 
@@ -5335,12 +5316,12 @@ html[data-theme="dark"] .atmosphere-blob-three {
     transform 780ms var(--ease-luxury);
 }
 
-.motion-section[data-motion-visible="true"] .apple-process-grid::before {
+.motion-section.is-visible .apple-process-grid::before {
   opacity: 0.88;
   scale: 1 1;
 }
 
-.motion-section[data-motion-visible="true"] .apple-process-grid::after {
+.motion-section.is-visible .apple-process-grid::after {
   transform: translate3d(0, 0, 0) scale(1);
 }
 
@@ -5408,8 +5389,8 @@ html[data-theme="dark"] .atmosphere-blob-three {
   transform: translate3d(0, 1.4rem, 0) rotate(0.65deg) scale(0.975);
 }
 
-.motion-section[data-motion-visible="true"] .apple-preserve-layout::before,
-.motion-section[data-motion-visible="true"] .apple-preserve-layout::after {
+.motion-section.is-visible .apple-preserve-layout::before,
+.motion-section.is-visible .apple-preserve-layout::after {
   opacity: 0.62;
   transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
 }
@@ -5496,7 +5477,7 @@ html[data-theme="dark"] .atmosphere-blob-three {
     transform 780ms var(--ease-luxury);
 }
 
-.motion-section[data-motion-visible="true"] .apple-inquiry-layout::after {
+.motion-section.is-visible .apple-inquiry-layout::after {
   transform: translate3d(0, 0, 0) scale(1);
 }
 
@@ -8019,7 +8000,7 @@ html[data-theme="dark"] .public-visual-scope::before {
   }
 
   .public-visual-scope .ambient-background {
-    transition-property: background, background-color, opacity;
+    transition-property: background-color, opacity;
   }
 }
 

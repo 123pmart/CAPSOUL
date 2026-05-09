@@ -3,7 +3,6 @@ import type { Metadata } from "next";
 import { cookies } from "next/headers";
 
 import { AdminEntry } from "@/components/admin/admin-entry";
-import { MotionProvider } from "@/components/motion/MotionProvider";
 import { SceneTransitionProvider } from "@/components/scene-transition-provider";
 import { SiteLocaleProvider } from "@/components/site-locale-provider";
 import { SiteHeader } from "@/components/site-header";
@@ -87,20 +86,18 @@ export default async function RootLayout({
           <SiteThemeProvider initialTheme={initialTheme}>
             <SiteLocaleProvider locale={locale} globalContent={siteContent.global}>
               <PublicVisualScope>
-                <MotionProvider>
-                  <SceneTransitionProvider>
-                    <SiteHeader />
-                    <main
-                      id="main-content"
-                      className="relative min-h-[100svh] w-full max-w-full overflow-x-clip pt-[var(--header-offset-mobile)] sm:pt-[var(--header-offset-desktop)]"
-                    >
-                      {children}
-                      <div className="md:hidden">
-                        <AdminEntry inline />
-                      </div>
-                    </main>
-                  </SceneTransitionProvider>
-                </MotionProvider>
+                <SceneTransitionProvider>
+                  <SiteHeader />
+                  <main
+                    id="main-content"
+                    className="relative min-h-[100svh] w-full max-w-full overflow-x-clip pt-[var(--header-offset-mobile)] sm:pt-[var(--header-offset-desktop)]"
+                  >
+                    {children}
+                    <div className="md:hidden">
+                      <AdminEntry inline />
+                    </div>
+                  </main>
+                </SceneTransitionProvider>
               </PublicVisualScope>
             </SiteLocaleProvider>
           </SiteThemeProvider>

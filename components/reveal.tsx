@@ -6,9 +6,6 @@ import {
   motion,
   useInView,
   useReducedMotion,
-  useScroll,
-  useSpring,
-  useTransform,
 } from "framer-motion";
 
 import {
@@ -16,7 +13,6 @@ import {
   heroRevealTransition,
   microRevealTransition,
   premiumEase,
-  scrollDepthSpring,
   sectionRevealTransition,
 } from "@/components/motion-config";
 import { useImmersiveScroll } from "@/components/immersive-scroll-context";
@@ -31,7 +27,6 @@ type RevealProps = {
   delay?: number;
   distance?: number;
   duration?: number;
-  blur?: number;
   variant?: RevealVariant;
   once?: boolean;
   amount?: number;
@@ -54,7 +49,6 @@ type RevealItemProps = {
   delay?: number;
   distance?: number;
   duration?: number;
-  blur?: number;
   variant?: RevealVariant;
 };
 
@@ -67,8 +61,6 @@ type ScrollPlaneProps = {
 type RevealDefaults = {
   y: number;
   scale: number;
-  blur: number;
-  clipPath?: string;
   duration: number;
   ease: readonly [number, number, number, number];
 };
@@ -79,7 +71,6 @@ function getRevealDefaults(variant: RevealVariant): RevealDefaults {
       return {
         y: 18,
         scale: 0.99,
-        blur: 3,
         duration: heroRevealTransition.duration,
         ease: heroRevealTransition.ease,
       };
@@ -87,8 +78,6 @@ function getRevealDefaults(variant: RevealVariant): RevealDefaults {
       return {
         y: 26,
         scale: 0.974,
-        blur: 4,
-        clipPath: "inset(0 0 14% 0 round 1.75rem)",
         duration: heroRevealTransition.duration,
         ease: heroRevealTransition.ease,
       };
@@ -96,7 +85,6 @@ function getRevealDefaults(variant: RevealVariant): RevealDefaults {
       return {
         y: 10,
         scale: 0.998,
-        blur: 0,
         duration: microRevealTransition.duration,
         ease: microRevealTransition.ease,
       };
@@ -104,7 +92,6 @@ function getRevealDefaults(variant: RevealVariant): RevealDefaults {
       return {
         y: 22,
         scale: 0.992,
-        blur: 0,
         duration: cardRevealTransition.duration,
         ease: cardRevealTransition.ease,
       };
@@ -113,7 +100,6 @@ function getRevealDefaults(variant: RevealVariant): RevealDefaults {
       return {
         y: 34,
         scale: 0.986,
-        blur: 0,
         duration: sectionRevealTransition.duration,
         ease: sectionRevealTransition.ease,
       };
@@ -126,7 +112,6 @@ export function Reveal({
   delay = 0,
   distance,
   duration,
-  blur,
   variant = "section",
   once = true,
   amount = 0.1,
@@ -145,7 +130,6 @@ export function Reveal({
     ? Math.min(distance ?? defaults.y, 12)
     : (distance ?? defaults.y);
   const resolvedDuration = duration ?? defaults.duration;
-  const resolvedBlur = usesLiteRevealMode ? 0 : (blur ?? defaults.blur);
   const inView = useInView(ref, {
     once,
     amount,
@@ -157,15 +141,11 @@ export function Reveal({
         opacity: 1,
         y: 0,
         scale: 1,
-        filter: "blur(0px)",
-        clipPath: "inset(0 0 0% 0 round 0rem)",
       }
     : {
         opacity: 0,
         y: resolvedDistance,
         scale: defaults.scale,
-        filter: resolvedBlur ? `blur(${resolvedBlur}px)` : "blur(0px)",
-        clipPath: defaults.clipPath ?? "inset(0 0 0% 0 round 0rem)",
       };
 
   const animate = inView || reduceMotion || forceVisible
@@ -173,8 +153,6 @@ export function Reveal({
         opacity: 1,
         y: 0,
         scale: 1,
-        filter: "blur(0px)",
-        clipPath: "inset(0 0 0% 0 round 0rem)",
       }
     : initial;
 
@@ -243,7 +221,6 @@ export function RevealItem({
   delay = 0,
   distance,
   duration,
-  blur,
   variant = "card",
 }: RevealItemProps) {
   const reduceMotion = useReducedMotion();
@@ -257,7 +234,6 @@ export function RevealItem({
     ? Math.min(distance ?? defaults.y, 12)
     : (distance ?? defaults.y);
   const resolvedDuration = duration ?? defaults.duration;
-  const resolvedBlur = usesLiteRevealMode ? 0 : (blur ?? defaults.blur);
 
   return (
     <motion.div
@@ -267,22 +243,16 @@ export function RevealItem({
               opacity: 1,
               y: 0,
               scale: 1,
-              filter: "blur(0px)",
-              clipPath: "inset(0 0 0% 0 round 0rem)",
             }
           : {
               opacity: 0,
               y: resolvedDistance,
               scale: defaults.scale,
-              filter: resolvedBlur ? `blur(${resolvedBlur}px)` : "blur(0px)",
-              clipPath: defaults.clipPath ?? "inset(0 0 0% 0 round 0rem)",
             },
         visible: {
           opacity: 1,
           y: 0,
           scale: 1,
-          filter: "blur(0px)",
-          clipPath: "inset(0 0 0% 0 round 0rem)",
         },
       }}
       transition={{
@@ -300,27 +270,10 @@ export function RevealItem({
 export function ScrollPlane({
   children,
   className = "",
-  distance = 18,
 }: ScrollPlaneProps) {
-  const ref = useRef<HTMLDivElement | null>(null);
-  const reduceMotion = useReducedMotion();
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"],
-  });
-
-  const yRaw = useTransform(scrollYProgress, [0, 0.45, 1], [distance, 0, -distance * 0.7]);
-  const scaleRaw = useTransform(scrollYProgress, [0, 0.45, 1], [1.015, 1, 0.992]);
-  const y = useSpring(yRaw, scrollDepthSpring);
-  const scale = useSpring(scaleRaw, scrollDepthSpring);
-
   return (
-    <motion.div
-      ref={ref}
-      style={reduceMotion ? undefined : { y, scale }}
-      className={className}
-    >
+    <div className={className}>
       {children}
-    </motion.div>
+    </div>
   );
 }

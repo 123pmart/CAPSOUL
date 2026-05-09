@@ -31,12 +31,8 @@ import {
   isImmersiveSectionId,
   type ImmersiveSectionId,
 } from "@/components/immersive-scroll-context";
-import { MotionText } from "@/components/motion/MotionText";
-import { Reveal } from "@/components/motion/Reveal";
-import { SceneCard } from "@/components/motion/SceneCard";
-import { ScrollScene } from "@/components/motion/ScrollScene";
-import { StaggerGroup } from "@/components/motion/StaggerGroup";
 import { contentSwapTransition, measuredEase } from "@/components/motion-config";
+import { RevealObserver } from "@/components/public/reveal-observer";
 import { useMagneticMotion } from "@/components/use-magnetic-motion";
 import type {
   GlobalSiteContent,
@@ -213,6 +209,10 @@ const primaryButtonMotion = {
   whileTap: { scale: 0.985 },
   transition: { duration: 0.2, ease: measuredEase },
 } as const;
+
+function revealDelay(index: number, step = 90): CSSProperties {
+  return { "--reveal-delay": `${Math.min(index * step, 360)}ms` } as CSSProperties;
+}
 
 function MagneticPrimaryAnchor({
   children,
@@ -603,27 +603,29 @@ function ArchiveSection({
   className?: string;
 }) {
   return (
-    <ScrollScene
-      as="section"
+    <section
       id={id}
       data-archive-section
       data-atmosphere-section={getAtmosphereSectionForId(id)}
       data-motion-section
       className={`apple-section motion-section ${className}`.trim()}
-      contentClassName="apple-section-inner motion-section-flow"
-      kind={id === "inquire" ? "quiet" : "section"}
+      data-reveal
     >
-      <Reveal as="div" className="apple-section-kicker motion-eyebrow" variant="micro">
-        {eyebrow}
-      </Reveal>
-      <MotionText as="h2" className="apple-section-title motion-title" delay={0.12} text={title} />
-      <Reveal as="p" className="apple-section-copy motion-copy" delay={0.24} variant="quiet">
-        {description}
-      </Reveal>
-      <Reveal as="div" className="apple-section-body motion-card" delay={0.34} variant="section">
-        {children}
-      </Reveal>
-    </ScrollScene>
+      <div className="apple-section-inner motion-section-flow">
+        <div className="apple-section-kicker motion-eyebrow" data-reveal>
+          {eyebrow}
+        </div>
+        <h2 className="apple-section-title motion-title" data-reveal style={revealDelay(1)}>
+          {title}
+        </h2>
+        <p className="apple-section-copy motion-copy" data-reveal style={revealDelay(2)}>
+          {description}
+        </p>
+        <div className="apple-section-body motion-card">
+          {children}
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -696,7 +698,11 @@ function ArchiveVisualFrame({
 }
 
 function HeroHeadline({ title }: { title: string }) {
-  return <MotionText as="h1" className="apple-hero-title motion-title" delay={0.14} immediate text={title} />;
+  return (
+    <h1 className="apple-hero-title motion-title" data-reveal style={revealDelay(1)}>
+      {title}
+    </h1>
+  );
 }
 
 function ArchiveHero({
@@ -713,45 +719,39 @@ function ArchiveHero({
   const processStepPrefix = stepLabelPrefix.toLocaleUpperCase();
 
   return (
-    <ScrollScene
-      as="section"
+    <section
       id="home"
       data-archive-section
       data-atmosphere-section="hero"
       data-motion-section
       className="apple-hero motion-section"
-      contentClassName="apple-hero-inner motion-section-flow"
-      kind="hero"
+      data-reveal
     >
-      <Reveal as="div" className="apple-section-kicker motion-eyebrow" delay={0.02} immediate variant="micro">
-        {home.eyebrow}
-      </Reveal>
-      <HeroHeadline title={home.title} />
-      <Reveal as="p" className="apple-hero-copy motion-copy" delay={0.32} immediate variant="quiet">
-        {home.description}
-      </Reveal>
-      <Reveal as="div" className="apple-hero-actions motion-card" delay={0.44} immediate variant="micro">
-        {home.primaryAction ? (
-          <MagneticPrimaryAnchor
-            href={home.primaryAction.href}
-            onClick={(event) => handleLink(home.primaryAction?.href ?? "", event)}
-          >
-            {home.primaryAction.label}
-          </MagneticPrimaryAnchor>
-        ) : null}
-        {home.secondaryAction ? (
-          <a className="apple-cta apple-cta-secondary" href={home.secondaryAction.href} onClick={(event) => handleLink(home.secondaryAction?.href ?? "", event)}>
-            {home.secondaryAction.label}
-          </a>
-        ) : null}
-      </Reveal>
-      <StaggerGroup
-        className="apple-hero-stage motion-media"
-        delay={0.58}
-        stagger={0.16}
-        variant="media"
-      >
-        <SceneCard className="apple-hero-record" hover={false} index={0} variant="media">
+      <div className="apple-hero-inner motion-section-flow">
+        <div className="apple-section-kicker motion-eyebrow" data-reveal>
+          {home.eyebrow}
+        </div>
+        <HeroHeadline title={home.title} />
+        <p className="apple-hero-copy motion-copy" data-reveal style={revealDelay(2)}>
+          {home.description}
+        </p>
+        <div className="apple-hero-actions motion-card" data-reveal style={revealDelay(3)}>
+          {home.primaryAction ? (
+            <MagneticPrimaryAnchor
+              href={home.primaryAction.href}
+              onClick={(event) => handleLink(home.primaryAction?.href ?? "", event)}
+            >
+              {home.primaryAction.label}
+            </MagneticPrimaryAnchor>
+          ) : null}
+          {home.secondaryAction ? (
+            <a className="apple-cta apple-cta-secondary" href={home.secondaryAction.href} onClick={(event) => handleLink(home.secondaryAction?.href ?? "", event)}>
+              {home.secondaryAction.label}
+            </a>
+          ) : null}
+        </div>
+        <div className="apple-hero-stage motion-media">
+          <div className="apple-hero-record" data-reveal style={revealDelay(4)}>
             <ArchiveVisualFrame
               image={heroStep.image}
               fallbackImage={heroStep.fallbackImage}
@@ -761,30 +761,28 @@ function ArchiveHero({
               priority
               showToolbar={false}
             />
-        </SceneCard>
-        <StaggerGroup
-          className="apple-hero-chapters"
-          aria-label="Opening process steps"
-          delay={0.76}
-          stagger={0.1}
-          variant="process"
-        >
-          {processCards.map((step, index) => (
-            <SceneCard
-              className="apple-hero-chapter apple-liquid-surface"
-              key={`hero-chapter-${index}`}
-              index={index}
-              variant="process"
-            >
-              <span className="apple-liquid-layer" aria-hidden="true" />
-              <span>{processStepPrefix} {index + 1}</span>
-              <strong>{step.label}</strong>
-              <p>{step.summary}</p>
-            </SceneCard>
-          ))}
-        </StaggerGroup>
-      </StaggerGroup>
-    </ScrollScene>
+          </div>
+          <div
+            className="apple-hero-chapters"
+            aria-label="Opening process steps"
+          >
+            {processCards.map((step, index) => (
+              <div
+                className="apple-hero-chapter apple-liquid-surface"
+                key={`hero-chapter-${index}`}
+                data-reveal
+                style={revealDelay(index + 5)}
+              >
+                <span className="apple-liquid-layer" aria-hidden="true" />
+                <span>{processStepPrefix} {index + 1}</span>
+                <strong>{step.label}</strong>
+                <p>{step.summary}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -794,7 +792,6 @@ function ArchiveValueCard({
   archiveLabelPrefix,
   isActive,
   detailId,
-  reduceMotion,
   onHover,
   onSelect,
 }: {
@@ -803,13 +800,11 @@ function ArchiveValueCard({
   archiveLabelPrefix: string;
   isActive: boolean;
   detailId: string;
-  reduceMotion: boolean;
   onHover: (index: number) => void;
   onSelect: (index: number) => void;
 }) {
   return (
-    <SceneCard
-      as="button"
+    <button
       type="button"
       className={[
         "apple-value-card apple-liquid-surface",
@@ -817,11 +812,11 @@ function ArchiveValueCard({
         isActive ? "" : "apple-value-card-inactive",
       ].filter(Boolean).join(" ")}
       key={`archive-value-card-${index}`}
-      hover={!reduceMotion}
-      index={index}
-      tap={!reduceMotion}
-      variant="archive"
-      style={{ "--motion-stagger-index": index } as CSSProperties}
+      data-reveal
+      style={{
+        "--motion-stagger-index": index,
+        "--reveal-delay": `${Math.min(index * 90, 360)}ms`,
+      } as CSSProperties}
       aria-controls={detailId}
       aria-expanded={isActive}
       aria-pressed={isActive}
@@ -858,7 +853,7 @@ function ArchiveValueCard({
           </motion.div>
         ) : null}
       </AnimatePresence>
-    </SceneCard>
+    </button>
   );
 }
 
@@ -867,7 +862,6 @@ function EmotionalValue({
 }: {
   stepLabelPrefix: string;
 }) {
-  const reduceMotion = useReducedMotion();
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [hoverIndex, setHoverIndex] = useState<number | null>(null);
   const archive = PRIVATE_MEMORY_ARCHIVE[getPublicLocale(stepLabelPrefix)];
@@ -876,18 +870,17 @@ function EmotionalValue({
   const activePillar = pillars[activeIndex] ?? pillars[0];
 
   return (
-    <ScrollScene
-      as="section"
+    <section
       className="apple-value-band motion-section"
       data-atmosphere-section="archive"
       data-active-index={activeIndex}
       data-motion-section
-      kind="archive"
+      data-reveal
       style={{
         "--active-archive-index": activeIndex,
       } as CSSProperties}
     >
-      <Reveal as="div" className="apple-value-archive-shell motion-media" delay={0.08} variant="archive">
+      <div className="apple-value-archive-shell motion-media" data-reveal>
         <div className="apple-archive-sheets" aria-hidden="true" data-active-index={activeIndex}>
           <span className="apple-archive-sheet apple-archive-sheet-one" />
           <span className="apple-archive-sheet apple-archive-sheet-two" />
@@ -895,19 +888,16 @@ function EmotionalValue({
         </div>
         <div className="apple-value-statement">
           <span>{archive.eyebrow}</span>
-          <MotionText as="h2" text={archive.headline} />
+          <h2 data-reveal style={revealDelay(1)}>{archive.headline}</h2>
           <div className="apple-archive-record-line" aria-hidden="true">
             <span style={{ "--archive-index-x": `${activeIndex * 100}%` } as CSSProperties} />
           </div>
           <p>{activePillar?.summary ?? archive.headline}</p>
         </div>
-      </Reveal>
-      <StaggerGroup
+      </div>
+      <div
         className="apple-value-grid motion-stagger"
         data-active-index={activeIndex}
-        delay={0.36}
-        stagger={0.12}
-        variant="archive"
         onPointerLeave={(event: PointerEvent<HTMLElement>) => {
           if (isFineHoverPointer(event)) {
             setHoverIndex(null);
@@ -930,14 +920,13 @@ function EmotionalValue({
               archiveLabelPrefix={archive.labelPrefix}
               isActive={isActive}
               detailId={detailId}
-              reduceMotion={Boolean(reduceMotion)}
               onHover={setHoverIndex}
               onSelect={setSelectedIndex}
             />
           );
         })}
-      </StaggerGroup>
-    </ScrollScene>
+      </div>
+    </section>
   );
 }
 
@@ -1015,12 +1004,10 @@ function ArchiveSceneModule({
   }
 
   return (
-    <StaggerGroup className="apple-scene-module motion-stagger" delay={0.12} direction="up" stagger={0.14} variant="card">
-      <SceneCard
+    <div className="apple-scene-module motion-stagger">
+      <div
         className="apple-record-list"
-        hover={false}
-        index={0}
-        variant="card"
+        data-reveal
         style={{
           "--record-active-index": activeIndex,
           "--record-total": scene.steps.length,
@@ -1056,9 +1043,9 @@ function ArchiveSceneModule({
             </button>
           );
         })}
-      </SceneCard>
+      </div>
 
-      <SceneCard className="apple-record-feature motion-media" hover={false} index={1} variant="media">
+      <div className="apple-record-feature motion-media" data-reveal style={revealDelay(1)}>
         <div className="experience-content-container">
           <AnimatePresence initial={false} custom={direction} mode="wait">
             <motion.div
@@ -1109,36 +1096,33 @@ function ArchiveSceneModule({
           nextDisabled={activeIndex === scene.steps.length - 1}
           showArrows
         />
-      </SceneCard>
-    </StaggerGroup>
+      </div>
+    </div>
   );
 }
 
 function ProcessStepCard({
   step,
   index,
-  reduceMotion,
 }: {
   step: PublicSceneStep;
   index: number;
-  reduceMotion: boolean;
 }) {
   return (
-    <SceneCard
-      as="article"
+    <article
       className="apple-process-card apple-liquid-surface how-it-works-card"
       key={`process-step-${index}`}
-      hover={!reduceMotion}
-      index={index}
-      tap={!reduceMotion}
-      variant="process"
-      style={{ "--motion-stagger-index": index } as CSSProperties}
+      data-reveal
+      style={{
+        "--motion-stagger-index": index,
+        "--reveal-delay": `${Math.min(index * 90, 360)}ms`,
+      } as CSSProperties}
     >
       <span className="apple-liquid-layer" aria-hidden="true" />
       <span>{String(index + 1).padStart(2, "0")}</span>
       <h3>{step.label}</h3>
       <p>{step.detail}</p>
-    </SceneCard>
+    </article>
   );
 }
 
@@ -1149,7 +1133,6 @@ function ProcessTimeline({
   process: ResolvedSceneContent;
   swipeHint: string;
 }) {
-  const reduceMotion = useReducedMotion();
   const scrollerRef = useRef<HTMLDivElement>(null);
   const isResettingScrollRef = useRef(true);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -1213,14 +1196,10 @@ function ProcessTimeline({
 
   return (
     <div className="apple-process-shell">
-      <StaggerGroup
+      <div
         ref={scrollerRef}
         className="apple-process-grid motion-stagger"
         data-scroll-ready={isScrollReady ? "true" : "false"}
-        delay={0.12}
-        direction="left"
-        stagger={0.1}
-        variant="process"
         onScroll={() => {
           if (isResettingScrollRef.current) {
             const scroller = scrollerRef.current;
@@ -1241,10 +1220,9 @@ function ProcessTimeline({
             key={`process-step-${index}`}
             step={step}
             index={index}
-            reduceMotion={Boolean(reduceMotion)}
           />
         ))}
-      </StaggerGroup>
+      </div>
       <div className="apple-process-scroll-cue" aria-hidden="true">
         <span className="apple-process-swipe-hint">{swipeHint}</span>
         <span className="apple-process-scroll-dots">
@@ -1265,14 +1243,11 @@ function PreserveEditorial({ preserve }: { preserve: ResolvedSceneContent }) {
   const remaining = preserve.steps.slice(1);
 
   return (
-    <StaggerGroup className="apple-preserve-layout motion-stagger" alternate delay={0.12} direction="up" stagger={0.12} variant="card">
+    <div className="apple-preserve-layout motion-stagger">
       {featured ? (
-        <SceneCard
-          as="article"
+        <article
           className="apple-preserve-feature apple-liquid-surface motion-media"
-          hover={false}
-          index={0}
-          variant="media"
+          data-reveal
         >
           <span className="apple-liquid-layer" aria-hidden="true" />
           <span>{featured.mediaLabel}</span>
@@ -1285,26 +1260,27 @@ function PreserveEditorial({ preserve }: { preserve: ResolvedSceneContent }) {
             items={featured.bullets}
             variants={detailStaggerReveal}
           />
-        </SceneCard>
+        </article>
       ) : null}
-      <StaggerGroup className="apple-preserve-grid" delay={0.24} stagger={0.1} variant="card">
+      <div className="apple-preserve-grid">
         {remaining.map((step, index) => (
-          <SceneCard
-            as="article"
+          <article
             className="apple-preserve-card apple-liquid-surface"
             key={`preserve-card-${index}`}
-            index={index + 1}
-            variant="card"
-            style={{ "--motion-stagger-index": index + 1 } as CSSProperties}
+            data-reveal
+            style={{
+              "--motion-stagger-index": index + 1,
+              "--reveal-delay": `${Math.min((index + 1) * 90, 360)}ms`,
+            } as CSSProperties}
           >
             <span className="apple-liquid-layer" aria-hidden="true" />
             <span>{step.label}</span>
             <h3>{step.title}</h3>
             <p>{step.summary}</p>
-          </SceneCard>
+          </article>
         ))}
-      </StaggerGroup>
-    </StaggerGroup>
+      </div>
+    </div>
   );
 }
 
@@ -1476,23 +1452,16 @@ function InquiryArchiveForm({
   }
 
   return (
-    <StaggerGroup className="apple-inquiry-layout motion-stagger" delay={0.14} stagger={0.16} variant="quiet">
-      <SceneCard
-        as="form"
+    <div className="apple-inquiry-layout motion-stagger">
+      <form
         className="apple-inquiry-form"
-        hover={false}
-        index={0}
         onSubmit={handleSubmit}
-        tap={false}
-        variant="quiet"
+        data-reveal
       >
-        <Reveal
-          as="div"
+        <div
           className="apple-inquiry-tabs"
           role="tablist"
           aria-label={inquiry.progressionLabel}
-          delay={0.18}
-          variant="micro"
           style={{
             "--inquiry-active-index": activeIndex,
             "--inquiry-active-offset": `calc(${activeIndex} * ((100% - 1.3rem) / 3 + 0.65rem))`,
@@ -1510,7 +1479,7 @@ function InquiryArchiveForm({
               {step.chip}
             </button>
           ))}
-        </Reveal>
+        </div>
         <div className="apple-inquiry-copy">
           <span>{activeSupport?.label}</span>
           <h3>{activeFormStep?.title}</h3>
@@ -1554,15 +1523,12 @@ function InquiryArchiveForm({
           )}
         </div>
         <p className="apple-inquiry-note">{inquiry.footerNote}</p>
-      </SceneCard>
+      </form>
 
-      <SceneCard
-        as="aside"
+      <aside
         className="apple-inquiry-support motion-media"
-        hover={false}
-        index={1}
-        tap={false}
-        variant="media"
+        data-reveal
+        style={revealDelay(1)}
       >
         <AnimatePresence initial={false} mode="wait">
           {activeSupport ? (
@@ -1589,8 +1555,8 @@ function InquiryArchiveForm({
           itemKeyPrefix="trust-point"
           items={inquiry.trustPoints}
         />
-      </SceneCard>
-    </StaggerGroup>
+      </aside>
+    </div>
   );
 }
 
@@ -1664,6 +1630,7 @@ export function PublicExperience({
 
   return (
     <div className="apple-archive-experience" data-active-section={activeAtmosphereSection}>
+      <RevealObserver />
       <ArchiveIndexLine items={railItems} activeKey={activeAtmosphereSection} />
 
       <nav className="apple-side-nav" aria-label="Section navigation">
