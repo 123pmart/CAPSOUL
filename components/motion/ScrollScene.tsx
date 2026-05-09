@@ -49,35 +49,35 @@ function getMotionElement(as: ElementType) {
 function getScrollValues(kind: ScrollSceneKind, intensity: number) {
   if (kind === "hero") {
     return {
-      y: [0, scaleMotionValue(-36, intensity)],
-      scale: [1, 0.965],
-      opacity: [1, 0.75],
+      y: [0, scaleMotionValue(-44, intensity)],
+      scale: [1, 0.955],
+      opacity: [1, 0.68],
       offset: ["start start", "end start"] as const,
     };
   }
 
   if (kind === "archive") {
     return {
-      y: [scaleMotionValue(16, intensity), 0, scaleMotionValue(-10, intensity)],
-      scale: [0.985, 1.008, 1],
-      opacity: [0.96, 1, 0.98],
+      y: [scaleMotionValue(30, intensity), 0, scaleMotionValue(-18, intensity)],
+      scale: [0.97, 1.018, 1],
+      opacity: [0.9, 1, 0.96],
       offset: ["start end", "center center", "end start"] as const,
     };
   }
 
   if (kind === "quiet") {
     return {
-      y: [scaleMotionValue(10, intensity), 0, scaleMotionValue(-6, intensity)],
-      scale: [0.995, 1, 0.998],
-      opacity: [0.98, 1, 0.98],
+      y: [scaleMotionValue(20, intensity), 0, scaleMotionValue(-10, intensity)],
+      scale: [0.985, 1, 0.996],
+      opacity: [0.94, 1, 0.98],
       offset: ["start end", "center center", "end start"] as const,
     };
   }
 
   return {
-    y: [scaleMotionValue(14, intensity), 0, scaleMotionValue(-8, intensity)],
-    scale: [0.995, 1, 0.998],
-    opacity: [0.98, 1, 0.96],
+    y: [scaleMotionValue(26, intensity), 0, scaleMotionValue(-12, intensity)],
+    scale: [0.985, 1, 0.996],
+    opacity: [0.94, 1, 0.96],
     offset: ["start end", "center center", "end start"] as const,
   };
 }

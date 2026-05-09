@@ -3997,22 +3997,6 @@ html[data-theme="dark"] .atmosphere-blob-three {
   will-change: transform, opacity;
 }
 
-.motion-text-word-mask {
-  display: inline-block;
-  overflow: hidden;
-  vertical-align: bottom;
-}
-
-.motion-text-word {
-  display: inline-block;
-  transform-origin: center bottom;
-}
-
-.motion-text-gap {
-  display: inline-block;
-  width: 0.28em;
-}
-
 .motion-eyebrow,
 .motion-title,
 .motion-copy,

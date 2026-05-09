@@ -16,12 +16,13 @@ export const premiumEase = [0.22, 1, 0.36, 1] as const;
 export const softEase = [0.16, 1, 0.3, 1] as const;
 
 export const motionDurations = {
-  micro: 0.24,
-  small: 0.52,
-  card: 0.68,
-  section: 0.86,
-  hero: 0.78,
-  text: 0.62,
+  micro: 0.58,
+  small: 0.78,
+  card: 0.88,
+  section: 0.96,
+  hero: 0.9,
+  archive: 1,
+  text: 0.82,
 } as const;
 
 export type MotionDevice = "mobile" | "tablet" | "desktop";

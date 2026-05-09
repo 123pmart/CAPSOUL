@@ -19,7 +19,7 @@ import {
   scaleMotionValue,
 } from "@/components/motion/motion-config";
 
-type RevealVariant = "hero" | "section" | "card" | "media" | "micro" | "quiet";
+type RevealVariant = "hero" | "section" | "card" | "media" | "micro" | "quiet" | "archive";
 type RevealDirection = "up" | "down" | "left" | "right" | "none";
 
 type RevealProps = {
@@ -59,18 +59,20 @@ function getMotionElement(as: ElementType) {
 function getDefaults(variant: RevealVariant) {
   switch (variant) {
     case "hero":
-      return { y: 18, scale: 0.99, duration: motionDurations.hero, ease: premiumEase };
+      return { y: 42, scale: 0.965, duration: motionDurations.hero, ease: premiumEase };
+    case "archive":
+      return { y: 58, scale: 0.96, duration: motionDurations.archive, ease: premiumEase };
     case "media":
-      return { y: 32, scale: 0.97, duration: motionDurations.section, ease: premiumEase };
+      return { y: 54, scale: 0.96, duration: motionDurations.section, ease: premiumEase };
     case "micro":
-      return { y: 10, scale: 0.995, duration: motionDurations.small, ease: softEase };
+      return { y: 22, scale: 0.98, duration: motionDurations.micro, ease: softEase };
     case "quiet":
-      return { y: 18, scale: 0.992, duration: motionDurations.small, ease: softEase };
+      return { y: 36, scale: 0.975, duration: motionDurations.small, ease: softEase };
     case "card":
-      return { y: 28, scale: 0.985, duration: motionDurations.card, ease: premiumEase };
+      return { y: 48, scale: 0.96, duration: motionDurations.card, ease: premiumEase };
     case "section":
     default:
-      return { y: 34, scale: 0.985, duration: motionDurations.section, ease: premiumEase };
+      return { y: 48, scale: 0.96, duration: motionDurations.section, ease: premiumEase };
   }
 }
 

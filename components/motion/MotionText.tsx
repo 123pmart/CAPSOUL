@@ -94,15 +94,13 @@ function AnimatedMotionText({
   const isVisible = inView || immediate;
   const hiddenTextState = {
     opacity: 0,
-    y: scaleMotionValue(24, motionState.intensity),
-    scale: 0.985,
-    clipPath: "inset(0 0 18% 0)",
+    y: scaleMotionValue(40, motionState.intensity),
+    scale: 0.96,
   };
   const visibleTextState = {
     opacity: 1,
     y: 0,
     scale: 1,
-    clipPath: "inset(0 0 0% 0)",
   };
 
   return (

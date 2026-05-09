@@ -98,7 +98,7 @@ export const StaggerGroup = forwardRef<HTMLElement, StaggerGroupProps>(function 
   alternate = false,
   variant = "card",
   delay = 0.05,
-  stagger = 0.08,
+  stagger = 0.1,
   amount = 0.18,
   margin = "0px 0px -72px 0px",
   once = true,
@@ -156,7 +156,7 @@ function AnimatedStaggerGroup({
   style,
   contextValue,
   delay = 0.05,
-  stagger = 0.08,
+  stagger = 0.1,
   amount = 0.18,
   margin = "0px 0px -72px 0px",
   once = true,
@@ -172,7 +172,7 @@ function AnimatedStaggerGroup({
   const motionState = useCinematicMotion();
   const inView = useInView(ref, { once, amount, margin: margin as any });
   const childCount = Children.count(children);
-  const cappedStagger = Math.min(stagger, childCount > 1 ? 0.48 / (childCount - 1) : stagger);
+  const cappedStagger = Math.min(stagger, childCount > 1 ? 0.72 / (childCount - 1) : stagger);
   const MotionComponent = getMotionElement(Component);
 
   useEffect(() => {

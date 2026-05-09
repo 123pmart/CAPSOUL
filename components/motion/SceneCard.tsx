@@ -46,34 +46,34 @@ function getMotionElement(as: ElementType) {
 function getBaseDistance(variant: StaggerVariant) {
   switch (variant) {
     case "archive":
-      return 36;
+      return 58;
     case "media":
-      return 32;
+      return 54;
     case "process":
-      return 24;
+      return 42;
     case "quiet":
-      return 18;
+      return 36;
     case "section":
-      return 30;
+      return 48;
     case "card":
     default:
-      return 28;
+      return 48;
   }
 }
 
 function getBaseScale(variant: StaggerVariant) {
   switch (variant) {
     case "archive":
-      return 0.96;
-    case "media":
-      return 0.97;
-    case "quiet":
-      return 0.99;
     case "card":
     case "process":
     case "section":
+      return 0.96;
+    case "media":
+      return 0.955;
+    case "quiet":
+      return 0.975;
     default:
-      return 0.985;
+      return 0.96;
   }
 }
 
@@ -83,16 +83,25 @@ function getHiddenTransform({
   index,
   intensity,
   variant,
+  isMobile,
 }: {
   direction: StaggerDirection;
   alternate: boolean;
   index: number;
   intensity: number;
   variant: StaggerVariant;
+  isMobile: boolean;
 }) {
   const baseDistance = scaleMotionValue(getBaseDistance(variant), intensity);
   const alternatingSign = alternate && index % 2 === 1 ? -1 : 1;
   const horizontalDistance = Math.min(18, baseDistance) * alternatingSign;
+
+  if (isMobile) {
+    return {
+      x: 0,
+      y: Math.max(14, baseDistance),
+    };
+  }
 
   if (direction === "left") {
     return { x: -horizontalDistance, y: scaleMotionValue(8, intensity) };
@@ -142,11 +151,16 @@ export function SceneCard({
   const MotionComponent = getMotionElement(Component);
   const duration = resolvedVariant === "quiet"
     ? motionDurations.small
-    : motionDurations.card;
+    : resolvedVariant === "archive"
+      ? motionDurations.archive
+      : resolvedVariant === "media"
+        ? motionDurations.section
+        : motionDurations.card;
   const hiddenTransform = getHiddenTransform({
     direction: resolvedDirection,
     alternate: staggerContext.alternate,
     index,
+    isMobile: motionState.isMobile,
     intensity: motionState.intensity,
     variant: resolvedVariant,
   });

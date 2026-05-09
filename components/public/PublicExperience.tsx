@@ -616,11 +616,11 @@ function ArchiveSection({
       <Reveal as="div" className="apple-section-kicker motion-eyebrow" variant="micro">
         {eyebrow}
       </Reveal>
-      <MotionText as="h2" className="apple-section-title motion-title" text={title} />
-      <Reveal as="p" className="apple-section-copy motion-copy" delay={0.08} variant="quiet">
+      <MotionText as="h2" className="apple-section-title motion-title" delay={0.12} text={title} />
+      <Reveal as="p" className="apple-section-copy motion-copy" delay={0.24} variant="quiet">
         {description}
       </Reveal>
-      <Reveal as="div" className="apple-section-body motion-card" delay={0.14} variant="section">
+      <Reveal as="div" className="apple-section-body motion-card" delay={0.34} variant="section">
         {children}
       </Reveal>
     </ScrollScene>
@@ -696,7 +696,7 @@ function ArchiveVisualFrame({
 }
 
 function HeroHeadline({ title }: { title: string }) {
-  return <MotionText as="h1" className="apple-hero-title motion-title" delay={0.04} immediate text={title} />;
+  return <MotionText as="h1" className="apple-hero-title motion-title" delay={0.14} immediate text={title} />;
 }
 
 function ArchiveHero({
@@ -723,14 +723,14 @@ function ArchiveHero({
       contentClassName="apple-hero-inner motion-section-flow"
       kind="hero"
     >
-      <Reveal as="div" className="apple-section-kicker motion-eyebrow" immediate variant="micro">
+      <Reveal as="div" className="apple-section-kicker motion-eyebrow" delay={0.02} immediate variant="micro">
         {home.eyebrow}
       </Reveal>
       <HeroHeadline title={home.title} />
-      <Reveal as="p" className="apple-hero-copy motion-copy" delay={0.14} immediate variant="quiet">
+      <Reveal as="p" className="apple-hero-copy motion-copy" delay={0.32} immediate variant="quiet">
         {home.description}
       </Reveal>
-      <Reveal as="div" className="apple-hero-actions motion-card" delay={0.2} immediate variant="micro">
+      <Reveal as="div" className="apple-hero-actions motion-card" delay={0.44} immediate variant="micro">
         {home.primaryAction ? (
           <MagneticPrimaryAnchor
             href={home.primaryAction.href}
@@ -747,8 +747,8 @@ function ArchiveHero({
       </Reveal>
       <StaggerGroup
         className="apple-hero-stage motion-media"
-        delay={0.12}
-        stagger={0.08}
+        delay={0.58}
+        stagger={0.16}
         variant="media"
       >
         <SceneCard className="apple-hero-record" hover={false} index={0} variant="media">
@@ -765,8 +765,8 @@ function ArchiveHero({
         <StaggerGroup
           className="apple-hero-chapters"
           aria-label="Opening process steps"
-          delay={0.16}
-          stagger={0.08}
+          delay={0.76}
+          stagger={0.1}
           variant="process"
         >
           {processCards.map((step, index) => (
@@ -887,7 +887,7 @@ function EmotionalValue({
         "--active-archive-index": activeIndex,
       } as CSSProperties}
     >
-      <Reveal as="div" className="apple-value-archive-shell motion-media" variant="media">
+      <Reveal as="div" className="apple-value-archive-shell motion-media" delay={0.08} variant="archive">
         <div className="apple-archive-sheets" aria-hidden="true" data-active-index={activeIndex}>
           <span className="apple-archive-sheet apple-archive-sheet-one" />
           <span className="apple-archive-sheet apple-archive-sheet-two" />
@@ -905,8 +905,8 @@ function EmotionalValue({
       <StaggerGroup
         className="apple-value-grid motion-stagger"
         data-active-index={activeIndex}
-        delay={0.08}
-        stagger={0.08}
+        delay={0.36}
+        stagger={0.12}
         variant="archive"
         onPointerLeave={(event: PointerEvent<HTMLElement>) => {
           if (isFineHoverPointer(event)) {
@@ -1015,7 +1015,7 @@ function ArchiveSceneModule({
   }
 
   return (
-    <StaggerGroup className="apple-scene-module motion-stagger" direction="up" stagger={0.1} variant="card">
+    <StaggerGroup className="apple-scene-module motion-stagger" delay={0.12} direction="up" stagger={0.14} variant="card">
       <SceneCard
         className="apple-record-list"
         hover={false}
@@ -1217,9 +1217,9 @@ function ProcessTimeline({
         ref={scrollerRef}
         className="apple-process-grid motion-stagger"
         data-scroll-ready={isScrollReady ? "true" : "false"}
-        delay={0.06}
-        direction="right"
-        stagger={0.08}
+        delay={0.12}
+        direction="left"
+        stagger={0.1}
         variant="process"
         onScroll={() => {
           if (isResettingScrollRef.current) {
@@ -1265,7 +1265,7 @@ function PreserveEditorial({ preserve }: { preserve: ResolvedSceneContent }) {
   const remaining = preserve.steps.slice(1);
 
   return (
-    <StaggerGroup className="apple-preserve-layout motion-stagger" alternate direction="up" stagger={0.08} variant="card">
+    <StaggerGroup className="apple-preserve-layout motion-stagger" alternate delay={0.12} direction="up" stagger={0.12} variant="card">
       {featured ? (
         <SceneCard
           as="article"
@@ -1287,7 +1287,7 @@ function PreserveEditorial({ preserve }: { preserve: ResolvedSceneContent }) {
           />
         </SceneCard>
       ) : null}
-      <StaggerGroup className="apple-preserve-grid" delay={0.1} stagger={0.08} variant="card">
+      <StaggerGroup className="apple-preserve-grid" delay={0.24} stagger={0.1} variant="card">
         {remaining.map((step, index) => (
           <SceneCard
             as="article"
@@ -1476,7 +1476,7 @@ function InquiryArchiveForm({
   }
 
   return (
-    <StaggerGroup className="apple-inquiry-layout motion-stagger" stagger={0.1} variant="quiet">
+    <StaggerGroup className="apple-inquiry-layout motion-stagger" delay={0.14} stagger={0.16} variant="quiet">
       <SceneCard
         as="form"
         className="apple-inquiry-form"
@@ -1491,7 +1491,7 @@ function InquiryArchiveForm({
           className="apple-inquiry-tabs"
           role="tablist"
           aria-label={inquiry.progressionLabel}
-          delay={0.08}
+          delay={0.18}
           variant="micro"
           style={{
             "--inquiry-active-index": activeIndex,
