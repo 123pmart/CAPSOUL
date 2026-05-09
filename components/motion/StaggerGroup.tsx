@@ -5,10 +5,8 @@ import {
   createContext,
   forwardRef,
   useContext,
-  useEffect,
   useMemo,
   useRef,
-  useState,
   type CSSProperties,
   type ElementType,
   type MutableRefObject,
@@ -168,18 +166,11 @@ function AnimatedStaggerGroup({
   forwardedRef?: Ref<HTMLElement>;
 }) {
   const ref = useRef<HTMLElement | null>(null);
-  const [isAnimating, setIsAnimating] = useState(false);
   const motionState = useCinematicMotion();
   const inView = useInView(ref, { once, amount, margin: margin as any });
   const childCount = Children.count(children);
   const cappedStagger = Math.min(stagger, childCount > 1 ? 0.72 / (childCount - 1) : stagger);
   const MotionComponent = getMotionElement(Component);
-
-  useEffect(() => {
-    if (inView) {
-      setIsAnimating(true);
-    }
-  }, [inView]);
 
   return (
     <StaggerContext.Provider value={contextValue}>
@@ -192,7 +183,6 @@ function AnimatedStaggerGroup({
         className={[
           className,
           "motion-gpu",
-          isAnimating ? "motion-no-layout" : "",
         ].filter(Boolean).join(" ")}
         data-motion-visible={inView ? "true" : "false"}
         initial="hidden"
@@ -209,7 +199,6 @@ function AnimatedStaggerGroup({
             },
           },
         }}
-        onAnimationComplete={() => setIsAnimating(false)}
         style={style}
       >
         {children}

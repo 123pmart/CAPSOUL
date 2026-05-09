@@ -92,10 +92,11 @@ function AnimatedMotionText({
   const inView = useInView(ref, { once: true, amount, margin: margin as any });
   const MotionComponent = getMotionElement(Component);
   const isVisible = inView || immediate;
+  const hiddenDistance = scaleMotionValue(44, motionState.intensity);
   const hiddenTextState = {
     opacity: 0,
-    y: scaleMotionValue(40, motionState.intensity),
-    scale: 0.96,
+    y: motionState.isMobile ? Math.max(24, hiddenDistance) : hiddenDistance,
+    scale: motionState.isMobile ? 0.98 : 0.965,
   };
   const visibleTextState = {
     opacity: 1,

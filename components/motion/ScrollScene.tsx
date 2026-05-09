@@ -154,6 +154,7 @@ function AnimatedScrollScene({
   const ref = useRef<HTMLElement | null>(null);
   const motionState = useCinematicMotion();
   const inView = useInView(ref, { once, amount, margin: margin as any });
+  const MotionComponent = getMotionElement(Component);
   const values = getScrollValues(kind ?? "section", motionState.intensity);
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -165,11 +166,22 @@ function AnimatedScrollScene({
   const y = useSpring(rawY, { stiffness: 120, damping: 26, mass: 0.72 });
   const scale = useSpring(rawScale, { stiffness: 120, damping: 26, mass: 0.72 });
   const opacity = useSpring(rawOpacity, { stiffness: 120, damping: 26, mass: 0.72 });
-  const MotionComponent = getMotionElement(Component);
   const animatedContentStyle = { ...contentStyle, y, scale, opacity };
-  const animatedSceneStyle = contentClassName
-    ? style
-    : { ...style, y, scale, opacity };
+
+  if (!contentClassName) {
+    return (
+      <MotionComponent
+        {...rest}
+        ref={ref}
+        className={[className, "motion-layer"].filter(Boolean).join(" ")}
+        data-motion-visible={inView ? "true" : "false"}
+        style={style}
+        transition={{ ease: premiumEase }}
+      >
+        {children}
+      </MotionComponent>
+    );
+  }
 
   return (
     <MotionComponent
@@ -177,19 +189,15 @@ function AnimatedScrollScene({
       ref={ref}
       className={[className, "motion-layer"].filter(Boolean).join(" ")}
       data-motion-visible={inView ? "true" : "false"}
-      style={animatedSceneStyle}
+      style={style}
       transition={{ ease: premiumEase }}
     >
-      {contentClassName ? (
-        <m.div
-          className={[contentClassName, "motion-gpu"].filter(Boolean).join(" ")}
-          style={animatedContentStyle}
-        >
-          {children}
-        </m.div>
-      ) : (
-        children
-      )}
+      <m.div
+        className={[contentClassName, "motion-gpu"].filter(Boolean).join(" ")}
+        style={animatedContentStyle}
+      >
+        {children}
+      </m.div>
     </MotionComponent>
   );
 }

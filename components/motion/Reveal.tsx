@@ -1,9 +1,7 @@
 "use client";
 
 import {
-  useEffect,
   useRef,
-  useState,
   type CSSProperties,
   type ElementType,
   type ReactNode,
@@ -163,29 +161,22 @@ function AnimatedReveal({
   ...rest
 }: RevealProps & { Component: ElementType }) {
   const ref = useRef<HTMLElement | null>(null);
-  const [isAnimating, setIsAnimating] = useState(false);
   const motionState = useCinematicMotion();
   const inView = useInView(ref, { once, amount, margin: margin as any });
   const defaults = getDefaults(variant ?? "section");
-  const resolvedDistance = scaleMotionValue(distance ?? defaults.y, motionState.intensity);
+  const scaledDistance = scaleMotionValue(distance ?? defaults.y, motionState.intensity);
+  const resolvedDistance = motionState.isMobile
+    ? Math.max(24, scaledDistance)
+    : scaledDistance;
+  const hiddenScale = motionState.isMobile ? Math.max(defaults.scale, 0.98) : defaults.scale;
   const offset = getDirectionalOffset(direction ?? "up", resolvedDistance);
   const MotionComponent = getMotionElement(Component);
-
-  useEffect(() => {
-    if (inView || immediate) {
-      setIsAnimating(true);
-    }
-  }, [immediate, inView]);
 
   return (
     <MotionComponent
       {...rest}
       ref={ref}
-      className={[
-        className,
-        "motion-gpu",
-        isAnimating ? "motion-no-layout" : "",
-      ].filter(Boolean).join(" ")}
+      className={[className, "motion-gpu"].filter(Boolean).join(" ")}
       data-motion-visible={inView || immediate ? "true" : "false"}
       initial="hidden"
       animate={inView || immediate ? "visible" : "hidden"}
@@ -194,7 +185,7 @@ function AnimatedReveal({
           opacity: 0,
           x: offset.x,
           y: offset.y,
-          scale: defaults.scale,
+          scale: hiddenScale,
         },
         visible: {
           opacity: 1,
@@ -208,7 +199,6 @@ function AnimatedReveal({
           },
         },
       }}
-      onAnimationComplete={() => setIsAnimating(false)}
       style={style}
     >
       {children}

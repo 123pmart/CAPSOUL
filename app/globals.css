@@ -3993,10 +3993,6 @@ html[data-theme="dark"] .atmosphere-blob-three {
   contain: paint;
 }
 
-.motion-no-layout {
-  will-change: transform, opacity;
-}
-
 .motion-eyebrow,
 .motion-title,
 .motion-copy,
@@ -5100,8 +5096,7 @@ html[data-theme="dark"] .atmosphere-blob-three {
   transition:
     transform var(--duration-fast) var(--ease-luxury),
     border-color var(--duration-fast) var(--ease-luxury),
-    background-color var(--duration-fast) var(--ease-luxury),
-    box-shadow var(--duration-med) var(--ease-luxury);
+    background-color var(--duration-fast) var(--ease-luxury);
 }
 
 .apple-record-card-active {
@@ -5310,8 +5305,7 @@ html[data-theme="dark"] .atmosphere-blob-three {
   padding: clamp(1rem, 1.5vw, 1.25rem);
   transition:
     transform var(--duration-fast) var(--ease-luxury),
-    border-color var(--duration-fast) var(--ease-luxury),
-    box-shadow var(--duration-med) var(--ease-luxury);
+    border-color var(--duration-fast) var(--ease-luxury);
 }
 
 @media (min-width: 900px) {
@@ -5402,8 +5396,7 @@ html[data-theme="dark"] .atmosphere-blob-three {
   padding: clamp(1rem, 1.8vw, 1.45rem);
   transition:
     transform var(--duration-fast) var(--ease-luxury),
-    border-color var(--duration-fast) var(--ease-luxury),
-    box-shadow var(--duration-med) var(--ease-luxury);
+    border-color var(--duration-fast) var(--ease-luxury);
 }
 
 .apple-preserve-card h3 {
@@ -5507,8 +5500,7 @@ html[data-theme="dark"] .atmosphere-blob-three {
   transition:
     transform var(--duration-fast) var(--ease-luxury),
     border-color var(--duration-fast) var(--ease-luxury),
-    background-color var(--duration-fast) var(--ease-luxury),
-    box-shadow var(--duration-med) var(--ease-luxury);
+    background-color var(--duration-fast) var(--ease-luxury);
 }
 
 .apple-inquiry-tab-active {
@@ -5558,7 +5550,6 @@ html[data-theme="dark"] .atmosphere-blob-three {
   box-shadow: var(--glass-inner-highlight);
   transition:
     border-color var(--duration-fast) var(--ease-luxury),
-    box-shadow var(--duration-fast) var(--ease-luxury),
     background-color var(--duration-fast) var(--ease-luxury),
     transform var(--duration-fast) var(--ease-luxury);
 }
@@ -7546,11 +7537,9 @@ html[data-theme="dark"] .apple-value-card-active {
   -webkit-overflow-scrolling: touch;
 }
 
-.section-scroller-content[data-section-active="true"] [style*="opacity: 0"],
-.section-scroller-content[data-section-active="true"] [style*="opacity:0"] {
+.section-scroller-content[data-section-active="true"] .scene-page-group [style*="opacity: 0"],
+.section-scroller-content[data-section-active="true"] .scene-page-group [style*="opacity:0"] {
   opacity: 1 !important;
-  filter: blur(0px) !important;
-  clip-path: none !important;
 }
 
 .section-scroller-content[data-section-active="true"] .scene-page-group,
@@ -8680,7 +8669,7 @@ html[data-theme="dark"] .public-visual-scope::before {
 
 .public-visual-scope .chip-marquee {
   --chip-marquee-gap: clamp(0.45rem, 1.4vw, 0.75rem);
-  --chip-marquee-duration: 22s;
+  --chip-marquee-duration: 16s;
   position: relative;
   justify-content: center;
   overflow: hidden;

@@ -22,7 +22,7 @@ export const motionDurations = {
   section: 0.96,
   hero: 0.9,
   archive: 1,
-  text: 0.82,
+  text: 0.85,
 } as const;
 
 export type MotionDevice = "mobile" | "tablet" | "desktop";

@@ -99,7 +99,7 @@ function getHiddenTransform({
   if (isMobile) {
     return {
       x: 0,
-      y: Math.max(14, baseDistance),
+      y: Math.max(24, baseDistance),
     };
   }
 
@@ -164,6 +164,9 @@ export function SceneCard({
     intensity: motionState.intensity,
     variant: resolvedVariant,
   });
+  const hiddenScale = motionState.isMobile
+    ? Math.max(getBaseScale(resolvedVariant), 0.98)
+    : getBaseScale(resolvedVariant);
 
   return (
     <MotionComponent
@@ -175,7 +178,7 @@ export function SceneCard({
           opacity: 0,
           x: hiddenTransform.x,
           y: hiddenTransform.y,
-          scale: getBaseScale(resolvedVariant),
+          scale: hiddenScale,
         },
         visible: {
           opacity: 1,
