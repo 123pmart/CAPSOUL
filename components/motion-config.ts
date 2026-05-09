@@ -1,7 +1,17 @@
-export const premiumEase = [0.18, 0.96, 0.24, 1] as const;
-export const measuredEase = [0.2, 0.84, 0.28, 1] as const;
-export const floatingEase = [0.27, 0.88, 0.38, 1] as const;
-export const gentleEase = [0.22, 0.88, 0.3, 0.98] as const;
+import { premiumEase } from "@/components/motion/motion-config";
+
+export {
+  ENABLE_CINEMATIC_MOTION,
+  MOTION_BREAKPOINTS,
+  MOTION_INTENSITY,
+  motionDurations,
+  premiumEase,
+  softEase,
+} from "@/components/motion/motion-config";
+
+export const measuredEase = [0.16, 1, 0.3, 1] as const;
+export const floatingEase = [0.16, 1, 0.3, 1] as const;
+export const gentleEase = [0.16, 1, 0.3, 1] as const;
 
 export const sectionRevealTransition = {
   duration: 0.44,

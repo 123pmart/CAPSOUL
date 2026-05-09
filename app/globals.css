@@ -3984,6 +3984,35 @@ html[data-theme="dark"] .atmosphere-blob-three {
   --motion-section-visible: 1;
 }
 
+.motion-gpu {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+.motion-layer {
+  contain: paint;
+}
+
+.motion-no-layout {
+  will-change: transform, opacity;
+}
+
+.motion-text-word-mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+}
+
+.motion-text-word {
+  display: inline-block;
+  transform-origin: center bottom;
+}
+
+.motion-text-gap {
+  display: inline-block;
+  width: 0.28em;
+}
+
 .motion-eyebrow,
 .motion-title,
 .motion-copy,
@@ -4764,7 +4793,6 @@ html[data-theme="dark"] .atmosphere-blob-three {
   align-items: start;
   margin-inline: auto;
   transition:
-    grid-template-columns 420ms var(--ease-luxury),
     transform 480ms var(--ease-luxury);
 }
 
@@ -6300,6 +6328,15 @@ html[data-theme="dark"] .apple-inquiry-tab-active {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .public-visual-scope *,
+  .public-visual-scope *::before,
+  .public-visual-scope *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
   .film-grain,
   .atmosphere-blob,
   .apple-hero::before,
