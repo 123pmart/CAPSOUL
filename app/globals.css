@@ -5139,11 +5139,12 @@ html[data-theme="dark"] .atmosphere-blob-three {
 .apple-record-card-active::before {
   content: "";
   position: absolute;
-  inset-block: 0.95rem;
-  left: 0;
-  width: 0.24rem;
-  border-radius: 0 var(--radius-pill) var(--radius-pill) 0;
-  background: linear-gradient(180deg, var(--text), color-mix(in srgb, var(--text) 42%, transparent));
+  inset: 0.34rem;
+  border: 1px solid color-mix(in srgb, var(--accent) 58%, var(--border-strong));
+  border-radius: calc(var(--radius-lg) - 0.34rem);
+  background: transparent;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--glass-highlight) 18%, transparent);
+  pointer-events: none;
 }
 
 .apple-record-card-active::after {
@@ -5729,7 +5730,6 @@ html[data-theme="dark"] .atmosphere-blob-three {
   gap: 1rem;
 }
 
-.apple-inquiry-support .apple-visual-toolbar,
 .apple-inquiry-support .apple-visual-frame p {
   font-family: var(--font-serif);
   font-style: italic;
@@ -7198,7 +7198,7 @@ html[data-theme="light"] .public-visual-scope :is(
   flex-direction: column;
   justify-content: center;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .experience-content-container .apple-record-feature-content {
@@ -8632,7 +8632,6 @@ html[data-theme="dark"] .public-visual-scope::before {
   text-wrap: balance;
 }
 
-.public-visual-scope .apple-inquiry-support .apple-visual-toolbar,
 .public-visual-scope .apple-inquiry-support .apple-visual-frame > p {
   font-family: var(--font-serif);
   font-style: italic;
@@ -8645,6 +8644,15 @@ html[data-theme="dark"] .public-visual-scope::before {
   color: color-mix(in srgb, var(--text-muted) 84%, var(--text));
   font-size: clamp(1rem, 1.35vw, 1.18rem);
   line-height: 1.45;
+}
+
+.public-visual-scope .apple-inquiry-support .apple-visual-toolbar,
+.public-visual-scope .apple-inquiry-support .apple-visual-toolbar span {
+  font-family: var(--font-sans);
+  font-style: normal;
+  font-weight: 820;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
 }
 
 .public-visual-scope :is(.apple-preserve-card h3, .apple-preserve-feature h3) {
@@ -8720,7 +8728,7 @@ html[data-theme="dark"] .public-visual-scope::before {
 
 .public-visual-scope .chip-marquee {
   --chip-marquee-gap: clamp(0.45rem, 1.4vw, 0.75rem);
-  --chip-marquee-duration: 7s;
+  --chip-marquee-duration: 4.4s;
   position: relative;
   justify-content: center;
   overflow: hidden;
@@ -8831,6 +8839,10 @@ html[data-theme="dark"] .public-visual-scope::before {
   justify-items: center;
 }
 
+.scroll-choreography-stage {
+  display: contents;
+}
+
 .scroll-choreography :is(
   .apple-section-kicker,
   .apple-hero-title,
@@ -8844,6 +8856,7 @@ html[data-theme="dark"] .public-visual-scope::before {
   .apple-record-list,
   .apple-record-feature,
   .apple-process-grid,
+  .apple-process-card,
   .apple-preserve-feature,
   .apple-preserve-card,
   .apple-inquiry-form,
@@ -8901,22 +8914,22 @@ html[data-theme="dark"] .public-visual-scope::before {
 
 .scroll-choreography-archive .apple-value-card:nth-child(1) {
   opacity: var(--scene-card-opacity-0, 1);
-  transform: translate3d(0, var(--scene-card-y-0, 0px), 0);
+  transform: translate3d(0, var(--scene-card-y-0, 0px), 0) scale(var(--scene-card-scale-0, 1));
 }
 
 .scroll-choreography-archive .apple-value-card:nth-child(2) {
   opacity: var(--scene-card-opacity-1, 1);
-  transform: translate3d(0, var(--scene-card-y-1, 0px), 0);
+  transform: translate3d(0, var(--scene-card-y-1, 0px), 0) scale(var(--scene-card-scale-1, 1));
 }
 
 .scroll-choreography-archive .apple-value-card:nth-child(3) {
   opacity: var(--scene-card-opacity-2, 1);
-  transform: translate3d(0, var(--scene-card-y-2, 0px), 0);
+  transform: translate3d(0, var(--scene-card-y-2, 0px), 0) scale(var(--scene-card-scale-2, 1));
 }
 
 .scroll-choreography-archive .apple-value-card:nth-child(4) {
   opacity: var(--scene-card-opacity-3, 1);
-  transform: translate3d(0, var(--scene-card-y-3, 0px), 0);
+  transform: translate3d(0, var(--scene-card-y-3, 0px), 0) scale(var(--scene-card-scale-3, 1));
 }
 
 .scroll-choreography-archive .apple-value-grid:has(.apple-value-card:hover) .apple-value-card-inactive:not(:hover) {
@@ -8956,9 +8969,35 @@ html[data-theme="dark"] .public-visual-scope::before {
 }
 
 .scroll-choreography-process-section .apple-process-grid {
-  opacity: var(--scene-standard-opacity, 1);
+  opacity: 1;
   transform: translate3d(var(--scene-row-x, 0px), 0, 0) scale(var(--scene-standard-scale, 1));
   transform-origin: center left;
+}
+
+.scroll-choreography-process-section .apple-process-card:nth-child(1) {
+  opacity: var(--process-card-opacity-0, 1);
+  transform: translate3d(var(--process-card-x-0, 0px), var(--process-card-y-0, 0px), 0) scale(var(--process-card-scale-0, 1));
+}
+
+.scroll-choreography-process-section .apple-process-card:nth-child(2) {
+  opacity: var(--process-card-opacity-1, 1);
+  transform: translate3d(var(--process-card-x-1, 0px), var(--process-card-y-1, 0px), 0) scale(var(--process-card-scale-1, 1));
+}
+
+.scroll-choreography-process-section .apple-process-card:nth-child(3) {
+  z-index: 3;
+  opacity: var(--process-card-opacity-2, 1);
+  transform: translate3d(var(--process-card-x-2, 0px), var(--process-card-y-2, 0px), 0) scale(var(--process-card-scale-2, 1));
+}
+
+.scroll-choreography-process-section .apple-process-card:nth-child(4) {
+  opacity: var(--process-card-opacity-3, 1);
+  transform: translate3d(var(--process-card-x-3, 0px), var(--process-card-y-3, 0px), 0) scale(var(--process-card-scale-3, 1));
+}
+
+.scroll-choreography-process-section .apple-process-card:nth-child(5) {
+  opacity: var(--process-card-opacity-4, 1);
+  transform: translate3d(var(--process-card-x-4, 0px), var(--process-card-y-4, 0px), 0) scale(var(--process-card-scale-4, 1));
 }
 
 .scroll-choreography-gallery-section :is(
@@ -8979,17 +9018,17 @@ html[data-theme="dark"] .public-visual-scope::before {
 
 .scroll-choreography-gallery-section .apple-preserve-grid .apple-preserve-card:nth-child(1) {
   opacity: var(--scene-card-opacity-1, 1);
-  transform: translate3d(0, var(--scene-card-y-1, 0px), 0) scale(var(--scene-standard-scale, 1));
+  transform: translate3d(var(--gallery-card-x-1, 0px), var(--scene-card-y-1, 0px), 0) scale(var(--scene-card-scale-1, 1));
 }
 
 .scroll-choreography-gallery-section .apple-preserve-grid .apple-preserve-card:nth-child(2) {
   opacity: var(--scene-card-opacity-2, 1);
-  transform: translate3d(0, var(--scene-card-y-2, 0px), 0) scale(var(--scene-standard-scale, 1));
+  transform: translate3d(var(--gallery-card-x-2, 0px), var(--scene-card-y-2, 0px), 0) scale(var(--scene-card-scale-2, 1));
 }
 
 .scroll-choreography-gallery-section .apple-preserve-grid .apple-preserve-card:nth-child(3) {
   opacity: var(--scene-card-opacity-3, 1);
-  transform: translate3d(0, var(--scene-card-y-3, 0px), 0) scale(var(--scene-standard-scale, 1));
+  transform: translate3d(var(--gallery-card-x-3, 0px), var(--scene-card-y-3, 0px), 0) scale(var(--scene-card-scale-3, 1));
 }
 
 .scroll-choreography-inquire-section :is(
@@ -9014,6 +9053,84 @@ html[data-theme="dark"] .public-visual-scope::before {
   transform-origin: center right;
 }
 
+@media (max-width: 767px) {
+  #how-it-works.apple-section {
+    align-content: start;
+    overflow: visible;
+  }
+
+  #how-it-works .scroll-choreography-process-section {
+    display: block;
+    min-height: 330svh;
+  }
+
+  #how-it-works .scroll-choreography-process-section .scroll-choreography-stage {
+    position: sticky;
+    top: calc(var(--header-offset-mobile) + 0.35rem);
+    display: grid;
+    min-height: calc(100svh - var(--header-offset-mobile) - 0.7rem);
+    align-content: center;
+    transform: translateZ(0);
+  }
+
+  #how-it-works .apple-section-body,
+  #how-it-works .apple-process-shell {
+    overflow: visible;
+  }
+
+  #how-it-works .apple-process-grid {
+    display: grid;
+    width: min(100%, 22rem);
+    max-width: calc(100vw - var(--shell-gutter) * 2);
+    grid-template-columns: 1fr;
+    grid-auto-flow: row;
+    grid-auto-columns: auto;
+    margin-inline: auto;
+    overflow: visible;
+    padding-inline: 0;
+    scroll-snap-type: none;
+    touch-action: pan-y;
+    mask-image: none;
+    -webkit-mask-image: none;
+  }
+
+  #how-it-works .apple-process-card {
+    grid-area: 1 / 1;
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    min-height: clamp(12.5rem, 48vw, 15.5rem);
+    pointer-events: none;
+    scroll-snap-align: none;
+  }
+
+  #how-it-works .apple-process-card:nth-child(1) {
+    z-index: 1;
+  }
+
+  #how-it-works .apple-process-card:nth-child(2) {
+    z-index: 2;
+  }
+
+  #how-it-works .apple-process-card:nth-child(3) {
+    z-index: 3;
+  }
+
+  #how-it-works .apple-process-card:nth-child(4) {
+    z-index: 4;
+  }
+
+  #how-it-works .apple-process-card:nth-child(5) {
+    z-index: 5;
+  }
+
+  #how-it-works .apple-process-scroll-cue {
+    position: relative;
+    z-index: 6;
+    opacity: 0.78;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .scroll-choreography :is(
     .apple-section-kicker,
@@ -9028,6 +9145,7 @@ html[data-theme="dark"] .public-visual-scope::before {
     .apple-record-list,
     .apple-record-feature,
     .apple-process-grid,
+    .apple-process-card,
     .apple-preserve-feature,
     .apple-preserve-card,
     .apple-inquiry-form,

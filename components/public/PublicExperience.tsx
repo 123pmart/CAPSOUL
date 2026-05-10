@@ -609,7 +609,7 @@ function ArchiveSection({
       : id === "inquire"
         ? { variant: "inquire" as const, className: "scroll-choreography-inquire-section" }
         : id === "how-it-works"
-          ? { variant: "standard" as const, className: "scroll-choreography-process-section" }
+          ? { variant: "process" as const, className: "scroll-choreography-process-section" }
           : { variant: "standard" as const, className: "scroll-choreography-experience-section" };
 
   return (
@@ -1067,10 +1067,10 @@ function ArchiveSceneModule({
               key={`experience-feature-${activeIndex}`}
               className="apple-record-feature-content"
               custom={direction}
-              initial={reduceMotion ? false : { opacity: 0, x: direction > 0 ? 28 : -28, y: 8, scale: 0.992 }}
+              initial={reduceMotion ? false : { opacity: 0, y: 24, scale: 0.97 }}
               animate={{ opacity: 1, x: 0, y: 0, scale: 1 }}
-              exit={reduceMotion ? undefined : { opacity: 0, x: direction > 0 ? -20 : 20, y: -6, scale: 0.996 }}
-              transition={reduceMotion ? { duration: 0 } : { ...transition, duration: 0.36 }}
+              exit={reduceMotion ? undefined : { opacity: 0, y: -12, scale: 0.985 }}
+              transition={reduceMotion ? { duration: 0 } : { ...transition, duration: 0.42 }}
             >
               <ArchiveVisualFrame
                 image={active.image}
