@@ -608,9 +608,7 @@ function ArchiveSection({
       ? { variant: "gallery" as const, className: "scroll-choreography-gallery-section" }
       : id === "inquire"
         ? { variant: "inquire" as const, className: "scroll-choreography-inquire-section" }
-        : id === "how-it-works"
-          ? { variant: "process" as const, className: "scroll-choreography-process-section" }
-          : { variant: "standard" as const, className: "scroll-choreography-experience-section" };
+        : { variant: "standard" as const, className: "scroll-choreography-experience-section" };
 
   return (
     <section
@@ -860,7 +858,7 @@ function ArchiveValueCard({
             initial={{ opacity: 0, y: -4, scale: 0.995 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -4, scale: 0.998 }}
-            transition={{ duration: 0.28, ease: measuredEase }}
+            transition={{ duration: 0.54, ease: measuredEase }}
           >
             {pillar.detail}
           </motion.div>
