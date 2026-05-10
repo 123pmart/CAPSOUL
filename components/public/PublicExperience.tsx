@@ -18,7 +18,10 @@ import { usePathname } from "next/navigation";
 import {
   AnimatePresence,
   motion,
+  useMotionValueEvent,
   useReducedMotion,
+  useScroll,
+  useTransform,
   type HTMLMotionProps,
 } from "framer-motion";
 
@@ -868,6 +871,131 @@ function ArchiveValueCard({
   );
 }
 
+function getMobileArchiveIndex(progress: number) {
+  if (progress < 0.2) {
+    return 0;
+  }
+
+  if (progress < 0.45) {
+    return 1;
+  }
+
+  if (progress < 0.7) {
+    return 2;
+  }
+
+  return 3;
+}
+
+function ArchiveMobileStageCard({
+  activeIndex,
+  archiveLabelPrefix,
+  index,
+  pillar,
+}: {
+  activeIndex: number;
+  archiveLabelPrefix: string;
+  index: number;
+  pillar: ArchivePillar;
+}) {
+  const stateClass = index === activeIndex
+    ? "archive-mobile-card-active"
+    : index < activeIndex
+      ? "archive-mobile-card-previous"
+      : "archive-mobile-card-next";
+
+  return (
+    <motion.article
+      className={`archive-mobile-card apple-liquid-surface ${stateClass}`}
+      style={{
+        zIndex: index === activeIndex ? 5 : Math.max(1, 4 - Math.abs(activeIndex - index)),
+      }}
+      aria-hidden={index === activeIndex ? undefined : "true"}
+    >
+      <span className="apple-liquid-layer" aria-hidden="true" />
+      <span>{archiveLabelPrefix} {String(index + 1).padStart(2, "0")}</span>
+      <h3>{pillar.title}</h3>
+      <p>{pillar.summary}</p>
+      <div className="archive-mobile-card-detail">{pillar.detail}</div>
+    </motion.article>
+  );
+}
+
+function ArchiveMobileScrollStage({
+  archive,
+}: {
+  archive: typeof PRIVATE_MEMORY_ARCHIVE[PublicLocale];
+}) {
+  const stageRef = useRef<HTMLElement | null>(null);
+  const reduceMotion = useReducedMotion();
+  const { scrollYProgress } = useScroll({
+    target: stageRef,
+    offset: ["start start", "end end"],
+  });
+  const [activeIndex, setActiveIndex] = useState(0);
+  const activePillar = archive.pillars[activeIndex] ?? archive.pillars[0];
+  const panelY = useTransform(scrollYProgress, [0, 0.14], ["54px", "0px"]);
+  const panelScale = useTransform(scrollYProgress, [0, 0.14], [0.9, 1]);
+  const panelOpacity = useTransform(scrollYProgress, [0, 0.1], [0.48, 1]);
+  const progressScale = useTransform(scrollYProgress, [0, 1], [0.25, 1]);
+
+  useMotionValueEvent(scrollYProgress, "change", (latest) => {
+    const clamped = Math.min(1, Math.max(0, latest));
+    setActiveIndex(getMobileArchiveIndex(clamped));
+  });
+
+  return (
+    <section
+      className="archive-mobile-stage"
+      data-active-archive-index={activeIndex}
+      data-archive-stage
+      ref={stageRef}
+    >
+      <div className="archive-mobile-stage-sticky">
+        <motion.div
+          className="apple-value-archive-shell archive-mobile-panel"
+          style={reduceMotion ? undefined : { opacity: panelOpacity, scale: panelScale, y: panelY }}
+        >
+          <div className="apple-archive-sheets" aria-hidden="true" data-active-index={activeIndex}>
+            <span className="apple-archive-sheet apple-archive-sheet-one" />
+            <span className="apple-archive-sheet apple-archive-sheet-two" />
+            <span className="apple-archive-sheet apple-archive-sheet-three" />
+          </div>
+          <div className="apple-value-statement">
+            <span>{archive.eyebrow}</span>
+            <h2>{archive.headline}</h2>
+            <div className="apple-archive-record-line" aria-hidden="true">
+              <motion.span
+                style={{
+                  scaleX: reduceMotion ? 1 : progressScale,
+                  transformOrigin: "left center",
+                }}
+              />
+            </div>
+            <p>{activePillar?.summary ?? archive.headline}</p>
+          </div>
+        </motion.div>
+
+        <div className="archive-mobile-stage-meter" aria-hidden="true">
+          <span>{String(activeIndex + 1).padStart(2, "0")} / 04</span>
+        </div>
+
+        <div className="archive-mobile-card-deck" aria-live="polite">
+          {archive.pillars.map((pillar, index) => (
+            <ArchiveMobileStageCard
+              activeIndex={activeIndex}
+              archiveLabelPrefix={archive.labelPrefix}
+              index={index}
+              key={`archive-mobile-stage-card-${index}`}
+              pillar={pillar}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function EmotionalValue({
   stepLabelPrefix,
 }: {
@@ -939,6 +1067,7 @@ function EmotionalValue({
           })}
         </div>
       </ScrollChoreography>
+      <ArchiveMobileScrollStage archive={archive} />
     </section>
   );
 }
