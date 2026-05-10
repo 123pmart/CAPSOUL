@@ -4185,7 +4185,7 @@ html[data-theme="dark"] .atmosphere-blob-three {
 }
 
 .apple-hero-title + .apple-hero-copy {
-  margin-top: clamp(1.35rem, 2.4vw, 2.35rem);
+  margin-top: clamp(2.2rem, 4.4vw, 4.4rem);
 }
 
 .apple-hero-actions {
@@ -5330,11 +5330,11 @@ html[data-theme="dark"] .atmosphere-blob-three {
   background:
     linear-gradient(90deg, transparent, color-mix(in srgb, var(--accent) 48%, transparent), color-mix(in srgb, var(--border-strong) 70%, transparent), transparent);
   opacity: 0;
-  scale: 0.24 1;
+  transform: scaleX(0.24);
   transform-origin: left center;
   transition:
     opacity 620ms var(--ease-luxury),
-    scale 820ms var(--ease-luxury);
+    transform 820ms var(--ease-luxury);
 }
 
 .apple-process-grid::after {
@@ -5354,7 +5354,7 @@ html[data-theme="dark"] .atmosphere-blob-three {
 
 .motion-section.is-visible .apple-process-grid::before {
   opacity: 0.88;
-  scale: 1 1;
+  transform: scaleX(1);
 }
 
 .motion-section.is-visible .apple-process-grid::after {
@@ -6391,8 +6391,6 @@ html[data-theme="dark"] .apple-inquiry-tab-active {
   .apple-hero-stage {
     animation: none;
     transform: none;
-    translate: 0 0;
-    scale: 1;
   }
 
   .apple-hero::after,
@@ -8575,7 +8573,8 @@ html[data-theme="dark"] .public-visual-scope::before {
     grid-auto-columns: var(--process-card-width);
     grid-auto-rows: 1fr;
     align-items: stretch;
-    justify-content: start;
+    place-content: normal start;
+    justify-content: flex-start;
     padding-inline: var(--shell-gutter) max(var(--shell-gutter), calc(100% - var(--shell-gutter) - var(--process-card-width)));
     scroll-padding-inline: var(--shell-gutter);
   }
@@ -8769,7 +8768,7 @@ html[data-theme="dark"] .public-visual-scope::before {
 
 .public-visual-scope .chip-marquee {
   --chip-marquee-gap: clamp(0.45rem, 1.4vw, 0.75rem);
-  --chip-marquee-duration: 2.8s;
+  --chip-marquee-duration: 1.7s;
   position: relative;
   justify-content: center;
   overflow: hidden;
@@ -8809,9 +8808,11 @@ html[data-theme="dark"] .public-visual-scope::before {
   will-change: transform;
 }
 
-.public-visual-scope .chip-marquee:is(:hover, :focus-within, :active) .chip-marquee-track,
-.public-visual-scope .chip-marquee[data-interacting="true"] .chip-marquee-track {
-  animation-play-state: paused;
+@media (hover: hover) and (pointer: fine) {
+  .public-visual-scope .chip-marquee:is(:hover, :focus-within) .chip-marquee-track,
+  .public-visual-scope .chip-marquee[data-interacting="true"] .chip-marquee-track {
+    animation-play-state: paused;
+  }
 }
 
 @keyframes chipMarquee {
@@ -8866,26 +8867,115 @@ html[data-theme="dark"] .public-visual-scope::before {
   }
 }
 
-.scroll-choreography {
+.apple-archive-experience {
+  position: relative;
+  isolation: isolate;
+  overflow-x: clip;
+}
+
+.apple-archive-experience > :not(.editorial-backdrop) {
+  position: relative;
+  z-index: 1;
+}
+
+.editorial-backdrop {
+  position: fixed;
+  inset: -8svh -5vw;
+  z-index: 0;
+  pointer-events: none;
+  contain: paint;
+  overflow: hidden;
+  opacity: 0.92;
+  color: rgba(24, 24, 24, 0.065);
+  mask-image: radial-gradient(ellipse at 50% 28%, black 0 34%, rgba(0, 0, 0, 0.74) 56%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse at 50% 28%, black 0 34%, rgba(0, 0, 0, 0.74) 56%, transparent 100%);
+}
+
+html[data-theme="dark"] .editorial-backdrop {
+  color: rgba(210, 222, 236, 0.07);
+}
+
+.editorial-backdrop-sheet {
+  position: absolute;
+  display: grid;
+  gap: clamp(0.7rem, 1.5vw, 1.15rem);
+  width: clamp(18rem, 29vw, 34rem);
+  min-height: clamp(22rem, 38vw, 44rem);
+  border: 1px solid currentColor;
+  border-radius: clamp(0.35rem, 0.8vw, 0.62rem);
+  padding: clamp(1rem, 2vw, 1.8rem);
+  background:
+    linear-gradient(90deg, currentColor 0 1px, transparent 1px 33%, currentColor 33% calc(33% + 1px), transparent calc(33% + 1px) 66%, currentColor 66% calc(66% + 1px), transparent calc(66% + 1px)),
+    repeating-linear-gradient(180deg, currentColor 0 1px, transparent 1px 0.9rem),
+    radial-gradient(circle at 20% 10%, currentColor, transparent 18%);
+  opacity: 0.72;
+  transform: translate3d(0, 0, 0);
+}
+
+.editorial-backdrop-sheet-one {
+  left: 2vw;
+  top: 10svh;
+  transform: rotate(-7deg);
+}
+
+.editorial-backdrop-sheet-two {
+  right: 4vw;
+  top: 16svh;
+  transform: rotate(5deg);
+}
+
+.editorial-backdrop-sheet-three {
+  left: 42vw;
+  bottom: -7svh;
+  transform: rotate(-2deg);
+}
+
+.editorial-backdrop-headline {
+  display: block;
+  max-width: 8ch;
+  font-family: var(--font-serif);
+  font-size: clamp(3.4rem, 8vw, 8rem);
+  font-style: italic;
+  font-weight: 500;
+  line-height: 0.82;
+  letter-spacing: -0.06em;
+  opacity: 0.72;
+  text-transform: uppercase;
+}
+
+.editorial-backdrop-rule {
+  display: block;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.9;
+  transform: translate3d(0, 0, 0);
+}
+
+.editorial-backdrop-columns {
+  display: block;
+  min-height: clamp(10rem, 17vw, 18rem);
+  background:
+    repeating-linear-gradient(180deg, currentColor 0 1px, transparent 1px 0.62rem),
+    linear-gradient(90deg, transparent 0 30%, currentColor 30% calc(30% + 1px), transparent calc(30% + 1px) 65%, currentColor 65% calc(65% + 1px), transparent calc(65% + 1px));
+  opacity: 0.58;
+}
+
+.apple-value-choreography,
+.premium-section-motion {
   position: relative;
   width: 100%;
   max-width: 100%;
   min-width: 0;
-  transform: translateZ(0);
-  backface-visibility: hidden;
 }
 
 .apple-value-choreography {
   display: grid;
-  gap: clamp(0.75rem, 1.6vw, 1.2rem);
+  gap: clamp(0.78rem, 1.55vw, 1.15rem);
   justify-items: center;
 }
 
-.scroll-choreography-stage {
-  display: contents;
-}
-
-.scroll-choreography :is(
+.premium-section-motion :is(
   .apple-section-kicker,
   .apple-hero-title,
   .apple-section-title,
@@ -8906,278 +8996,297 @@ html[data-theme="dark"] .public-visual-scope::before {
 ) {
   backface-visibility: hidden;
   transform-style: flat;
-  transition-property: transform, opacity, color, background-color, border-color;
-  transition-duration: 220ms;
-  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.public-visual-scope :is(.apple-hero-title, .apple-section-title, .apple-value-statement h2)[data-reveal] {
+.premium-section-motion :is(.apple-hero-title, .apple-section-title, .apple-value-statement h2) {
   opacity: 1;
 }
 
-.scroll-choreography-hero :is(
-  .apple-section-kicker,
-  .apple-hero-copy,
-  .apple-hero-actions
-) {
-  opacity: var(--scene-hero-opacity, 1);
-  transform: translate3d(0, var(--scene-hero-y, 0px), 0) scale(var(--scene-hero-scale, 1));
+.premium-section-motion-hero :is(.apple-section-kicker, .apple-hero-title, .apple-hero-copy, .apple-hero-actions) {
+  opacity: max(var(--pm-hero-opacity, 1), var(--motion-section-visible, 0));
+  transform: translate3d(0, var(--pm-hero-y, 0px), 0) scale(var(--pm-hero-scale, 1));
   transform-origin: center top;
 }
 
-.scroll-choreography-hero .apple-hero-title {
-  transform: translate3d(0, var(--scene-hero-y, 0px), 0) scale(var(--scene-hero-scale, 1));
-  transform-origin: center top;
-}
-
-.scroll-choreography-hero .apple-hero-record {
-  opacity: var(--scene-media-opacity, 1);
-  transform: translate3d(0, var(--scene-media-y, 0px), 0) scale(var(--scene-media-scale, 1));
+.premium-section-motion-hero .apple-hero-record {
+  opacity: max(var(--pm-media-opacity, 1), var(--motion-section-visible, 0));
+  transform: translate3d(0, var(--pm-media-y, 0px), 0) scale(var(--pm-media-scale, 1));
   transform-origin: center center;
 }
 
-.scroll-choreography-hero .apple-hero-chapter:nth-child(1) {
-  opacity: var(--scene-card-opacity-0, 1);
-  transform: translate3d(var(--scene-card-y-0, 0px), var(--scene-card-y-0, 0px), 0) scale(var(--scene-card-scale-0, 1));
+.premium-section-motion-hero .apple-hero-chapter:nth-child(1) {
+  opacity: max(var(--pm-card-opacity-0, 1), var(--motion-section-visible, 0));
+  transform: translate3d(var(--pm-card-x-0, 0px), var(--pm-card-y-0, 0px), 0) scale(var(--pm-card-scale-0, 1));
 }
 
-.scroll-choreography-hero .apple-hero-chapter:nth-child(2) {
-  opacity: var(--scene-card-opacity-1, 1);
-  transform: translate3d(var(--scene-card-y-1, 0px), var(--scene-card-y-1, 0px), 0) scale(var(--scene-card-scale-1, 1));
+.premium-section-motion-hero .apple-hero-chapter:nth-child(2) {
+  opacity: max(var(--pm-card-opacity-1, 1), var(--motion-section-visible, 0));
+  transform: translate3d(var(--pm-card-x-1, 0px), var(--pm-card-y-1, 0px), 0) scale(var(--pm-card-scale-1, 1));
 }
 
-.scroll-choreography-hero .apple-hero-chapter:nth-child(3) {
-  opacity: var(--scene-card-opacity-2, 1);
-  transform: translate3d(var(--scene-card-y-2, 0px), var(--scene-card-y-2, 0px), 0) scale(var(--scene-card-scale-2, 1));
+.premium-section-motion-hero .apple-hero-chapter:nth-child(3) {
+  opacity: max(var(--pm-card-opacity-2, 1), var(--motion-section-visible, 0));
+  transform: translate3d(var(--pm-card-x-2, 0px), var(--pm-card-y-2, 0px), 0) scale(var(--pm-card-scale-2, 1));
 }
 
-.scroll-choreography-hero .apple-hero-chapter:nth-child(4) {
-  opacity: var(--scene-card-opacity-3, 1);
-  transform: translate3d(var(--scene-card-y-3, 0px), var(--scene-card-y-3, 0px), 0) scale(var(--scene-card-scale-3, 1));
+.premium-section-motion-hero .apple-hero-chapter:nth-child(4) {
+  opacity: max(var(--pm-card-opacity-3, 1), var(--motion-section-visible, 0));
+  transform: translate3d(var(--pm-card-x-3, 0px), var(--pm-card-y-3, 0px), 0) scale(var(--pm-card-scale-3, 1));
 }
 
-.scroll-choreography-archive .apple-value-archive-shell {
-  opacity: 1;
-  transform: translate3d(0, var(--scene-panel-y, 0px), 0) scale(var(--scene-panel-scale, 1));
+.premium-section-motion-archive .apple-value-archive-shell {
+  opacity: max(var(--pm-archive-opacity, 1), var(--motion-section-visible, 0));
+  transform: translate3d(0, var(--pm-archive-y, 0px), 0) scale(var(--pm-archive-scale, 1));
   transform-origin: center top;
 }
 
-.scroll-choreography-archive .apple-value-card {
+.premium-section-motion-archive .apple-value-card:nth-child(1),
+.premium-section-motion-process-section .apple-process-card:nth-child(1),
+.premium-section-motion-preserve-section .apple-preserve-feature {
+  opacity: max(var(--pm-card-opacity-0, 1), var(--motion-section-visible, 0));
+  transform: translate3d(var(--pm-card-x-0, 0px), var(--pm-card-y-0, 0px), 0) scale(var(--pm-card-scale-0, 1));
+}
+
+.premium-section-motion-archive .apple-value-card:nth-child(2),
+.premium-section-motion-process-section .apple-process-card:nth-child(2),
+.premium-section-motion-preserve-section .apple-preserve-grid .apple-preserve-card:nth-child(1) {
+  opacity: max(var(--pm-card-opacity-1, 1), var(--motion-section-visible, 0));
+  transform: translate3d(var(--pm-card-x-1, 0px), var(--pm-card-y-1, 0px), 0) scale(var(--pm-card-scale-1, 1));
+}
+
+.premium-section-motion-archive .apple-value-card:nth-child(3),
+.premium-section-motion-process-section .apple-process-card:nth-child(3),
+.premium-section-motion-preserve-section .apple-preserve-grid .apple-preserve-card:nth-child(2) {
+  opacity: max(var(--pm-card-opacity-2, 1), var(--motion-section-visible, 0));
+  transform: translate3d(var(--pm-card-x-2, 0px), var(--pm-card-y-2, 0px), 0) scale(var(--pm-card-scale-2, 1));
+}
+
+.premium-section-motion-archive .apple-value-card:nth-child(4),
+.premium-section-motion-process-section .apple-process-card:nth-child(4),
+.premium-section-motion-preserve-section .apple-preserve-grid .apple-preserve-card:nth-child(3) {
+  opacity: max(var(--pm-card-opacity-3, 1), var(--motion-section-visible, 0));
+  transform: translate3d(var(--pm-card-x-3, 0px), var(--pm-card-y-3, 0px), 0) scale(var(--pm-card-scale-3, 1));
+}
+
+.premium-section-motion-process-section .apple-process-card:nth-child(5) {
+  opacity: max(var(--pm-card-opacity-4, 1), var(--motion-section-visible, 0));
+  transform: translate3d(var(--pm-card-x-4, 0px), var(--pm-card-y-4, 0px), 0) scale(var(--pm-card-scale-4, 1));
+}
+
+.premium-section-motion-process-section :is(.apple-section-kicker, .apple-section-copy),
+.premium-section-motion-preserve-section :is(.apple-section-kicker, .apple-section-copy) {
+  opacity: max(var(--pm-section-opacity, 1), var(--motion-section-visible, 0));
+  transform: translate3d(0, var(--pm-section-y, 0px), 0) scale(var(--pm-section-scale, 1));
+  transform-origin: center top;
+}
+
+.premium-section-motion-process-section .apple-section-title,
+.premium-section-motion-preserve-section .apple-section-title {
+  transform: translate3d(0, var(--pm-title-y, 0px), 0);
+  transform-origin: center top;
+}
+
+.premium-section-motion-process-section .apple-process-grid {
+  transform: translate3d(var(--pm-row-x, 0px), 0, 0);
+  transform-origin: center center;
+}
+
+.premium-section-motion-preserve-section .apple-preserve-feature {
+  transform: translate3d(var(--pm-card-x-0, 0px), var(--pm-card-y-0, 0px), 0) scale(var(--pm-gallery-scale, 1));
+}
+
+.premium-section-motion-experience-section .apple-record-list {
+  opacity: max(var(--pm-section-opacity, 1), var(--motion-section-visible, 0));
+  transform: translate3d(var(--pm-left-x, 0px), var(--pm-section-y, 0px), 0) scale(var(--pm-section-scale, 1));
+}
+
+.premium-section-motion-experience-section .apple-record-feature {
+  opacity: max(var(--pm-section-opacity, 1), var(--motion-section-visible, 0));
+  transform: translate3d(var(--pm-right-x, 0px), var(--pm-section-y, 0px), 0) scale(var(--pm-section-scale, 1));
+}
+
+.premium-section-motion-inquire-section .apple-inquiry-form {
+  opacity: max(var(--pm-section-opacity, 1), var(--motion-section-visible, 0));
+  transform: translate3d(var(--pm-left-x, 0px), var(--pm-section-y, 0px), 0) scale(var(--pm-section-scale, 1));
+}
+
+.premium-section-motion-inquire-section .apple-inquiry-support {
+  opacity: max(var(--pm-section-opacity, 1), var(--motion-section-visible, 0));
+  transform: translate3d(var(--pm-right-x, 0px), var(--pm-section-y, 0px), 0) scale(var(--pm-section-scale, 1));
+}
+
+.public-visual-scope .apple-value-archive-shell {
+  width: min(100%, 900px);
+}
+
+.public-visual-scope .apple-value-statement {
+  min-height: clamp(11.5rem, 17vw, 16.25rem);
+  background:
+    radial-gradient(circle at 22% 10%, rgba(255, 255, 255, 0.16), transparent 36%),
+    linear-gradient(180deg, rgba(18, 18, 19, 0.97), rgba(2, 2, 3, 0.99));
+}
+
+.public-visual-scope .apple-value-grid,
+.public-visual-scope .apple-value-grid[data-active-index] {
+  width: min(100%, 940px);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(0.56rem, 0.85vw, 0.72rem);
+  align-items: stretch;
+  margin-top: clamp(0.6rem, 1.1vw, 0.9rem);
+}
+
+.public-visual-scope .apple-value-card {
+  min-height: auto;
+  border-color: rgba(255, 255, 255, 0.12);
+  background:
+    radial-gradient(circle at 18% 0%, rgba(255, 255, 255, 0.08), transparent 42%),
+    linear-gradient(180deg, rgba(26, 26, 28, 0.92), rgba(7, 7, 8, 0.96));
+  color: rgba(255, 255, 255, 0.92);
+  cursor: default;
+  overflow: hidden;
+  padding: clamp(0.82rem, 1.05vw, 1rem);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 16px 42px rgba(0, 0, 0, 0.14);
   transition-property: transform, opacity;
-  transition-duration: 560ms;
+  transition-duration: 520ms;
   transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.scroll-choreography-archive .apple-value-card:nth-child(1) {
-  opacity: var(--scene-card-opacity-0, 1);
-  transform:
-    translate3d(var(--archive-card-shift-x, 0px), var(--scene-card-y-0, 0px), 0)
-    translate3d(0, var(--archive-card-shift-y, 0px), 0)
-    scale(var(--scene-card-scale-0, 1))
-    scale(var(--archive-card-scale, 1));
+.public-visual-scope .apple-value-card > span:not(.apple-liquid-layer) {
+  color: rgba(219, 230, 244, 0.74);
 }
 
-.scroll-choreography-archive .apple-value-card:nth-child(2) {
-  opacity: var(--scene-card-opacity-1, 1);
-  transform:
-    translate3d(var(--archive-card-shift-x, 0px), var(--scene-card-y-1, 0px), 0)
-    translate3d(0, var(--archive-card-shift-y, 0px), 0)
-    scale(var(--scene-card-scale-1, 1))
-    scale(var(--archive-card-scale, 1));
+.public-visual-scope .apple-value-card h3 {
+  color: white;
 }
 
-.scroll-choreography-archive .apple-value-card:nth-child(3) {
-  opacity: var(--scene-card-opacity-2, 1);
-  transform:
-    translate3d(var(--archive-card-shift-x, 0px), var(--scene-card-y-2, 0px), 0)
-    translate3d(0, var(--archive-card-shift-y, 0px), 0)
-    scale(var(--scene-card-scale-2, 1))
-    scale(var(--archive-card-scale, 1));
+.public-visual-scope .apple-value-card p,
+.public-visual-scope .apple-value-card-detail {
+  color: rgba(245, 247, 250, 0.68);
 }
 
-.scroll-choreography-archive .apple-value-card:nth-child(4) {
-  opacity: var(--scene-card-opacity-3, 1);
-  transform:
-    translate3d(var(--archive-card-shift-x, 0px), var(--scene-card-y-3, 0px), 0)
-    translate3d(0, var(--archive-card-shift-y, 0px), 0)
-    scale(var(--scene-card-scale-3, 1))
-    scale(var(--archive-card-scale, 1));
+.public-visual-scope .apple-value-card p {
+  display: block;
+  overflow: visible;
+  -webkit-line-clamp: unset;
 }
 
-.scroll-choreography-archive .apple-value-grid:has(.apple-value-card:hover) .apple-value-card-inactive:not(:hover) {
-  opacity: 0.94;
-}
-
-.scroll-choreography-archive .apple-value-card-active {
-  opacity: 1;
+.public-visual-scope .apple-value-card-detail {
+  margin-top: 0.36rem;
+  font-size: clamp(0.72rem, 0.78vw, 0.82rem);
+  line-height: 1.38;
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .scroll-choreography-archive .apple-value-card:hover {
-    --archive-card-shift-y: -4px;
-    --archive-card-scale: 1.025;
+  .public-visual-scope .apple-value-card:hover {
+    transform: translate3d(0, -3px, 0) scale(1.01);
+    border-color: rgba(255, 255, 255, 0.2);
   }
-
-  .scroll-choreography-archive .apple-value-grid[data-active-index="0"] .apple-value-card:nth-child(n + 2),
-  .scroll-choreography-archive .apple-value-grid[data-active-index="1"] .apple-value-card:nth-child(n + 3),
-  .scroll-choreography-archive .apple-value-grid[data-active-index="2"] .apple-value-card:nth-child(4) {
-    --archive-card-shift-x: 8px;
-  }
-
-  .scroll-choreography-archive .apple-value-grid[data-active-index="1"] .apple-value-card:nth-child(1),
-  .scroll-choreography-archive .apple-value-grid[data-active-index="2"] .apple-value-card:nth-child(-n + 2),
-  .scroll-choreography-archive .apple-value-grid[data-active-index="3"] .apple-value-card:nth-child(-n + 3) {
-    --archive-card-shift-x: -8px;
-  }
-}
-
-.scroll-choreography-process-section :is(
-  .apple-section-kicker,
-  .apple-section-copy
-) {
-  opacity: var(--scene-standard-opacity, 1);
-  transform: translate3d(0, var(--scene-section-y, 0px), 0) scale(var(--scene-standard-scale, 1));
-  transform-origin: center top;
-}
-
-.scroll-choreography-process-section .apple-section-title {
-  transform: translate3d(0, var(--scene-section-y, 0px), 0) scale(var(--scene-standard-scale, 1));
-  transform-origin: center top;
-}
-
-.scroll-choreography-process-section .apple-process-grid {
-  opacity: var(--scene-standard-opacity, 1);
-  transform: translate3d(var(--scene-row-x, 0px), var(--scene-section-y, 0px), 0) scale(var(--scene-standard-scale, 1));
-  transform-origin: center center;
-}
-
-.scroll-choreography-process-section .apple-process-card:nth-child(1) {
-  opacity: var(--scene-card-opacity-0, 1);
-  transform: translate3d(var(--scene-left-x, 0px), var(--scene-card-y-0, 0px), 0) scale(var(--scene-card-scale-0, 1));
-}
-
-.scroll-choreography-process-section .apple-process-card:nth-child(2) {
-  opacity: var(--scene-card-opacity-1, 1);
-  transform: translate3d(0, var(--scene-card-y-1, 0px), 0) scale(var(--scene-card-scale-1, 1));
-}
-
-.scroll-choreography-process-section .apple-process-card:nth-child(3) {
-  opacity: var(--scene-card-opacity-2, 1);
-  transform: translate3d(0, var(--scene-card-y-2, 0px), 0) scale(var(--scene-card-scale-2, 1));
-}
-
-.scroll-choreography-process-section .apple-process-card:nth-child(4) {
-  opacity: var(--scene-card-opacity-3, 1);
-  transform: translate3d(var(--scene-card-y-3, 0px), var(--scene-card-y-3, 0px), 0) scale(var(--scene-card-scale-3, 1));
-}
-
-.scroll-choreography-process-section .apple-process-card:nth-child(5) {
-  opacity: var(--scene-card-opacity-4, 1);
-  transform: translate3d(var(--scene-card-y-4, 0px), var(--scene-card-y-4, 0px), 0) scale(var(--scene-card-scale-4, 1));
-}
-
-.scroll-choreography-gallery-section :is(
-  .apple-section-kicker,
-  .apple-section-copy
-) {
-  opacity: var(--scene-standard-opacity, 1);
-  transform: translate3d(0, var(--scene-title-y, 0px), 0);
-  transform-origin: center top;
-}
-
-.scroll-choreography-gallery-section .apple-section-title {
-  transform: translate3d(0, var(--scene-title-y, 0px), 0);
-  transform-origin: center top;
-}
-
-.scroll-choreography-gallery-section .apple-preserve-feature {
-  opacity: var(--scene-card-opacity-0, 1);
-  transform: translate3d(0, var(--scene-card-y-0, 0px), 0) scale(var(--scene-gallery-scale, 1));
-  transform-origin: center center;
-}
-
-.scroll-choreography-gallery-section .apple-preserve-grid .apple-preserve-card:nth-child(1) {
-  opacity: var(--scene-card-opacity-1, 1);
-  transform: translate3d(var(--gallery-card-x-1, 0px), var(--scene-card-y-1, 0px), 0) scale(var(--scene-card-scale-1, 1));
-}
-
-.scroll-choreography-gallery-section .apple-preserve-grid .apple-preserve-card:nth-child(2) {
-  opacity: var(--scene-card-opacity-2, 1);
-  transform: translate3d(var(--gallery-card-x-2, 0px), var(--scene-card-y-2, 0px), 0) scale(var(--scene-card-scale-2, 1));
-}
-
-.scroll-choreography-gallery-section .apple-preserve-grid .apple-preserve-card:nth-child(3) {
-  opacity: var(--scene-card-opacity-3, 1);
-  transform: translate3d(var(--gallery-card-x-3, 0px), var(--scene-card-y-3, 0px), 0) scale(var(--scene-card-scale-3, 1));
 }
 
 @media (max-width: 767px) {
-  .apple-value-band {
-    align-content: start;
-    overflow: visible;
+  .editorial-backdrop {
+    opacity: 0.62;
   }
 
-  .apple-value-band .apple-value-choreography {
-    display: grid;
-    gap: clamp(0.74rem, 3vw, 0.96rem);
-    width: min(100%, 22.5rem);
-    justify-items: stretch;
+  .editorial-backdrop-sheet {
+    width: 19rem;
+    min-height: 24rem;
   }
 
-  .apple-value-band .scroll-choreography-stage {
-    display: grid;
-    gap: clamp(0.74rem, 3vw, 0.96rem);
-    justify-items: center;
+  .editorial-backdrop-sheet-two {
+    right: -8rem;
   }
 
-  .apple-value-band .apple-value-archive-shell,
-  .apple-value-band .apple-value-grid {
-    width: min(100%, 22.5rem);
+  .editorial-backdrop-sheet-three {
+    display: none;
   }
 
-  .apple-value-band .apple-value-statement {
-    min-height: auto;
-    padding: clamp(1.1rem, 5.2vw, 1.5rem);
-  }
-
-  .apple-value-band .apple-value-grid {
-    grid-template-columns: 1fr;
-    gap: clamp(0.72rem, 3vw, 0.92rem);
-    overflow: visible;
-  }
-
-  .apple-value-band .apple-value-grid::before,
-  .apple-value-band .apple-value-grid::after {
-    content: none;
-  }
-
-  .apple-value-band .apple-value-card,
-  .scroll-choreography-archive .apple-value-card:nth-child(n) {
-    min-height: auto;
+  .premium-section-motion-hero :is(.apple-section-kicker, .apple-hero-title, .apple-hero-copy, .apple-hero-actions) {
     opacity: 1;
     transform: none;
   }
 
-  .apple-value-band .apple-value-card p {
-    display: block;
+  .premium-section-motion-experience-section :is(.apple-record-list, .apple-record-feature),
+  .premium-section-motion-inquire-section :is(.apple-inquiry-form, .apple-inquiry-support) {
+    transform: translate3d(0, var(--pm-section-y, 0px), 0) scale(var(--pm-section-scale, 1));
+  }
+
+  .premium-section-motion-process-section .apple-process-grid {
+    transform: translate3d(0, var(--pm-section-y, 0px), 0) scale(var(--pm-section-scale, 1));
+  }
+
+  .premium-section-motion-process-section .apple-process-card:nth-child(1),
+  .premium-section-motion-process-section .apple-process-card:nth-child(2),
+  .premium-section-motion-process-section .apple-process-card:nth-child(3),
+  .premium-section-motion-process-section .apple-process-card:nth-child(4),
+  .premium-section-motion-process-section .apple-process-card:nth-child(5),
+  .premium-section-motion-preserve-section .apple-preserve-feature,
+  .premium-section-motion-preserve-section .apple-preserve-grid .apple-preserve-card:nth-child(1),
+  .premium-section-motion-preserve-section .apple-preserve-grid .apple-preserve-card:nth-child(2),
+  .premium-section-motion-preserve-section .apple-preserve-grid .apple-preserve-card:nth-child(3) {
+    transform: translate3d(0, var(--pm-card-y-0, 0px), 0) scale(var(--pm-card-scale-0, 1));
+  }
+
+  .public-visual-scope .apple-value-band {
     overflow: visible;
-    -webkit-line-clamp: unset;
   }
-}
 
-@media (min-width: 768px) {
-  .apple-value-band .apple-value-choreography {
+  .public-visual-scope .apple-value-choreography {
+    width: 100%;
+    gap: clamp(0.75rem, 3vw, 0.95rem);
+  }
+
+  .public-visual-scope .apple-value-archive-shell,
+  .public-visual-scope .apple-value-grid {
+    width: 100%;
+  }
+
+  .public-visual-scope .apple-value-statement {
+    min-height: auto;
+    padding: clamp(1.08rem, 4.8vw, 1.42rem);
+  }
+
+  .public-visual-scope .apple-value-grid,
+  .public-visual-scope .apple-value-grid[data-active-index] {
     display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(13.5rem, min(78vw, 19rem));
+    grid-template-columns: none;
+    gap: 0.72rem;
+    justify-content: start;
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    padding-block: 0.1rem 0.55rem;
+    padding-inline: 0;
+    scroll-padding-inline: 0;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 1.1rem), transparent 100%);
+    -webkit-mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 1.1rem), transparent 100%);
   }
-}
 
-.scroll-choreography :is(.apple-hero-title, .apple-section-title)[data-reveal].is-visible,
-.scroll-choreography-archive .apple-value-statement h2[data-reveal].is-visible {
-  opacity: 1;
+  .public-visual-scope .apple-value-grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .public-visual-scope .apple-value-grid::before,
+  .public-visual-scope .apple-value-grid::after {
+    content: none;
+  }
+
+  .public-visual-scope .apple-value-card {
+    min-height: auto;
+    scroll-snap-align: start;
+    transform: translate3d(0, var(--pm-card-y-0, 0px), 0);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .scroll-choreography :is(
+  .editorial-backdrop,
+  .premium-section-motion :is(
     .apple-section-kicker,
     .apple-hero-title,
     .apple-section-title,

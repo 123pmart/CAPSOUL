@@ -198,8 +198,10 @@ export function SiteHeader() {
 
           <div
             id="mobile-navigation"
-            className={`overflow-hidden transition-[max-height,padding] duration-300 ease-out lg:hidden ${
-              isOpen ? "max-h-[calc(100svh-var(--safe-top)-1rem)] pt-3" : "max-h-0"
+            className={`overflow-hidden transition-[opacity,transform] duration-200 ease-out lg:hidden ${
+              isOpen
+                ? "max-h-[calc(100svh-var(--safe-top)-1rem)] translate-y-0 pt-3 opacity-100"
+                : "max-h-0 -translate-y-2 opacity-0"
             }`}
           >
             <div className="grid gap-2 pr-1 pb-[calc(var(--safe-bottom)+0.3rem)]">

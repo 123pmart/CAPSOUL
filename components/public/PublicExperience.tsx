@@ -11,7 +11,6 @@ import {
   type CSSProperties,
   type FormEvent,
   type MouseEvent,
-  type PointerEvent,
   type ReactNode,
 } from "react";
 import { usePathname } from "next/navigation";
@@ -23,6 +22,7 @@ import {
 } from "framer-motion";
 
 import { CompactSceneControls } from "@/components/compact-scene-controls";
+import { EditorialBackdrop } from "@/components/EditorialBackdrop";
 import {
   IMMERSIVE_SECTION_NAVIGATE_EVENT,
   dispatchImmersiveSectionChange,
@@ -32,7 +32,7 @@ import {
   type ImmersiveSectionId,
 } from "@/components/immersive-scroll-context";
 import { contentSwapTransition, measuredEase } from "@/components/motion-config";
-import { ScrollChoreography } from "@/components/motion/ScrollChoreography";
+import { PremiumSectionMotion } from "@/components/motion/PremiumSectionMotion";
 import { RevealObserver } from "@/components/public/reveal-observer";
 import { useMagneticMotion } from "@/components/use-magnetic-motion";
 import type {
@@ -255,10 +255,6 @@ function MagneticPrimaryButton({
       {children}
     </motion.button>
   );
-}
-
-function isFineHoverPointer(event: { pointerType: string }) {
-  return event.pointerType === "mouse" || event.pointerType === "pen";
 }
 
 const detailStaggerReveal = {
@@ -603,12 +599,16 @@ function ArchiveSection({
   children: ReactNode;
   className?: string;
 }) {
-  const choreography =
-    id === "what-we-preserve"
-      ? { variant: "gallery" as const, className: "scroll-choreography-gallery-section" }
+  const motion =
+    id === "the-experience"
+      ? { variant: "experience" as const, className: "premium-section-motion-experience-section" }
       : id === "how-it-works"
-        ? { variant: "standard" as const, className: "scroll-choreography-process-section" }
-        : null;
+        ? { variant: "process" as const, className: "premium-section-motion-process-section" }
+        : id === "what-we-preserve"
+          ? { variant: "preserve" as const, className: "premium-section-motion-preserve-section" }
+          : id === "inquire"
+            ? { variant: "inquire" as const, className: "premium-section-motion-inquire-section" }
+            : null;
   const sectionContent = (
     <>
       <div className="apple-section-kicker motion-eyebrow" data-reveal>
@@ -635,13 +635,13 @@ function ArchiveSection({
       className={`apple-section motion-section ${className}`.trim()}
       data-reveal
     >
-      {choreography ? (
-        <ScrollChoreography
-          variant={choreography.variant}
-          className={`apple-section-inner motion-section-flow ${choreography.className}`}
+      {motion ? (
+        <PremiumSectionMotion
+          variant={motion.variant}
+          className={`apple-section-inner motion-section-flow ${motion.className}`}
         >
           {sectionContent}
-        </ScrollChoreography>
+        </PremiumSectionMotion>
       ) : (
         <div className="apple-section-inner motion-section-flow">
           {sectionContent}
@@ -749,7 +749,7 @@ function ArchiveHero({
       className="apple-hero motion-section"
       data-reveal
     >
-      <ScrollChoreography variant="hero" className="apple-hero-inner motion-section-flow">
+      <PremiumSectionMotion variant="hero" className="apple-hero-inner motion-section-flow">
         <div className="apple-section-kicker motion-eyebrow" data-reveal>
           {home.eyebrow}
         </div>
@@ -803,7 +803,7 @@ function ArchiveHero({
             ))}
           </div>
         </div>
-      </ScrollChoreography>
+      </PremiumSectionMotion>
     </section>
   );
 }
@@ -812,70 +812,29 @@ function ArchiveValueCard({
   pillar,
   index,
   archiveLabelPrefix,
-  isActive,
-  detailId,
-  onHover,
-  onSelect,
 }: {
   pillar: ArchivePillar;
   index: number;
   archiveLabelPrefix: string;
-  isActive: boolean;
-  detailId: string;
-  onHover: (index: number) => void;
-  onSelect: (index: number) => void;
 }) {
   return (
-    <button
-      type="button"
-      className={[
-        "apple-value-card apple-liquid-surface",
-        isActive ? "apple-value-card-active" : "",
-        isActive ? "" : "apple-value-card-inactive",
-      ].filter(Boolean).join(" ")}
+    <article
+      className="apple-value-card apple-liquid-surface"
       key={`archive-value-card-${index}`}
       data-reveal
       style={{
         "--motion-stagger-index": index,
         "--reveal-delay": `${Math.min(index * 90, 360)}ms`,
       } as CSSProperties}
-      aria-controls={detailId}
-      aria-expanded={isActive}
-      aria-pressed={isActive}
-      onPointerEnter={(event: PointerEvent<HTMLElement>) => {
-        if (isFineHoverPointer(event)) {
-          onHover(index);
-        }
-      }}
-      onPointerDown={(event: PointerEvent<HTMLElement>) => {
-        if (!isFineHoverPointer(event)) {
-          onSelect(index);
-        }
-      }}
-      onClick={() => {
-        onSelect(index);
-      }}
-      onFocus={() => onSelect(index)}
     >
       <span className="apple-liquid-layer" aria-hidden="true" />
       <span>{archiveLabelPrefix} {String(index + 1).padStart(2, "0")}</span>
       <h3>{pillar.title}</h3>
       <p>{pillar.summary}</p>
-      <AnimatePresence initial={false}>
-        {isActive ? (
-          <motion.div
-            id={detailId}
-            className="apple-value-card-detail"
-            initial={{ opacity: 0, y: -4, scale: 0.995 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -4, scale: 0.998 }}
-            transition={{ duration: 0.54, ease: measuredEase }}
-          >
-            {pillar.detail}
-          </motion.div>
-        ) : null}
-      </AnimatePresence>
-    </button>
+      <div className="apple-value-card-detail">
+        {pillar.detail}
+      </div>
+    </article>
   );
 }
 
@@ -884,12 +843,19 @@ function EmotionalValue({
 }: {
   stepLabelPrefix: string;
 }) {
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  const [hoverIndex, setHoverIndex] = useState<number | null>(null);
+  const archiveGridRef = useRef<HTMLDivElement>(null);
   const archive = PRIVATE_MEMORY_ARCHIVE[getPublicLocale(stepLabelPrefix)];
   const pillars = archive.pillars;
-  const activeIndex = hoverIndex ?? selectedIndex;
+  const activeIndex = 0;
   const activePillar = pillars[activeIndex] ?? pillars[0];
+
+  useIsomorphicLayoutEffect(() => {
+    const grid = archiveGridRef.current;
+
+    if (grid) {
+      grid.scrollLeft = 0;
+    }
+  }, [pillars.length]);
 
   return (
     <section
@@ -902,7 +868,7 @@ function EmotionalValue({
         "--active-archive-index": activeIndex,
       } as CSSProperties}
     >
-      <ScrollChoreography variant="archive" className="apple-value-choreography">
+      <PremiumSectionMotion variant="archive" className="apple-value-choreography">
         <div className="apple-value-archive-shell motion-media" data-reveal>
           <div className="apple-archive-sheets" aria-hidden="true" data-active-index={activeIndex}>
             <span className="apple-archive-sheet apple-archive-sheet-one" />
@@ -919,37 +885,24 @@ function EmotionalValue({
           </div>
         </div>
         <div
+          ref={archiveGridRef}
           className="apple-value-grid motion-stagger"
           data-active-index={activeIndex}
-          onPointerLeave={(event: PointerEvent<HTMLElement>) => {
-            if (isFineHoverPointer(event)) {
-              setHoverIndex(null);
-            }
-          }}
           style={{
             "--active-archive-index": activeIndex,
             "--archive-card-index-x": `calc(${12.5 + activeIndex * 25}% - 0.32rem)`,
           } as CSSProperties}
         >
-          {pillars.map((pillar, index) => {
-            const isActive = index === activeIndex;
-            const detailId = `archive-card-detail-${index + 1}`;
-
-            return (
-              <ArchiveValueCard
-                key={`archive-value-card-${index}`}
-                pillar={pillar}
-                index={index}
-                archiveLabelPrefix={archive.labelPrefix}
-                isActive={isActive}
-                detailId={detailId}
-                onHover={setHoverIndex}
-                onSelect={setSelectedIndex}
-              />
-            );
-          })}
+          {pillars.map((pillar, index) => (
+            <ArchiveValueCard
+              key={`archive-value-card-${index}`}
+              pillar={pillar}
+              index={index}
+              archiveLabelPrefix={archive.labelPrefix}
+            />
+          ))}
         </div>
-      </ScrollChoreography>
+      </PremiumSectionMotion>
     </section>
   );
 }
@@ -1654,6 +1607,7 @@ export function PublicExperience({
 
   return (
     <div className="apple-archive-experience" data-active-section={activeAtmosphereSection}>
+      <EditorialBackdrop />
       <RevealObserver />
       <ArchiveIndexLine items={railItems} activeKey={activeAtmosphereSection} />
 
