@@ -4610,8 +4610,7 @@ html[data-theme="dark"] .atmosphere-blob-three {
   pointer-events: none;
   transition:
     opacity 620ms var(--ease-luxury),
-    transform 760ms var(--ease-luxury),
-    background 760ms var(--ease-luxury);
+    transform 760ms var(--ease-luxury);
 }
 
 .apple-value-band::before {
@@ -4922,7 +4921,7 @@ html[data-theme="dark"] .atmosphere-blob-three {
 }
 
 .apple-value-grid:has(.apple-value-card:hover) .apple-value-card-inactive:not(:hover) {
-  opacity: 0.78;
+  opacity: 0.94;
 }
 
 .apple-value-card-active p {
@@ -5590,7 +5589,7 @@ html[data-theme="dark"] .atmosphere-blob-three {
   outline: none;
   border-color: color-mix(in srgb, var(--accent) 62%, var(--border-strong));
   box-shadow: 0 0 0 4px var(--accent-soft), var(--glass-inner-highlight);
-  transform: translateY(-1px);
+  transform: none;
 }
 
 .apple-textarea {
@@ -5728,6 +5727,21 @@ html[data-theme="dark"] .atmosphere-blob-three {
   display: grid;
   align-content: start;
   gap: 1rem;
+}
+
+.apple-inquiry-support .apple-visual-toolbar,
+.apple-inquiry-support .apple-visual-frame p {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.apple-inquiry-support .apple-visual-frame p {
+  color: color-mix(in srgb, var(--text-muted) 82%, var(--text));
+  font-size: clamp(1rem, 1.35vw, 1.18rem);
+  line-height: 1.45;
 }
 
 .apple-inquiry-success {
@@ -7294,11 +7308,11 @@ html[data-theme="light"] .public-visual-scope :is(
 .apple-value-card,
 .apple-process-card {
   transform-style: flat;
-  backface-visibility: visible;
+  backface-visibility: hidden;
 }
 
 .apple-value-card {
-  min-height: clamp(6.2rem, 6.8vw, 7.8rem);
+  min-height: clamp(7.7rem, 8.4vw, 9.3rem);
   border-radius: clamp(1.05rem, 1.9vw, 1.42rem);
   padding: clamp(0.78rem, 1.15vw, 1rem);
   overflow: hidden;
@@ -7380,19 +7394,19 @@ html[data-theme="dark"] .apple-value-card-active {
   }
 
   .apple-value-grid[data-active-index="0"] {
-    grid-template-columns: minmax(0, 1.48fr) repeat(3, minmax(0, 0.84fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 
   .apple-value-grid[data-active-index="1"] {
-    grid-template-columns: minmax(0, 0.84fr) minmax(0, 1.48fr) repeat(2, minmax(0, 0.84fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 
   .apple-value-grid[data-active-index="2"] {
-    grid-template-columns: repeat(2, minmax(0, 0.84fr)) minmax(0, 1.48fr) minmax(0, 0.84fr);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 
   .apple-value-grid[data-active-index="3"] {
-    grid-template-columns: repeat(3, minmax(0, 0.84fr)) minmax(0, 1.48fr);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
 
@@ -8618,6 +8632,21 @@ html[data-theme="dark"] .public-visual-scope::before {
   text-wrap: balance;
 }
 
+.public-visual-scope .apple-inquiry-support .apple-visual-toolbar,
+.public-visual-scope .apple-inquiry-support .apple-visual-frame > p {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.public-visual-scope .apple-inquiry-support .apple-visual-frame > p {
+  color: color-mix(in srgb, var(--text-muted) 84%, var(--text));
+  font-size: clamp(1rem, 1.35vw, 1.18rem);
+  line-height: 1.45;
+}
+
 .public-visual-scope :is(.apple-preserve-card h3, .apple-preserve-feature h3) {
   font-family: var(--font-sans);
   font-weight: 820;
@@ -8691,7 +8720,7 @@ html[data-theme="dark"] .public-visual-scope::before {
 
 .public-visual-scope .chip-marquee {
   --chip-marquee-gap: clamp(0.45rem, 1.4vw, 0.75rem);
-  --chip-marquee-duration: 11.2s;
+  --chip-marquee-duration: 7s;
   position: relative;
   justify-content: center;
   overflow: hidden;
@@ -8785,6 +8814,228 @@ html[data-theme="dark"] .public-visual-scope::before {
   .public-visual-scope .chip-marquee[data-overflow="true"] .chip-marquee-track {
     animation: none;
     transform: translate3d(0, 0, 0);
+  }
+}
+
+.scroll-choreography {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+.apple-value-choreography {
+  display: grid;
+  gap: clamp(0.75rem, 1.6vw, 1.2rem);
+  justify-items: center;
+}
+
+.scroll-choreography :is(
+  .apple-section-kicker,
+  .apple-hero-title,
+  .apple-section-title,
+  .apple-hero-copy,
+  .apple-section-copy,
+  .apple-hero-record,
+  .apple-hero-chapter,
+  .apple-value-archive-shell,
+  .apple-value-card,
+  .apple-record-list,
+  .apple-record-feature,
+  .apple-process-grid,
+  .apple-preserve-feature,
+  .apple-preserve-card,
+  .apple-inquiry-form,
+  .apple-inquiry-support
+) {
+  backface-visibility: hidden;
+  transform-style: flat;
+  transition-property: opacity, color, background-color, border-color;
+  transition-duration: 220ms;
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.scroll-choreography-hero :is(
+  .apple-section-kicker,
+  .apple-hero-title,
+  .apple-hero-copy,
+  .apple-hero-actions
+) {
+  opacity: var(--scene-hero-opacity, 1);
+  transform: translate3d(0, var(--scene-hero-y, 0px), 0) scale(var(--scene-hero-scale, 1));
+  transform-origin: center top;
+}
+
+.scroll-choreography-hero .apple-hero-record {
+  opacity: var(--scene-media-opacity, 1);
+  transform: translate3d(0, var(--scene-media-y, 0px), 0) scale(var(--scene-media-scale, 1));
+  transform-origin: center center;
+}
+
+.scroll-choreography-hero .apple-hero-chapter:nth-child(1) {
+  opacity: var(--scene-card-opacity-0, 1);
+  transform: translate3d(0, var(--scene-card-y-0, 0px), 0);
+}
+
+.scroll-choreography-hero .apple-hero-chapter:nth-child(2) {
+  opacity: var(--scene-card-opacity-1, 1);
+  transform: translate3d(0, var(--scene-card-y-1, 0px), 0);
+}
+
+.scroll-choreography-hero .apple-hero-chapter:nth-child(3) {
+  opacity: var(--scene-card-opacity-2, 1);
+  transform: translate3d(0, var(--scene-card-y-2, 0px), 0);
+}
+
+.scroll-choreography-hero .apple-hero-chapter:nth-child(4) {
+  opacity: var(--scene-card-opacity-3, 1);
+  transform: translate3d(0, var(--scene-card-y-3, 0px), 0);
+}
+
+.scroll-choreography-archive .apple-value-archive-shell {
+  opacity: var(--scene-panel-opacity, 1);
+  transform: translate3d(0, var(--scene-panel-y, 0px), 0) scale(var(--scene-panel-scale, 1));
+  transform-origin: center top;
+}
+
+.scroll-choreography-archive .apple-value-card:nth-child(1) {
+  opacity: var(--scene-card-opacity-0, 1);
+  transform: translate3d(0, var(--scene-card-y-0, 0px), 0);
+}
+
+.scroll-choreography-archive .apple-value-card:nth-child(2) {
+  opacity: var(--scene-card-opacity-1, 1);
+  transform: translate3d(0, var(--scene-card-y-1, 0px), 0);
+}
+
+.scroll-choreography-archive .apple-value-card:nth-child(3) {
+  opacity: var(--scene-card-opacity-2, 1);
+  transform: translate3d(0, var(--scene-card-y-2, 0px), 0);
+}
+
+.scroll-choreography-archive .apple-value-card:nth-child(4) {
+  opacity: var(--scene-card-opacity-3, 1);
+  transform: translate3d(0, var(--scene-card-y-3, 0px), 0);
+}
+
+.scroll-choreography-archive .apple-value-grid:has(.apple-value-card:hover) .apple-value-card-inactive:not(:hover) {
+  opacity: 0.94;
+}
+
+.scroll-choreography-experience-section :is(
+  .apple-section-kicker,
+  .apple-section-title,
+  .apple-section-copy
+) {
+  opacity: var(--scene-standard-opacity, 1);
+  transform: translate3d(0, var(--scene-section-y, 0px), 0) scale(var(--scene-standard-scale, 1));
+  transform-origin: center top;
+}
+
+.scroll-choreography-experience-section .apple-record-list {
+  opacity: var(--scene-standard-opacity, 1);
+  transform: translate3d(var(--scene-left-x, 0px), var(--scene-section-y, 0px), 0) scale(var(--scene-standard-scale, 1));
+  transform-origin: center left;
+}
+
+.scroll-choreography-experience-section .apple-record-feature {
+  opacity: var(--scene-standard-opacity, 1);
+  transform: translate3d(var(--scene-right-x, 0px), var(--scene-section-y, 0px), 0) scale(var(--scene-standard-scale, 1));
+  transform-origin: center right;
+}
+
+.scroll-choreography-process-section :is(
+  .apple-section-kicker,
+  .apple-section-title,
+  .apple-section-copy
+) {
+  opacity: var(--scene-standard-opacity, 1);
+  transform: translate3d(0, var(--scene-title-y, 0px), 0);
+  transform-origin: center top;
+}
+
+.scroll-choreography-process-section .apple-process-grid {
+  opacity: var(--scene-standard-opacity, 1);
+  transform: translate3d(var(--scene-row-x, 0px), 0, 0) scale(var(--scene-standard-scale, 1));
+  transform-origin: center left;
+}
+
+.scroll-choreography-gallery-section :is(
+  .apple-section-kicker,
+  .apple-section-title,
+  .apple-section-copy
+) {
+  opacity: var(--scene-standard-opacity, 1);
+  transform: translate3d(0, var(--scene-title-y, 0px), 0);
+  transform-origin: center top;
+}
+
+.scroll-choreography-gallery-section .apple-preserve-feature {
+  opacity: var(--scene-card-opacity-0, 1);
+  transform: translate3d(0, var(--scene-card-y-0, 0px), 0) scale(var(--scene-gallery-scale, 1));
+  transform-origin: center center;
+}
+
+.scroll-choreography-gallery-section .apple-preserve-grid .apple-preserve-card:nth-child(1) {
+  opacity: var(--scene-card-opacity-1, 1);
+  transform: translate3d(0, var(--scene-card-y-1, 0px), 0) scale(var(--scene-standard-scale, 1));
+}
+
+.scroll-choreography-gallery-section .apple-preserve-grid .apple-preserve-card:nth-child(2) {
+  opacity: var(--scene-card-opacity-2, 1);
+  transform: translate3d(0, var(--scene-card-y-2, 0px), 0) scale(var(--scene-standard-scale, 1));
+}
+
+.scroll-choreography-gallery-section .apple-preserve-grid .apple-preserve-card:nth-child(3) {
+  opacity: var(--scene-card-opacity-3, 1);
+  transform: translate3d(0, var(--scene-card-y-3, 0px), 0) scale(var(--scene-standard-scale, 1));
+}
+
+.scroll-choreography-inquire-section :is(
+  .apple-section-kicker,
+  .apple-section-title,
+  .apple-section-copy
+) {
+  opacity: var(--scene-standard-opacity, 1);
+  transform: translate3d(0, var(--scene-section-y, 0px), 0);
+  transform-origin: center top;
+}
+
+.scroll-choreography-inquire-section .apple-inquiry-form {
+  opacity: var(--scene-standard-opacity, 1);
+  transform: translate3d(var(--scene-left-x, 0px), var(--scene-section-y, 0px), 0);
+  transform-origin: center left;
+}
+
+.scroll-choreography-inquire-section .apple-inquiry-support {
+  opacity: var(--scene-standard-opacity, 1);
+  transform: translate3d(var(--scene-right-x, 0px), var(--scene-section-y, 0px), 0);
+  transform-origin: center right;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-choreography :is(
+    .apple-section-kicker,
+    .apple-hero-title,
+    .apple-section-title,
+    .apple-hero-copy,
+    .apple-section-copy,
+    .apple-hero-record,
+    .apple-hero-chapter,
+    .apple-value-archive-shell,
+    .apple-value-card,
+    .apple-record-list,
+    .apple-record-feature,
+    .apple-process-grid,
+    .apple-preserve-feature,
+    .apple-preserve-card,
+    .apple-inquiry-form,
+    .apple-inquiry-support
+  ) {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
   }
 }
 

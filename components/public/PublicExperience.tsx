@@ -32,6 +32,7 @@ import {
   type ImmersiveSectionId,
 } from "@/components/immersive-scroll-context";
 import { contentSwapTransition, measuredEase } from "@/components/motion-config";
+import { ScrollChoreography } from "@/components/motion/ScrollChoreography";
 import { RevealObserver } from "@/components/public/reveal-observer";
 import { useMagneticMotion } from "@/components/use-magnetic-motion";
 import type {
@@ -602,6 +603,15 @@ function ArchiveSection({
   children: ReactNode;
   className?: string;
 }) {
+  const choreography =
+    id === "what-we-preserve"
+      ? { variant: "gallery" as const, className: "scroll-choreography-gallery-section" }
+      : id === "inquire"
+        ? { variant: "inquire" as const, className: "scroll-choreography-inquire-section" }
+        : id === "how-it-works"
+          ? { variant: "standard" as const, className: "scroll-choreography-process-section" }
+          : { variant: "standard" as const, className: "scroll-choreography-experience-section" };
+
   return (
     <section
       id={id}
@@ -611,7 +621,10 @@ function ArchiveSection({
       className={`apple-section motion-section ${className}`.trim()}
       data-reveal
     >
-      <div className="apple-section-inner motion-section-flow">
+      <ScrollChoreography
+        variant={choreography.variant}
+        className={`apple-section-inner motion-section-flow ${choreography.className}`}
+      >
         <div className="apple-section-kicker motion-eyebrow" data-reveal>
           {eyebrow}
         </div>
@@ -624,7 +637,7 @@ function ArchiveSection({
         <div className="apple-section-body motion-card">
           {children}
         </div>
-      </div>
+      </ScrollChoreography>
     </section>
   );
 }
@@ -727,7 +740,7 @@ function ArchiveHero({
       className="apple-hero motion-section"
       data-reveal
     >
-      <div className="apple-hero-inner motion-section-flow">
+      <ScrollChoreography variant="hero" className="apple-hero-inner motion-section-flow">
         <div className="apple-section-kicker motion-eyebrow" data-reveal>
           {home.eyebrow}
         </div>
@@ -781,7 +794,7 @@ function ArchiveHero({
             ))}
           </div>
         </div>
-      </div>
+      </ScrollChoreography>
     </section>
   );
 }
@@ -880,52 +893,54 @@ function EmotionalValue({
         "--active-archive-index": activeIndex,
       } as CSSProperties}
     >
-      <div className="apple-value-archive-shell motion-media" data-reveal>
-        <div className="apple-archive-sheets" aria-hidden="true" data-active-index={activeIndex}>
-          <span className="apple-archive-sheet apple-archive-sheet-one" />
-          <span className="apple-archive-sheet apple-archive-sheet-two" />
-          <span className="apple-archive-sheet apple-archive-sheet-three" />
-        </div>
-        <div className="apple-value-statement">
-          <span>{archive.eyebrow}</span>
-          <h2 data-reveal style={revealDelay(1)}>{archive.headline}</h2>
-          <div className="apple-archive-record-line" aria-hidden="true">
-            <span style={{ "--archive-index-x": `${activeIndex * 100}%` } as CSSProperties} />
+      <ScrollChoreography variant="archive" className="apple-value-choreography">
+        <div className="apple-value-archive-shell motion-media" data-reveal>
+          <div className="apple-archive-sheets" aria-hidden="true" data-active-index={activeIndex}>
+            <span className="apple-archive-sheet apple-archive-sheet-one" />
+            <span className="apple-archive-sheet apple-archive-sheet-two" />
+            <span className="apple-archive-sheet apple-archive-sheet-three" />
           </div>
-          <p>{activePillar?.summary ?? archive.headline}</p>
+          <div className="apple-value-statement">
+            <span>{archive.eyebrow}</span>
+            <h2 data-reveal style={revealDelay(1)}>{archive.headline}</h2>
+            <div className="apple-archive-record-line" aria-hidden="true">
+              <span style={{ "--archive-index-x": `${activeIndex * 100}%` } as CSSProperties} />
+            </div>
+            <p>{activePillar?.summary ?? archive.headline}</p>
+          </div>
         </div>
-      </div>
-      <div
-        className="apple-value-grid motion-stagger"
-        data-active-index={activeIndex}
-        onPointerLeave={(event: PointerEvent<HTMLElement>) => {
-          if (isFineHoverPointer(event)) {
-            setHoverIndex(null);
-          }
-        }}
-        style={{
-          "--active-archive-index": activeIndex,
-          "--archive-card-index-x": `calc(${12.5 + activeIndex * 25}% - 0.32rem)`,
-        } as CSSProperties}
-      >
-        {pillars.map((pillar, index) => {
-          const isActive = index === activeIndex;
-          const detailId = `archive-card-detail-${index + 1}`;
+        <div
+          className="apple-value-grid motion-stagger"
+          data-active-index={activeIndex}
+          onPointerLeave={(event: PointerEvent<HTMLElement>) => {
+            if (isFineHoverPointer(event)) {
+              setHoverIndex(null);
+            }
+          }}
+          style={{
+            "--active-archive-index": activeIndex,
+            "--archive-card-index-x": `calc(${12.5 + activeIndex * 25}% - 0.32rem)`,
+          } as CSSProperties}
+        >
+          {pillars.map((pillar, index) => {
+            const isActive = index === activeIndex;
+            const detailId = `archive-card-detail-${index + 1}`;
 
-          return (
-            <ArchiveValueCard
-              key={`archive-value-card-${index}`}
-              pillar={pillar}
-              index={index}
-              archiveLabelPrefix={archive.labelPrefix}
-              isActive={isActive}
-              detailId={detailId}
-              onHover={setHoverIndex}
-              onSelect={setSelectedIndex}
-            />
-          );
-        })}
-      </div>
+            return (
+              <ArchiveValueCard
+                key={`archive-value-card-${index}`}
+                pillar={pillar}
+                index={index}
+                archiveLabelPrefix={archive.labelPrefix}
+                isActive={isActive}
+                detailId={detailId}
+                onHover={setHoverIndex}
+                onSelect={setSelectedIndex}
+              />
+            );
+          })}
+        </div>
+      </ScrollChoreography>
     </section>
   );
 }
@@ -1488,10 +1503,10 @@ function InquiryArchiveForm({
         <AnimatePresence initial={false} mode="wait">
           <motion.div
             key={`fields-${activeIndex}`}
-            initial={{ opacity: 0, y: 16, scale: 0.995 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -8, scale: 0.998 }}
-            transition={{ duration: 0.32, ease: measuredEase }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.24, ease: measuredEase }}
           >
             {renderFields()}
           </motion.div>
