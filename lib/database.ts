@@ -73,6 +73,9 @@ async function initializeDatabase() {
       faith_context TEXT NOT NULL,
       extra_notes TEXT NOT NULL,
       status TEXT NOT NULL,
+      scheduled_at TIMESTAMPTZ,
+      booking_notes TEXT NOT NULL DEFAULT '',
+      booking_status TEXT NOT NULL DEFAULT 'unscheduled',
       submitted_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
     )
   `;
@@ -80,6 +83,21 @@ async function initializeDatabase() {
   await sql`
     ALTER TABLE leads
     ADD COLUMN IF NOT EXISTS estimated_budget TEXT NOT NULL DEFAULT ''
+  `;
+
+  await sql`
+    ALTER TABLE leads
+    ADD COLUMN IF NOT EXISTS scheduled_at TIMESTAMPTZ
+  `;
+
+  await sql`
+    ALTER TABLE leads
+    ADD COLUMN IF NOT EXISTS booking_notes TEXT NOT NULL DEFAULT ''
+  `;
+
+  await sql`
+    ALTER TABLE leads
+    ADD COLUMN IF NOT EXISTS booking_status TEXT NOT NULL DEFAULT 'unscheduled'
   `;
 
   await sql`

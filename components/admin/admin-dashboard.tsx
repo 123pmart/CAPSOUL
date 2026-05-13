@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 
 import { AdminContentEditor } from "@/components/admin/admin-content-editor";
 import type { PublicAdminUser } from "@/lib/admin-auth";
-import type { LeadRecord, LeadStatus } from "@/lib/leads";
+import type { LeadBookingStatus, LeadRecord, LeadStatus } from "@/lib/leads";
 import { mediaObjectPositionOptions, type ResolvedMediaSlot } from "@/lib/media-shared";
 import type { SiteContentDocument } from "@/lib/site-content-schema";
 
@@ -16,7 +16,7 @@ type AdminDashboardProps = {
   initialSiteContent: SiteContentDocument;
 };
 
-type DashboardTab = "leads" | "media" | "content" | "settings";
+type DashboardTab = "leads" | "bookings" | "media" | "content" | "settings";
 const mediaLoadErrorMessage = "Saved image could not be loaded. Try uploading it again.";
 
 function formatTimestamp(value: string) {
@@ -30,6 +30,43 @@ function statusTone(status: LeadStatus) {
   if (status === "contacted") return "text-[var(--accent-deep)]";
   if (status === "closed") return "text-[var(--muted-strong)]";
   return "text-[var(--text-primary)]";
+}
+
+function bookingStatusTone(status: LeadBookingStatus) {
+  if (status === "scheduled") return "text-[var(--accent-deep)]";
+  if (status === "completed") return "text-[var(--text-tertiary)]";
+  return "text-[var(--text-secondary)]";
+}
+
+function toDateTimeLocalValue(value: string | null) {
+  if (!value) {
+    return "";
+  }
+
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return "";
+  }
+
+  const offset = date.getTimezoneOffset() * 60_000;
+  return new Date(date.getTime() - offset).toISOString().slice(0, 16);
+}
+
+function fromDateTimeLocalValue(value: string) {
+  if (!value) {
+    return null;
+  }
+
+  return new Date(value).toISOString();
+}
+
+function formatBookingDay(value: string) {
+  return new Intl.DateTimeFormat("en-US", {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+  }).format(new Date(value));
 }
 
 function adminTabClass(active: boolean) {
@@ -47,10 +84,17 @@ export function AdminDashboard({
   const [leads, setLeads] = useState(initialLeads);
   const [mediaSlots, setMediaSlots] = useState(initialMediaSlots);
   const [selectedLeadId, setSelectedLeadId] = useState<string | null>(initialLeads[0]?.id ?? null);
+  const [selectedBookingLeadId, setSelectedBookingLeadId] = useState<string | null>(initialLeads[0]?.id ?? null);
   const [searchValue, setSearchValue] = useState("");
   const [statusFilter, setStatusFilter] = useState<LeadStatus | "all">("all");
   const [leadError, setLeadError] = useState("");
   const [deletingLeadId, setDeletingLeadId] = useState<string | null>(null);
+  const [bookingError, setBookingError] = useState("");
+  const [bookingSuccess, setBookingSuccess] = useState("");
+  const [bookingSavingLeadId, setBookingSavingLeadId] = useState<string | null>(null);
+  const [bookingDraftScheduledAt, setBookingDraftScheduledAt] = useState("");
+  const [bookingDraftNotes, setBookingDraftNotes] = useState("");
+  const [bookingDraftStatus, setBookingDraftStatus] = useState<LeadBookingStatus>("unscheduled");
   const [settingsError, setSettingsError] = useState("");
   const [settingsSuccess, setSettingsSuccess] = useState("");
   const [isSavingSettings, setIsSavingSettings] = useState(false);
@@ -97,6 +141,42 @@ export function AdminDashboard({
   const activeLead =
     filteredLeads.find((lead) => lead.id === selectedLeadId) ?? filteredLeads[0] ?? null;
 
+  const bookingLeads = useMemo(() => {
+    return [...leads]
+      .filter((lead) => lead.status !== "closed" || lead.scheduledAt || lead.bookingStatus !== "unscheduled")
+      .sort((left, right) => {
+        if (left.scheduledAt && right.scheduledAt) {
+          return Date.parse(left.scheduledAt) - Date.parse(right.scheduledAt);
+        }
+
+        if (left.scheduledAt) return -1;
+        if (right.scheduledAt) return 1;
+        return Date.parse(right.submittedAt) - Date.parse(left.submittedAt);
+      });
+  }, [leads]);
+
+  const activeBookingLead =
+    bookingLeads.find((lead) => lead.id === selectedBookingLeadId) ?? bookingLeads[0] ?? null;
+
+  const unscheduledBookingLeads = bookingLeads.filter((lead) => !lead.scheduledAt);
+  const scheduledBookingGroups = useMemo(() => {
+    const groups = new Map<string, LeadRecord[]>();
+
+    for (const lead of bookingLeads) {
+      if (!lead.scheduledAt) {
+        continue;
+      }
+
+      const key = new Date(lead.scheduledAt).toISOString().slice(0, 10);
+      groups.set(key, [...(groups.get(key) ?? []), lead]);
+    }
+
+    return Array.from(groups.entries()).map(([date, entries]) => ({
+      date,
+      entries,
+    }));
+  }, [bookingLeads]);
+
   const mediaGroups = useMemo(() => {
     return mediaSlots.reduce<Record<string, ResolvedMediaSlot[]>>((groups, slot) => {
       groups[slot.pageLabel] = [...(groups[slot.pageLabel] ?? []), slot];
@@ -114,6 +194,30 @@ export function AdminDashboard({
       setSelectedLeadId(activeLead.id);
     }
   }, [activeLead, filteredLeads, selectedLeadId]);
+
+  useEffect(() => {
+    if (!activeBookingLead && bookingLeads.length > 0) {
+      setSelectedBookingLeadId(bookingLeads[0].id);
+      return;
+    }
+
+    if (activeBookingLead && activeBookingLead.id !== selectedBookingLeadId) {
+      setSelectedBookingLeadId(activeBookingLead.id);
+    }
+  }, [activeBookingLead, bookingLeads, selectedBookingLeadId]);
+
+  useEffect(() => {
+    if (!activeBookingLead) {
+      setBookingDraftScheduledAt("");
+      setBookingDraftNotes("");
+      setBookingDraftStatus("unscheduled");
+      return;
+    }
+
+    setBookingDraftScheduledAt(toDateTimeLocalValue(activeBookingLead.scheduledAt));
+    setBookingDraftNotes(activeBookingLead.bookingNotes ?? "");
+    setBookingDraftStatus(activeBookingLead.bookingStatus ?? "unscheduled");
+  }, [activeBookingLead]);
 
   useEffect(() => {
     setMediaObjectPositions((current) => {
@@ -155,6 +259,57 @@ export function AdminDashboard({
       );
     } catch {
       setLeadError("Unable to update this lead.");
+    }
+  }
+
+  async function handleBookingSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    if (!activeBookingLead) {
+      return;
+    }
+
+    const scheduledAt = fromDateTimeLocalValue(bookingDraftScheduledAt);
+    const bookingStatus =
+      scheduledAt && bookingDraftStatus === "unscheduled" ? "scheduled" : bookingDraftStatus;
+
+    setBookingError("");
+    setBookingSuccess("");
+    setBookingSavingLeadId(activeBookingLead.id);
+
+    try {
+      const response = await fetch(`/api/admin/leads/${activeBookingLead.id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          scheduledAt,
+          bookingNotes: bookingDraftNotes,
+          bookingStatus,
+        }),
+      });
+
+      const payload = (await response.json()) as {
+        ok: boolean;
+        error?: string;
+        lead?: LeadRecord;
+      };
+
+      if (!response.ok || !payload.ok || !payload.lead) {
+        setBookingError(payload.error ?? "Unable to save booking.");
+        return;
+      }
+
+      setLeads((current) =>
+        current.map((lead) => (lead.id === payload.lead?.id ? payload.lead : lead)),
+      );
+      setSelectedBookingLeadId(payload.lead.id);
+      setBookingSuccess("Booking details saved.");
+    } catch {
+      setBookingError("Unable to save booking.");
+    } finally {
+      setBookingSavingLeadId(null);
     }
   }
 
@@ -443,6 +598,7 @@ export function AdminDashboard({
               <div className="mt-1 flex flex-wrap gap-2.5">
                 {([
                   { key: "leads", label: "Leads" },
+                  { key: "bookings", label: "Bookings" },
                   { key: "media", label: "Media" },
                   { key: "content", label: "Site Content" },
                   { key: "settings", label: "Account" },
@@ -531,10 +687,8 @@ export function AdminDashboard({
                         <button
                           key={lead.id}
                           type="button"
-                          className={`text-left rounded-[1.2rem] border px-4 py-3.5 ${
-                            isActive
-                              ? "border-white/88 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(231,239,247,0.98))] shadow-[0_16px_30px_rgba(152,169,189,0.18)]"
-                              : "border-[rgba(181,196,211,0.28)] bg-[linear-gradient(180deg,rgba(255,255,255,0.48),rgba(243,248,252,0.68))]"
+                          className={`admin-lead-card text-left rounded-[1.2rem] border px-4 py-3.5 ${
+                            isActive ? "admin-lead-card-active" : ""
                           }`}
                           onClick={() => setSelectedLeadId(lead.id)}
                         >
@@ -672,6 +826,239 @@ export function AdminDashboard({
                 ) : (
                   <div className="archive-chip rounded-[1.2rem] px-4 py-4 text-[0.92rem] leading-6 text-[var(--text-secondary)]">
                     No lead selected.
+                  </div>
+                )}
+              </div>
+            </div>
+          ) : null}
+
+          {activeTab === "bookings" ? (
+            <div className="admin-bookings-grid grid gap-4 xl:grid-cols-[minmax(20rem,0.72fr)_minmax(0,1.28fr)]">
+              <div className="panel rounded-[1.7rem] p-4 sm:p-5">
+                <div className="grid gap-3 sm:grid-cols-3 xl:grid-cols-1">
+                  <div className="archive-chip rounded-[1.15rem] px-4 py-3">
+                    <p className="text-[0.66rem] font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">
+                      Needs scheduling
+                    </p>
+                    <p className="mt-2 text-[1.55rem] font-semibold leading-none text-[var(--text-primary)]">
+                      {unscheduledBookingLeads.length}
+                    </p>
+                  </div>
+                  <div className="archive-chip rounded-[1.15rem] px-4 py-3">
+                    <p className="text-[0.66rem] font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">
+                      Scheduled
+                    </p>
+                    <p className="mt-2 text-[1.55rem] font-semibold leading-none text-[var(--text-primary)]">
+                      {bookingLeads.filter((lead) => Boolean(lead.scheduledAt)).length}
+                    </p>
+                  </div>
+                  <div className="archive-chip rounded-[1.15rem] px-4 py-3">
+                    <p className="text-[0.66rem] font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">
+                      Active leads
+                    </p>
+                    <p className="mt-2 text-[1.55rem] font-semibold leading-none text-[var(--text-primary)]">
+                      {bookingLeads.length}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="home-divider my-4" />
+
+                <div className="grid gap-4">
+                  {unscheduledBookingLeads.length ? (
+                    <div className="grid gap-2.5">
+                      <p className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[var(--text-tertiary)]">
+                        Ready to place
+                      </p>
+                      {unscheduledBookingLeads.map((lead) => (
+                        <button
+                          key={`unscheduled-${lead.id}`}
+                          type="button"
+                          className={`admin-lead-card text-left rounded-[1.1rem] border px-4 py-3 ${
+                            lead.id === activeBookingLead?.id ? "admin-lead-card-active" : ""
+                          }`}
+                          onClick={() => setSelectedBookingLeadId(lead.id)}
+                        >
+                          <span className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">
+                            {lead.bookingStatus}
+                          </span>
+                          <strong className="mt-1 block text-[0.98rem] leading-5 text-[var(--text-primary)]">
+                            {lead.fullName}
+                          </strong>
+                          <span className="mt-1 block text-[0.84rem] leading-5 text-[var(--text-secondary)]">
+                            {lead.region || lead.email}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                  ) : null}
+
+                  {scheduledBookingGroups.map((group) => (
+                    <div className="grid gap-2.5" key={group.date}>
+                      <p className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[var(--text-tertiary)]">
+                        {formatBookingDay(group.date)}
+                      </p>
+                      {group.entries.map((lead) => (
+                        <button
+                          key={`scheduled-${lead.id}`}
+                          type="button"
+                          className={`admin-lead-card text-left rounded-[1.1rem] border px-4 py-3 ${
+                            lead.id === activeBookingLead?.id ? "admin-lead-card-active" : ""
+                          }`}
+                          onClick={() => setSelectedBookingLeadId(lead.id)}
+                        >
+                          <span className={`text-[0.68rem] font-semibold uppercase tracking-[0.16em] ${bookingStatusTone(lead.bookingStatus)}`}>
+                            {lead.bookingStatus}
+                          </span>
+                          <strong className="mt-1 block text-[0.98rem] leading-5 text-[var(--text-primary)]">
+                            {lead.fullName}
+                          </strong>
+                          <span className="mt-1 block text-[0.84rem] leading-5 text-[var(--text-secondary)]">
+                            {lead.scheduledAt ? formatTimestamp(lead.scheduledAt) : "No time set"}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                  ))}
+
+                  {!bookingLeads.length ? (
+                    <div className="archive-chip rounded-[1.2rem] px-4 py-4 text-[0.92rem] leading-6 text-[var(--text-secondary)]">
+                      No active booking leads yet.
+                    </div>
+                  ) : null}
+                </div>
+              </div>
+
+              <div className="panel-strong rounded-[1.7rem] p-5 sm:p-6">
+                {activeBookingLead ? (
+                  <div className="grid gap-5">
+                    <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+                      <div>
+                        <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-deep)]">
+                          Booking detail
+                        </p>
+                        <h2 className="mt-2 text-[1.85rem] leading-[0.96]">
+                          {activeBookingLead.fullName}
+                        </h2>
+                        <p className="mt-2 text-[0.92rem] leading-6 text-[var(--text-secondary)]">
+                          {activeBookingLead.email} · {activeBookingLead.phone || "No phone"}
+                        </p>
+                      </div>
+                      <span className={`archive-chip rounded-full px-3 py-1.5 text-[0.66rem] font-semibold uppercase tracking-[0.16em] ${bookingStatusTone(activeBookingLead.bookingStatus)}`}>
+                        {activeBookingLead.bookingStatus}
+                      </span>
+                    </div>
+
+                    <form className="grid gap-4" onSubmit={handleBookingSubmit}>
+                      <div className="grid gap-4 md:grid-cols-2">
+                        <div className="space-y-1.5">
+                          <label className="field-label" htmlFor="booking-scheduled-at">
+                            Scheduled date/time
+                          </label>
+                          <input
+                            id="booking-scheduled-at"
+                            className="field-input"
+                            type="datetime-local"
+                            value={bookingDraftScheduledAt}
+                            onChange={(event) => setBookingDraftScheduledAt(event.target.value)}
+                          />
+                        </div>
+
+                        <div className="space-y-1.5">
+                          <label className="field-label" htmlFor="booking-status">
+                            Booking status
+                          </label>
+                          <select
+                            id="booking-status"
+                            className="field-select"
+                            value={bookingDraftStatus}
+                            onChange={(event) =>
+                              setBookingDraftStatus(event.target.value as LeadBookingStatus)
+                            }
+                          >
+                            <option value="unscheduled">Unscheduled</option>
+                            <option value="scheduled">Scheduled</option>
+                            <option value="completed">Completed</option>
+                          </select>
+                        </div>
+
+                        <div className="space-y-1.5 md:col-span-2">
+                          <label className="field-label" htmlFor="booking-notes">
+                            Booking notes
+                          </label>
+                          <textarea
+                            id="booking-notes"
+                            className="field-textarea min-h-[8rem]"
+                            value={bookingDraftNotes}
+                            onChange={(event) => setBookingDraftNotes(event.target.value)}
+                            placeholder="Add scheduling context, call notes, or next action."
+                          />
+                        </div>
+                      </div>
+
+                      {bookingError ? (
+                        <p className="rounded-[1rem] border border-[rgba(199,116,116,0.2)] bg-[rgba(255,255,255,0.52)] px-3.5 py-3 text-[0.88rem] leading-6 text-[var(--text-primary)]">
+                          {bookingError}
+                        </p>
+                      ) : null}
+
+                      {bookingSuccess ? (
+                        <p className="rounded-[1rem] border border-white/72 bg-[rgba(255,255,255,0.56)] px-3.5 py-3 text-[0.88rem] leading-6 text-[var(--text-primary)]">
+                          {bookingSuccess}
+                        </p>
+                      ) : null}
+
+                      <button
+                        type="submit"
+                        className="button-primary w-fit"
+                        disabled={bookingSavingLeadId === activeBookingLead.id}
+                      >
+                        {bookingSavingLeadId === activeBookingLead.id ? "Saving booking..." : "Save booking"}
+                      </button>
+                    </form>
+
+                    <div className="grid gap-3 md:grid-cols-2">
+                      {[
+                        ["Submitted", formatTimestamp(activeBookingLead.submittedAt)],
+                        ["Lead status", activeBookingLead.status],
+                        ["Region", activeBookingLead.region || "Not provided"],
+                        ["Budget", activeBookingLead.estimatedBudget || "Not provided"],
+                        ["Film for", activeBookingLead.filmFor],
+                        ["Timeline", activeBookingLead.timeline || "Not provided"],
+                      ].map(([label, value]) => (
+                        <div key={label} className="panel rounded-[1rem] p-4">
+                          <p className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">
+                            {label}
+                          </p>
+                          <p className="mt-2 text-[0.92rem] leading-6 text-[var(--text-primary)]">
+                            {value}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="grid gap-3">
+                      <div className="panel rounded-[1rem] p-4">
+                        <p className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">
+                          Story context
+                        </p>
+                        <p className="mt-2 text-[0.94rem] leading-7 text-[var(--text-primary)]">
+                          {activeBookingLead.storyImportance}
+                        </p>
+                      </div>
+                      <div className="panel rounded-[1rem] p-4">
+                        <p className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">
+                          Additional notes
+                        </p>
+                        <p className="mt-2 text-[0.92rem] leading-7 text-[var(--text-primary)]">
+                          {activeBookingLead.extraNotes || "No additional notes submitted."}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="archive-chip rounded-[1.2rem] px-4 py-4 text-[0.92rem] leading-6 text-[var(--text-secondary)]">
+                    No booking lead selected.
                   </div>
                 )}
               </div>

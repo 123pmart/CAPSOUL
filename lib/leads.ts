@@ -7,6 +7,7 @@ import { canUseLegacyMutableFallback, hasPersistentDatabase } from "@/lib/server
 import { DATA_ROOT, readJsonFile, writeJsonFile } from "@/lib/storage";
 
 export type LeadStatus = "new" | "contacted" | "closed";
+export type LeadBookingStatus = "unscheduled" | "scheduled" | "completed";
 
 export type LeadSubmissionInput = {
   fullName: string;
@@ -28,6 +29,16 @@ export type LeadRecord = LeadSubmissionInput & {
   id: string;
   submittedAt: string;
   status: LeadStatus;
+  scheduledAt: string | null;
+  bookingNotes: string;
+  bookingStatus: LeadBookingStatus;
+};
+
+export type LeadUpdateInput = {
+  status?: LeadStatus;
+  scheduledAt?: string | null;
+  bookingNotes?: string;
+  bookingStatus?: LeadBookingStatus;
 };
 
 const LEADS_FILE = path.join(DATA_ROOT, "leads.json");
@@ -49,6 +60,9 @@ type PersistentLeadRow = {
   faith_context: string;
   extra_notes: string;
   status: LeadStatus;
+  scheduled_at: string | Date | null;
+  booking_notes: string | null;
+  booking_status: LeadBookingStatus | null;
   submitted_at: string | Date;
 };
 
@@ -75,6 +89,38 @@ function normalizeLeadInput(input: LeadSubmissionInput): LeadSubmissionInput {
     filmingLocation: normalizeValue(input.filmingLocation),
     faithContext: normalizeValue(input.faithContext),
     extraNotes: normalizeValue(input.extraNotes),
+  };
+}
+
+function normalizeBookingStatus(value: LeadBookingStatus | null | undefined): LeadBookingStatus {
+  if (value === "scheduled" || value === "completed") {
+    return value;
+  }
+
+  return "unscheduled";
+}
+
+function normalizeScheduledAt(value: string | null | undefined) {
+  if (!value) {
+    return null;
+  }
+
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    throw new Error("Scheduled date/time is invalid.");
+  }
+
+  return date.toISOString();
+}
+
+function normalizeLeadRecord(lead: LeadRecord): LeadRecord {
+  return {
+    ...lead,
+    estimatedBudget: lead.estimatedBudget ?? "",
+    scheduledAt: normalizeScheduledAt(lead.scheduledAt),
+    bookingNotes: lead.bookingNotes ?? "",
+    bookingStatus: normalizeBookingStatus(lead.bookingStatus),
   };
 }
 
@@ -121,6 +167,9 @@ function mapPersistentLead(row: PersistentLeadRow): LeadRecord {
     faithContext: row.faith_context,
     extraNotes: row.extra_notes,
     status: row.status,
+    scheduledAt: row.scheduled_at ? toIsoString(row.scheduled_at) : null,
+    bookingNotes: row.booking_notes ?? "",
+    bookingStatus: normalizeBookingStatus(row.booking_status),
     submittedAt: toIsoString(row.submitted_at),
   };
 }
@@ -128,7 +177,7 @@ function mapPersistentLead(row: PersistentLeadRow): LeadRecord {
 async function listLegacyLeads() {
   const leads = await readJsonFile<LeadRecord[]>(LEADS_FILE, []);
 
-  return [...leads].sort(
+  return leads.map(normalizeLeadRecord).sort(
     (left, right) => Date.parse(right.submittedAt) - Date.parse(left.submittedAt),
   );
 }
@@ -178,6 +227,9 @@ async function ensurePersistentLeadsSeeded() {
             faith_context,
             extra_notes,
             status,
+            scheduled_at,
+            booking_notes,
+            booking_status,
             submitted_at
           )
           VALUES (
@@ -196,6 +248,9 @@ async function ensurePersistentLeadsSeeded() {
             ${lead.faithContext},
             ${lead.extraNotes},
             ${lead.status},
+            ${lead.scheduledAt ?? null},
+            ${lead.bookingNotes ?? ""},
+            ${lead.bookingStatus ?? "unscheduled"},
             ${lead.submittedAt}
           )
           ON CONFLICT (id) DO NOTHING
@@ -229,6 +284,9 @@ export async function listLeads() {
           faith_context,
           extra_notes,
           status,
+          scheduled_at,
+          booking_notes,
+          booking_status,
           submitted_at
         FROM leads
         ORDER BY submitted_at DESC
@@ -254,6 +312,9 @@ export async function createLead(input: LeadSubmissionInput) {
   const lead: LeadRecord = {
     id: randomUUID(),
     status: "new",
+    scheduledAt: null,
+    bookingNotes: "",
+    bookingStatus: "unscheduled",
     submittedAt: new Date().toISOString(),
     ...normalizedInput,
   };
@@ -278,6 +339,9 @@ export async function createLead(input: LeadSubmissionInput) {
         faith_context,
         extra_notes,
         status,
+        scheduled_at,
+        booking_notes,
+        booking_status,
         submitted_at
       )
       VALUES (
@@ -296,6 +360,9 @@ export async function createLead(input: LeadSubmissionInput) {
         ${lead.faithContext},
         ${lead.extraNotes},
         ${lead.status},
+        ${lead.scheduledAt},
+        ${lead.bookingNotes},
+        ${lead.bookingStatus},
         ${lead.submittedAt}
       )
     `;
@@ -313,13 +380,25 @@ export async function createLead(input: LeadSubmissionInput) {
   return lead;
 }
 
-export async function updateLeadStatus(leadId: string, status: LeadStatus) {
+export async function updateLead(leadId: string, input: LeadUpdateInput) {
+  const hasStatus = input.status !== undefined;
+  const hasScheduledAt = input.scheduledAt !== undefined;
+  const hasBookingNotes = input.bookingNotes !== undefined;
+  const hasBookingStatus = input.bookingStatus !== undefined;
+  const nextScheduledAt = hasScheduledAt ? normalizeScheduledAt(input.scheduledAt) : null;
+  const nextBookingNotes = hasBookingNotes ? normalizeValue(input.bookingNotes ?? "") : "";
+  const nextBookingStatus = hasBookingStatus ? normalizeBookingStatus(input.bookingStatus) : "unscheduled";
+
   if (hasPersistentDatabase()) {
     await ensurePersistentLeadsSeeded();
     const sql = getDatabaseClient();
     const rows = await sql<PersistentLeadRow[]>`
       UPDATE leads
-      SET status = ${status}
+      SET
+        status = CASE WHEN ${hasStatus} THEN ${input.status ?? "new"} ELSE status END,
+        scheduled_at = CASE WHEN ${hasScheduledAt} THEN ${nextScheduledAt}::timestamptz ELSE scheduled_at END,
+        booking_notes = CASE WHEN ${hasBookingNotes} THEN ${nextBookingNotes} ELSE booking_notes END,
+        booking_status = CASE WHEN ${hasBookingStatus} THEN ${nextBookingStatus} ELSE booking_status END
       WHERE id = ${leadId}
       RETURNING
         id,
@@ -337,6 +416,9 @@ export async function updateLeadStatus(leadId: string, status: LeadStatus) {
         faith_context,
         extra_notes,
         status,
+        scheduled_at,
+        booking_notes,
+        booking_status,
         submitted_at
     `;
 
@@ -356,11 +438,18 @@ export async function updateLeadStatus(leadId: string, status: LeadStatus) {
 
   leads[leadIndex] = {
     ...leads[leadIndex],
-    status,
+    ...(hasStatus ? { status: input.status as LeadStatus } : {}),
+    ...(hasScheduledAt ? { scheduledAt: nextScheduledAt } : {}),
+    ...(hasBookingNotes ? { bookingNotes: nextBookingNotes } : {}),
+    ...(hasBookingStatus ? { bookingStatus: nextBookingStatus } : {}),
   };
 
   await writeJsonFile(LEADS_FILE, leads);
   return leads[leadIndex];
+}
+
+export async function updateLeadStatus(leadId: string, status: LeadStatus) {
+  return updateLead(leadId, { status });
 }
 
 export async function deleteLead(leadId: string) {
@@ -386,6 +475,9 @@ export async function deleteLead(leadId: string) {
         faith_context,
         extra_notes,
         status,
+        scheduled_at,
+        booking_notes,
+        booking_status,
         submitted_at
     `;
 

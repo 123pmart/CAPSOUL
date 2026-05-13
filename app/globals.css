@@ -8653,7 +8653,7 @@ html[data-theme="dark"] .public-visual-scope::before {
 
 .public-visual-scope .chip-marquee {
   --chip-marquee-gap: clamp(0.45rem, 1.4vw, 0.75rem);
-  --chip-marquee-duration: 22s;
+  --chip-marquee-duration: 18s;
   position: relative;
   justify-content: center;
   overflow: hidden;
@@ -8701,7 +8701,7 @@ html[data-theme="dark"] .public-visual-scope::before {
 
 @media (max-width: 767px) {
   .public-visual-scope .chip-marquee {
-    --chip-marquee-duration: 16s;
+    --chip-marquee-duration: 13s;
   }
 }
 
@@ -9459,6 +9459,159 @@ html[data-theme="dark"] .public-visual-scope::before {
   }
 }
 
+/* Premium refinement pass: process cards, archive mobile, centered experience module. */
+.public-visual-scope .apple-process-grid {
+  gap: clamp(0.72rem, 1.25vw, 1rem);
+}
+
+.public-visual-scope .apple-process-grid::after {
+  border-color: color-mix(in srgb, var(--border) 26%, transparent);
+  background:
+    radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--glass-highlight) 16%, transparent), transparent 48%),
+    linear-gradient(180deg, color-mix(in srgb, var(--surface-glass-strong) 18%, transparent), transparent 76%);
+  opacity: 0.52;
+}
+
+.public-visual-scope .apple-process-card {
+  border: 1px solid color-mix(in srgb, var(--border) 62%, transparent);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--glass-highlight) 44%, transparent), transparent 28%),
+    radial-gradient(circle at 16% 0%, color-mix(in srgb, var(--accent-soft) 26%, transparent), transparent 42%),
+    linear-gradient(180deg, color-mix(in srgb, var(--surface-strong) 86%, transparent), color-mix(in srgb, var(--surface-glass) 70%, transparent));
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--glass-highlight) 46%, transparent),
+    0 10px 28px color-mix(in srgb, var(--shadow-color, #000) 7%, transparent);
+}
+
+.public-visual-scope .apple-process-card > span:not(.apple-liquid-layer) {
+  color: color-mix(in srgb, var(--accent-deep) 72%, var(--text-muted));
+}
+
+.public-visual-scope .apple-process-card h3 {
+  color: var(--text);
+}
+
+.public-visual-scope .apple-process-card p {
+  color: color-mix(in srgb, var(--text-muted) 82%, var(--text));
+}
+
+.public-visual-scope .apple-section-contrast .apple-record-feature {
+  background:
+    radial-gradient(circle at 50% 0%, color-mix(in srgb, var(--glass-highlight) 30%, transparent), transparent 34%),
+    linear-gradient(180deg, color-mix(in srgb, var(--surface-strong) 88%, transparent), color-mix(in srgb, var(--surface-glass) 70%, transparent));
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--glass-highlight) 38%, transparent),
+    0 24px 70px color-mix(in srgb, var(--shadow-color, #000) 10%, transparent);
+}
+
+.public-visual-scope .apple-section-contrast .apple-record-feature::after {
+  opacity: 0.34;
+}
+
+.public-visual-scope .apple-section-contrast .apple-record-detail > span {
+  color: color-mix(in srgb, var(--accent-deep) 74%, var(--text-muted));
+}
+
+.public-visual-scope .apple-value-statement span {
+  color: rgba(237, 241, 248, 0.62);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .public-visual-scope .apple-process-card:hover {
+    border-color: color-mix(in srgb, var(--border-strong) 70%, transparent);
+    transform: translate3d(0, -3px, 0) scale(1.01);
+  }
+}
+
+@media (max-width: 1023px) {
+  .public-visual-scope .apple-process-shell {
+    width: 100%;
+  }
+
+  .public-visual-scope .apple-process-grid {
+    overflow-x: auto;
+    overflow-y: visible;
+    scroll-snap-type: x mandatory;
+  }
+}
+
+@media (max-width: 767px) {
+  .public-visual-scope .apple-process-grid {
+    --process-card-width: min(80vw, 21rem);
+    --process-side-pad: max(var(--shell-gutter), calc((100vw - var(--process-card-width)) / 2));
+    gap: clamp(0.78rem, 3.2vw, 1rem);
+    padding-block: 0.25rem 0.5rem;
+  }
+
+  .public-visual-scope .apple-process-card {
+    min-height: clamp(10.6rem, 44vw, 13rem);
+    border-radius: clamp(1.25rem, 6vw, 1.75rem);
+    padding: clamp(1rem, 4.2vw, 1.25rem);
+    scroll-snap-align: center;
+  }
+
+  .public-visual-scope .apple-process-card h3 {
+    font-size: clamp(1.25rem, 6vw, 1.75rem);
+    line-height: 1;
+  }
+
+  .public-visual-scope .apple-process-card p {
+    font-size: clamp(0.9rem, 3.5vw, 0.98rem);
+    line-height: 1.46;
+  }
+
+  .public-visual-scope .apple-value-statement {
+    min-height: clamp(13rem, 62vw, 17rem);
+    border-radius: clamp(1.55rem, 7vw, 2.2rem);
+  }
+
+  .public-visual-scope .apple-value-statement span {
+    color: rgba(237, 241, 248, 0.7);
+  }
+
+  .public-visual-scope .apple-value-grid,
+  .public-visual-scope .apple-value-grid[data-active-index] {
+    --archive-card-width: min(82vw, 20rem);
+    grid-auto-columns: var(--archive-card-width);
+    gap: clamp(0.76rem, 3vw, 0.95rem);
+    padding-inline: max(var(--shell-gutter), calc((100vw - var(--archive-card-width)) / 2));
+    scroll-padding-inline: max(var(--shell-gutter), calc((100vw - var(--archive-card-width)) / 2));
+    mask-image: none;
+    -webkit-mask-image: none;
+  }
+
+  .public-visual-scope .apple-value-card {
+    min-height: clamp(10.5rem, 45vw, 13rem);
+    height: auto;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: clamp(1.22rem, 6vw, 1.7rem);
+    background:
+      radial-gradient(circle at 18% 0%, rgba(255, 255, 255, 0.12), transparent 42%),
+      linear-gradient(180deg, rgba(27, 28, 31, 0.96), rgba(6, 7, 9, 0.98));
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.09),
+      0 16px 42px rgba(0, 0, 0, 0.16);
+    color: rgba(255, 255, 255, 0.94);
+    padding: clamp(1rem, 4.5vw, 1.22rem);
+    scroll-snap-align: center;
+  }
+
+  .public-visual-scope .apple-value-card > span:not(.apple-liquid-layer) {
+    color: rgba(221, 230, 243, 0.74);
+  }
+
+  .public-visual-scope .apple-value-card h3 {
+    color: white;
+    font-size: clamp(1.22rem, 5.6vw, 1.62rem);
+    line-height: 1;
+  }
+
+  .public-visual-scope .apple-value-card p,
+  .public-visual-scope .apple-value-card-detail {
+    color: rgba(245, 247, 250, 0.72);
+  }
+}
+
 /* Admin visual refresh, scoped away from public behavior and data flows. */
 .admin-visual-scope {
   color: var(--text);
@@ -9473,6 +9626,27 @@ html[data-theme="dark"] .public-visual-scope::before {
   box-shadow: var(--shadow-soft), var(--glass-inner-highlight);
   backdrop-filter: blur(18px) saturate(var(--glass-saturation));
   -webkit-backdrop-filter: blur(18px) saturate(var(--glass-saturation));
+}
+
+.admin-visual-scope .header-nav-shell {
+  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.055);
+}
+
+.admin-visual-scope .header-nav-pill-active,
+.admin-visual-scope .locale-pill-active {
+  color: #141414;
+  background: rgba(246, 241, 232, 0.92);
+}
+
+.admin-visual-scope .header-nav-pill-inactive,
+.admin-visual-scope .locale-pill-inactive {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.admin-visual-scope .header-menu-button,
+.admin-visual-scope .theme-toggle {
+  color: rgba(255, 255, 255, 0.84);
 }
 
 .admin-visual-scope .panel,
@@ -9555,6 +9729,205 @@ html[data-theme="dark"] .public-visual-scope::before {
   .admin-visual-scope :is(.button-primary, .button-secondary, .admin-tab):not(:disabled):hover {
     border-color: var(--control-border-active);
     transform: translateY(-1px);
+  }
+}
+
+/* Admin premium overhaul. Functionality stays in the same components; this is a scoped visual skin. */
+.admin-visual-scope {
+  display: block;
+  min-height: 100svh;
+  --bg: #050506;
+  --bg-soft: #090a0c;
+  --surface: rgba(16, 17, 19, 0.78);
+  --surface-muted: rgba(24, 25, 28, 0.72);
+  --surface-strong: rgba(30, 31, 35, 0.82);
+  --surface-glass: linear-gradient(145deg, rgba(27, 28, 32, 0.82), rgba(6, 7, 9, 0.76));
+  --surface-glass-strong: linear-gradient(145deg, rgba(38, 39, 44, 0.88), rgba(10, 11, 13, 0.78));
+  --border: rgba(255, 255, 255, 0.13);
+  --border-strong: rgba(255, 255, 255, 0.24);
+  --text: #f7f5ef;
+  --text-muted: rgba(238, 234, 222, 0.72);
+  --text-soft: rgba(238, 234, 222, 0.48);
+  --text-primary: var(--text);
+  --text-secondary: var(--text-muted);
+  --text-tertiary: var(--text-soft);
+  --accent: #f1e5ce;
+  --accent-deep: #d7c39e;
+  --accent-soft: rgba(215, 195, 158, 0.16);
+  --control-bg: rgba(255, 255, 255, 0.06);
+  --control-bg-active: rgba(255, 255, 255, 0.12);
+  --control-border: rgba(255, 255, 255, 0.14);
+  --control-border-active: rgba(241, 229, 206, 0.38);
+  --control-text: #f7f5ef;
+  --control-muted: rgba(238, 234, 222, 0.66);
+  --button-primary-bg: linear-gradient(135deg, #f7f2e8, #d7c39e);
+  --button-primary-text: #090909;
+  --button-primary-border: rgba(255, 255, 255, 0.5);
+  --focus-ring: rgba(215, 195, 158, 0.2);
+  --shadow-color: #000;
+  background:
+    radial-gradient(circle at 18% 0%, rgba(215, 195, 158, 0.12), transparent 34rem),
+    radial-gradient(circle at 82% 18%, rgba(135, 151, 174, 0.12), transparent 30rem),
+    linear-gradient(180deg, #060607, #0b0c0e 52%, #050506);
+  color: var(--text);
+}
+
+.admin-visual-scope::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(255, 255, 255, 0.06), transparent 42%),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.018) 0 1px, transparent 1px 16px);
+  opacity: 0.34;
+  mask-image: linear-gradient(180deg, black 0%, black 72%, transparent 100%);
+}
+
+.admin-visual-scope header,
+.admin-visual-scope main {
+  position: relative;
+  z-index: 1;
+}
+
+.admin-visual-scope main {
+  padding-bottom: calc(var(--safe-bottom) + 2rem);
+}
+
+.admin-visual-scope .admin-dashboard {
+  padding-top: clamp(0.9rem, 2vw, 1.4rem);
+}
+
+.admin-visual-scope .admin-dashboard-shell {
+  border-radius: clamp(1.55rem, 3vw, 2.6rem);
+}
+
+.admin-visual-scope .scene-shell {
+  border-color: rgba(255, 255, 255, 0.12);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.08), transparent 34%),
+    linear-gradient(180deg, rgba(23, 24, 27, 0.88), rgba(7, 8, 10, 0.94));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 30px 92px rgba(0, 0, 0, 0.34);
+}
+
+.admin-visual-scope :is(.panel, .panel-strong, .archive-chip, .media-caption, .film-frame) {
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  background:
+    radial-gradient(circle at 16% 0%, rgba(255, 255, 255, 0.075), transparent 42%),
+    linear-gradient(180deg, rgba(28, 29, 33, 0.76), rgba(10, 11, 13, 0.78));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.075);
+  color: var(--text);
+}
+
+.admin-visual-scope :is(.panel, .panel-strong) {
+  border-radius: clamp(1.2rem, 2vw, 1.7rem);
+}
+
+.admin-visual-scope .archive-chip {
+  border-radius: 1rem;
+}
+
+.admin-visual-scope .admin-tab {
+  min-height: 2.24rem;
+  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(238, 234, 222, 0.7);
+  padding: 0.56rem 0.9rem;
+  font-size: 0.78rem;
+  font-weight: 720;
+  letter-spacing: 0.02em;
+}
+
+.admin-visual-scope .admin-tab-active {
+  border-color: rgba(241, 229, 206, 0.4);
+  background: rgba(241, 229, 206, 0.12);
+  color: var(--text);
+}
+
+.admin-visual-scope .admin-lead-card {
+  border-color: rgba(255, 255, 255, 0.11);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.052), rgba(255, 255, 255, 0.028)),
+    rgba(255, 255, 255, 0.02);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.055);
+  transition-property: transform, opacity, background-color, border-color, color;
+  transition-duration: 220ms;
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.admin-visual-scope .admin-lead-card-active {
+  border-color: rgba(241, 229, 206, 0.42);
+  background:
+    radial-gradient(circle at 0% 0%, rgba(241, 229, 206, 0.13), transparent 42%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.095), rgba(255, 255, 255, 0.045));
+}
+
+.admin-visual-scope :is(.field-input, .field-select, .field-textarea) {
+  min-height: 2.8rem;
+  border-color: rgba(255, 255, 255, 0.13);
+  border-radius: 0.95rem;
+  background: rgba(255, 255, 255, 0.055);
+  color: var(--text);
+}
+
+.admin-visual-scope :is(.field-input, .field-select, .field-textarea)::placeholder {
+  color: rgba(238, 234, 222, 0.38);
+}
+
+.admin-visual-scope :is(.field-input, .field-select, .field-textarea):focus {
+  border-color: rgba(241, 229, 206, 0.46);
+  box-shadow: 0 0 0 4px rgba(215, 195, 158, 0.16);
+}
+
+.admin-visual-scope .field-label {
+  color: rgba(238, 234, 222, 0.62);
+  font-size: 0.68rem;
+  letter-spacing: 0.15em;
+}
+
+.admin-visual-scope :is(.button-primary, .button-secondary) {
+  min-height: 2.65rem;
+  border-radius: 999px;
+  padding-inline: 1rem;
+  font-size: 0.86rem;
+  font-weight: 760;
+}
+
+.admin-visual-scope .button-secondary {
+  background: rgba(255, 255, 255, 0.055);
+  color: rgba(248, 245, 238, 0.88);
+}
+
+.admin-visual-scope .home-divider {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.16), transparent);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .admin-visual-scope .admin-lead-card:hover {
+    border-color: rgba(241, 229, 206, 0.3);
+    transform: translate3d(0, -2px, 0);
+  }
+}
+
+@media (max-width: 767px) {
+  .admin-visual-scope .admin-dashboard {
+    padding-inline: 0;
+  }
+
+  .admin-visual-scope .admin-dashboard-shell {
+    border-radius: 1.35rem;
+  }
+
+  .admin-visual-scope .content-frame-wide {
+    gap: 0.85rem;
+  }
+
+  .admin-visual-scope .admin-tab {
+    flex: 1 1 calc(50% - 0.4rem);
+    justify-content: center;
   }
 }
 
