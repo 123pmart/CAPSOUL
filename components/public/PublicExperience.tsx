@@ -1002,46 +1002,6 @@ function ArchiveSceneModule({
 
   return (
     <div className="apple-scene-module motion-stagger">
-      <div
-        className="apple-record-list"
-        data-reveal
-        style={{
-          "--record-active-index": activeIndex,
-          "--record-total": scene.steps.length,
-          "--record-progress": `${((activeIndex + 1) / scene.steps.length) * 100}%`,
-        } as CSSProperties}
-      >
-        <div className="apple-record-list-header">
-          <span>{sectionLabel}</span>
-          <span>
-            {String(activeIndex + 1).padStart(2, "0")} / {String(scene.steps.length).padStart(2, "0")}
-          </span>
-        </div>
-        <div className="apple-record-sync-rail" aria-hidden="true">
-          <span />
-        </div>
-        {scene.steps.map((step, index) => {
-          const isActive = index === activeIndex;
-
-          return (
-            <button
-              key={`experience-state-${index}`}
-              type="button"
-              className={`apple-record-card apple-liquid-surface ${isActive ? "apple-record-card-active" : ""}`.trim()}
-              style={{ "--motion-stagger-index": index } as CSSProperties}
-              aria-pressed={isActive}
-              onPointerDown={() => selectIndex(index)}
-              onClick={() => selectIndex(index)}
-            >
-              <span className="apple-liquid-layer" aria-hidden="true" />
-              <span>{step.label}</span>
-              <strong>{step.title}</strong>
-              <p>{step.summary}</p>
-            </button>
-          );
-        })}
-      </div>
-
       <div className="apple-record-feature motion-media" data-reveal style={revealDelay(1)}>
         <div className="experience-content-container">
           <AnimatePresence initial={false} custom={direction} mode="wait">

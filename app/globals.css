@@ -3857,18 +3857,33 @@ html[data-theme="dark"] body {
   z-index: 0;
   overflow: hidden;
   contain: paint;
-  opacity: 0.72;
+  opacity: 0.62;
   transform: translate3d(0, 0, 0);
 }
 
+.atmosphere-backdrop::before,
 .atmosphere-backdrop::after {
   content: "";
   position: absolute;
+  pointer-events: none;
+}
+
+.atmosphere-backdrop::before {
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 50% -8%, color-mix(in srgb, var(--shadow-color, #0b0b0b) 10%, transparent), transparent 42%),
+    linear-gradient(90deg, color-mix(in srgb, var(--shadow-color, #0b0b0b) 2.2%, transparent) 0 1px, transparent 1px 14px);
+  opacity: 0.18;
+  mask-image: linear-gradient(180deg, transparent 0%, black 18%, black 78%, transparent 100%);
+}
+
+.atmosphere-backdrop::after {
   inset: -18%;
   background:
-    radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--glass-highlight) 16%, transparent), transparent 44%),
-    linear-gradient(180deg, transparent 0%, color-mix(in srgb, var(--bg-soft) 34%, transparent) 100%);
-  opacity: 0.55;
+    radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--glass-highlight) 11%, transparent), transparent 44%),
+    radial-gradient(ellipse at 50% 100%, color-mix(in srgb, var(--accent) 6%, transparent), transparent 50%),
+    linear-gradient(180deg, transparent 0%, color-mix(in srgb, var(--bg-soft) 24%, transparent) 100%);
+  opacity: 0.42;
 }
 
 .atmosphere-bloom {
@@ -3876,7 +3891,7 @@ html[data-theme="dark"] body {
   width: min(76vmax, 82rem);
   height: min(76vmax, 82rem);
   border-radius: 999px;
-  opacity: 0.11;
+  opacity: 0.09;
   pointer-events: none;
   transform: translate3d(0, 0, 0);
   mix-blend-mode: soft-light;
@@ -3903,12 +3918,44 @@ html[data-theme="dark"] body {
   opacity: 0.09;
 }
 
+.atmosphere-panel {
+  position: absolute;
+  width: clamp(15rem, 28vw, 31rem);
+  height: clamp(9rem, 18vw, 20rem);
+  border: 1px solid color-mix(in srgb, var(--glass-highlight) 9%, transparent);
+  border-radius: clamp(2rem, 5vw, 4rem);
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--glass-highlight) 5%, transparent), color-mix(in srgb, var(--surface-glass) 7%, transparent)),
+    linear-gradient(90deg, transparent, color-mix(in srgb, var(--accent) 2.5%, transparent), transparent);
+  opacity: 0.24;
+  transform: translate3d(0, 0, 0) rotate(var(--atmosphere-panel-rotate, -8deg));
+}
+
+.atmosphere-panel-one {
+  top: 18svh;
+  left: -8vw;
+  --atmosphere-panel-rotate: -10deg;
+}
+
+.atmosphere-panel-two {
+  right: -9vw;
+  bottom: 12svh;
+  --atmosphere-panel-rotate: 9deg;
+}
+
 html[data-theme="dark"] .atmosphere-backdrop {
-  opacity: 0.66;
+  opacity: 0.58;
+}
+
+html[data-theme="dark"] .atmosphere-backdrop::before {
+  background:
+    radial-gradient(ellipse at 50% -8%, rgba(255, 255, 255, 0.048), transparent 42%),
+    linear-gradient(90deg, rgba(220, 230, 244, 0.018) 0 1px, transparent 1px 14px);
+  opacity: 0.22;
 }
 
 html[data-theme="dark"] .atmosphere-backdrop::after {
-  opacity: 0.34;
+  opacity: 0.28;
 }
 
 html[data-theme="dark"] .atmosphere-bloom-one {
@@ -3921,6 +3968,14 @@ html[data-theme="dark"] .atmosphere-bloom-two {
 
 html[data-theme="dark"] .atmosphere-bloom-three {
   background: radial-gradient(circle, rgba(185, 148, 84, 0.11) 0%, rgba(94, 72, 40, 0.04) 34%, transparent 68%);
+}
+
+html[data-theme="dark"] .atmosphere-panel {
+  border-color: rgba(210, 224, 242, 0.055);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.034), rgba(94, 116, 142, 0.028)),
+    linear-gradient(90deg, transparent, rgba(98, 118, 150, 0.026), transparent);
+  opacity: 0.28;
 }
 
 .apple-hero,
@@ -9101,7 +9156,7 @@ html[data-theme="dark"] .public-visual-scope::before {
 .public-visual-scope main {
   padding-top: calc(
     var(--safe-top) + var(--header-shell-offset-mobile) + var(--header-height-mobile) +
-      (2 * var(--header-shell-pad-mobile)) + 0.08rem
+      (2 * var(--header-shell-pad-mobile)) + 0.55rem
   );
 }
 
@@ -9109,14 +9164,97 @@ html[data-theme="dark"] .public-visual-scope::before {
   .public-visual-scope main {
     padding-top: calc(
       var(--safe-top) + var(--header-shell-offset-desktop) + var(--header-height-desktop) +
-        (2 * var(--header-shell-pad-desktop)) + 0.1rem
+        (2 * var(--header-shell-pad-desktop)) + 1.55rem
     );
   }
 }
 
 .public-visual-scope .apple-hero {
-  padding-top: clamp(0.72rem, 1.8svh, 1.35rem);
+  padding-top: clamp(1.55rem, 3.8svh, 2.35rem);
   min-height: min(52rem, calc(100svh - var(--header-offset-mobile) + 2.4rem));
+}
+
+.public-visual-scope .apple-section-contrast .apple-scene-module {
+  width: min(100%, 840px);
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: center;
+  align-items: center;
+  gap: 0;
+  margin-top: clamp(1.15rem, 2.4vw, 1.9rem);
+}
+
+.public-visual-scope .apple-section-contrast .apple-scene-module::after {
+  content: none;
+}
+
+.public-visual-scope .apple-section-contrast .apple-scene-module::before {
+  inset: clamp(-0.75rem, -1vw, -0.22rem);
+  border-color: color-mix(in srgb, var(--border) 32%, transparent);
+  background:
+    radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--glass-highlight) 24%, transparent), transparent 46%),
+    linear-gradient(180deg, color-mix(in srgb, var(--surface-glass-strong) 26%, transparent), transparent 64%);
+  opacity: 0.5;
+}
+
+.public-visual-scope .apple-section-contrast .apple-record-feature {
+  width: min(100%, 780px);
+  max-width: 100%;
+  margin-inline: auto;
+  padding: clamp(1rem, 1.75vw, 1.4rem);
+  border-radius: clamp(1.45rem, 2.8vw, 2.35rem);
+}
+
+.public-visual-scope .apple-section-contrast .experience-content-container {
+  display: grid;
+  place-items: center;
+  width: 100%;
+}
+
+.public-visual-scope .apple-section-contrast .apple-record-feature-content {
+  width: 100%;
+  justify-items: center;
+  gap: clamp(0.85rem, 1.35vw, 1.12rem);
+}
+
+.public-visual-scope .apple-section-contrast .apple-record-feature .apple-visual-frame {
+  width: min(100%, clamp(20rem, 46vw, 38rem));
+  max-width: 100%;
+}
+
+.public-visual-scope .apple-section-contrast .apple-record-detail {
+  display: grid;
+  justify-items: center;
+  padding: clamp(0.9rem, 1.35vw, 1.12rem) 0 0;
+  text-align: center;
+}
+
+.public-visual-scope .apple-section-contrast .apple-record-detail h3 {
+  width: min(100%, 15ch);
+  max-width: 100%;
+  font-size: clamp(1.65rem, 2.75vw, 2.8rem);
+  line-height: 1;
+}
+
+.public-visual-scope .apple-section-contrast .apple-record-detail p {
+  width: min(100%, 41rem);
+  max-width: 100%;
+  line-height: 1.52;
+}
+
+.public-visual-scope .apple-section-contrast .apple-record-detail .apple-record-tags {
+  width: min(100%, 38rem);
+  margin-top: clamp(0.72rem, 1.2vw, 0.95rem);
+}
+
+.public-visual-scope .apple-section-contrast .apple-scene-controls {
+  width: 100%;
+  justify-content: center;
+  gap: clamp(0.75rem, 1.35vw, 1.05rem);
+  margin-top: clamp(0.85rem, 1.45vw, 1.15rem);
+}
+
+.public-visual-scope .apple-section-contrast .apple-scene-controls .compact-scene-progress {
+  flex: 0 1 auto;
 }
 
 .public-visual-scope .apple-archive-record-line {
@@ -9177,7 +9315,7 @@ html[data-theme="dark"] .public-visual-scope::before {
       linear-gradient(180deg, rgba(25, 25, 27, 0.92), rgba(7, 7, 8, 0.96));
     color: rgba(255, 255, 255, 0.92);
     padding: clamp(0.86rem, 1.08vw, 1.06rem);
-    transition-property: flex, transform, opacity, border-color, background-color;
+    transition-property: transform, opacity, border-color, background-color;
     transition-duration: 560ms;
     transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
   }
@@ -9201,7 +9339,7 @@ html[data-theme="dark"] .public-visual-scope::before {
     max-height: 0;
     opacity: 0;
     transform: translate3d(0, 0.45rem, 0);
-    transition-property: max-height, opacity, transform;
+    transition-property: opacity, transform;
     transition-duration: 520ms;
     transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
   }
@@ -9219,8 +9357,67 @@ html[data-theme="dark"] .public-visual-scope::before {
 
 @media (max-width: 767px) {
   .public-visual-scope .apple-hero {
-    padding-top: clamp(0.58rem, 2.4svh, 1rem);
+    padding-top: clamp(0.85rem, 3svh, 1.25rem);
     min-height: auto;
+  }
+
+  .public-visual-scope .apple-section-contrast .apple-scene-module {
+    width: 100%;
+    margin-top: clamp(1rem, 4vw, 1.35rem);
+  }
+
+  .public-visual-scope .apple-section-contrast .apple-record-feature {
+    width: 100%;
+    padding: clamp(0.9rem, 4vw, 1.1rem);
+    border-radius: clamp(1.2rem, 5.8vw, 1.65rem);
+  }
+
+  .public-visual-scope .apple-section-contrast .apple-record-feature-content {
+    gap: clamp(0.78rem, 3vw, 1rem);
+  }
+
+  .public-visual-scope .apple-section-contrast .apple-record-feature .apple-visual-frame {
+    width: 100%;
+    padding: clamp(0.54rem, 2.4vw, 0.7rem);
+  }
+
+  .public-visual-scope .apple-section-contrast .apple-record-feature .apple-visual-image-wrap {
+    max-height: none;
+  }
+
+  .public-visual-scope .apple-section-contrast .apple-record-detail {
+    padding-top: clamp(0.65rem, 2.7vw, 0.85rem);
+  }
+
+  .public-visual-scope .apple-section-contrast .apple-record-detail h3 {
+    width: min(100%, 14ch);
+    font-size: clamp(1.38rem, 7vw, 2rem);
+    line-height: 1.04;
+  }
+
+  .public-visual-scope .apple-section-contrast .apple-record-detail p {
+    font-size: clamp(0.9rem, 3.5vw, 0.98rem);
+    line-height: 1.52;
+  }
+
+  .public-visual-scope .apple-section-contrast .apple-record-detail .apple-record-tags {
+    width: 100%;
+    margin-top: clamp(0.68rem, 3vw, 0.88rem);
+  }
+
+  .public-visual-scope .apple-section-contrast .apple-scene-controls {
+    flex-wrap: nowrap;
+    gap: clamp(0.55rem, 3vw, 0.76rem);
+    margin-top: clamp(0.9rem, 3.8vw, 1.12rem);
+  }
+
+  .public-visual-scope .apple-section-contrast .apple-scene-controls .compact-scene-arrow {
+    flex: 0 0 var(--compact-control-size);
+  }
+
+  .public-visual-scope .apple-section-contrast .apple-scene-controls .compact-scene-progress {
+    min-width: 0;
+    padding-inline: clamp(0.45rem, 2.2vw, 0.62rem);
   }
 
   .public-visual-scope .apple-value-grid,

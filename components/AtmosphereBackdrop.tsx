@@ -16,6 +16,8 @@ export function AtmosphereBackdrop() {
       <span className="atmosphere-bloom atmosphere-bloom-one" />
       <span className="atmosphere-bloom atmosphere-bloom-two" />
       <span className="atmosphere-bloom atmosphere-bloom-three" />
+      <span className="atmosphere-panel atmosphere-panel-one" />
+      <span className="atmosphere-panel atmosphere-panel-two" />
     </motion.div>
   );
 }
