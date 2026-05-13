@@ -3,7 +3,7 @@
 import type { ReactNode } from "react";
 import { usePathname } from "next/navigation";
 
-import { Atmosphere } from "@/components/Atmosphere";
+import { AtmosphereBackdrop } from "@/components/AtmosphereBackdrop";
 
 export function PublicVisualScope({ children }: { children: ReactNode }) {
   const pathname = usePathname();
@@ -15,8 +15,7 @@ export function PublicVisualScope({ children }: { children: ReactNode }) {
 
   return (
     <div className="public-visual-scope">
-      <div className="film-grain" aria-hidden="true" />
-      <Atmosphere />
+      <AtmosphereBackdrop />
       {children}
     </div>
   );

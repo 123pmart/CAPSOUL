@@ -11,6 +11,7 @@ import {
   type CSSProperties,
   type FormEvent,
   type MouseEvent,
+  type PointerEvent,
   type ReactNode,
 } from "react";
 import { usePathname } from "next/navigation";
@@ -22,7 +23,6 @@ import {
 } from "framer-motion";
 
 import { CompactSceneControls } from "@/components/compact-scene-controls";
-import { EditorialBackdrop } from "@/components/EditorialBackdrop";
 import {
   IMMERSIVE_SECTION_NAVIGATE_EVENT,
   dispatchImmersiveSectionChange,
@@ -270,6 +270,10 @@ const detailItemReveal = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.34, ease: revealEase } },
 } as const;
 
+function isFineHoverPointer(event: { pointerType: string }) {
+  return event.pointerType === "mouse" || event.pointerType === "pen";
+}
+
 type ChipMarqueeRowProps = {
   className: string;
   items: string[];
@@ -288,7 +292,6 @@ function ChipMarqueeRow({
   const rowRef = useRef<HTMLDivElement | null>(null);
   const setRef = useRef<HTMLDivElement | null>(null);
   const [isOverflowing, setIsOverflowing] = useState(false);
-  const [isInteracting, setIsInteracting] = useState(false);
 
   useEffect(() => {
     const row = rowRef.current;
@@ -350,14 +353,9 @@ function ChipMarqueeRow({
   return (
     <motion.div
       className={`${className} chip-row chip-marquee`}
-      data-interacting={isInteracting ? "true" : "false"}
       data-overflow={isOverflowing ? "true" : "false"}
       ref={rowRef}
       variants={variants}
-      onPointerCancel={() => setIsInteracting(false)}
-      onPointerDown={() => setIsInteracting(true)}
-      onPointerLeave={() => setIsInteracting(false)}
-      onPointerUp={() => setIsInteracting(false)}
     >
       <div className="chip-marquee-track">
         {renderChipSet()}
@@ -812,25 +810,39 @@ function ArchiveValueCard({
   pillar,
   index,
   archiveLabelPrefix,
+  isActive,
+  onHover,
+  onFocus,
 }: {
   pillar: ArchivePillar;
   index: number;
   archiveLabelPrefix: string;
+  isActive: boolean;
+  onHover: (index: number) => void;
+  onFocus: (index: number) => void;
 }) {
   return (
     <article
       className="apple-value-card apple-liquid-surface"
       key={`archive-value-card-${index}`}
       data-reveal
+      data-active={isActive ? "true" : "false"}
+      tabIndex={0}
       style={{
         "--motion-stagger-index": index,
         "--reveal-delay": `${Math.min(index * 90, 360)}ms`,
       } as CSSProperties}
+      onPointerEnter={(event: PointerEvent<HTMLElement>) => {
+        if (isFineHoverPointer(event)) {
+          onHover(index);
+        }
+      }}
+      onFocus={() => onFocus(index)}
     >
       <span className="apple-liquid-layer" aria-hidden="true" />
       <span>{archiveLabelPrefix} {String(index + 1).padStart(2, "0")}</span>
       <h3>{pillar.title}</h3>
-      <p>{pillar.summary}</p>
+      <p className="apple-value-card-preview">{pillar.summary}</p>
       <div className="apple-value-card-detail">
         {pillar.detail}
       </div>
@@ -844,9 +856,9 @@ function EmotionalValue({
   stepLabelPrefix: string;
 }) {
   const archiveGridRef = useRef<HTMLDivElement>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
   const archive = PRIVATE_MEMORY_ARCHIVE[getPublicLocale(stepLabelPrefix)];
   const pillars = archive.pillars;
-  const activeIndex = 0;
   const activePillar = pillars[activeIndex] ?? pillars[0];
 
   useIsomorphicLayoutEffect(() => {
@@ -879,7 +891,7 @@ function EmotionalValue({
             <span>{archive.eyebrow}</span>
             <h2 data-reveal style={revealDelay(1)}>{archive.headline}</h2>
             <div className="apple-archive-record-line" aria-hidden="true">
-              <span style={{ "--archive-index-x": `${activeIndex * 100}%` } as CSSProperties} />
+              <span style={{ "--archive-progress-scale": (activeIndex + 1) / pillars.length } as CSSProperties} />
             </div>
             <p>{activePillar?.summary ?? archive.headline}</p>
           </div>
@@ -888,6 +900,11 @@ function EmotionalValue({
           ref={archiveGridRef}
           className="apple-value-grid motion-stagger"
           data-active-index={activeIndex}
+          onPointerLeave={(event: PointerEvent<HTMLElement>) => {
+            if (isFineHoverPointer(event)) {
+              setActiveIndex(0);
+            }
+          }}
           style={{
             "--active-archive-index": activeIndex,
             "--archive-card-index-x": `calc(${12.5 + activeIndex * 25}% - 0.32rem)`,
@@ -899,6 +916,9 @@ function EmotionalValue({
               pillar={pillar}
               index={index}
               archiveLabelPrefix={archive.labelPrefix}
+              isActive={index === activeIndex}
+              onHover={setActiveIndex}
+              onFocus={setActiveIndex}
             />
           ))}
         </div>
@@ -1607,7 +1627,6 @@ export function PublicExperience({
 
   return (
     <div className="apple-archive-experience" data-active-section={activeAtmosphereSection}>
-      <EditorialBackdrop />
       <RevealObserver />
       <ArchiveIndexLine items={railItems} activeKey={activeAtmosphereSection} />
 
