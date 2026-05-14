@@ -33,7 +33,6 @@ import {
 } from "@/components/immersive-scroll-context";
 import { contentSwapTransition, measuredEase } from "@/components/motion-config";
 import { PremiumSectionMotion } from "@/components/motion/PremiumSectionMotion";
-import { RevealObserver } from "@/components/public/reveal-observer";
 import { useMagneticMotion } from "@/components/use-magnetic-motion";
 import type {
   GlobalSiteContent,
@@ -266,8 +265,12 @@ const detailStaggerReveal = {
 } as const;
 
 const detailItemReveal = {
-  hidden: { opacity: 0, y: 14 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.34, ease: revealEase } },
+  hidden: { opacity: 0, clipPath: "inset(0 0 100% 0)" },
+  visible: {
+    opacity: 1,
+    clipPath: "inset(0 0 0% 0)",
+    transition: { duration: 0.48, ease: revealEase },
+  },
 } as const;
 
 function isFineHoverPointer(event: { pointerType: string }) {
@@ -1009,10 +1012,10 @@ function ArchiveSceneModule({
               key={`experience-feature-${activeIndex}`}
               className="apple-record-feature-content"
               custom={direction}
-              initial={reduceMotion ? false : { opacity: 0, y: 24, scale: 0.97 }}
-              animate={{ opacity: 1, x: 0, y: 0, scale: 1 }}
-              exit={reduceMotion ? undefined : { opacity: 0, y: -12, scale: 0.985 }}
-              transition={reduceMotion ? { duration: 0 } : { ...transition, duration: 0.42 }}
+              initial={reduceMotion ? false : { opacity: 0, scale: 0.96 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={reduceMotion ? undefined : { opacity: 0, scale: 0.985 }}
+              transition={reduceMotion ? { duration: 0 } : { ...transition, duration: 0.56 }}
             >
               <ArchiveVisualFrame
                 image={active.image}
@@ -1587,7 +1590,6 @@ export function PublicExperience({
 
   return (
     <div className="apple-archive-experience" data-active-section={activeAtmosphereSection}>
-      <RevealObserver />
       <ArchiveIndexLine items={railItems} activeKey={activeAtmosphereSection} />
 
       <nav className="apple-side-nav" aria-label="Section navigation">
