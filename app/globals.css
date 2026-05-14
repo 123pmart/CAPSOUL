@@ -9087,33 +9087,33 @@ html[data-theme="dark"] .public-visual-scope::before {
 
 .public-visual-scope .apple-value-card {
   min-height: auto;
-  border-color: rgba(255, 255, 255, 0.12);
+  border-color: rgba(20, 20, 20, 0.08);
   background:
-    radial-gradient(circle at 18% 0%, rgba(255, 255, 255, 0.08), transparent 42%),
-    linear-gradient(180deg, rgba(26, 26, 28, 0.92), rgba(7, 7, 8, 0.96));
-  color: rgba(255, 255, 255, 0.92);
+    linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0.72)),
+    radial-gradient(circle at 18% 0%, rgba(255, 255, 255, 0.72), transparent 44%);
+  color: #191919;
   cursor: default;
   overflow: hidden;
   padding: clamp(0.82rem, 1.05vw, 1rem);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.08),
-    0 16px 42px rgba(0, 0, 0, 0.14);
+    inset 0 1px 0 rgba(255, 255, 255, 0.72),
+    0 16px 38px rgba(20, 20, 20, 0.07);
   transition-property: transform, opacity;
   transition-duration: 520ms;
   transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .public-visual-scope .apple-value-card > span:not(.apple-liquid-layer) {
-  color: rgba(219, 230, 244, 0.74);
+  color: rgba(20, 20, 20, 0.56);
 }
 
 .public-visual-scope .apple-value-card h3 {
-  color: white;
+  color: #151515;
 }
 
 .public-visual-scope .apple-value-card p,
 .public-visual-scope .apple-value-card-detail {
-  color: rgba(245, 247, 250, 0.68);
+  color: rgba(20, 20, 20, 0.66);
 }
 
 .public-visual-scope .apple-value-card p {
@@ -9131,6 +9131,36 @@ html[data-theme="dark"] .public-visual-scope::before {
 @media (hover: hover) and (pointer: fine) {
   .public-visual-scope .apple-value-card:hover {
     transform: translate3d(0, -3px, 0) scale(1.01);
+    border-color: rgba(20, 20, 20, 0.14);
+  }
+}
+
+html[data-theme="dark"] .public-visual-scope .apple-value-card {
+  border-color: rgba(255, 255, 255, 0.12);
+  background:
+    radial-gradient(circle at 18% 0%, rgba(255, 255, 255, 0.08), transparent 42%),
+    linear-gradient(180deg, rgba(26, 26, 28, 0.92), rgba(7, 7, 8, 0.96));
+  color: rgba(255, 255, 255, 0.92);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 16px 42px rgba(0, 0, 0, 0.14);
+}
+
+html[data-theme="dark"] .public-visual-scope .apple-value-card > span:not(.apple-liquid-layer) {
+  color: rgba(219, 230, 244, 0.74);
+}
+
+html[data-theme="dark"] .public-visual-scope .apple-value-card h3 {
+  color: white;
+}
+
+html[data-theme="dark"] .public-visual-scope .apple-value-card p,
+html[data-theme="dark"] .public-visual-scope .apple-value-card-detail {
+  color: rgba(245, 247, 250, 0.68);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  html[data-theme="dark"] .public-visual-scope .apple-value-card:hover {
     border-color: rgba(255, 255, 255, 0.2);
   }
 }
@@ -9411,12 +9441,12 @@ html[data-theme="dark"] .public-visual-scope::before {
   }
 
   .public-visual-scope .apple-section-contrast .apple-section-inner {
-    width: min(100%, 1240px);
+    width: min(100%, 1080px);
   }
 
   .public-visual-scope .apple-section-contrast .apple-scene-module {
-    width: min(100%, 1120px);
-    margin-top: clamp(1.45rem, 2.8vw, 2.4rem);
+    width: min(100%, 960px);
+    margin-top: clamp(1rem, 2vw, 1.65rem);
   }
 
   .public-visual-scope .apple-section-contrast .apple-scene-module::before {
@@ -9443,43 +9473,46 @@ html[data-theme="dark"] .public-visual-scope::before {
   }
 
   .public-visual-scope .apple-section-contrast .apple-record-feature {
-    width: min(100%, 1080px);
-    padding: clamp(1.2rem, 1.7vw, 1.7rem);
-    border-radius: clamp(1.8rem, 3.2vw, 2.75rem);
+    width: min(100%, 920px);
+    padding: clamp(0.95rem, 1.35vw, 1.28rem);
+    border-radius: clamp(1.55rem, 2.6vw, 2.25rem);
   }
 
   .public-visual-scope .apple-section-contrast .apple-record-feature-content {
-    gap: clamp(1rem, 1.5vw, 1.35rem);
+    gap: clamp(0.72rem, 1.05vw, 1rem);
   }
 
   .public-visual-scope .apple-section-contrast .apple-record-feature .apple-visual-frame {
-    width: min(100%, clamp(44rem, 62vw, 54rem));
+    width: min(100%, clamp(34rem, 50vw, 42rem));
   }
 
   .public-visual-scope .apple-section-contrast .apple-record-feature .apple-visual-image-wrap {
-    max-height: clamp(21rem, 42vw, 34rem);
+    max-height: clamp(17rem, 31vw, 24.5rem);
   }
 
   .public-visual-scope .apple-section-contrast .apple-record-detail {
-    padding-top: clamp(1.1rem, 1.7vw, 1.5rem);
+    padding-top: clamp(0.72rem, 1.05vw, 0.98rem);
   }
 
   .public-visual-scope .apple-section-contrast .apple-record-detail h3 {
-    width: min(100%, 18ch);
-    font-size: clamp(2.25rem, 3vw, 3.65rem);
+    width: min(100%, 16ch);
+    font-size: clamp(1.95rem, 2.45vw, 2.85rem);
   }
 
   .public-visual-scope .apple-section-contrast .apple-record-detail p {
-    width: min(100%, 48rem);
-    font-size: clamp(1rem, 1.05vw, 1.12rem);
+    width: min(100%, 42rem);
+    font-size: clamp(0.94rem, 0.96vw, 1.04rem);
+    line-height: 1.48;
   }
 
   .public-visual-scope .apple-section-contrast .apple-record-detail .apple-record-tags {
-    width: min(100%, 48rem);
+    width: min(100%, 42rem);
+    margin-top: clamp(0.58rem, 0.9vw, 0.78rem);
   }
 
   .public-visual-scope .apple-section-contrast .apple-scene-controls {
-    width: min(100%, 50rem);
+    width: min(100%, 42rem);
+    margin-top: clamp(0.62rem, 0.9vw, 0.86rem);
   }
 }
 
@@ -9535,11 +9568,11 @@ html[data-theme="dark"] .public-visual-scope::before {
     height: 100%;
     align-content: start;
     gap: 0.34rem;
-    border-color: rgba(255, 255, 255, 0.12);
+    border-color: rgba(20, 20, 20, 0.08);
     background:
-      radial-gradient(circle at 18% 0%, rgba(255, 255, 255, 0.085), transparent 42%),
-      linear-gradient(180deg, rgba(25, 25, 27, 0.92), rgba(7, 7, 8, 0.96));
-    color: rgba(255, 255, 255, 0.92);
+      linear-gradient(180deg, rgba(255, 255, 255, 0.84), rgba(255, 255, 255, 0.72)),
+      radial-gradient(circle at 18% 0%, rgba(255, 255, 255, 0.72), transparent 42%);
+    color: #191919;
     padding: clamp(0.86rem, 1.08vw, 1.06rem);
     transition-property: transform, opacity, border-color, background-color;
     transition-duration: 560ms;
@@ -9554,11 +9587,26 @@ html[data-theme="dark"] .public-visual-scope::before {
   .public-visual-scope .apple-value-grid:has(.apple-value-card:is(:hover, :focus-visible)) .apple-value-card:is(:hover, :focus-visible) {
     flex: 1.72 1 0;
     opacity: 1;
+    border-color: rgba(20, 20, 20, 0.16);
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.78)),
+      radial-gradient(circle at 8% 0%, rgba(255, 255, 255, 0.82), transparent 44%);
+    transform: translate3d(0, -3px, 0) scale(1.01);
+  }
+
+  html[data-theme="dark"] .public-visual-scope .apple-value-card {
+    border-color: rgba(255, 255, 255, 0.12);
+    background:
+      radial-gradient(circle at 18% 0%, rgba(255, 255, 255, 0.085), transparent 42%),
+      linear-gradient(180deg, rgba(25, 25, 27, 0.92), rgba(7, 7, 8, 0.96));
+    color: rgba(255, 255, 255, 0.92);
+  }
+
+  html[data-theme="dark"] .public-visual-scope .apple-value-grid:has(.apple-value-card:is(:hover, :focus-visible)) .apple-value-card:is(:hover, :focus-visible) {
     border-color: rgba(255, 255, 255, 0.24);
     background:
       radial-gradient(circle at 8% 0%, rgba(255, 255, 255, 0.13), transparent 44%),
       linear-gradient(180deg, rgba(31, 31, 33, 0.96), rgba(8, 8, 9, 0.98));
-    transform: translate3d(0, -3px, 0) scale(1.01);
   }
 
   .public-visual-scope .apple-value-card-detail {
@@ -9809,8 +9857,36 @@ html[data-theme="dark"] .public-visual-scope::before {
   .public-visual-scope .apple-value-card {
     min-height: clamp(10.5rem, 45vw, 13rem);
     height: auto;
-    border: 1px solid rgba(255, 255, 255, 0.14);
+    border: 1px solid rgba(20, 20, 20, 0.08);
     border-radius: clamp(1.22rem, 6vw, 1.7rem);
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.86), rgba(255, 255, 255, 0.72)),
+      radial-gradient(circle at 18% 0%, rgba(255, 255, 255, 0.76), transparent 42%);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.74),
+      0 14px 34px rgba(20, 20, 20, 0.07);
+    color: #191919;
+    padding: clamp(1rem, 4.5vw, 1.22rem);
+    scroll-snap-align: center;
+  }
+
+  .public-visual-scope .apple-value-card > span:not(.apple-liquid-layer) {
+    color: rgba(20, 20, 20, 0.58);
+  }
+
+  .public-visual-scope .apple-value-card h3 {
+    color: #151515;
+    font-size: clamp(1.22rem, 5.6vw, 1.62rem);
+    line-height: 1;
+  }
+
+  .public-visual-scope .apple-value-card p,
+  .public-visual-scope .apple-value-card-detail {
+    color: rgba(20, 20, 20, 0.68);
+  }
+
+  html[data-theme="dark"] .public-visual-scope .apple-value-card {
+    border-color: rgba(255, 255, 255, 0.14);
     background:
       radial-gradient(circle at 18% 0%, rgba(255, 255, 255, 0.12), transparent 42%),
       linear-gradient(180deg, rgba(27, 28, 31, 0.96), rgba(6, 7, 9, 0.98));
@@ -9818,22 +9894,18 @@ html[data-theme="dark"] .public-visual-scope::before {
       inset 0 1px 0 rgba(255, 255, 255, 0.09),
       0 16px 42px rgba(0, 0, 0, 0.16);
     color: rgba(255, 255, 255, 0.94);
-    padding: clamp(1rem, 4.5vw, 1.22rem);
-    scroll-snap-align: center;
   }
 
-  .public-visual-scope .apple-value-card > span:not(.apple-liquid-layer) {
+  html[data-theme="dark"] .public-visual-scope .apple-value-card > span:not(.apple-liquid-layer) {
     color: rgba(221, 230, 243, 0.74);
   }
 
-  .public-visual-scope .apple-value-card h3 {
+  html[data-theme="dark"] .public-visual-scope .apple-value-card h3 {
     color: white;
-    font-size: clamp(1.22rem, 5.6vw, 1.62rem);
-    line-height: 1;
   }
 
-  .public-visual-scope .apple-value-card p,
-  .public-visual-scope .apple-value-card-detail {
+  html[data-theme="dark"] .public-visual-scope .apple-value-card p,
+  html[data-theme="dark"] .public-visual-scope .apple-value-card-detail {
     color: rgba(245, 247, 250, 0.72);
   }
 }
@@ -10362,7 +10434,7 @@ html[data-theme="dark"] .public-visual-scope :is(
   .apple-inquiry-support .apple-visual-frame > p,
   .media-caption p
 ) {
-  color: rgba(215, 185, 125, 0.88);
+  color: rgba(238, 238, 232, 0.72);
 }
 
 .admin-visual-scope[data-admin-theme="light"] {

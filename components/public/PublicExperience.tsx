@@ -109,7 +109,7 @@ const PRIVATE_MEMORY_ARCHIVE: Record<PublicLocale, {
   en: {
     eyebrow: "Private memory archive",
     headline: "THE FINISHED PIECE BECOMES PART OF THE FAMILY ARCHIVE RATHER THAN DISPOSABLE CONTENT.",
-    labelPrefix: "Archive",
+    labelPrefix: "Chapter",
     pillars: [
       {
         title: "Reflection",
@@ -136,7 +136,7 @@ const PRIVATE_MEMORY_ARCHIVE: Record<PublicLocale, {
   es: {
     eyebrow: "Archivo privado de memoria",
     headline: "LA PIEZA FINAL SE CONVIERTE EN PARTE DEL ARCHIVO FAMILIAR EN LUGAR DE CONTENIDO DESECHABLE.",
-    labelPrefix: "Archivo",
+    labelPrefix: "Capítulo",
     pillars: [
       {
         title: "Reflexión",
@@ -840,7 +840,7 @@ function ArchiveValueCard({
       onFocus={() => onFocus(index)}
     >
       <span className="apple-liquid-layer" aria-hidden="true" />
-      <span>{archiveLabelPrefix} {String(index + 1).padStart(2, "0")}</span>
+      <span>{archiveLabelPrefix} {index + 1}</span>
       <h3>{pillar.title}</h3>
       <p className="apple-value-card-preview">{pillar.summary}</p>
       <div className="apple-value-card-detail">
