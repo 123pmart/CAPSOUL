@@ -3978,6 +3978,154 @@ html[data-theme="dark"] .atmosphere-panel {
   opacity: 0.28;
 }
 
+/* Premium documentary studio atmosphere. Gradients only; no text, images, canvas, or spacers. */
+.atmosphere-backdrop {
+  opacity: 0.72;
+  background:
+    radial-gradient(ellipse at 18% 8%, rgba(210, 200, 180, 0.2), transparent 34vmax),
+    radial-gradient(ellipse at 84% 18%, rgba(180, 195, 210, 0.12), transparent 32vmax),
+    linear-gradient(180deg, rgba(255, 254, 250, 0.48), transparent 44%, rgba(20, 20, 20, 0.04));
+}
+
+.atmosphere-backdrop::before {
+  background:
+    radial-gradient(ellipse at 50% -12%, rgba(255, 255, 255, 0.34), transparent 46%),
+    linear-gradient(180deg, transparent, rgba(20, 20, 20, 0.04) 72%, rgba(20, 20, 20, 0.06));
+  opacity: 0.42;
+  mask-image: linear-gradient(180deg, transparent 0%, black 12%, black 82%, transparent 100%);
+}
+
+.atmosphere-backdrop::after {
+  inset: -14%;
+  background:
+    radial-gradient(ellipse at 14% 72%, rgba(210, 200, 180, 0.16), transparent 36%),
+    radial-gradient(ellipse at 88% 72%, rgba(180, 195, 210, 0.11), transparent 34%),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.16), transparent 38%, rgba(255, 255, 255, 0.12));
+  opacity: 0.5;
+}
+
+.atmosphere-bloom {
+  mix-blend-mode: multiply;
+}
+
+.atmosphere-bloom-one {
+  top: -28vmax;
+  left: -18vmax;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.72) 0%, rgba(210, 200, 180, 0.2) 32%, transparent 68%);
+  opacity: 0.18;
+}
+
+.atmosphere-bloom-two {
+  right: -24vmax;
+  top: 14svh;
+  background: radial-gradient(circle, rgba(180, 195, 210, 0.2) 0%, rgba(180, 195, 210, 0.08) 34%, transparent 70%);
+  opacity: 0.16;
+}
+
+.atmosphere-bloom-three {
+  left: 22vw;
+  bottom: -34vmax;
+  background: radial-gradient(circle, rgba(215, 185, 125, 0.18) 0%, rgba(215, 185, 125, 0.055) 34%, transparent 68%);
+  opacity: 0.14;
+}
+
+.atmosphere-panel {
+  width: clamp(18rem, 34vw, 44rem);
+  height: clamp(10rem, 20vw, 24rem);
+  border-color: rgba(255, 255, 255, 0.18);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(210, 200, 180, 0.08)),
+    linear-gradient(90deg, transparent, rgba(180, 195, 210, 0.08), transparent);
+  opacity: 0.22;
+}
+
+.atmosphere-panel-one {
+  top: 16svh;
+  left: -11vw;
+}
+
+.atmosphere-panel-two {
+  right: -12vw;
+  bottom: 7svh;
+}
+
+.atmosphere-panel-three {
+  top: 48svh;
+  left: 28vw;
+  --atmosphere-panel-rotate: -3deg;
+  opacity: 0.12;
+}
+
+.atmosphere-sweep {
+  position: absolute;
+  pointer-events: none;
+  width: min(78vw, 64rem);
+  height: 1px;
+  transform: rotate(-11deg) translate3d(0, 0, 0);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.28), transparent);
+  opacity: 0.22;
+}
+
+.atmosphere-sweep-one {
+  top: 34svh;
+  left: 8vw;
+}
+
+html[data-theme="dark"] .atmosphere-backdrop {
+  opacity: 0.74;
+  background:
+    radial-gradient(ellipse at 18% 6%, rgba(30, 45, 70, 0.22), transparent 34vmax),
+    radial-gradient(ellipse at 82% 18%, rgba(185, 145, 75, 0.14), transparent 32vmax),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent 38%, rgba(0, 0, 0, 0.1));
+}
+
+html[data-theme="dark"] .atmosphere-backdrop::before {
+  background:
+    radial-gradient(ellipse at 50% -12%, rgba(255, 255, 255, 0.05), transparent 46%),
+    linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.024) 62%, rgba(0, 0, 0, 0.18));
+  opacity: 0.36;
+}
+
+html[data-theme="dark"] .atmosphere-backdrop::after {
+  background:
+    radial-gradient(ellipse at 12% 74%, rgba(30, 45, 70, 0.22), transparent 38%),
+    radial-gradient(ellipse at 90% 74%, rgba(185, 145, 75, 0.14), transparent 36%),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035), transparent 40%, rgba(255, 255, 255, 0.026));
+  opacity: 0.42;
+}
+
+html[data-theme="dark"] .atmosphere-bloom {
+  mix-blend-mode: screen;
+}
+
+html[data-theme="dark"] .atmosphere-bloom-one {
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.11) 0%, rgba(30, 45, 70, 0.13) 36%, transparent 70%);
+  opacity: 0.18;
+}
+
+html[data-theme="dark"] .atmosphere-bloom-two {
+  background: radial-gradient(circle, rgba(30, 45, 70, 0.28) 0%, rgba(30, 45, 70, 0.1) 34%, transparent 70%);
+  opacity: 0.2;
+}
+
+html[data-theme="dark"] .atmosphere-bloom-three {
+  background: radial-gradient(circle, rgba(185, 145, 75, 0.18) 0%, rgba(185, 145, 75, 0.06) 34%, transparent 70%);
+  opacity: 0.18;
+}
+
+html[data-theme="dark"] .atmosphere-panel {
+  border-color: rgba(255, 255, 255, 0.06);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.052), rgba(30, 45, 70, 0.06)),
+    linear-gradient(90deg, transparent, rgba(185, 145, 75, 0.035), transparent);
+  opacity: 0.24;
+}
+
+html[data-theme="dark"] .atmosphere-sweep {
+  background: linear-gradient(90deg, transparent, rgba(215, 185, 125, 0.16), transparent);
+  opacity: 0.18;
+}
+
 .apple-hero,
 .apple-section,
 .apple-value-band {
@@ -8653,7 +8801,7 @@ html[data-theme="dark"] .public-visual-scope::before {
 
 .public-visual-scope .chip-marquee {
   --chip-marquee-gap: clamp(0.45rem, 1.4vw, 0.75rem);
-  --chip-marquee-duration: 18s;
+  --chip-marquee-duration: 19s;
   position: relative;
   justify-content: center;
   overflow: hidden;
@@ -8701,7 +8849,7 @@ html[data-theme="dark"] .public-visual-scope::before {
 
 @media (max-width: 767px) {
   .public-visual-scope .chip-marquee {
-    --chip-marquee-duration: 13s;
+    --chip-marquee-duration: 15s;
   }
 }
 
@@ -8805,39 +8953,39 @@ html[data-theme="dark"] .public-visual-scope::before {
 }
 
 .premium-section-motion-hero :is(.apple-section-kicker, .apple-hero-title, .apple-hero-copy, .apple-hero-actions) {
-  opacity: max(var(--pm-hero-opacity, 1), var(--motion-section-visible, 0));
+  opacity: var(--pm-hero-opacity, 1);
   transform: translate3d(0, var(--pm-hero-y, 0px), 0) scale(var(--pm-hero-scale, 1));
   transform-origin: center top;
 }
 
 .premium-section-motion-hero .apple-hero-record {
-  opacity: max(var(--pm-media-opacity, 1), var(--motion-section-visible, 0));
+  opacity: var(--pm-media-opacity, 1);
   transform: translate3d(0, var(--pm-media-y, 0px), 0) scale(var(--pm-media-scale, 1));
   transform-origin: center center;
 }
 
 .premium-section-motion-hero .apple-hero-chapter:nth-child(1) {
-  opacity: max(var(--pm-card-opacity-0, 1), var(--motion-section-visible, 0));
+  opacity: var(--pm-card-opacity-0, 1);
   transform: translate3d(var(--pm-card-x-0, 0px), var(--pm-card-y-0, 0px), 0) scale(var(--pm-card-scale-0, 1));
 }
 
 .premium-section-motion-hero .apple-hero-chapter:nth-child(2) {
-  opacity: max(var(--pm-card-opacity-1, 1), var(--motion-section-visible, 0));
+  opacity: var(--pm-card-opacity-1, 1);
   transform: translate3d(var(--pm-card-x-1, 0px), var(--pm-card-y-1, 0px), 0) scale(var(--pm-card-scale-1, 1));
 }
 
 .premium-section-motion-hero .apple-hero-chapter:nth-child(3) {
-  opacity: max(var(--pm-card-opacity-2, 1), var(--motion-section-visible, 0));
+  opacity: var(--pm-card-opacity-2, 1);
   transform: translate3d(var(--pm-card-x-2, 0px), var(--pm-card-y-2, 0px), 0) scale(var(--pm-card-scale-2, 1));
 }
 
 .premium-section-motion-hero .apple-hero-chapter:nth-child(4) {
-  opacity: max(var(--pm-card-opacity-3, 1), var(--motion-section-visible, 0));
+  opacity: var(--pm-card-opacity-3, 1);
   transform: translate3d(var(--pm-card-x-3, 0px), var(--pm-card-y-3, 0px), 0) scale(var(--pm-card-scale-3, 1));
 }
 
 .premium-section-motion-archive .apple-value-archive-shell {
-  opacity: max(var(--pm-archive-opacity, 1), var(--motion-section-visible, 0));
+  opacity: var(--pm-archive-opacity, 1);
   transform: translate3d(0, var(--pm-archive-y, 0px), 0) scale(var(--pm-archive-scale, 1));
   transform-origin: center top;
 }
@@ -8845,39 +8993,39 @@ html[data-theme="dark"] .public-visual-scope::before {
 .premium-section-motion-archive .apple-value-card:nth-child(1),
 .premium-section-motion-process-section .apple-process-card:nth-child(1),
 .premium-section-motion-preserve-section .apple-preserve-feature {
-  opacity: max(var(--pm-card-opacity-0, 1), var(--motion-section-visible, 0));
+  opacity: var(--pm-card-opacity-0, 1);
   transform: translate3d(var(--pm-card-x-0, 0px), var(--pm-card-y-0, 0px), 0) scale(var(--pm-card-scale-0, 1));
 }
 
 .premium-section-motion-archive .apple-value-card:nth-child(2),
 .premium-section-motion-process-section .apple-process-card:nth-child(2),
 .premium-section-motion-preserve-section .apple-preserve-grid .apple-preserve-card:nth-child(1) {
-  opacity: max(var(--pm-card-opacity-1, 1), var(--motion-section-visible, 0));
+  opacity: var(--pm-card-opacity-1, 1);
   transform: translate3d(var(--pm-card-x-1, 0px), var(--pm-card-y-1, 0px), 0) scale(var(--pm-card-scale-1, 1));
 }
 
 .premium-section-motion-archive .apple-value-card:nth-child(3),
 .premium-section-motion-process-section .apple-process-card:nth-child(3),
 .premium-section-motion-preserve-section .apple-preserve-grid .apple-preserve-card:nth-child(2) {
-  opacity: max(var(--pm-card-opacity-2, 1), var(--motion-section-visible, 0));
+  opacity: var(--pm-card-opacity-2, 1);
   transform: translate3d(var(--pm-card-x-2, 0px), var(--pm-card-y-2, 0px), 0) scale(var(--pm-card-scale-2, 1));
 }
 
 .premium-section-motion-archive .apple-value-card:nth-child(4),
 .premium-section-motion-process-section .apple-process-card:nth-child(4),
 .premium-section-motion-preserve-section .apple-preserve-grid .apple-preserve-card:nth-child(3) {
-  opacity: max(var(--pm-card-opacity-3, 1), var(--motion-section-visible, 0));
+  opacity: var(--pm-card-opacity-3, 1);
   transform: translate3d(var(--pm-card-x-3, 0px), var(--pm-card-y-3, 0px), 0) scale(var(--pm-card-scale-3, 1));
 }
 
 .premium-section-motion-process-section .apple-process-card:nth-child(5) {
-  opacity: max(var(--pm-card-opacity-4, 1), var(--motion-section-visible, 0));
+  opacity: var(--pm-card-opacity-4, 1);
   transform: translate3d(var(--pm-card-x-4, 0px), var(--pm-card-y-4, 0px), 0) scale(var(--pm-card-scale-4, 1));
 }
 
 .premium-section-motion-process-section :is(.apple-section-kicker, .apple-section-copy),
 .premium-section-motion-preserve-section :is(.apple-section-kicker, .apple-section-copy) {
-  opacity: max(var(--pm-section-opacity, 1), var(--motion-section-visible, 0));
+  opacity: var(--pm-section-opacity, 1);
   transform: translate3d(0, var(--pm-section-y, 0px), 0) scale(var(--pm-section-scale, 1));
   transform-origin: center top;
 }
@@ -8898,22 +9046,22 @@ html[data-theme="dark"] .public-visual-scope::before {
 }
 
 .premium-section-motion-experience-section .apple-record-list {
-  opacity: max(var(--pm-section-opacity, 1), var(--motion-section-visible, 0));
+  opacity: var(--pm-section-opacity, 1);
   transform: translate3d(var(--pm-left-x, 0px), var(--pm-section-y, 0px), 0) scale(var(--pm-section-scale, 1));
 }
 
 .premium-section-motion-experience-section .apple-record-feature {
-  opacity: max(var(--pm-section-opacity, 1), var(--motion-section-visible, 0));
+  opacity: var(--pm-section-opacity, 1);
   transform: translate3d(var(--pm-right-x, 0px), var(--pm-section-y, 0px), 0) scale(var(--pm-section-scale, 1));
 }
 
 .premium-section-motion-inquire-section .apple-inquiry-form {
-  opacity: max(var(--pm-section-opacity, 1), var(--motion-section-visible, 0));
+  opacity: var(--pm-section-opacity, 1);
   transform: translate3d(var(--pm-left-x, 0px), var(--pm-section-y, 0px), 0) scale(var(--pm-section-scale, 1));
 }
 
 .premium-section-motion-inquire-section .apple-inquiry-support {
-  opacity: max(var(--pm-section-opacity, 1), var(--motion-section-visible, 0));
+  opacity: var(--pm-section-opacity, 1);
   transform: translate3d(var(--pm-right-x, 0px), var(--pm-section-y, 0px), 0) scale(var(--pm-section-scale, 1));
 }
 
@@ -9255,6 +9403,84 @@ html[data-theme="dark"] .public-visual-scope::before {
 
 .public-visual-scope .apple-section-contrast .apple-scene-controls .compact-scene-progress {
   flex: 0 1 auto;
+}
+
+@media (min-width: 900px) {
+  .public-visual-scope .apple-section-contrast {
+    overflow: clip;
+  }
+
+  .public-visual-scope .apple-section-contrast .apple-section-inner {
+    width: min(100%, 1240px);
+  }
+
+  .public-visual-scope .apple-section-contrast .apple-scene-module {
+    width: min(100%, 1120px);
+    margin-top: clamp(1.45rem, 2.8vw, 2.4rem);
+  }
+
+  .public-visual-scope .apple-section-contrast .apple-scene-module::before {
+    inset: clamp(-1.6rem, -2.4vw, -0.9rem);
+    border-color: color-mix(in srgb, var(--border) 26%, transparent);
+    background:
+      radial-gradient(ellipse at 0% 50%, color-mix(in srgb, var(--accent-soft) 38%, transparent), transparent 42%),
+      radial-gradient(ellipse at 100% 46%, color-mix(in srgb, var(--glass-highlight) 28%, transparent), transparent 44%),
+      linear-gradient(180deg, color-mix(in srgb, var(--surface-glass-strong) 36%, transparent), transparent 68%);
+    opacity: 0.72;
+  }
+
+  .public-visual-scope .apple-section-contrast .apple-scene-module::after {
+    content: "";
+    position: absolute;
+    inset: clamp(-2.6rem, -3vw, -1.2rem) clamp(-2rem, -2vw, -0.8rem);
+    z-index: -2;
+    border-radius: clamp(2.4rem, 5vw, 4.4rem);
+    pointer-events: none;
+    background:
+      radial-gradient(ellipse at 12% 42%, color-mix(in srgb, var(--accent-soft) 52%, transparent), transparent 42%),
+      radial-gradient(ellipse at 88% 40%, color-mix(in srgb, var(--glow) 58%, transparent), transparent 44%);
+    opacity: 0.62;
+  }
+
+  .public-visual-scope .apple-section-contrast .apple-record-feature {
+    width: min(100%, 1080px);
+    padding: clamp(1.2rem, 1.7vw, 1.7rem);
+    border-radius: clamp(1.8rem, 3.2vw, 2.75rem);
+  }
+
+  .public-visual-scope .apple-section-contrast .apple-record-feature-content {
+    gap: clamp(1rem, 1.5vw, 1.35rem);
+  }
+
+  .public-visual-scope .apple-section-contrast .apple-record-feature .apple-visual-frame {
+    width: min(100%, clamp(44rem, 62vw, 54rem));
+  }
+
+  .public-visual-scope .apple-section-contrast .apple-record-feature .apple-visual-image-wrap {
+    max-height: clamp(21rem, 42vw, 34rem);
+  }
+
+  .public-visual-scope .apple-section-contrast .apple-record-detail {
+    padding-top: clamp(1.1rem, 1.7vw, 1.5rem);
+  }
+
+  .public-visual-scope .apple-section-contrast .apple-record-detail h3 {
+    width: min(100%, 18ch);
+    font-size: clamp(2.25rem, 3vw, 3.65rem);
+  }
+
+  .public-visual-scope .apple-section-contrast .apple-record-detail p {
+    width: min(100%, 48rem);
+    font-size: clamp(1rem, 1.05vw, 1.12rem);
+  }
+
+  .public-visual-scope .apple-section-contrast .apple-record-detail .apple-record-tags {
+    width: min(100%, 48rem);
+  }
+
+  .public-visual-scope .apple-section-contrast .apple-scene-controls {
+    width: min(100%, 50rem);
+  }
 }
 
 .public-visual-scope .apple-archive-record-line {
@@ -9929,6 +10155,314 @@ html[data-theme="dark"] .public-visual-scope::before {
     flex: 1 1 calc(50% - 0.4rem);
     justify-content: center;
   }
+}
+
+/* Final admin theme correction: light mode is light, dark mode keeps restrained gold accents. */
+.admin-visual-scope {
+  --admin-bg: #f4f1eb;
+  --admin-bg-soft: #fbfaf7;
+  --admin-panel: rgba(255, 255, 255, 0.78);
+  --admin-panel-soft: rgba(248, 246, 241, 0.72);
+  --admin-panel-strong: rgba(255, 255, 255, 0.9);
+  --admin-text: #111111;
+  --admin-muted: rgba(17, 17, 17, 0.62);
+  --admin-soft: rgba(17, 17, 17, 0.42);
+  --admin-border: rgba(17, 17, 17, 0.13);
+  --admin-border-strong: rgba(17, 17, 17, 0.24);
+  --admin-accent: #111111;
+  --admin-accent-soft: rgba(17, 17, 17, 0.075);
+  --admin-focus: rgba(17, 17, 17, 0.12);
+  --bg: var(--admin-bg);
+  --bg-soft: var(--admin-bg-soft);
+  --surface: var(--admin-panel);
+  --surface-strong: var(--admin-panel-strong);
+  --border: var(--admin-border);
+  --border-strong: var(--admin-border-strong);
+  --text: var(--admin-text);
+  --text-primary: var(--admin-text);
+  --text-secondary: var(--admin-muted);
+  --text-tertiary: var(--admin-soft);
+  --accent: var(--admin-accent);
+  --accent-deep: var(--admin-accent);
+  --accent-soft: var(--admin-accent-soft);
+  --control-bg: rgba(255, 255, 255, 0.72);
+  --control-bg-active: rgba(255, 255, 255, 0.94);
+  --control-border: var(--admin-border);
+  --control-border-active: var(--admin-border-strong);
+  --control-text: var(--admin-text);
+  --control-muted: var(--admin-muted);
+  --button-primary-bg: #111111;
+  --button-primary-text: #ffffff;
+  --button-primary-border: rgba(17, 17, 17, 0.22);
+  --focus-ring: var(--admin-focus);
+  background:
+    radial-gradient(circle at 18% 0%, rgba(210, 200, 180, 0.28), transparent 32rem),
+    radial-gradient(circle at 82% 16%, rgba(180, 195, 210, 0.16), transparent 30rem),
+    linear-gradient(180deg, #f8f6f1, var(--admin-bg) 56%, #ece8df);
+  color: var(--admin-text);
+}
+
+html[data-theme="dark"] .admin-visual-scope {
+  --admin-bg: #050506;
+  --admin-bg-soft: #0a0a0c;
+  --admin-panel: rgba(18, 19, 22, 0.78);
+  --admin-panel-soft: rgba(25, 26, 30, 0.68);
+  --admin-panel-strong: rgba(28, 29, 34, 0.88);
+  --admin-text: #f7f5ef;
+  --admin-muted: rgba(238, 234, 222, 0.72);
+  --admin-soft: rgba(238, 234, 222, 0.5);
+  --admin-border: rgba(255, 255, 255, 0.12);
+  --admin-border-strong: rgba(241, 229, 206, 0.34);
+  --admin-accent: #d7b97d;
+  --admin-accent-soft: rgba(215, 185, 125, 0.15);
+  --admin-focus: rgba(215, 185, 125, 0.18);
+  --button-primary-bg: #f5f2ea;
+  --button-primary-text: #090909;
+  --button-primary-border: rgba(255, 255, 255, 0.46);
+  background:
+    radial-gradient(circle at 18% 0%, rgba(215, 185, 125, 0.13), transparent 34rem),
+    radial-gradient(circle at 82% 16%, rgba(30, 45, 70, 0.2), transparent 30rem),
+    linear-gradient(180deg, #060607, #0a0b0d 54%, #050506);
+  color: var(--admin-text);
+}
+
+.admin-visual-scope::before {
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(255, 255, 255, 0.36), transparent 42%),
+    linear-gradient(90deg, rgba(20, 20, 20, 0.026) 0 1px, transparent 1px 16px);
+  opacity: 0.28;
+}
+
+html[data-theme="dark"] .admin-visual-scope::before {
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(255, 255, 255, 0.052), transparent 42%),
+    linear-gradient(90deg, rgba(215, 185, 125, 0.022) 0 1px, transparent 1px 16px);
+  opacity: 0.34;
+}
+
+.admin-visual-scope .scene-shell {
+  border-color: var(--admin-border);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.58), transparent 36%),
+    linear-gradient(180deg, var(--admin-panel-strong), var(--admin-panel-soft));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.54),
+    0 28px 80px rgba(24, 22, 18, 0.1);
+}
+
+html[data-theme="dark"] .admin-visual-scope .scene-shell {
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.075), transparent 36%),
+    linear-gradient(180deg, var(--admin-panel-strong), rgba(7, 8, 10, 0.94));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 30px 92px rgba(0, 0, 0, 0.34);
+}
+
+.admin-visual-scope :is(.panel, .panel-strong, .archive-chip, .media-caption, .film-frame) {
+  border-color: var(--admin-border);
+  background:
+    radial-gradient(circle at 16% 0%, rgba(255, 255, 255, 0.55), transparent 42%),
+    linear-gradient(180deg, var(--admin-panel), var(--admin-panel-soft));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.46);
+  color: var(--admin-text);
+}
+
+html[data-theme="dark"] .admin-visual-scope :is(.panel, .panel-strong, .archive-chip, .media-caption, .film-frame) {
+  background:
+    radial-gradient(circle at 16% 0%, rgba(255, 255, 255, 0.075), transparent 42%),
+    linear-gradient(180deg, var(--admin-panel), rgba(10, 11, 13, 0.78));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.075);
+}
+
+.admin-visual-scope .header-nav-shell {
+  border-color: var(--admin-border);
+  background: color-mix(in srgb, var(--admin-panel) 76%, transparent);
+}
+
+.admin-visual-scope .header-nav-pill-active,
+.admin-visual-scope .locale-pill-active {
+  color: var(--button-primary-text);
+  background: var(--button-primary-bg);
+}
+
+.admin-visual-scope .header-nav-pill-inactive,
+.admin-visual-scope .locale-pill-inactive {
+  color: var(--admin-muted);
+}
+
+.admin-visual-scope :is(.field-input, .field-select, .field-textarea) {
+  border-color: var(--admin-border);
+  background: color-mix(in srgb, var(--admin-panel-strong) 72%, transparent);
+  color: var(--admin-text);
+}
+
+.admin-visual-scope :is(.field-input, .field-select, .field-textarea)::placeholder {
+  color: var(--admin-soft);
+}
+
+.admin-visual-scope :is(.field-input, .field-select, .field-textarea):focus {
+  border-color: var(--admin-border-strong);
+  box-shadow: 0 0 0 4px var(--admin-focus);
+}
+
+.admin-visual-scope .admin-tab {
+  border-color: var(--admin-border);
+  background: color-mix(in srgb, var(--admin-panel) 72%, transparent);
+  color: var(--admin-muted);
+}
+
+.admin-visual-scope .admin-tab-active,
+.admin-visual-scope .admin-lead-card-active {
+  border-color: var(--admin-border-strong);
+  background:
+    radial-gradient(circle at 0% 0%, var(--admin-accent-soft), transparent 42%),
+    color-mix(in srgb, var(--admin-panel-strong) 82%, transparent);
+  color: var(--admin-text);
+}
+
+.admin-visual-scope .admin-lead-card {
+  border-color: var(--admin-border);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.24), rgba(255, 255, 255, 0.08)),
+    color-mix(in srgb, var(--admin-panel) 76%, transparent);
+}
+
+html[data-theme="dark"] .admin-visual-scope .admin-lead-card {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.052), rgba(255, 255, 255, 0.028)),
+    rgba(255, 255, 255, 0.02);
+}
+
+.admin-visual-scope .field-label,
+.admin-visual-scope :is(.archive-chip, .media-caption) p:first-child {
+  color: var(--admin-accent);
+}
+
+.admin-visual-scope .button-primary {
+  border-color: var(--button-primary-border);
+  background: var(--button-primary-bg);
+  color: var(--button-primary-text);
+}
+
+.admin-visual-scope .button-secondary {
+  border-color: var(--admin-border);
+  background: color-mix(in srgb, var(--admin-panel) 72%, transparent);
+  color: var(--admin-text);
+}
+
+html[data-theme="dark"] .admin-visual-scope :is(.field-label, .admin-tab-active, .archive-chip p:first-child, .media-caption p:first-child) {
+  color: var(--admin-accent);
+}
+
+html[data-theme="dark"] .public-visual-scope :is(
+  .apple-hero-copy,
+  .apple-section-copy,
+  .apple-value-statement p,
+  .apple-inquiry-support .apple-visual-frame > p,
+  .media-caption p
+) {
+  color: rgba(215, 185, 125, 0.88);
+}
+
+.admin-visual-scope[data-admin-theme="light"] {
+  --admin-bg: #f4f1eb;
+  --admin-bg-soft: #fbfaf7;
+  --admin-panel: rgba(255, 255, 255, 0.78);
+  --admin-panel-soft: rgba(248, 246, 241, 0.72);
+  --admin-panel-strong: rgba(255, 255, 255, 0.9);
+  --admin-text: #111111;
+  --admin-muted: rgba(17, 17, 17, 0.62);
+  --admin-soft: rgba(17, 17, 17, 0.42);
+  --admin-border: rgba(17, 17, 17, 0.13);
+  --admin-border-strong: rgba(17, 17, 17, 0.24);
+  --admin-accent: #111111;
+  --admin-accent-soft: rgba(17, 17, 17, 0.075);
+  --admin-focus: rgba(17, 17, 17, 0.12);
+  --button-primary-bg: #111111;
+  --button-primary-text: #ffffff;
+  --button-primary-border: rgba(17, 17, 17, 0.22);
+  background:
+    radial-gradient(circle at 18% 0%, rgba(210, 200, 180, 0.28), transparent 32rem),
+    radial-gradient(circle at 82% 16%, rgba(180, 195, 210, 0.16), transparent 30rem),
+    linear-gradient(180deg, #f8f6f1, var(--admin-bg) 56%, #ece8df);
+  color: var(--admin-text);
+}
+
+.admin-visual-scope[data-admin-theme="dark"] {
+  --admin-bg: #050506;
+  --admin-bg-soft: #0a0a0c;
+  --admin-panel: rgba(18, 19, 22, 0.78);
+  --admin-panel-soft: rgba(25, 26, 30, 0.68);
+  --admin-panel-strong: rgba(28, 29, 34, 0.88);
+  --admin-text: #f7f5ef;
+  --admin-muted: rgba(238, 234, 222, 0.72);
+  --admin-soft: rgba(238, 234, 222, 0.5);
+  --admin-border: rgba(255, 255, 255, 0.12);
+  --admin-border-strong: rgba(241, 229, 206, 0.34);
+  --admin-accent: #d7b97d;
+  --admin-accent-soft: rgba(215, 185, 125, 0.15);
+  --admin-focus: rgba(215, 185, 125, 0.18);
+  --button-primary-bg: #f5f2ea;
+  --button-primary-text: #090909;
+  --button-primary-border: rgba(255, 255, 255, 0.46);
+  background:
+    radial-gradient(circle at 18% 0%, rgba(215, 185, 125, 0.13), transparent 34rem),
+    radial-gradient(circle at 82% 16%, rgba(30, 45, 70, 0.2), transparent 30rem),
+    linear-gradient(180deg, #060607, #0a0b0d 54%, #050506);
+  color: var(--admin-text);
+}
+
+.admin-visual-scope[data-admin-theme="light"]::before {
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(255, 255, 255, 0.36), transparent 42%),
+    linear-gradient(90deg, rgba(20, 20, 20, 0.026) 0 1px, transparent 1px 16px);
+  opacity: 0.28;
+}
+
+.admin-visual-scope[data-admin-theme="dark"]::before {
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(255, 255, 255, 0.052), transparent 42%),
+    linear-gradient(90deg, rgba(215, 185, 125, 0.022) 0 1px, transparent 1px 16px);
+  opacity: 0.34;
+}
+
+.admin-visual-scope[data-admin-theme="light"] .scene-shell {
+  border-color: var(--admin-border);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.58), transparent 36%),
+    linear-gradient(180deg, var(--admin-panel-strong), var(--admin-panel-soft));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.54),
+    0 28px 80px rgba(24, 22, 18, 0.1);
+}
+
+.admin-visual-scope[data-admin-theme="dark"] .scene-shell {
+  border-color: var(--admin-border);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.075), transparent 36%),
+    linear-gradient(180deg, var(--admin-panel-strong), rgba(7, 8, 10, 0.94));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 30px 92px rgba(0, 0, 0, 0.34);
+}
+
+.admin-visual-scope[data-admin-theme="light"] :is(.panel, .panel-strong, .archive-chip, .media-caption, .film-frame) {
+  border-color: var(--admin-border);
+  background:
+    radial-gradient(circle at 16% 0%, rgba(255, 255, 255, 0.55), transparent 42%),
+    linear-gradient(180deg, var(--admin-panel), var(--admin-panel-soft));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.46);
+  color: var(--admin-text);
+}
+
+.admin-visual-scope[data-admin-theme="dark"] :is(.panel, .panel-strong, .archive-chip, .media-caption, .film-frame) {
+  border-color: var(--admin-border);
+  background:
+    radial-gradient(circle at 16% 0%, rgba(255, 255, 255, 0.075), transparent 42%),
+    linear-gradient(180deg, var(--admin-panel), rgba(10, 11, 13, 0.78));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.075);
+  color: var(--admin-text);
 }
 
 @media (prefers-reduced-motion: reduce) {
