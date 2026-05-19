@@ -4132,77 +4132,6 @@ html[data-theme="dark"] .atmosphere-sweep {
   scroll-margin-top: calc(var(--header-offset-mobile) + 0.65rem);
 }
 
-.motion-section {
-  --motion-section-visible: 0;
-}
-
-.motion-section.is-visible {
-  --motion-section-visible: 1;
-}
-
-[data-reveal] {
-  opacity: 1;
-  transform: none;
-  transition: none;
-  transition-delay: 0ms;
-}
-
-[data-reveal].is-visible {
-  opacity: 1;
-  transform: none;
-}
-
-.public-visual-scope :is(.apple-hero-title, .apple-section-title, .apple-value-statement h2)[data-reveal],
-.public-visual-scope :is(.apple-hero-title, .apple-section-title, .apple-value-statement h2)[data-reveal].is-visible {
-  opacity: 1 !important;
-}
-
-.public-visual-scope .motion-title[data-reveal] {
-  clip-path: none;
-  opacity: 1 !important;
-  transform: none;
-  transition: none;
-}
-
-.public-visual-scope .motion-title[data-reveal].is-visible {
-  clip-path: none;
-  opacity: 1 !important;
-  transform: none;
-}
-
-.apple-value-archive-shell[data-reveal] {
-  transform: none;
-  transition: none;
-}
-
-.apple-value-archive-shell[data-reveal].is-visible {
-  transform: none;
-}
-
-@media (max-width: 767px) {
-  [data-reveal] {
-    transform: none;
-    transition: none;
-  }
-
-  .public-visual-scope .motion-title[data-reveal] {
-    transform: none;
-    transition: none;
-  }
-
-  [data-reveal].is-visible {
-    transform: none;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  [data-reveal] {
-    opacity: 1 !important;
-    transform: none !important;
-    transition: none !important;
-  }
-}
-
 .motion-eyebrow,
 .motion-title,
 .motion-copy,
@@ -4826,14 +4755,6 @@ html[data-theme="dark"] .atmosphere-sweep {
   transform: scaleX(0.76);
 }
 
-.apple-value-band.is-visible::before {
-  transform: translate3d(0, 0, 0) scale(1);
-}
-
-.apple-value-band.is-visible::after {
-  transform: scaleX(1);
-}
-
 .apple-value-band[data-active-index="1"] {
   --local-archive-x: 38%;
 }
@@ -5030,16 +4951,6 @@ html[data-theme="dark"] .atmosphere-sweep {
   transition:
     opacity 540ms var(--ease-luxury),
     transform 540ms var(--ease-luxury);
-}
-
-.apple-value-band.is-visible .apple-value-grid::before {
-  opacity: 0.82;
-  transform: scaleX(1);
-}
-
-.apple-value-band.is-visible .apple-value-grid::after {
-  opacity: 1;
-  transform: scale(1);
 }
 
 .apple-value-card {
@@ -5247,14 +5158,6 @@ html[data-theme="dark"] .atmosphere-sweep {
   background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--border-strong) 70%, transparent), transparent);
   opacity: 0.6;
   transform: translate3d(0, -50%, 0) scaleX(0.72);
-}
-
-.motion-section.is-visible .apple-scene-module::before {
-  transform: translate3d(0, 0, 0) scale(1);
-}
-
-.motion-section.is-visible .apple-scene-module::after {
-  transform: translate3d(0, -50%, 0) scaleX(1);
 }
 
 .apple-record-list,
@@ -5507,15 +5410,6 @@ html[data-theme="dark"] .atmosphere-sweep {
     transform 780ms var(--ease-luxury);
 }
 
-.motion-section.is-visible .apple-process-grid::before {
-  opacity: 0.88;
-  transform: scaleX(1);
-}
-
-.motion-section.is-visible .apple-process-grid::after {
-  transform: translate3d(0, 0, 0) scale(1);
-}
-
 .apple-process-card {
   position: relative;
   z-index: 1;
@@ -5578,12 +5472,6 @@ html[data-theme="dark"] .atmosphere-sweep {
 .apple-preserve-layout::after {
   inset: 1.45rem 1.3rem -1.35rem;
   transform: translate3d(0, 1.4rem, 0) rotate(0.65deg) scale(0.975);
-}
-
-.motion-section.is-visible .apple-preserve-layout::before,
-.motion-section.is-visible .apple-preserve-layout::after {
-  opacity: 0.62;
-  transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
 }
 
 .apple-preserve-feature {
@@ -5666,10 +5554,6 @@ html[data-theme="dark"] .atmosphere-sweep {
   transition:
     opacity 680ms var(--ease-luxury),
     transform 780ms var(--ease-luxury);
-}
-
-.motion-section.is-visible .apple-inquiry-layout::after {
-  transform: translate3d(0, 0, 0) scale(1);
 }
 
 .apple-inquiry-form,
@@ -8948,116 +8832,79 @@ html[data-theme="dark"] .public-visual-scope::before {
 }
 
 .premium-section-motion-hero :is(.apple-section-kicker, .apple-hero-title, .apple-hero-copy, .apple-hero-actions) {
-  opacity: var(--pm-hero-opacity, 1);
-  transform: translate3d(0, var(--pm-hero-y, 0px), 0) scale(var(--pm-hero-scale, 1));
   transform-origin: center top;
 }
 
 .premium-section-motion-hero .apple-hero-record {
-  opacity: var(--pm-media-opacity, 1);
-  transform: translate3d(0, var(--pm-media-y, 0px), 0) scale(var(--pm-media-scale, 1));
   transform-origin: center center;
 }
 
 .premium-section-motion-hero .apple-hero-chapter:nth-child(1) {
-  opacity: var(--pm-card-opacity-0, 1);
-  transform: translate3d(var(--pm-card-x-0, 0px), var(--pm-card-y-0, 0px), 0) scale(var(--pm-card-scale-0, 1));
 }
 
 .premium-section-motion-hero .apple-hero-chapter:nth-child(2) {
-  opacity: var(--pm-card-opacity-1, 1);
-  transform: translate3d(var(--pm-card-x-1, 0px), var(--pm-card-y-1, 0px), 0) scale(var(--pm-card-scale-1, 1));
 }
 
 .premium-section-motion-hero .apple-hero-chapter:nth-child(3) {
-  opacity: var(--pm-card-opacity-2, 1);
-  transform: translate3d(var(--pm-card-x-2, 0px), var(--pm-card-y-2, 0px), 0) scale(var(--pm-card-scale-2, 1));
 }
 
 .premium-section-motion-hero .apple-hero-chapter:nth-child(4) {
-  opacity: var(--pm-card-opacity-3, 1);
-  transform: translate3d(var(--pm-card-x-3, 0px), var(--pm-card-y-3, 0px), 0) scale(var(--pm-card-scale-3, 1));
 }
 
 .premium-section-motion-archive .apple-value-archive-shell {
-  opacity: var(--pm-archive-opacity, 1);
-  transform: translate3d(0, var(--pm-archive-y, 0px), 0) scale(var(--pm-archive-scale, 1));
   transform-origin: center top;
 }
 
 .premium-section-motion-archive .apple-value-card:nth-child(1),
 .premium-section-motion-process-section .apple-process-card:nth-child(1),
 .premium-section-motion-preserve-section .apple-preserve-feature {
-  opacity: var(--pm-card-opacity-0, 1);
-  transform: translate3d(var(--pm-card-x-0, 0px), var(--pm-card-y-0, 0px), 0) scale(var(--pm-card-scale-0, 1));
 }
 
 .premium-section-motion-archive .apple-value-card:nth-child(2),
 .premium-section-motion-process-section .apple-process-card:nth-child(2),
 .premium-section-motion-preserve-section .apple-preserve-grid .apple-preserve-card:nth-child(1) {
-  opacity: var(--pm-card-opacity-1, 1);
-  transform: translate3d(var(--pm-card-x-1, 0px), var(--pm-card-y-1, 0px), 0) scale(var(--pm-card-scale-1, 1));
 }
 
 .premium-section-motion-archive .apple-value-card:nth-child(3),
 .premium-section-motion-process-section .apple-process-card:nth-child(3),
 .premium-section-motion-preserve-section .apple-preserve-grid .apple-preserve-card:nth-child(2) {
-  opacity: var(--pm-card-opacity-2, 1);
-  transform: translate3d(var(--pm-card-x-2, 0px), var(--pm-card-y-2, 0px), 0) scale(var(--pm-card-scale-2, 1));
 }
 
 .premium-section-motion-archive .apple-value-card:nth-child(4),
 .premium-section-motion-process-section .apple-process-card:nth-child(4),
 .premium-section-motion-preserve-section .apple-preserve-grid .apple-preserve-card:nth-child(3) {
-  opacity: var(--pm-card-opacity-3, 1);
-  transform: translate3d(var(--pm-card-x-3, 0px), var(--pm-card-y-3, 0px), 0) scale(var(--pm-card-scale-3, 1));
 }
 
 .premium-section-motion-process-section .apple-process-card:nth-child(5) {
-  opacity: var(--pm-card-opacity-4, 1);
-  transform: translate3d(var(--pm-card-x-4, 0px), var(--pm-card-y-4, 0px), 0) scale(var(--pm-card-scale-4, 1));
 }
 
 .premium-section-motion-process-section :is(.apple-section-kicker, .apple-section-copy),
 .premium-section-motion-preserve-section :is(.apple-section-kicker, .apple-section-copy) {
-  opacity: var(--pm-section-opacity, 1);
-  transform: translate3d(0, var(--pm-section-y, 0px), 0) scale(var(--pm-section-scale, 1));
   transform-origin: center top;
 }
 
 .premium-section-motion-process-section .apple-section-title,
 .premium-section-motion-preserve-section .apple-section-title {
-  transform: translate3d(0, var(--pm-title-y, 0px), 0);
   transform-origin: center top;
 }
 
 .premium-section-motion-process-section .apple-process-grid {
-  transform: translate3d(var(--pm-row-x, 0px), 0, 0);
   transform-origin: center center;
 }
 
 .premium-section-motion-preserve-section .apple-preserve-feature {
-  transform: translate3d(var(--pm-card-x-0, 0px), var(--pm-card-y-0, 0px), 0) scale(var(--pm-gallery-scale, 1));
 }
 
 .premium-section-motion-experience-section .apple-record-list {
-  opacity: var(--pm-section-opacity, 1);
-  transform: translate3d(var(--pm-left-x, 0px), var(--pm-section-y, 0px), 0) scale(var(--pm-section-scale, 1));
 }
 
 .premium-section-motion-experience-section .apple-record-feature {
-  opacity: var(--pm-section-opacity, 1);
-  transform: translate3d(var(--pm-right-x, 0px), var(--pm-section-y, 0px), 0) scale(var(--pm-section-scale, 1));
 }
 
 .premium-section-motion-inquire-section .apple-inquiry-form {
-  opacity: var(--pm-section-opacity, 1);
-  transform: translate3d(var(--pm-left-x, 0px), var(--pm-section-y, 0px), 0) scale(var(--pm-section-scale, 1));
 }
 
 .premium-section-motion-inquire-section .apple-inquiry-support {
-  opacity: var(--pm-section-opacity, 1);
-  transform: translate3d(var(--pm-right-x, 0px), var(--pm-section-y, 0px), 0) scale(var(--pm-section-scale, 1));
 }
 
 .public-visual-scope .apple-value-archive-shell {
@@ -9168,11 +9015,9 @@ html[data-theme="dark"] .public-visual-scope .apple-value-card-detail {
 
   .premium-section-motion-experience-section :is(.apple-record-list, .apple-record-feature),
   .premium-section-motion-inquire-section :is(.apple-inquiry-form, .apple-inquiry-support) {
-    transform: translate3d(0, var(--pm-section-y, 0px), 0) scale(var(--pm-section-scale, 1));
   }
 
   .premium-section-motion-process-section .apple-process-grid {
-    transform: translate3d(0, var(--pm-section-y, 0px), 0) scale(var(--pm-section-scale, 1));
   }
 
   .premium-section-motion-process-section .apple-process-card:nth-child(1),
@@ -9184,7 +9029,6 @@ html[data-theme="dark"] .public-visual-scope .apple-value-card-detail {
   .premium-section-motion-preserve-section .apple-preserve-grid .apple-preserve-card:nth-child(1),
   .premium-section-motion-preserve-section .apple-preserve-grid .apple-preserve-card:nth-child(2),
   .premium-section-motion-preserve-section .apple-preserve-grid .apple-preserve-card:nth-child(3) {
-    transform: translate3d(0, var(--pm-card-y-0, 0px), 0) scale(var(--pm-card-scale-0, 1));
   }
 
   .public-visual-scope .apple-value-band {
@@ -9238,7 +9082,6 @@ html[data-theme="dark"] .public-visual-scope .apple-value-card-detail {
   .public-visual-scope .apple-value-card {
     min-height: auto;
     scroll-snap-align: start;
-    transform: translate3d(0, var(--pm-card-y-0, 0px), 0);
   }
 }
 
@@ -10530,18 +10373,6 @@ html[data-theme="dark"] .public-visual-scope :is(
   color: var(--admin-text);
 }
 
-/* Cinematic public motion reset: disables the old generic slide-up reveal path. */
-.public-visual-scope [data-reveal],
-.public-visual-scope [data-reveal].is-visible,
-.public-visual-scope :is(.motion-title, .motion-copy, .motion-card, .motion-media, .motion-eyebrow)[data-reveal],
-.public-visual-scope :is(.motion-title, .motion-copy, .motion-card, .motion-media, .motion-eyebrow)[data-reveal].is-visible {
-  opacity: 1;
-  clip-path: none;
-  transform: none;
-  transition: none;
-  transition-delay: 0ms;
-}
-
 .public-visual-scope .atmosphere-backdrop {
   opacity: 0.68;
   background:
@@ -10638,26 +10469,20 @@ html[data-theme="dark"] .public-visual-scope .atmosphere-sweep {
 .public-visual-scope .premium-section-motion :is(.apple-section-title, .apple-value-statement h2) {
   opacity: 1;
   clip-path: none;
-  transform: translate3d(0, var(--pm-title-y, 0px), 0);
   transform-origin: center top;
 }
 
 .public-visual-scope .premium-section-motion-hero .apple-hero-title {
   opacity: 1;
   clip-path: none;
-  transform: translate3d(0, calc(var(--pm-hero-y, 0px) + var(--pm-title-y, 0px)), 0) scale(var(--pm-hero-scale, 1));
   transform-origin: center top;
 }
 
 .public-visual-scope .premium-section-motion-hero :is(.apple-section-kicker, .apple-hero-copy, .apple-hero-actions) {
-  opacity: var(--pm-hero-opacity, 1);
-  transform: translate3d(0, var(--pm-hero-y, 0px), 0) scale(var(--pm-hero-scale, 1));
   transform-origin: center top;
 }
 
 .public-visual-scope .premium-section-motion-hero .apple-hero-record {
-  opacity: var(--pm-media-opacity, 1);
-  transform: translate3d(0, var(--pm-media-y, 0px), 0) scale(var(--pm-media-scale, 1));
 }
 
 .public-visual-scope .apple-hero-stage {
@@ -10667,34 +10492,24 @@ html[data-theme="dark"] .public-visual-scope .atmosphere-sweep {
 .public-visual-scope .premium-section-motion-hero .apple-hero-chapter:nth-child(1),
 .public-visual-scope .premium-section-motion-archive .apple-value-card:nth-child(1),
 .public-visual-scope .premium-section-motion-process-section .apple-process-card:nth-child(1) {
-  opacity: var(--pm-card-opacity-0, 1);
-  transform: translate3d(var(--pm-card-x-0, 0px), calc(var(--pm-card-y-0, 0px) + var(--card-hover-y, 0px)), 0) scale(var(--pm-card-scale-0, 1)) scale(var(--card-hover-scale, 1)) rotate(var(--pm-card-rotate-0, 0deg));
 }
 
 .public-visual-scope .premium-section-motion-hero .apple-hero-chapter:nth-child(2),
 .public-visual-scope .premium-section-motion-archive .apple-value-card:nth-child(2),
 .public-visual-scope .premium-section-motion-process-section .apple-process-card:nth-child(2) {
-  opacity: var(--pm-card-opacity-1, 1);
-  transform: translate3d(var(--pm-card-x-1, 0px), calc(var(--pm-card-y-1, 0px) + var(--card-hover-y, 0px)), 0) scale(var(--pm-card-scale-1, 1)) scale(var(--card-hover-scale, 1)) rotate(var(--pm-card-rotate-1, 0deg));
 }
 
 .public-visual-scope .premium-section-motion-hero .apple-hero-chapter:nth-child(3),
 .public-visual-scope .premium-section-motion-archive .apple-value-card:nth-child(3),
 .public-visual-scope .premium-section-motion-process-section .apple-process-card:nth-child(3) {
-  opacity: var(--pm-card-opacity-2, 1);
-  transform: translate3d(var(--pm-card-x-2, 0px), calc(var(--pm-card-y-2, 0px) + var(--card-hover-y, 0px)), 0) scale(var(--pm-card-scale-2, 1)) scale(var(--card-hover-scale, 1)) rotate(var(--pm-card-rotate-2, 0deg));
 }
 
 .public-visual-scope .premium-section-motion-hero .apple-hero-chapter:nth-child(4),
 .public-visual-scope .premium-section-motion-archive .apple-value-card:nth-child(4),
 .public-visual-scope .premium-section-motion-process-section .apple-process-card:nth-child(4) {
-  opacity: var(--pm-card-opacity-3, 1);
-  transform: translate3d(var(--pm-card-x-3, 0px), calc(var(--pm-card-y-3, 0px) + var(--card-hover-y, 0px)), 0) scale(var(--pm-card-scale-3, 1)) scale(var(--card-hover-scale, 1)) rotate(var(--pm-card-rotate-3, 0deg));
 }
 
 .public-visual-scope .premium-section-motion-process-section .apple-process-card:nth-child(5) {
-  opacity: var(--pm-card-opacity-4, 1);
-  transform: translate3d(var(--pm-card-x-4, 0px), calc(var(--pm-card-y-4, 0px) + var(--card-hover-y, 0px)), 0) scale(var(--pm-card-scale-4, 1)) scale(var(--card-hover-scale, 1)) rotate(var(--pm-card-rotate-4, 0deg));
 }
 
 .public-visual-scope :is(.apple-value-card, .apple-process-card, .apple-preserve-card) {
@@ -10710,8 +10525,6 @@ html[data-theme="dark"] .public-visual-scope .atmosphere-sweep {
 }
 
 .public-visual-scope .premium-section-motion-archive .apple-value-archive-shell {
-  opacity: var(--pm-archive-opacity, 1);
-  transform: translate3d(0, var(--pm-archive-y, 0px), 0) scale(var(--pm-archive-scale, 1));
 }
 
 .public-visual-scope .apple-value-grid::before,
@@ -10725,13 +10538,9 @@ html[data-theme="dark"] .public-visual-scope .atmosphere-sweep {
 }
 
 .public-visual-scope .premium-section-motion-experience-section .apple-record-feature {
-  opacity: var(--pm-section-opacity, 1);
-  transform: translate3d(var(--pm-right-x, 0px), 0, 0) scale(var(--pm-section-scale, 1));
 }
 
 .public-visual-scope .premium-section-motion-experience-section .apple-record-feature .apple-visual-frame {
-  opacity: var(--pm-media-opacity, 1);
-  transform: scale(var(--pm-media-scale, 1));
 }
 
 .public-visual-scope .premium-section-motion-experience-section .apple-record-detail h3 {
@@ -10741,35 +10550,24 @@ html[data-theme="dark"] .public-visual-scope .atmosphere-sweep {
 
 .public-visual-scope .premium-section-motion-experience-section .apple-record-tags .ui-chip:nth-child(1),
 .public-visual-scope .premium-section-motion-experience-section .apple-trust-grid .ui-chip:nth-child(1) {
-  opacity: var(--pm-card-opacity-0, 1);
-  transform: scale(var(--pm-card-scale-0, 1));
 }
 
 .public-visual-scope .premium-section-motion-experience-section .apple-record-tags .ui-chip:nth-child(2),
 .public-visual-scope .premium-section-motion-experience-section .apple-trust-grid .ui-chip:nth-child(2) {
-  opacity: var(--pm-card-opacity-1, 1);
-  transform: scale(var(--pm-card-scale-1, 1));
 }
 
 .public-visual-scope .premium-section-motion-experience-section .apple-record-tags .ui-chip:nth-child(3),
 .public-visual-scope .premium-section-motion-experience-section .apple-trust-grid .ui-chip:nth-child(3) {
-  opacity: var(--pm-card-opacity-2, 1);
-  transform: scale(var(--pm-card-scale-2, 1));
 }
 
 .public-visual-scope .premium-section-motion-experience-section .apple-scene-controls {
-  opacity: var(--pm-section-opacity, 1);
-  transform: scale(var(--pm-section-scale, 1));
 }
 
 .public-visual-scope .premium-section-motion-process-section .apple-process-grid {
-  opacity: var(--pm-section-opacity, 1);
-  transform: translate3d(var(--pm-row-x, 0px), 0, 0) scale(var(--pm-section-scale, 1));
 }
 
 .public-visual-scope .apple-process-grid::before {
   opacity: 0.86;
-  transform: scaleX(var(--pm-section-opacity, 1));
 }
 
 .public-visual-scope .apple-process-grid::after {
@@ -10778,23 +10576,15 @@ html[data-theme="dark"] .public-visual-scope .atmosphere-sweep {
 }
 
 .public-visual-scope .premium-section-motion-preserve-section .apple-preserve-feature {
-  opacity: var(--pm-card-opacity-0, 1);
-  transform: translate3d(var(--pm-card-x-0, 0px), var(--pm-card-y-0, 0px), 0) scale(var(--pm-gallery-scale, 1)) rotate(var(--pm-card-rotate-0, 0deg));
 }
 
 .public-visual-scope .premium-section-motion-preserve-section .apple-preserve-grid .apple-preserve-card:nth-child(1) {
-  opacity: var(--pm-card-opacity-1, 1);
-  transform: translate3d(var(--pm-card-x-1, 0px), var(--pm-card-y-1, 0px), 0) scale(var(--pm-card-scale-1, 1)) rotate(var(--pm-card-rotate-1, 0deg));
 }
 
 .public-visual-scope .premium-section-motion-preserve-section .apple-preserve-grid .apple-preserve-card:nth-child(2) {
-  opacity: var(--pm-card-opacity-2, 1);
-  transform: translate3d(var(--pm-card-x-2, 0px), var(--pm-card-y-2, 0px), 0) scale(var(--pm-card-scale-2, 1)) rotate(var(--pm-card-rotate-2, 0deg));
 }
 
 .public-visual-scope .premium-section-motion-preserve-section .apple-preserve-grid .apple-preserve-card:nth-child(3) {
-  opacity: var(--pm-card-opacity-3, 1);
-  transform: translate3d(var(--pm-card-x-3, 0px), var(--pm-card-y-3, 0px), 0) scale(var(--pm-card-scale-3, 1)) rotate(var(--pm-card-rotate-3, 0deg));
 }
 
 .public-visual-scope .apple-preserve-layout::before,
@@ -10804,13 +10594,9 @@ html[data-theme="dark"] .public-visual-scope .atmosphere-sweep {
 }
 
 .public-visual-scope .premium-section-motion-inquire-section .apple-inquiry-form {
-  opacity: var(--pm-section-opacity, 1);
-  transform: translate3d(var(--pm-left-x, 0px), 0, 0) scale(var(--pm-section-scale, 1));
 }
 
 .public-visual-scope .premium-section-motion-inquire-section .apple-inquiry-support {
-  opacity: var(--pm-section-opacity, 1);
-  transform: translate3d(var(--pm-right-x, 0px), 0, 0) scale(var(--pm-section-scale, 1));
 }
 
 .public-visual-scope .apple-inquiry-layout::after {
@@ -10820,7 +10606,6 @@ html[data-theme="dark"] .public-visual-scope .atmosphere-sweep {
 
 @media (max-width: 767px) {
   .public-visual-scope .premium-section-motion :is(.apple-section-title, .apple-value-statement h2) {
-    transform: translate3d(0, calc(var(--pm-title-y, 0px) * 0.45), 0);
   }
 
   .public-visual-scope .apple-section-contrast .apple-record-detail h3 {
@@ -10835,11 +10620,9 @@ html[data-theme="dark"] .public-visual-scope .atmosphere-sweep {
 
   .public-visual-scope .premium-section-motion-experience-section .apple-record-feature,
   .public-visual-scope .premium-section-motion-inquire-section :is(.apple-inquiry-form, .apple-inquiry-support) {
-    transform: scale(var(--pm-section-scale, 1));
   }
 
   .public-visual-scope .premium-section-motion-process-section .apple-process-grid {
-    transform: scale(var(--pm-section-scale, 1));
   }
 
   .public-visual-scope .premium-section-motion-process-section .apple-process-card:nth-child(1),
@@ -10847,7 +10630,6 @@ html[data-theme="dark"] .public-visual-scope .atmosphere-sweep {
   .public-visual-scope .premium-section-motion-process-section .apple-process-card:nth-child(3),
   .public-visual-scope .premium-section-motion-process-section .apple-process-card:nth-child(4),
   .public-visual-scope .premium-section-motion-process-section .apple-process-card:nth-child(5) {
-    transform: translate3d(0, var(--pm-card-y-0, 0px), 0) scale(var(--pm-card-scale-0, 1));
   }
 }
 
@@ -11025,8 +10807,6 @@ html[data-theme="dark"] .public-visual-scope .atmosphere-panel {
 
 .public-visual-scope .premium-section-motion-hero .apple-hero-title,
 .public-visual-scope .premium-section-motion-hero :is(.apple-section-kicker, .apple-hero-copy, .apple-hero-actions) {
-  opacity: var(--pm-hero-opacity, 1);
-  transform: translate3d(0, var(--pm-hero-y, 0px), 0) scale(var(--pm-hero-scale, 1));
   transform-origin: center top;
 }
 
@@ -11047,8 +10827,6 @@ html[data-theme="dark"] .public-visual-scope .atmosphere-panel {
 }
 
 .public-visual-scope .premium-section-motion-hero .apple-hero-record {
-  opacity: var(--pm-media-opacity, 1);
-  transform: translate3d(0, var(--pm-media-y, 0px), 0) scale(var(--pm-media-scale, 1));
   transform-origin: center 76%;
 }
 
@@ -11075,23 +10853,15 @@ html[data-theme="dark"] .public-visual-scope .atmosphere-panel {
 }
 
 .public-visual-scope .premium-section-motion-hero .apple-hero-chapter:nth-child(1) {
-  opacity: var(--pm-card-opacity-0, 1);
-  transform: translate3d(0, calc(var(--pm-card-y-0, 0px) + var(--card-hover-y, 0px)), 0) scale(var(--pm-card-scale-0, 1)) scale(var(--card-hover-scale, 1));
 }
 
 .public-visual-scope .premium-section-motion-hero .apple-hero-chapter:nth-child(2) {
-  opacity: var(--pm-card-opacity-1, 1);
-  transform: translate3d(0, calc(var(--pm-card-y-1, 0px) + var(--card-hover-y, 0px)), 0) scale(var(--pm-card-scale-1, 1)) scale(var(--card-hover-scale, 1));
 }
 
 .public-visual-scope .premium-section-motion-hero .apple-hero-chapter:nth-child(3) {
-  opacity: var(--pm-card-opacity-2, 1);
-  transform: translate3d(0, calc(var(--pm-card-y-2, 0px) + var(--card-hover-y, 0px)), 0) scale(var(--pm-card-scale-2, 1)) scale(var(--card-hover-scale, 1));
 }
 
 .public-visual-scope .premium-section-motion-hero .apple-hero-chapter:nth-child(4) {
-  opacity: var(--pm-card-opacity-3, 1);
-  transform: translate3d(0, calc(var(--pm-card-y-3, 0px) + var(--card-hover-y, 0px)), 0) scale(var(--pm-card-scale-3, 1)) scale(var(--card-hover-scale, 1));
 }
 
 .public-visual-scope .apple-value-band {
@@ -11206,8 +10976,6 @@ html[data-theme="dark"] .public-visual-scope .apple-value-card {
 }
 
 .public-visual-scope .premium-section-motion-experience-section .apple-record-feature {
-  opacity: var(--pm-section-opacity, 1);
-  transform: translate3d(var(--pm-right-x, 0px), 0, 0) scale(var(--pm-section-scale, 1));
   transform-origin: center center;
 }
 
@@ -11244,8 +11012,6 @@ html[data-theme="dark"] .public-visual-scope .apple-value-card {
 }
 
 .public-visual-scope .premium-section-motion-process-section .apple-process-grid {
-  opacity: var(--pm-section-opacity, 1);
-  transform: translate3d(var(--pm-row-x, 0px), 0, 0) scale(var(--pm-section-scale, 1));
   transform-origin: center center;
 }
 
@@ -11286,8 +11052,6 @@ html[data-theme="dark"] .public-visual-scope .apple-value-card {
 }
 
 .public-visual-scope .premium-section-motion-preserve-section .apple-preserve-feature {
-  opacity: var(--pm-card-opacity-0, 1);
-  transform: translate3d(var(--pm-card-x-0, 0px), var(--pm-card-y-0, 0px), 0) scale(var(--pm-gallery-scale, 1)) rotate(var(--pm-card-rotate-0, 0deg));
 }
 
 .public-visual-scope .apple-preserve-feature,
@@ -11303,14 +11067,10 @@ html[data-theme="dark"] .public-visual-scope .apple-value-card {
 }
 
 .public-visual-scope .premium-section-motion-inquire-section .apple-inquiry-form {
-  opacity: var(--pm-section-opacity, 1);
-  transform: translate3d(var(--pm-left-x, 0px), 0, 0) scale(var(--pm-section-scale, 1));
   transform-origin: center center;
 }
 
 .public-visual-scope .premium-section-motion-inquire-section .apple-inquiry-support {
-  opacity: var(--pm-section-opacity, 1);
-  transform: translate3d(var(--pm-right-x, 0px), 0, 0) scale(var(--pm-section-scale, 1));
   transform-origin: center center;
 }
 
@@ -11400,7 +11160,6 @@ html[data-theme="dark"] .public-visual-scope .apple-value-card {
   .public-visual-scope .premium-section-motion-experience-section .apple-record-feature,
   .public-visual-scope .premium-section-motion-inquire-section :is(.apple-inquiry-form, .apple-inquiry-support),
   .public-visual-scope .premium-section-motion-process-section .apple-process-grid {
-    transform: scale(var(--pm-section-scale, 1));
   }
 
   .public-visual-scope .apple-process-grid {
@@ -11462,6 +11221,246 @@ html[data-theme="dark"] .public-visual-scope .apple-value-card {
     .apple-inquiry-form,
     .apple-inquiry-support
   ) {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* Spatial camera system: sections now move as depth planes, not reveal lists. */
+.public-visual-scope .premium-section-motion {
+  position: relative;
+  isolation: isolate;
+  opacity: var(--camera-scene-opacity, 1);
+  transform: translate3d(0, var(--camera-scene-y, 0px), 0) scale(var(--camera-scene-scale, 1));
+  transform-origin: center center;
+  backface-visibility: hidden;
+  contain: paint;
+}
+
+.public-visual-scope .premium-section-motion::before,
+.public-visual-scope .premium-section-motion::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  inset: clamp(-1rem, -2vw, -0.5rem);
+  border-radius: inherit;
+}
+
+.public-visual-scope .premium-section-motion::before {
+  z-index: 4;
+  opacity: var(--camera-scene-dim, 0);
+  background:
+    radial-gradient(ellipse at 50% 42%, transparent 34%, rgba(0, 0, 0, 0.16) 100%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.06), transparent 28%, rgba(0, 0, 0, 0.08));
+}
+
+.public-visual-scope .premium-section-motion::after {
+  z-index: 0;
+  opacity: var(--camera-scene-haze, 0);
+  background:
+    radial-gradient(ellipse at 50% 26%, rgba(255, 255, 255, 0.34), transparent 42%),
+    radial-gradient(ellipse at 18% 100%, color-mix(in srgb, var(--accent-soft) 38%, transparent), transparent 46%);
+}
+
+html[data-theme="dark"] .public-visual-scope .premium-section-motion::before {
+  background:
+    radial-gradient(ellipse at 50% 42%, transparent 32%, rgba(0, 0, 0, 0.26) 100%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.12), transparent 28%, rgba(0, 0, 0, 0.16));
+}
+
+html[data-theme="dark"] .public-visual-scope .premium-section-motion::after {
+  background:
+    radial-gradient(ellipse at 50% 24%, rgba(255, 255, 255, 0.07), transparent 46%),
+    radial-gradient(ellipse at 16% 100%, rgba(58, 74, 104, 0.24), transparent 48%);
+}
+
+.public-visual-scope .premium-section-motion > * {
+  position: relative;
+  z-index: 1;
+}
+
+.public-visual-scope .premium-section-motion :is(
+  .apple-section-kicker,
+  .apple-hero-title,
+  .apple-section-title,
+  .apple-hero-copy,
+  .apple-section-copy,
+  .apple-hero-record,
+  .apple-hero-chapter,
+  .apple-value-archive-shell,
+  .apple-value-grid,
+  .apple-value-card,
+  .apple-record-feature,
+  .apple-process-grid,
+  .apple-process-card,
+  .apple-preserve-layout,
+  .apple-preserve-feature,
+  .apple-preserve-card,
+  .apple-inquiry-form,
+  .apple-inquiry-support
+) {
+  backface-visibility: hidden;
+}
+
+.public-visual-scope .premium-section-motion :is(
+  .apple-section-title,
+  .apple-hero-title,
+  .apple-value-statement h2
+) {
+  opacity: 1;
+  transform: translate3d(0, var(--camera-title-y, 0px), 0) scale(var(--camera-title-scale, 1));
+  transform-origin: center center;
+}
+
+.public-visual-scope .premium-section-motion :is(.apple-section-kicker, .apple-section-copy) {
+  opacity: 1;
+  transform: translate3d(0, var(--camera-copy-y, 0px), 0);
+}
+
+.public-visual-scope .premium-section-motion-hero :is(.apple-section-kicker, .apple-hero-title, .apple-hero-copy, .apple-hero-actions) {
+  opacity: 1;
+  transform: translate3d(0, var(--camera-copy-y, 0px), 0) scale(var(--camera-title-scale, 1));
+  transform-origin: center center;
+}
+
+.public-visual-scope .premium-section-motion-hero .apple-hero-title {
+  transform: translate3d(0, var(--camera-title-y, 0px), 0) scale(var(--camera-title-scale, 1));
+}
+
+.public-visual-scope .premium-section-motion-hero .apple-hero-record {
+  opacity: 1;
+  transform: translate3d(0, var(--camera-media-y, 0px), 0) scale(var(--camera-media-scale, 1));
+  transform-origin: center center;
+}
+
+.public-visual-scope .premium-section-motion-hero .apple-hero-chapter {
+  opacity: 1;
+  transform: translate3d(0, var(--camera-foreground-lift, 0px), 0) scale(0.985);
+}
+
+.public-visual-scope .premium-section-motion-archive .apple-value-archive-shell {
+  opacity: 1;
+  transform: translate3d(0, var(--camera-archive-y, 0px), 0) scale(var(--camera-archive-scale, 1));
+  transform-origin: center center;
+}
+
+.public-visual-scope .premium-section-motion-archive .apple-value-grid {
+  opacity: 1;
+  transform: translate3d(0, var(--camera-foreground-lift, 0px), 0) scale(var(--camera-gallery-scale, 1));
+  transform-origin: center top;
+}
+
+.public-visual-scope .premium-section-motion-archive .apple-value-card {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+.public-visual-scope .premium-section-motion-experience-section .apple-record-feature {
+  opacity: 1;
+  transform: translate3d(0, var(--camera-media-y, 0px), 0) scale(var(--camera-media-scale, 1));
+  transform-origin: center center;
+}
+
+.public-visual-scope .premium-section-motion-experience-section .apple-record-feature-content {
+  transform: translate3d(var(--camera-panel-right-x, 0px), 0, 0);
+  transform-origin: center center;
+}
+
+.public-visual-scope .premium-section-motion-process-section .apple-process-grid {
+  opacity: 1;
+  transform: translate3d(var(--camera-rail-x, 0px), 0, 0) scale(var(--camera-rail-scale, 1));
+  transform-origin: center center;
+}
+
+.public-visual-scope .premium-section-motion-process-section .apple-process-card {
+  opacity: 0.78;
+  transform: translate3d(var(--process-card-offset, 0px), 0, 0) scale(0.958);
+  transform-origin: center center;
+}
+
+.public-visual-scope .premium-section-motion-process-section .apple-process-card[data-process-active="true"] {
+  opacity: 1;
+  transform: translate3d(0, var(--camera-foreground-lift, 0px), 0) scale(1);
+}
+
+.public-visual-scope .premium-section-motion-preserve-section .apple-preserve-layout {
+  opacity: 1;
+  transform: translate3d(0, var(--camera-foreground-lift, 0px), 0) scale(var(--camera-gallery-scale, 1));
+  transform-origin: center center;
+}
+
+.public-visual-scope .premium-section-motion-preserve-section :is(.apple-preserve-feature, .apple-preserve-card) {
+  opacity: 1;
+}
+
+.public-visual-scope .premium-section-motion-inquire-section .apple-inquiry-form {
+  opacity: 1;
+  transform: translate3d(var(--camera-panel-left-x, 0px), var(--camera-media-y, 0px), 0) scale(var(--camera-media-scale, 1));
+}
+
+.public-visual-scope .premium-section-motion-inquire-section .apple-inquiry-support {
+  opacity: 1;
+  transform: translate3d(var(--camera-panel-right-x, 0px), var(--camera-media-y, 0px), 0) scale(var(--camera-media-scale, 1));
+}
+
+.public-visual-scope :is(.apple-value-card, .apple-process-card, .apple-preserve-card, .apple-inquiry-tab, .ui-chip) {
+  transition-property: transform, opacity, color, background-color, border-color;
+  transition-duration: 360ms;
+  transition-timing-function: var(--cinematic-ease);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .public-visual-scope :is(.apple-value-card, .apple-process-card, .apple-preserve-card):hover {
+    transform: translate3d(0, -0.42rem, 0) scale(1.018);
+  }
+
+  .public-visual-scope .apple-process-grid:has(.apple-process-card:hover) .apple-process-card:not(:hover) {
+    opacity: 0.72;
+    transform: translate3d(0, 0, 0) scale(0.95);
+  }
+
+  .public-visual-scope .chip-row .ui-chip:hover {
+    transform: translate3d(0, -0.14rem, 0) scale(1.015);
+  }
+}
+
+@media (max-width: 767px) {
+  .public-visual-scope .premium-section-motion {
+    transform: translate3d(0, var(--camera-scene-y, 0px), 0) scale(var(--camera-scene-scale, 1));
+  }
+
+  .public-visual-scope .premium-section-motion::before {
+    opacity: calc(var(--camera-scene-dim, 0) * 0.72);
+  }
+
+  .public-visual-scope .premium-section-motion-hero :is(.apple-section-kicker, .apple-hero-title, .apple-hero-copy, .apple-hero-actions) {
+    transform: translate3d(0, var(--camera-copy-y, 0px), 0) scale(var(--camera-title-scale, 1));
+  }
+
+  .public-visual-scope .premium-section-motion-hero .apple-hero-title {
+    transform: translate3d(0, var(--camera-title-y, 0px), 0) scale(var(--camera-title-scale, 1));
+  }
+
+  .public-visual-scope .premium-section-motion-hero .apple-hero-chapter,
+  .public-visual-scope .premium-section-motion-process-section .apple-process-card {
+    transform: translate3d(0, 0, 0) scale(0.985);
+  }
+
+  .public-visual-scope .premium-section-motion-process-section .apple-process-card[data-process-active="true"] {
+    transform: translate3d(0, -0.24rem, 0) scale(1);
+  }
+
+  .public-visual-scope .premium-section-motion-experience-section .apple-record-feature-content {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .public-visual-scope .premium-section-motion,
+  .public-visual-scope .premium-section-motion::before,
+  .public-visual-scope .premium-section-motion::after,
+  .public-visual-scope .premium-section-motion * {
     opacity: 1 !important;
     transform: none !important;
     transition: none !important;

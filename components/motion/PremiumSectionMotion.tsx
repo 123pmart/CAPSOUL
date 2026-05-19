@@ -42,61 +42,26 @@ function useIsMobile() {
   return isMobile;
 }
 
-function useCardVars(progress: MotionValue<number>, index: number, isMobile: boolean) {
-  const start = isMobile ? 0.08 + index * 0.07 : 0.08 + index * 0.092;
-  const end = isMobile ? start + 0.26 : start + 0.32;
-  const y = useTransform(progress, [start, end], isMobile ? ["30px", "0px"] : ["86px", "0px"]);
-  const opacity = useTransform(progress, [start, end], [isMobile ? 0.68 : 0.48, 1]);
-  const scale = useTransform(progress, [start, end], isMobile ? [0.982, 1] : [0.885, 1]);
-
-  return { y, opacity, scale };
-}
-
 const reducedVars: MotionVars = {
   position: "relative",
-  "--pm-section-y": "0px",
-  "--pm-section-opacity": 1,
-  "--pm-section-scale": 1,
-  "--pm-title-y": "0px",
-  "--pm-title-opacity": 1,
-  "--pm-hero-y": "0px",
-  "--pm-hero-opacity": 1,
-  "--pm-hero-scale": 1,
-  "--pm-media-y": "0px",
-  "--pm-media-opacity": 1,
-  "--pm-media-scale": 1,
-  "--pm-left-x": "0px",
-  "--pm-right-x": "0px",
-  "--pm-row-x": "0px",
-  "--pm-archive-y": "0px",
-  "--pm-archive-opacity": 1,
-  "--pm-archive-scale": 1,
-  "--pm-gallery-scale": 1,
-  "--pm-card-x-0": "0px",
-  "--pm-card-x-1": "0px",
-  "--pm-card-x-2": "0px",
-  "--pm-card-x-3": "0px",
-  "--pm-card-x-4": "0px",
-  "--pm-card-y-0": "0px",
-  "--pm-card-y-1": "0px",
-  "--pm-card-y-2": "0px",
-  "--pm-card-y-3": "0px",
-  "--pm-card-y-4": "0px",
-  "--pm-card-opacity-0": 1,
-  "--pm-card-opacity-1": 1,
-  "--pm-card-opacity-2": 1,
-  "--pm-card-opacity-3": 1,
-  "--pm-card-opacity-4": 1,
-  "--pm-card-scale-0": 1,
-  "--pm-card-scale-1": 1,
-  "--pm-card-scale-2": 1,
-  "--pm-card-scale-3": 1,
-  "--pm-card-scale-4": 1,
-  "--pm-card-rotate-0": "0deg",
-  "--pm-card-rotate-1": "0deg",
-  "--pm-card-rotate-2": "0deg",
-  "--pm-card-rotate-3": "0deg",
-  "--pm-card-rotate-4": "0deg",
+  "--camera-scene-y": "0px",
+  "--camera-scene-scale": 1,
+  "--camera-scene-opacity": 1,
+  "--camera-scene-dim": 0,
+  "--camera-scene-haze": 0,
+  "--camera-title-y": "0px",
+  "--camera-title-scale": 1,
+  "--camera-copy-y": "0px",
+  "--camera-media-y": "0px",
+  "--camera-media-scale": 1,
+  "--camera-panel-left-x": "0px",
+  "--camera-panel-right-x": "0px",
+  "--camera-rail-x": "0px",
+  "--camera-rail-scale": 1,
+  "--camera-gallery-scale": 1,
+  "--camera-archive-y": "0px",
+  "--camera-archive-scale": 1,
+  "--camera-foreground-lift": "0px",
 };
 
 export function PremiumSectionMotion({
@@ -111,93 +76,109 @@ export function PremiumSectionMotion({
     target: ref,
     offset: ["start end", "end start"],
   });
+  const isHero = variant === "hero";
 
-  const sectionY = useTransform(scrollYProgress, [0.02, 0.42], isMobile ? ["28px", "0px"] : ["58px", "0px"]);
-  const sectionOpacity = useTransform(scrollYProgress, [0.02, 0.3], [isMobile ? 0.84 : 0.74, 1]);
-  const sectionScale = useTransform(scrollYProgress, [0.02, 0.44], isMobile ? [0.992, 1] : [0.955, 1]);
-  const titleY = useTransform(scrollYProgress, [0.02, 0.38], isMobile ? ["20px", "0px"] : ["40px", "0px"]);
-
-  const heroY = useTransform(scrollYProgress, [0.24, 0.78], isMobile ? ["0px", "0px"] : ["0px", "-82px"]);
-  const heroOpacity = useTransform(scrollYProgress, [0.24, 0.78], isMobile ? [1, 1] : [1, 0.86]);
-  const heroScale = useTransform(scrollYProgress, [0.24, 0.78], isMobile ? [1, 1] : [1, 0.955]);
-  const mediaY = useTransform(scrollYProgress, [0.04, 0.46], isMobile ? ["34px", "0px"] : ["112px", "0px"]);
-  const mediaOpacity = useTransform(scrollYProgress, [0.04, 0.32], [isMobile ? 0.78 : 0.66, 1]);
-  const mediaScale = useTransform(scrollYProgress, [0.04, 0.46], isMobile ? [0.985, 1] : [0.9, 1]);
-
-  const archiveY = useTransform(scrollYProgress, [0.02, 0.46], isMobile ? ["34px", "0px"] : ["104px", "0px"]);
-  const archiveOpacity = useTransform(scrollYProgress, [0.02, 0.32], [isMobile ? 0.82 : 0.7, 1]);
-  const archiveScale = useTransform(scrollYProgress, [0.02, 0.46], isMobile ? [0.985, 1] : [0.875, 1]);
-
-  const leftX = useTransform(scrollYProgress, [0.08, 0.46], isMobile ? ["0px", "0px"] : ["-82px", "0px"]);
-  const rightX = useTransform(scrollYProgress, [0.08, 0.46], isMobile ? ["0px", "0px"] : ["82px", "0px"]);
-  const rowX = useTransform(scrollYProgress, [0.05, 0.46], isMobile ? ["0px", "0px"] : ["112px", "0px"]);
-  const galleryScale = useTransform(scrollYProgress, [0.06, 0.44], isMobile ? [0.988, 1] : [0.905, 1]);
-
-  const card0 = useCardVars(scrollYProgress, 0, isMobile);
-  const card1 = useCardVars(scrollYProgress, 1, isMobile);
-  const card2 = useCardVars(scrollYProgress, 2, isMobile);
-  const card3 = useCardVars(scrollYProgress, 3, isMobile);
-  const card4 = useCardVars(scrollYProgress, 4, isMobile);
-
-  const heroCardStack = variant === "hero";
-  const cardX0 = useTransform(scrollYProgress, [0.08, 0.38], isMobile || heroCardStack ? ["0px", "0px"] : ["-118px", "0px"]);
-  const cardX1 = useTransform(scrollYProgress, [0.16, 0.44], isMobile || heroCardStack ? ["0px", "0px"] : ["-36px", "0px"]);
-  const cardX2 = useTransform(scrollYProgress, [0.24, 0.5], ["0px", "0px"]);
-  const cardX3 = useTransform(scrollYProgress, [0.32, 0.58], isMobile || heroCardStack ? ["0px", "0px"] : ["48px", "0px"]);
-  const cardX4 = useTransform(scrollYProgress, [0.4, 0.66], isMobile || heroCardStack ? ["0px", "0px"] : ["118px", "0px"]);
-  const cardRotate0 = useTransform(scrollYProgress, [0.08, 0.38], isMobile || heroCardStack ? ["0deg", "0deg"] : ["-6deg", "0deg"]);
-  const cardRotate1 = useTransform(scrollYProgress, [0.16, 0.44], isMobile || heroCardStack ? ["0deg", "0deg"] : ["3deg", "0deg"]);
-  const cardRotate2 = useTransform(scrollYProgress, [0.24, 0.5], isMobile || heroCardStack ? ["0deg", "0deg"] : ["-1.5deg", "0deg"]);
-  const cardRotate3 = useTransform(scrollYProgress, [0.32, 0.58], isMobile || heroCardStack ? ["0deg", "0deg"] : ["3.8deg", "0deg"]);
-  const cardRotate4 = useTransform(scrollYProgress, [0.4, 0.66], isMobile || heroCardStack ? ["0deg", "0deg"] : ["-5deg", "0deg"]);
+  const sceneY = useTransform(
+    scrollYProgress,
+    [0, 0.5, 1],
+    isHero
+      ? isMobile ? ["0px", "0px", "-28px"] : ["0px", "-18px", "-94px"]
+      : isMobile ? ["34px", "0px", "-28px"] : ["110px", "0px", "-86px"],
+  );
+  const sceneScale = useTransform(
+    scrollYProgress,
+    [0, 0.5, 1],
+    isHero
+      ? isMobile ? [1, 1, 0.98] : [1, 0.986, 0.92]
+      : isMobile ? [0.965, 1, 0.975] : [0.875, 1, 0.92],
+  );
+  const sceneOpacity = useTransform(
+    scrollYProgress,
+    [0, 0.2, 0.78, 1],
+    isHero
+      ? isMobile ? [1, 1, 1, 0.9] : [1, 1, 0.94, 0.82]
+      : isMobile ? [0.82, 1, 1, 0.88] : [0.72, 1, 1, 0.82],
+  );
+  const sceneDim = useTransform(
+    scrollYProgress,
+    [0, 0.5, 1],
+    isHero
+      ? isMobile ? [0, 0.02, 0.08] : [0, 0.06, 0.18]
+      : isMobile ? [0.1, 0, 0.08] : [0.2, 0, 0.16],
+  );
+  const sceneHaze = useTransform(
+    scrollYProgress,
+    [0, 0.5, 1],
+    isHero
+      ? isMobile ? [0.04, 0.06, 0.14] : [0.08, 0.12, 0.24]
+      : isMobile ? [0.14, 0.02, 0.12] : [0.28, 0.04, 0.22],
+  );
+  const titleY = useTransform(
+    scrollYProgress,
+    [0, 0.5, 1],
+    isHero
+      ? isMobile ? ["0px", "0px", "-16px"] : ["0px", "-34px", "-72px"]
+      : isMobile ? ["20px", "0px", "-12px"] : ["64px", "0px", "-38px"],
+  );
+  const titleScale = useTransform(
+    scrollYProgress,
+    [0, 0.5, 1],
+    isHero
+      ? isMobile ? [1, 1, 0.985] : [1, 0.97, 0.94]
+      : isMobile ? [0.985, 1, 0.99] : [0.94, 1, 0.965],
+  );
+  const copyY = useTransform(
+    scrollYProgress,
+    [0, 0.5, 1],
+    isHero
+      ? isMobile ? ["0px", "0px", "-10px"] : ["0px", "-22px", "-46px"]
+      : isMobile ? ["12px", "0px", "-8px"] : ["28px", "0px", "-18px"],
+  );
+  const mediaY = useTransform(
+    scrollYProgress,
+    [0, 0.52, 1],
+    isHero
+      ? isMobile ? ["18px", "0px", "-10px"] : ["62px", "0px", "-42px"]
+      : isMobile ? ["22px", "0px", "-12px"] : ["76px", "0px", "-38px"],
+  );
+  const mediaScale = useTransform(
+    scrollYProgress,
+    [0, 0.52, 1],
+    isHero
+      ? isMobile ? [0.985, 1, 0.99] : [0.925, 1, 0.955]
+      : isMobile ? [0.985, 1, 0.99] : [0.91, 1, 0.955],
+  );
+  const leftPanelX = useTransform(scrollYProgress, [0, 0.5, 1], isMobile ? ["0px", "0px", "0px"] : ["-72px", "0px", "28px"]);
+  const rightPanelX = useTransform(scrollYProgress, [0, 0.5, 1], isMobile ? ["0px", "0px", "0px"] : ["72px", "0px", "-28px"]);
+  const railX = useTransform(scrollYProgress, [0, 0.52, 1], isMobile ? ["0px", "0px", "0px"] : ["124px", "0px", "-48px"]);
+  const railScale = useTransform(scrollYProgress, [0, 0.52, 1], isMobile ? [0.985, 1, 0.992] : [0.9, 1, 0.96]);
+  const galleryScale = useTransform(scrollYProgress, [0, 0.52, 1], isMobile ? [0.985, 1, 0.992] : [0.88, 1, 0.95]);
+  const archiveY = useTransform(scrollYProgress, [0, 0.5, 1], isMobile ? ["32px", "0px", "-20px"] : ["124px", "0px", "-56px"]);
+  const archiveScale = useTransform(scrollYProgress, [0, 0.5, 1], isMobile ? [0.97, 1, 0.985] : [0.86, 1, 0.94]);
+  const foregroundLift = useTransform(scrollYProgress, [0, 0.5, 1], isMobile ? ["8px", "0px", "-8px"] : ["34px", "0px", "-24px"]);
 
   const style: MotionVars = prefersReducedMotion
     ? reducedVars
     : {
         position: "relative",
-        "--pm-section-y": sectionY,
-        "--pm-section-opacity": sectionOpacity,
-        "--pm-section-scale": sectionScale,
-        "--pm-title-y": titleY,
-        "--pm-title-opacity": 1,
-        "--pm-hero-y": heroY,
-        "--pm-hero-opacity": heroOpacity,
-        "--pm-hero-scale": heroScale,
-        "--pm-media-y": mediaY,
-        "--pm-media-opacity": mediaOpacity,
-        "--pm-media-scale": mediaScale,
-        "--pm-left-x": leftX,
-        "--pm-right-x": rightX,
-        "--pm-row-x": rowX,
-        "--pm-archive-y": archiveY,
-        "--pm-archive-opacity": archiveOpacity,
-        "--pm-archive-scale": archiveScale,
-        "--pm-gallery-scale": galleryScale,
-        "--pm-card-x-0": cardX0,
-        "--pm-card-x-1": cardX1,
-        "--pm-card-x-2": cardX2,
-        "--pm-card-x-3": cardX3,
-        "--pm-card-x-4": cardX4,
-        "--pm-card-y-0": card0.y,
-        "--pm-card-y-1": card1.y,
-        "--pm-card-y-2": card2.y,
-        "--pm-card-y-3": card3.y,
-        "--pm-card-y-4": card4.y,
-        "--pm-card-opacity-0": card0.opacity,
-        "--pm-card-opacity-1": card1.opacity,
-        "--pm-card-opacity-2": card2.opacity,
-        "--pm-card-opacity-3": card3.opacity,
-        "--pm-card-opacity-4": card4.opacity,
-        "--pm-card-scale-0": card0.scale,
-        "--pm-card-scale-1": card1.scale,
-        "--pm-card-scale-2": card2.scale,
-        "--pm-card-scale-3": card3.scale,
-        "--pm-card-scale-4": card4.scale,
-        "--pm-card-rotate-0": cardRotate0,
-        "--pm-card-rotate-1": cardRotate1,
-        "--pm-card-rotate-2": cardRotate2,
-        "--pm-card-rotate-3": cardRotate3,
-        "--pm-card-rotate-4": cardRotate4,
+        "--camera-scene-y": sceneY,
+        "--camera-scene-scale": sceneScale,
+        "--camera-scene-opacity": sceneOpacity,
+        "--camera-scene-dim": sceneDim,
+        "--camera-scene-haze": sceneHaze,
+        "--camera-title-y": titleY,
+        "--camera-title-scale": titleScale,
+        "--camera-copy-y": copyY,
+        "--camera-media-y": mediaY,
+        "--camera-media-scale": mediaScale,
+        "--camera-panel-left-x": leftPanelX,
+        "--camera-panel-right-x": rightPanelX,
+        "--camera-rail-x": railX,
+        "--camera-rail-scale": railScale,
+        "--camera-gallery-scale": galleryScale,
+        "--camera-archive-y": archiveY,
+        "--camera-archive-scale": archiveScale,
+        "--camera-foreground-lift": foregroundLift,
       };
 
   return (
@@ -207,6 +188,7 @@ export function PremiumSectionMotion({
         .filter(Boolean)
         .join(" ")}
       data-premium-motion={variant}
+      data-camera-scene={variant}
       style={style}
     >
       {children}

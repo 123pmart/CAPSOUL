@@ -210,10 +210,6 @@ const primaryButtonMotion = {
   transition: { duration: 0.2, ease: measuredEase },
 } as const;
 
-function revealDelay(index: number, step = 90): CSSProperties {
-  return { "--reveal-delay": `${Math.min(index * step, 360)}ms` } as CSSProperties;
-}
-
 function MagneticPrimaryAnchor({
   children,
   className = "",
@@ -612,13 +608,13 @@ function ArchiveSection({
             : null;
   const sectionContent = (
     <>
-      <div className="apple-section-kicker motion-eyebrow" data-reveal>
+      <div className="apple-section-kicker motion-eyebrow">
         {eyebrow}
       </div>
-      <h2 className="apple-section-title motion-title" data-reveal style={revealDelay(1)}>
+      <h2 className="apple-section-title motion-title">
         {title}
       </h2>
-      <p className="apple-section-copy motion-copy" data-reveal style={revealDelay(2)}>
+      <p className="apple-section-copy motion-copy">
         {description}
       </p>
       <div className="apple-section-body motion-card">
@@ -634,7 +630,6 @@ function ArchiveSection({
       data-atmosphere-section={getAtmosphereSectionForId(id)}
       data-motion-section
       className={`apple-section motion-section ${className}`.trim()}
-      data-reveal
     >
       {motion ? (
         <PremiumSectionMotion
@@ -722,7 +717,7 @@ function ArchiveVisualFrame({
 
 function HeroHeadline({ title }: { title: string }) {
   return (
-    <h1 className="apple-hero-title motion-title" data-reveal style={revealDelay(1)}>
+    <h1 className="apple-hero-title motion-title">
       {title}
     </h1>
   );
@@ -748,17 +743,16 @@ function ArchiveHero({
       data-atmosphere-section="hero"
       data-motion-section
       className="apple-hero motion-section"
-      data-reveal
     >
       <PremiumSectionMotion variant="hero" className="apple-hero-inner motion-section-flow">
-        <div className="apple-section-kicker motion-eyebrow" data-reveal>
+        <div className="apple-section-kicker motion-eyebrow">
           {home.eyebrow}
         </div>
         <HeroHeadline title={home.title} />
-        <p className="apple-hero-copy motion-copy" data-reveal style={revealDelay(2)}>
+        <p className="apple-hero-copy motion-copy">
           {home.description}
         </p>
-        <div className="apple-hero-actions motion-card" data-reveal style={revealDelay(3)}>
+        <div className="apple-hero-actions motion-card">
           {home.primaryAction ? (
             <MagneticPrimaryAnchor
               href={home.primaryAction.href}
@@ -774,7 +768,7 @@ function ArchiveHero({
           ) : null}
         </div>
         <div className="apple-hero-stage motion-media">
-          <div className="apple-hero-record" data-reveal style={revealDelay(4)}>
+          <div className="apple-hero-record">
             <ArchiveVisualFrame
               image={heroStep.image}
               fallbackImage={heroStep.fallbackImage}
@@ -793,8 +787,6 @@ function ArchiveHero({
               <div
                 className="apple-hero-chapter apple-liquid-surface"
                 key={`hero-chapter-${index}`}
-                data-reveal
-                style={revealDelay(index + 5)}
               >
                 <span className="apple-liquid-layer" aria-hidden="true" />
                 <span>{processStepPrefix} {index + 1}</span>
@@ -828,12 +820,10 @@ function ArchiveValueCard({
     <article
       className="apple-value-card apple-liquid-surface"
       key={`archive-value-card-${index}`}
-      data-reveal
       data-active={isActive ? "true" : "false"}
       tabIndex={0}
       style={{
         "--motion-stagger-index": index,
-        "--reveal-delay": `${Math.min(index * 90, 360)}ms`,
       } as CSSProperties}
       onPointerEnter={(event: PointerEvent<HTMLElement>) => {
         if (isFineHoverPointer(event)) {
@@ -878,13 +868,12 @@ function EmotionalValue({
       data-atmosphere-section="archive"
       data-active-index={activeIndex}
       data-motion-section
-      data-reveal
       style={{
         "--active-archive-index": activeIndex,
       } as CSSProperties}
     >
       <PremiumSectionMotion variant="archive" className="apple-value-choreography">
-        <div className="apple-value-archive-shell motion-media" data-reveal>
+        <div className="apple-value-archive-shell motion-media">
           <div className="apple-archive-sheets" aria-hidden="true" data-active-index={activeIndex}>
             <span className="apple-archive-sheet apple-archive-sheet-one" />
             <span className="apple-archive-sheet apple-archive-sheet-two" />
@@ -892,7 +881,7 @@ function EmotionalValue({
           </div>
           <div className="apple-value-statement">
             <span>{archive.eyebrow}</span>
-            <h2 data-reveal style={revealDelay(1)}>{archive.headline}</h2>
+            <h2>{archive.headline}</h2>
             <div className="apple-archive-record-line" aria-hidden="true">
               <span style={{ "--archive-progress-scale": (activeIndex + 1) / pillars.length } as CSSProperties} />
             </div>
@@ -1005,7 +994,7 @@ function ArchiveSceneModule({
 
   return (
     <div className="apple-scene-module motion-stagger">
-      <div className="apple-record-feature motion-media" data-reveal style={revealDelay(1)}>
+      <div className="apple-record-feature motion-media">
         <div className="experience-content-container">
           <AnimatePresence initial={false} custom={direction} mode="wait">
             <motion.div
@@ -1064,18 +1053,26 @@ function ArchiveSceneModule({
 function ProcessStepCard({
   step,
   index,
+  isActive,
+  distance,
+  direction,
 }: {
   step: PublicSceneStep;
   index: number;
+  isActive: boolean;
+  distance: number;
+  direction: number;
 }) {
   return (
     <article
       className="apple-process-card apple-liquid-surface how-it-works-card"
       key={`process-step-${index}`}
-      data-reveal
+      data-process-active={isActive ? "true" : "false"}
       style={{
         "--motion-stagger-index": index,
-        "--reveal-delay": `${Math.min(index * 90, 360)}ms`,
+        "--process-card-distance": distance,
+        "--process-card-direction": direction,
+        "--process-card-offset": `${direction * Math.min(distance * 8, 18)}px`,
       } as CSSProperties}
     >
       <span className="apple-liquid-layer" aria-hidden="true" />
@@ -1180,6 +1177,9 @@ function ProcessTimeline({
             key={`process-step-${index}`}
             step={step}
             index={index}
+            isActive={index === activeIndex}
+            distance={Math.abs(index - activeIndex)}
+            direction={index === activeIndex ? 0 : index > activeIndex ? 1 : -1}
           />
         ))}
       </div>
@@ -1207,7 +1207,6 @@ function PreserveEditorial({ preserve }: { preserve: ResolvedSceneContent }) {
       {featured ? (
         <article
           className="apple-preserve-feature apple-liquid-surface motion-media"
-          data-reveal
         >
           <span className="apple-liquid-layer" aria-hidden="true" />
           <span>{featured.mediaLabel}</span>
@@ -1227,10 +1226,8 @@ function PreserveEditorial({ preserve }: { preserve: ResolvedSceneContent }) {
           <article
             className="apple-preserve-card apple-liquid-surface"
             key={`preserve-card-${index}`}
-            data-reveal
             style={{
               "--motion-stagger-index": index + 1,
-              "--reveal-delay": `${Math.min((index + 1) * 90, 360)}ms`,
             } as CSSProperties}
           >
             <span className="apple-liquid-layer" aria-hidden="true" />
@@ -1416,7 +1413,6 @@ function InquiryArchiveForm({
       <form
         className="apple-inquiry-form"
         onSubmit={handleSubmit}
-        data-reveal
       >
         <div
           className="apple-inquiry-tabs"
@@ -1487,8 +1483,6 @@ function InquiryArchiveForm({
 
       <aside
         className="apple-inquiry-support motion-media"
-        data-reveal
-        style={revealDelay(1)}
       >
         <AnimatePresence initial={false} mode="wait">
           {activeSupport ? (
