@@ -43,11 +43,11 @@ function useIsMobile() {
 }
 
 function useCardVars(progress: MotionValue<number>, index: number, isMobile: boolean) {
-  const start = isMobile ? 0.06 + index * 0.065 : 0.06 + index * 0.085;
-  const end = isMobile ? start + 0.24 : start + 0.28;
-  const y = useTransform(progress, [start, end], isMobile ? ["34px", "0px"] : ["72px", "0px"]);
-  const opacity = useTransform(progress, [start, end], [0.04, 1]);
-  const scale = useTransform(progress, [start, end], isMobile ? [0.975, 1] : [0.92, 1]);
+  const start = isMobile ? 0.08 + index * 0.07 : 0.08 + index * 0.092;
+  const end = isMobile ? start + 0.26 : start + 0.32;
+  const y = useTransform(progress, [start, end], isMobile ? ["30px", "0px"] : ["86px", "0px"]);
+  const opacity = useTransform(progress, [start, end], [isMobile ? 0.68 : 0.48, 1]);
+  const scale = useTransform(progress, [start, end], isMobile ? [0.982, 1] : [0.885, 1]);
 
   return { y, opacity, scale };
 }
@@ -59,7 +59,6 @@ const reducedVars: MotionVars = {
   "--pm-section-scale": 1,
   "--pm-title-y": "0px",
   "--pm-title-opacity": 1,
-  "--pm-title-clip": "inset(0 0 0% 0)",
   "--pm-hero-y": "0px",
   "--pm-hero-opacity": 1,
   "--pm-hero-scale": 1,
@@ -113,27 +112,26 @@ export function PremiumSectionMotion({
     offset: ["start end", "end start"],
   });
 
-  const sectionY = useTransform(scrollYProgress, [0, 0.4], isMobile ? ["34px", "0px"] : ["76px", "0px"]);
-  const sectionOpacity = useTransform(scrollYProgress, [0, 0.34], [0.12, 1]);
-  const sectionScale = useTransform(scrollYProgress, [0, 0.42], isMobile ? [0.985, 1] : [0.94, 1]);
-  const titleY = useTransform(scrollYProgress, [0, 0.38], isMobile ? ["26px", "0px"] : ["56px", "0px"]);
-  const titleClip = useTransform(scrollYProgress, [0.02, 0.36], ["inset(0 0 100% 0)", "inset(0 0 0% 0)"]);
+  const sectionY = useTransform(scrollYProgress, [0.02, 0.42], isMobile ? ["28px", "0px"] : ["58px", "0px"]);
+  const sectionOpacity = useTransform(scrollYProgress, [0.02, 0.3], [isMobile ? 0.84 : 0.74, 1]);
+  const sectionScale = useTransform(scrollYProgress, [0.02, 0.44], isMobile ? [0.992, 1] : [0.955, 1]);
+  const titleY = useTransform(scrollYProgress, [0.02, 0.38], isMobile ? ["20px", "0px"] : ["40px", "0px"]);
 
-  const heroY = useTransform(scrollYProgress, [0.34, 0.74], isMobile ? ["0px", "0px"] : ["0px", "-46px"]);
-  const heroOpacity = useTransform(scrollYProgress, [0.34, 0.74], isMobile ? [1, 1] : [1, 0.92]);
-  const heroScale = useTransform(scrollYProgress, [0.34, 0.74], isMobile ? [1, 1] : [1, 0.972]);
-  const mediaY = useTransform(scrollYProgress, [0.06, 0.44], isMobile ? ["38px", "0px"] : ["82px", "0px"]);
-  const mediaOpacity = useTransform(scrollYProgress, [0.06, 0.38], [0.12, 1]);
-  const mediaScale = useTransform(scrollYProgress, [0.06, 0.44], isMobile ? [0.98, 1] : [0.94, 1]);
+  const heroY = useTransform(scrollYProgress, [0.24, 0.78], isMobile ? ["0px", "0px"] : ["0px", "-82px"]);
+  const heroOpacity = useTransform(scrollYProgress, [0.24, 0.78], isMobile ? [1, 1] : [1, 0.86]);
+  const heroScale = useTransform(scrollYProgress, [0.24, 0.78], isMobile ? [1, 1] : [1, 0.955]);
+  const mediaY = useTransform(scrollYProgress, [0.04, 0.46], isMobile ? ["34px", "0px"] : ["112px", "0px"]);
+  const mediaOpacity = useTransform(scrollYProgress, [0.04, 0.32], [isMobile ? 0.78 : 0.66, 1]);
+  const mediaScale = useTransform(scrollYProgress, [0.04, 0.46], isMobile ? [0.985, 1] : [0.9, 1]);
 
-  const archiveY = useTransform(scrollYProgress, [0, 0.44], isMobile ? ["38px", "0px"] : ["92px", "0px"]);
-  const archiveOpacity = useTransform(scrollYProgress, [0, 0.36], [0.18, 1]);
-  const archiveScale = useTransform(scrollYProgress, [0, 0.44], isMobile ? [0.98, 1] : [0.91, 1]);
+  const archiveY = useTransform(scrollYProgress, [0.02, 0.46], isMobile ? ["34px", "0px"] : ["104px", "0px"]);
+  const archiveOpacity = useTransform(scrollYProgress, [0.02, 0.32], [isMobile ? 0.82 : 0.7, 1]);
+  const archiveScale = useTransform(scrollYProgress, [0.02, 0.46], isMobile ? [0.985, 1] : [0.875, 1]);
 
-  const leftX = useTransform(scrollYProgress, [0.06, 0.42], isMobile ? ["0px", "0px"] : ["-64px", "0px"]);
-  const rightX = useTransform(scrollYProgress, [0.06, 0.42], isMobile ? ["0px", "0px"] : ["64px", "0px"]);
-  const rowX = useTransform(scrollYProgress, [0.04, 0.42], isMobile ? ["0px", "0px"] : ["72px", "0px"]);
-  const galleryScale = useTransform(scrollYProgress, [0.06, 0.42], isMobile ? [0.98, 1] : [0.92, 1]);
+  const leftX = useTransform(scrollYProgress, [0.08, 0.46], isMobile ? ["0px", "0px"] : ["-82px", "0px"]);
+  const rightX = useTransform(scrollYProgress, [0.08, 0.46], isMobile ? ["0px", "0px"] : ["82px", "0px"]);
+  const rowX = useTransform(scrollYProgress, [0.05, 0.46], isMobile ? ["0px", "0px"] : ["112px", "0px"]);
+  const galleryScale = useTransform(scrollYProgress, [0.06, 0.44], isMobile ? [0.988, 1] : [0.905, 1]);
 
   const card0 = useCardVars(scrollYProgress, 0, isMobile);
   const card1 = useCardVars(scrollYProgress, 1, isMobile);
@@ -141,16 +139,17 @@ export function PremiumSectionMotion({
   const card3 = useCardVars(scrollYProgress, 3, isMobile);
   const card4 = useCardVars(scrollYProgress, 4, isMobile);
 
-  const cardX0 = useTransform(scrollYProgress, [0.08, 0.36], isMobile ? ["0px", "0px"] : ["-86px", "0px"]);
-  const cardX1 = useTransform(scrollYProgress, [0.15, 0.39], ["0px", "0px"]);
-  const cardX2 = useTransform(scrollYProgress, [0.22, 0.46], ["0px", "0px"]);
-  const cardX3 = useTransform(scrollYProgress, [0.29, 0.57], isMobile ? ["0px", "0px"] : ["44px", "0px"]);
-  const cardX4 = useTransform(scrollYProgress, [0.36, 0.64], isMobile ? ["0px", "0px"] : ["86px", "0px"]);
-  const cardRotate0 = useTransform(scrollYProgress, [0.08, 0.36], isMobile ? ["0deg", "0deg"] : ["-4deg", "0deg"]);
-  const cardRotate1 = useTransform(scrollYProgress, [0.15, 0.43], isMobile ? ["0deg", "0deg"] : ["2.2deg", "0deg"]);
-  const cardRotate2 = useTransform(scrollYProgress, [0.22, 0.5], isMobile ? ["0deg", "0deg"] : ["-1.2deg", "0deg"]);
-  const cardRotate3 = useTransform(scrollYProgress, [0.29, 0.57], isMobile ? ["0deg", "0deg"] : ["2.8deg", "0deg"]);
-  const cardRotate4 = useTransform(scrollYProgress, [0.36, 0.64], isMobile ? ["0deg", "0deg"] : ["-3.4deg", "0deg"]);
+  const heroCardStack = variant === "hero";
+  const cardX0 = useTransform(scrollYProgress, [0.08, 0.38], isMobile || heroCardStack ? ["0px", "0px"] : ["-118px", "0px"]);
+  const cardX1 = useTransform(scrollYProgress, [0.16, 0.44], isMobile || heroCardStack ? ["0px", "0px"] : ["-36px", "0px"]);
+  const cardX2 = useTransform(scrollYProgress, [0.24, 0.5], ["0px", "0px"]);
+  const cardX3 = useTransform(scrollYProgress, [0.32, 0.58], isMobile || heroCardStack ? ["0px", "0px"] : ["48px", "0px"]);
+  const cardX4 = useTransform(scrollYProgress, [0.4, 0.66], isMobile || heroCardStack ? ["0px", "0px"] : ["118px", "0px"]);
+  const cardRotate0 = useTransform(scrollYProgress, [0.08, 0.38], isMobile || heroCardStack ? ["0deg", "0deg"] : ["-6deg", "0deg"]);
+  const cardRotate1 = useTransform(scrollYProgress, [0.16, 0.44], isMobile || heroCardStack ? ["0deg", "0deg"] : ["3deg", "0deg"]);
+  const cardRotate2 = useTransform(scrollYProgress, [0.24, 0.5], isMobile || heroCardStack ? ["0deg", "0deg"] : ["-1.5deg", "0deg"]);
+  const cardRotate3 = useTransform(scrollYProgress, [0.32, 0.58], isMobile || heroCardStack ? ["0deg", "0deg"] : ["3.8deg", "0deg"]);
+  const cardRotate4 = useTransform(scrollYProgress, [0.4, 0.66], isMobile || heroCardStack ? ["0deg", "0deg"] : ["-5deg", "0deg"]);
 
   const style: MotionVars = prefersReducedMotion
     ? reducedVars
@@ -161,7 +160,6 @@ export function PremiumSectionMotion({
         "--pm-section-scale": sectionScale,
         "--pm-title-y": titleY,
         "--pm-title-opacity": 1,
-        "--pm-title-clip": titleClip,
         "--pm-hero-y": heroY,
         "--pm-hero-opacity": heroOpacity,
         "--pm-hero-scale": heroScale,
