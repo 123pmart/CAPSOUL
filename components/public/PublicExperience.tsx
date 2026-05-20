@@ -1072,7 +1072,7 @@ function ProcessStepCard({
         "--motion-stagger-index": index,
         "--process-card-distance": distance,
         "--process-card-direction": direction,
-        "--process-card-offset": `${direction * Math.min(distance * 8, 18)}px`,
+        "--process-card-offset": `${direction * Math.min(distance * 4, 8)}px`,
       } as CSSProperties}
     >
       <span className="apple-liquid-layer" aria-hidden="true" />
