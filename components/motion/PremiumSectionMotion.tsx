@@ -1,9 +1,6 @@
 "use client";
 
-import {
-  useEffect,
-  type ReactNode,
-} from "react";
+import { useEffect, type ReactNode } from "react";
 
 type PremiumSectionVariant = "hero" | "archive" | "experience" | "process" | "preserve" | "inquire";
 
@@ -13,83 +10,148 @@ type PremiumSectionMotionProps = {
   variant: PremiumSectionVariant;
 };
 
-const reducedVars = {
-  sceneScale: 1,
-  sceneZ: 0,
-  sceneOpacity: 1,
-  sceneDim: 0,
-  sceneHaze: 0,
-  contentScale: 1,
-  mediaScale: 1,
-  railScale: 1,
-  galleryScale: 1,
-  archiveScale: 1,
-  cardDepth: 1,
-};
+const TUNNEL_SCENE_CHANGE_EVENT = "capsoul:tunnel-scene-change";
+const TUNNEL_SCENE_NAVIGATE_EVENT = "capsoul:tunnel-scene-navigate";
+const animationDuration = 1200;
 
-function clamp(value: number, min = 0, max = 1) {
-  return Math.min(max, Math.max(min, value));
+function getScenes() {
+  return Array.from(document.querySelectorAll<HTMLElement>(".scroll-container > .scene"));
 }
 
-function interpolate(progress: number, stops: number[], values: number[]) {
-  if (progress <= stops[0]) return values[0];
+function normalizeSceneClasses(scenes: HTMLElement[], currentIdx: number) {
+  scenes.forEach((scene, index) => {
+    scene.classList.toggle("active", index === currentIdx);
+    scene.classList.toggle("exit", index < currentIdx);
+    scene.setAttribute("aria-hidden", index === currentIdx ? "false" : "true");
+  });
+}
 
-  for (let index = 1; index < stops.length; index += 1) {
-    if (progress <= stops[index]) {
-      const localProgress = (progress - stops[index - 1]) / (stops[index] - stops[index - 1]);
-      return values[index - 1] + (values[index] - values[index - 1]) * localProgress;
+function dispatchSceneChange(scene: HTMLElement, index: number) {
+  window.dispatchEvent(
+    new CustomEvent(TUNNEL_SCENE_CHANGE_EVENT, {
+      detail: {
+        id: scene.id,
+        index,
+        atmosphereSection: scene.dataset.atmosphereSection,
+      },
+    }),
+  );
+}
+
+function findSceneIndex(scenes: HTMLElement[], id: string) {
+  return scenes.findIndex((scene) => scene.id === id);
+}
+
+export function navigateTunnelToScene(id: string) {
+  window.dispatchEvent(
+    new CustomEvent(TUNNEL_SCENE_NAVIGATE_EVENT, {
+      detail: { id },
+    }),
+  );
+}
+
+export function startTunnelScrollNavigation() {
+  const scenes = getScenes();
+
+  if (!scenes.length) {
+    return () => undefined;
+  }
+
+  let currentIdx = Math.max(0, scenes.findIndex((scene) => scene.classList.contains("active")));
+  let isAnimating = false;
+
+  normalizeSceneClasses(scenes, currentIdx);
+  dispatchSceneChange(scenes[currentIdx], currentIdx);
+
+  const goTo = (nextIdx: number) => {
+    if (isAnimating || nextIdx === currentIdx || nextIdx < 0 || nextIdx > scenes.length - 1) {
+      return;
     }
-  }
 
-  return values[values.length - 1];
-}
+    isAnimating = true;
+    currentIdx = nextIdx;
+    normalizeSceneClasses(scenes, currentIdx);
+    dispatchSceneChange(scenes[currentIdx], currentIdx);
 
-function resolveCameraVars(progress: number, variant: PremiumSectionVariant, isMobile: boolean) {
-  const isHero = variant === "hero";
-
-  if (isHero) {
-    return {
-      sceneScale: interpolate(progress, [0, 0.5, 1], isMobile ? [1, 1, 1.012] : [1, 1, 1.035]),
-      sceneZ: interpolate(progress, [0, 0.5, 1], isMobile ? [0, 0, -72] : [0, 0, -160]),
-      sceneOpacity: interpolate(progress, [0, 0.2, 0.78, 1], isMobile ? [1, 1, 1, 0.92] : [1, 1, 0.96, 0.84]),
-      sceneDim: interpolate(progress, [0, 0.5, 1], isMobile ? [0, 0, 0.08] : [0, 0, 0.18]),
-      sceneHaze: interpolate(progress, [0, 0.5, 1], isMobile ? [0.02, 0.04, 0.14] : [0.04, 0.08, 0.24]),
-      contentScale: interpolate(progress, [0, 0.5, 1], isMobile ? [1, 1, 0.99] : [1, 0.992, 0.975]),
-      mediaScale: interpolate(progress, [0, 0.52, 1], isMobile ? [0.985, 1, 0.995] : [0.955, 1, 0.985]),
-      railScale: interpolate(progress, [0, 0.52, 1], isMobile ? [0.975, 1, 0.99] : [0.935, 1, 0.975]),
-      galleryScale: interpolate(progress, [0, 0.52, 1], isMobile ? [0.98, 1, 0.99] : [0.92, 1, 0.97]),
-      archiveScale: interpolate(progress, [0, 0.5, 1], isMobile ? [0.965, 1, 0.99] : [0.9, 1, 0.97]),
-      cardDepth: interpolate(progress, [0, 0.5, 1], isMobile ? [0.97, 1, 0.99] : [0.92, 1, 0.96]),
-    };
-  }
-
-  return {
-    sceneScale: interpolate(progress, [0, 0.5, 1], isMobile ? [0.94, 1, 1.012] : [0.88, 1, 1.035]),
-    sceneZ: interpolate(progress, [0, 0.5, 1], isMobile ? [-92, 0, -72] : [-240, 0, -160]),
-    sceneOpacity: interpolate(progress, [0, 0.2, 0.78, 1], isMobile ? [0.62, 1, 1, 0.9] : [0.45, 1, 0.96, 0.82]),
-    sceneDim: interpolate(progress, [0, 0.5, 1], isMobile ? [0.12, 0, 0.08] : [0.24, 0, 0.18]),
-    sceneHaze: interpolate(progress, [0, 0.5, 1], isMobile ? [0.18, 0.04, 0.12] : [0.34, 0.04, 0.24]),
-    contentScale: interpolate(progress, [0, 0.5, 1], isMobile ? [0.98, 1, 0.99] : [0.955, 1, 0.975]),
-    mediaScale: interpolate(progress, [0, 0.52, 1], isMobile ? [0.985, 1, 0.995] : [0.94, 1, 0.985]),
-    railScale: interpolate(progress, [0, 0.52, 1], isMobile ? [0.975, 1, 0.99] : [0.935, 1, 0.975]),
-    galleryScale: interpolate(progress, [0, 0.52, 1], isMobile ? [0.98, 1, 0.99] : [0.92, 1, 0.97]),
-    archiveScale: interpolate(progress, [0, 0.5, 1], isMobile ? [0.965, 1, 0.99] : [0.9, 1, 0.97]),
-    cardDepth: interpolate(progress, [0, 0.5, 1], isMobile ? [0.97, 1, 0.99] : [0.92, 1, 0.96]),
+    window.setTimeout(() => {
+      isAnimating = false;
+    }, animationDuration);
   };
-}
 
-function setCameraVars(element: HTMLDivElement, vars: typeof reducedVars) {
-  element.style.setProperty("--camera-scene-scale", vars.sceneScale.toFixed(4));
-  element.style.setProperty("--camera-scene-z", `${vars.sceneZ.toFixed(1)}px`);
-  element.style.setProperty("--camera-scene-opacity", vars.sceneOpacity.toFixed(4));
-  element.style.setProperty("--camera-scene-dim", vars.sceneDim.toFixed(4));
-  element.style.setProperty("--camera-scene-haze", vars.sceneHaze.toFixed(4));
-  element.style.setProperty("--camera-content-scale", vars.contentScale.toFixed(4));
-  element.style.setProperty("--camera-media-scale", vars.mediaScale.toFixed(4));
-  element.style.setProperty("--camera-rail-scale", vars.railScale.toFixed(4));
-  element.style.setProperty("--camera-gallery-scale", vars.galleryScale.toFixed(4));
-  element.style.setProperty("--camera-archive-scale", vars.archiveScale.toFixed(4));
-  element.style.setProperty("--camera-card-depth", vars.cardDepth.toFixed(4));
+  const handleWheel = (event: WheelEvent) => {
+    event.preventDefault();
+
+    if (isAnimating) return;
+
+    if (event.deltaY > 0 && currentIdx < scenes.length - 1) {
+      goTo(currentIdx + 1);
+    } else if (event.deltaY < 0 && currentIdx > 0) {
+      goTo(currentIdx - 1);
+    }
+  };
+
+  const handleKeyDown = (event: KeyboardEvent) => {
+    if (isAnimating) return;
+
+    if (["ArrowDown", "PageDown", " "].includes(event.key)) {
+      event.preventDefault();
+      goTo(currentIdx + 1);
+    } else if (["ArrowUp", "PageUp"].includes(event.key)) {
+      event.preventDefault();
+      goTo(currentIdx - 1);
+    } else if (event.key === "Home") {
+      event.preventDefault();
+      goTo(0);
+    } else if (event.key === "End") {
+      event.preventDefault();
+      goTo(scenes.length - 1);
+    }
+  };
+
+  const handleNavigate = (event: Event) => {
+    const id = (event as CustomEvent<{ id?: string }>).detail?.id;
+
+    if (!id) return;
+
+    const nextIdx = findSceneIndex(scenes, id);
+
+    if (nextIdx >= 0) {
+      goTo(nextIdx);
+    }
+  };
+
+  let touchStartY = 0;
+  const handleTouchStart = (event: TouchEvent) => {
+    touchStartY = event.touches[0]?.clientY ?? 0;
+  };
+  const handleTouchEnd = (event: TouchEvent) => {
+    if (isAnimating) return;
+
+    const touchEndY = event.changedTouches[0]?.clientY ?? touchStartY;
+    const delta = touchStartY - touchEndY;
+
+    if (Math.abs(delta) < 44) return;
+
+    if (delta > 0) {
+      goTo(currentIdx + 1);
+    } else {
+      goTo(currentIdx - 1);
+    }
+  };
+
+  window.addEventListener("wheel", handleWheel, { passive: false });
+  window.addEventListener("keydown", handleKeyDown);
+  window.addEventListener(TUNNEL_SCENE_NAVIGATE_EVENT, handleNavigate);
+  window.addEventListener("touchstart", handleTouchStart, { passive: true });
+  window.addEventListener("touchend", handleTouchEnd, { passive: true });
+
+  return () => {
+    window.removeEventListener("wheel", handleWheel);
+    window.removeEventListener("keydown", handleKeyDown);
+    window.removeEventListener(TUNNEL_SCENE_NAVIGATE_EVENT, handleNavigate);
+    window.removeEventListener("touchstart", handleTouchStart);
+    window.removeEventListener("touchend", handleTouchEnd);
+  };
 }
 
 export function PremiumSectionMotion({
@@ -99,64 +161,18 @@ export function PremiumSectionMotion({
 }: PremiumSectionMotionProps) {
   return (
     <div
-      className={["premium-section-motion", `premium-section-motion-${variant}`, className]
-        .filter(Boolean)
-        .join(" ")}
+      className={["content", className].filter(Boolean).join(" ")}
       data-premium-motion={variant}
-      data-camera-scene={variant}
     >
-      <div className="premium-scene-plane">
-        {children}
-      </div>
+      {children}
     </div>
   );
 }
 
-export function startCameraDepthController() {
-  const mobileQuery = window.matchMedia("(max-width: 767px)");
-  const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-  let frame = 0;
-
-  const update = () => {
-    frame = 0;
-    const scenes = Array.from(document.querySelectorAll<HTMLElement>("[data-camera-scene]"));
-
-    if (reducedMotionQuery.matches) {
-      scenes.forEach((scene) => setCameraVars(scene as HTMLDivElement, reducedVars));
-      return;
-    }
-
-    const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
-    scenes.forEach((scene) => {
-      const rect = scene.getBoundingClientRect();
-      const progress = clamp((viewportHeight - rect.top) / (viewportHeight + rect.height));
-      const variant = scene.dataset.cameraScene as PremiumSectionVariant;
-      setCameraVars(scene as HTMLDivElement, resolveCameraVars(progress, variant, mobileQuery.matches));
-    });
-  };
-
-  const requestUpdate = () => {
-    if (frame) return;
-    frame = window.requestAnimationFrame(update);
-  };
-
-  requestUpdate();
-  window.addEventListener("scroll", requestUpdate, { passive: true });
-  window.addEventListener("resize", requestUpdate);
-  mobileQuery.addEventListener("change", requestUpdate);
-  reducedMotionQuery.addEventListener("change", requestUpdate);
-
-  return () => {
-    if (frame) window.cancelAnimationFrame(frame);
-    window.removeEventListener("scroll", requestUpdate);
-    window.removeEventListener("resize", requestUpdate);
-    mobileQuery.removeEventListener("change", requestUpdate);
-    reducedMotionQuery.removeEventListener("change", requestUpdate);
-  };
-}
-
-export function CameraDepthController() {
-  useEffect(() => startCameraDepthController(), []);
+export function TunnelScrollController() {
+  useEffect(() => startTunnelScrollNavigation(), []);
 
   return null;
 }
+
+export { TUNNEL_SCENE_CHANGE_EVENT };

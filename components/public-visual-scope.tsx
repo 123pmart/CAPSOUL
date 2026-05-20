@@ -4,7 +4,7 @@ import { useEffect, type ReactNode } from "react";
 import { usePathname } from "next/navigation";
 
 import { AtmosphereBackdrop } from "@/components/AtmosphereBackdrop";
-import { startCameraDepthController } from "@/components/motion/PremiumSectionMotion";
+import { startTunnelScrollNavigation } from "@/components/motion/PremiumSectionMotion";
 import { useSiteTheme } from "@/components/site-theme-provider";
 
 export function PublicVisualScope({ children }: { children: ReactNode }) {
@@ -15,7 +15,7 @@ export function PublicVisualScope({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (isAdminRoute) return;
 
-    return startCameraDepthController();
+    return startTunnelScrollNavigation();
   }, [isAdminRoute]);
 
   if (isAdminRoute) {

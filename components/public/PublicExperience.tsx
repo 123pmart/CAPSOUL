@@ -32,7 +32,11 @@ import {
   type ImmersiveSectionId,
 } from "@/components/immersive-scroll-context";
 import { contentSwapTransition, measuredEase } from "@/components/motion-config";
-import { PremiumSectionMotion } from "@/components/motion/PremiumSectionMotion";
+import {
+  PremiumSectionMotion,
+  TUNNEL_SCENE_CHANGE_EVENT,
+  navigateTunnelToScene,
+} from "@/components/motion/PremiumSectionMotion";
 import { useMagneticMotion } from "@/components/use-magnetic-motion";
 import type {
   GlobalSiteContent,
@@ -401,37 +405,17 @@ function usePublicAtmosphereSection() {
   const [activeSection, setActiveSection] = useState<PublicSectionKey>("hero");
 
   useEffect(() => {
-    const elements = Array.from(
-      document.querySelectorAll<HTMLElement>("[data-atmosphere-section]"),
-    );
+    const handleSceneChange = (event: Event) => {
+      const nextSection = (event as CustomEvent<{ atmosphereSection?: string }>).detail?.atmosphereSection;
 
-    if (!elements.length) {
-      return;
-    }
+      if (isPublicSectionKey(nextSection)) {
+        setActiveSection(nextSection);
+      }
+    };
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-        const nextSection = visible?.target instanceof HTMLElement
-          ? visible.target.dataset.atmosphereSection
-          : undefined;
+    window.addEventListener(TUNNEL_SCENE_CHANGE_EVENT, handleSceneChange);
 
-        if (isPublicSectionKey(nextSection)) {
-          setActiveSection(nextSection);
-        }
-      },
-      {
-        root: null,
-        rootMargin: "-30% 0px -46% 0px",
-        threshold: [0.12, 0.28, 0.52],
-      },
-    );
-
-    elements.forEach((element) => observer.observe(element));
-
-    return () => observer.disconnect();
+    return () => window.removeEventListener(TUNNEL_SCENE_CHANGE_EVENT, handleSceneChange);
   }, []);
 
   useEffect(() => {
@@ -475,6 +459,11 @@ function getHeaderOffset() {
 }
 
 function scrollToPublicSection(id: ImmersiveSectionId, behavior?: ScrollBehavior) {
+  if (document.querySelector(".scroll-container")) {
+    navigateTunnelToScene(id);
+    return;
+  }
+
   const target = document.getElementById(id);
 
   if (!target) {
@@ -496,37 +485,18 @@ function usePublicActiveSection(
   const [activeId, setActiveId] = useState<ImmersiveSectionId>(sections[0]?.id ?? "home");
 
   useEffect(() => {
-    const elements = sections
-      .map((section) => document.getElementById(section.id))
-      .filter((element): element is HTMLElement => Boolean(element));
+    const handleSceneChange = (event: Event) => {
+      const id = (event as CustomEvent<{ id?: string }>).detail?.id;
 
-    if (!elements.length) {
-      return;
-    }
+      if (id && isImmersiveSectionId(id)) {
+        setActiveId(id);
+      }
+    };
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+    window.addEventListener(TUNNEL_SCENE_CHANGE_EVENT, handleSceneChange);
 
-        if (!visible?.target.id || !isImmersiveSectionId(visible.target.id)) {
-          return;
-        }
-
-        setActiveId(visible.target.id);
-      },
-      {
-        root: null,
-        rootMargin: "-34% 0px -46% 0px",
-        threshold: [0.12, 0.32, 0.58],
-      },
-    );
-
-    elements.forEach((element) => observer.observe(element));
-
-    return () => observer.disconnect();
-  }, [sections]);
+    return () => window.removeEventListener(TUNNEL_SCENE_CHANGE_EVENT, handleSceneChange);
+  }, []);
 
   useEffect(() => {
     const index = sections.findIndex((section) => section.id === activeId);
@@ -598,13 +568,13 @@ function ArchiveSection({
 }) {
   const motion =
     id === "the-experience"
-      ? { variant: "experience" as const, className: "premium-section-motion-experience-section" }
+      ? { variant: "experience" as const }
       : id === "how-it-works"
-        ? { variant: "process" as const, className: "premium-section-motion-process-section" }
+        ? { variant: "process" as const }
         : id === "what-we-preserve"
-          ? { variant: "preserve" as const, className: "premium-section-motion-preserve-section" }
+          ? { variant: "preserve" as const }
           : id === "inquire"
-            ? { variant: "inquire" as const, className: "premium-section-motion-inquire-section" }
+            ? { variant: "inquire" as const }
             : null;
   const sectionContent = (
     <>
@@ -629,12 +599,12 @@ function ArchiveSection({
       data-archive-section
       data-atmosphere-section={getAtmosphereSectionForId(id)}
       data-motion-section
-      className={`apple-section motion-section ${className}`.trim()}
+      className={`scene apple-section motion-section ${className}`.trim()}
     >
       {motion ? (
         <PremiumSectionMotion
           variant={motion.variant}
-          className={`apple-section-inner motion-section-flow ${motion.className}`}
+          className="apple-section-inner motion-section-flow"
         >
           {sectionContent}
         </PremiumSectionMotion>
@@ -742,7 +712,7 @@ function ArchiveHero({
       data-archive-section
       data-atmosphere-section="hero"
       data-motion-section
-      className="apple-hero motion-section"
+      className="scene active apple-hero motion-section"
     >
       <PremiumSectionMotion variant="hero" className="apple-hero-inner motion-section-flow">
         <div className="apple-section-kicker motion-eyebrow">
@@ -864,7 +834,8 @@ function EmotionalValue({
 
   return (
     <section
-      className="apple-value-band motion-section"
+      id="archive"
+      className="scene apple-value-band motion-section"
       data-atmosphere-section="archive"
       data-active-index={activeIndex}
       data-motion-section
@@ -1601,48 +1572,50 @@ export function PublicExperience({
         ))}
       </nav>
 
-      <ArchiveHero home={home} stepLabelPrefix={archiveStepLabelPrefix} />
-      <EmotionalValue stepLabelPrefix={archiveStepLabelPrefix} />
+      <div className="scroll-container">
+        <ArchiveHero home={home} stepLabelPrefix={archiveStepLabelPrefix} />
+        <EmotionalValue stepLabelPrefix={archiveStepLabelPrefix} />
 
-      <ArchiveSection
-        id="the-experience"
-        eyebrow={experience.eyebrow}
-        title={experience.title}
-        description={experience.description}
-        className="apple-section-contrast"
-      >
-        <ArchiveSceneModule scene={experience} sectionLabel={experience.stageLabel} />
-      </ArchiveSection>
+        <ArchiveSection
+          id="the-experience"
+          eyebrow={experience.eyebrow}
+          title={experience.title}
+          description={experience.description}
+          className="apple-section-contrast"
+        >
+          <ArchiveSceneModule scene={experience} sectionLabel={experience.stageLabel} />
+        </ArchiveSection>
 
-      <ArchiveSection
-        id="how-it-works"
-        eyebrow={process.eyebrow}
-        title={process.title}
-        description={process.description}
-      >
-        <ProcessTimeline process={process} swipeHint={processSwipeHint} />
-      </ArchiveSection>
+        <ArchiveSection
+          id="how-it-works"
+          eyebrow={process.eyebrow}
+          title={process.title}
+          description={process.description}
+        >
+          <ProcessTimeline process={process} swipeHint={processSwipeHint} />
+        </ArchiveSection>
 
-      <ArchiveSection
-        id="what-we-preserve"
-        eyebrow={preserve.eyebrow}
-        title={preserve.title}
-        description={preserve.description}
-        className="apple-section-editorial"
-      >
-        <PreserveEditorial preserve={preserve} />
-      </ArchiveSection>
+        <ArchiveSection
+          id="what-we-preserve"
+          eyebrow={preserve.eyebrow}
+          title={preserve.title}
+          description={preserve.description}
+          className="apple-section-editorial"
+        >
+          <PreserveEditorial preserve={preserve} />
+        </ArchiveSection>
 
-      <ArchiveSection
-        id="inquire"
-        eyebrow={inquiry.eyebrow}
-        title={inquiry.title}
-        description={inquiry.description}
-        className="apple-section-inquiry"
-      >
-        <InquiryArchiveForm inquiry={inquiry} />
-        <PublicAdminAccess label={globalContent.adminEntryLabel} />
-      </ArchiveSection>
+        <ArchiveSection
+          id="inquire"
+          eyebrow={inquiry.eyebrow}
+          title={inquiry.title}
+          description={inquiry.description}
+          className="apple-section-inquiry"
+        >
+          <InquiryArchiveForm inquiry={inquiry} />
+          <PublicAdminAccess label={globalContent.adminEntryLabel} />
+        </ArchiveSection>
+      </div>
     </div>
   );
 }
