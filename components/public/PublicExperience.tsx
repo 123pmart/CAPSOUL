@@ -32,11 +32,7 @@ import {
   type ImmersiveSectionId,
 } from "@/components/immersive-scroll-context";
 import { contentSwapTransition, measuredEase } from "@/components/motion-config";
-import {
-  PremiumSectionMotion,
-  TUNNEL_SCENE_CHANGE_EVENT,
-  navigateTunnelToScene,
-} from "@/components/motion/PremiumSectionMotion";
+import { PremiumSectionMotion } from "@/components/motion/PremiumSectionMotion";
 import { useMagneticMotion } from "@/components/use-magnetic-motion";
 import type {
   GlobalSiteContent,
@@ -213,6 +209,10 @@ const primaryButtonMotion = {
   whileTap: { scale: 0.985 },
   transition: { duration: 0.2, ease: measuredEase },
 } as const;
+
+function revealDelay(index: number, step = 90): CSSProperties {
+  return { "--reveal-delay": `${Math.min(index * step, 360)}ms` } as CSSProperties;
+}
 
 function MagneticPrimaryAnchor({
   children,
@@ -405,17 +405,37 @@ function usePublicAtmosphereSection() {
   const [activeSection, setActiveSection] = useState<PublicSectionKey>("hero");
 
   useEffect(() => {
-    const handleSceneChange = (event: Event) => {
-      const nextSection = (event as CustomEvent<{ atmosphereSection?: string }>).detail?.atmosphereSection;
+    const elements = Array.from(
+      document.querySelectorAll<HTMLElement>("[data-atmosphere-section]"),
+    );
 
-      if (isPublicSectionKey(nextSection)) {
-        setActiveSection(nextSection);
-      }
-    };
+    if (!elements.length) {
+      return;
+    }
 
-    window.addEventListener(TUNNEL_SCENE_CHANGE_EVENT, handleSceneChange);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        const nextSection = visible?.target instanceof HTMLElement
+          ? visible.target.dataset.atmosphereSection
+          : undefined;
 
-    return () => window.removeEventListener(TUNNEL_SCENE_CHANGE_EVENT, handleSceneChange);
+        if (isPublicSectionKey(nextSection)) {
+          setActiveSection(nextSection);
+        }
+      },
+      {
+        root: null,
+        rootMargin: "-30% 0px -46% 0px",
+        threshold: [0.12, 0.28, 0.52],
+      },
+    );
+
+    elements.forEach((element) => observer.observe(element));
+
+    return () => observer.disconnect();
   }, []);
 
   useEffect(() => {
@@ -459,11 +479,6 @@ function getHeaderOffset() {
 }
 
 function scrollToPublicSection(id: ImmersiveSectionId, behavior?: ScrollBehavior) {
-  if (document.querySelector(".scroll-container")) {
-    navigateTunnelToScene(id);
-    return;
-  }
-
   const target = document.getElementById(id);
 
   if (!target) {
@@ -485,18 +500,37 @@ function usePublicActiveSection(
   const [activeId, setActiveId] = useState<ImmersiveSectionId>(sections[0]?.id ?? "home");
 
   useEffect(() => {
-    const handleSceneChange = (event: Event) => {
-      const id = (event as CustomEvent<{ id?: string }>).detail?.id;
+    const elements = sections
+      .map((section) => document.getElementById(section.id))
+      .filter((element): element is HTMLElement => Boolean(element));
 
-      if (id && isImmersiveSectionId(id)) {
-        setActiveId(id);
-      }
-    };
+    if (!elements.length) {
+      return;
+    }
 
-    window.addEventListener(TUNNEL_SCENE_CHANGE_EVENT, handleSceneChange);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
 
-    return () => window.removeEventListener(TUNNEL_SCENE_CHANGE_EVENT, handleSceneChange);
-  }, []);
+        if (!visible?.target.id || !isImmersiveSectionId(visible.target.id)) {
+          return;
+        }
+
+        setActiveId(visible.target.id);
+      },
+      {
+        root: null,
+        rootMargin: "-34% 0px -46% 0px",
+        threshold: [0.12, 0.32, 0.58],
+      },
+    );
+
+    elements.forEach((element) => observer.observe(element));
+
+    return () => observer.disconnect();
+  }, [sections]);
 
   useEffect(() => {
     const index = sections.findIndex((section) => section.id === activeId);
@@ -568,24 +602,23 @@ function ArchiveSection({
 }) {
   const motion =
     id === "the-experience"
-      ? { variant: "experience" as const }
+      ? { variant: "experience" as const, className: "premium-section-motion-experience-section" }
       : id === "how-it-works"
-        ? { variant: "process" as const }
+        ? { variant: "process" as const, className: "premium-section-motion-process-section" }
         : id === "what-we-preserve"
-          ? { variant: "preserve" as const }
+          ? { variant: "preserve" as const, className: "premium-section-motion-preserve-section" }
           : id === "inquire"
-            ? { variant: "inquire" as const }
+            ? { variant: "inquire" as const, className: "premium-section-motion-inquire-section" }
             : null;
-  const scrollMode = id === "how-it-works" ? "locked" : "internal";
   const sectionContent = (
     <>
-      <div className="apple-section-kicker motion-eyebrow">
+      <div className="apple-section-kicker motion-eyebrow" data-reveal>
         {eyebrow}
       </div>
-      <h2 className="apple-section-title motion-title">
+      <h2 className="apple-section-title motion-title" data-reveal style={revealDelay(1)}>
         {title}
       </h2>
-      <p className="apple-section-copy motion-copy">
+      <p className="apple-section-copy motion-copy" data-reveal style={revealDelay(2)}>
         {description}
       </p>
       <div className="apple-section-body motion-card">
@@ -600,13 +633,13 @@ function ArchiveSection({
       data-archive-section
       data-atmosphere-section={getAtmosphereSectionForId(id)}
       data-motion-section
-      data-scroll-mode={scrollMode}
-      className={`scene section-layer apple-section motion-section ${className}`.trim()}
+      className={`apple-section motion-section ${className}`.trim()}
+      data-reveal
     >
       {motion ? (
         <PremiumSectionMotion
           variant={motion.variant}
-          className="apple-section-inner motion-section-flow"
+          className={`apple-section-inner motion-section-flow ${motion.className}`}
         >
           {sectionContent}
         </PremiumSectionMotion>
@@ -689,7 +722,7 @@ function ArchiveVisualFrame({
 
 function HeroHeadline({ title }: { title: string }) {
   return (
-    <h1 className="apple-hero-title motion-title">
+    <h1 className="apple-hero-title motion-title" data-reveal style={revealDelay(1)}>
       {title}
     </h1>
   );
@@ -714,18 +747,18 @@ function ArchiveHero({
       data-archive-section
       data-atmosphere-section="hero"
       data-motion-section
-      data-scroll-mode="internal"
-      className="scene section-layer active apple-hero motion-section"
+      className="apple-hero motion-section"
+      data-reveal
     >
       <PremiumSectionMotion variant="hero" className="apple-hero-inner motion-section-flow">
-        <div className="apple-section-kicker motion-eyebrow">
+        <div className="apple-section-kicker motion-eyebrow" data-reveal>
           {home.eyebrow}
         </div>
         <HeroHeadline title={home.title} />
-        <p className="apple-hero-copy motion-copy">
+        <p className="apple-hero-copy motion-copy" data-reveal style={revealDelay(2)}>
           {home.description}
         </p>
-        <div className="apple-hero-actions motion-card">
+        <div className="apple-hero-actions motion-card" data-reveal style={revealDelay(3)}>
           {home.primaryAction ? (
             <MagneticPrimaryAnchor
               href={home.primaryAction.href}
@@ -741,7 +774,7 @@ function ArchiveHero({
           ) : null}
         </div>
         <div className="apple-hero-stage motion-media">
-          <div className="apple-hero-record">
+          <div className="apple-hero-record" data-reveal style={revealDelay(4)}>
             <ArchiveVisualFrame
               image={heroStep.image}
               fallbackImage={heroStep.fallbackImage}
@@ -760,6 +793,8 @@ function ArchiveHero({
               <div
                 className="apple-hero-chapter apple-liquid-surface"
                 key={`hero-chapter-${index}`}
+                data-reveal
+                style={revealDelay(index + 5)}
               >
                 <span className="apple-liquid-layer" aria-hidden="true" />
                 <span>{processStepPrefix} {index + 1}</span>
@@ -793,10 +828,12 @@ function ArchiveValueCard({
     <article
       className="apple-value-card apple-liquid-surface"
       key={`archive-value-card-${index}`}
+      data-reveal
       data-active={isActive ? "true" : "false"}
       tabIndex={0}
       style={{
         "--motion-stagger-index": index,
+        "--reveal-delay": `${Math.min(index * 90, 360)}ms`,
       } as CSSProperties}
       onPointerEnter={(event: PointerEvent<HTMLElement>) => {
         if (isFineHoverPointer(event)) {
@@ -837,18 +874,17 @@ function EmotionalValue({
 
   return (
     <section
-      id="archive"
-      className="scene section-layer apple-value-band motion-section"
+      className="apple-value-band motion-section"
       data-atmosphere-section="archive"
       data-active-index={activeIndex}
       data-motion-section
-      data-scroll-mode="internal"
+      data-reveal
       style={{
         "--active-archive-index": activeIndex,
       } as CSSProperties}
     >
       <PremiumSectionMotion variant="archive" className="apple-value-choreography">
-        <div className="apple-value-archive-shell motion-media">
+        <div className="apple-value-archive-shell motion-media" data-reveal>
           <div className="apple-archive-sheets" aria-hidden="true" data-active-index={activeIndex}>
             <span className="apple-archive-sheet apple-archive-sheet-one" />
             <span className="apple-archive-sheet apple-archive-sheet-two" />
@@ -856,7 +892,7 @@ function EmotionalValue({
           </div>
           <div className="apple-value-statement">
             <span>{archive.eyebrow}</span>
-            <h2>{archive.headline}</h2>
+            <h2 data-reveal style={revealDelay(1)}>{archive.headline}</h2>
             <div className="apple-archive-record-line" aria-hidden="true">
               <span style={{ "--archive-progress-scale": (activeIndex + 1) / pillars.length } as CSSProperties} />
             </div>
@@ -969,7 +1005,7 @@ function ArchiveSceneModule({
 
   return (
     <div className="apple-scene-module motion-stagger">
-      <div className="apple-record-feature motion-media">
+      <div className="apple-record-feature motion-media" data-reveal style={revealDelay(1)}>
         <div className="experience-content-container">
           <AnimatePresence initial={false} custom={direction} mode="wait">
             <motion.div
@@ -1028,26 +1064,18 @@ function ArchiveSceneModule({
 function ProcessStepCard({
   step,
   index,
-  isActive,
-  distance,
-  direction,
 }: {
   step: PublicSceneStep;
   index: number;
-  isActive: boolean;
-  distance: number;
-  direction: number;
 }) {
   return (
     <article
       className="apple-process-card apple-liquid-surface how-it-works-card"
       key={`process-step-${index}`}
-      data-process-active={isActive ? "true" : "false"}
+      data-reveal
       style={{
         "--motion-stagger-index": index,
-        "--process-card-distance": distance,
-        "--process-card-direction": direction,
-        "--process-card-offset": `${direction * Math.min(distance * 4, 8)}px`,
+        "--reveal-delay": `${Math.min(index * 90, 360)}ms`,
       } as CSSProperties}
     >
       <span className="apple-liquid-layer" aria-hidden="true" />
@@ -1152,9 +1180,6 @@ function ProcessTimeline({
             key={`process-step-${index}`}
             step={step}
             index={index}
-            isActive={index === activeIndex}
-            distance={Math.abs(index - activeIndex)}
-            direction={index === activeIndex ? 0 : index > activeIndex ? 1 : -1}
           />
         ))}
       </div>
@@ -1182,6 +1207,7 @@ function PreserveEditorial({ preserve }: { preserve: ResolvedSceneContent }) {
       {featured ? (
         <article
           className="apple-preserve-feature apple-liquid-surface motion-media"
+          data-reveal
         >
           <span className="apple-liquid-layer" aria-hidden="true" />
           <span>{featured.mediaLabel}</span>
@@ -1201,8 +1227,10 @@ function PreserveEditorial({ preserve }: { preserve: ResolvedSceneContent }) {
           <article
             className="apple-preserve-card apple-liquid-surface"
             key={`preserve-card-${index}`}
+            data-reveal
             style={{
               "--motion-stagger-index": index + 1,
+              "--reveal-delay": `${Math.min((index + 1) * 90, 360)}ms`,
             } as CSSProperties}
           >
             <span className="apple-liquid-layer" aria-hidden="true" />
@@ -1388,6 +1416,7 @@ function InquiryArchiveForm({
       <form
         className="apple-inquiry-form"
         onSubmit={handleSubmit}
+        data-reveal
       >
         <div
           className="apple-inquiry-tabs"
@@ -1458,6 +1487,8 @@ function InquiryArchiveForm({
 
       <aside
         className="apple-inquiry-support motion-media"
+        data-reveal
+        style={revealDelay(1)}
       >
         <AnimatePresence initial={false} mode="wait">
           {activeSupport ? (
@@ -1576,50 +1607,48 @@ export function PublicExperience({
         ))}
       </nav>
 
-      <div className="scroll-container tunnel-wrapper">
-        <ArchiveHero home={home} stepLabelPrefix={archiveStepLabelPrefix} />
-        <EmotionalValue stepLabelPrefix={archiveStepLabelPrefix} />
+      <ArchiveHero home={home} stepLabelPrefix={archiveStepLabelPrefix} />
+      <EmotionalValue stepLabelPrefix={archiveStepLabelPrefix} />
 
-        <ArchiveSection
-          id="the-experience"
-          eyebrow={experience.eyebrow}
-          title={experience.title}
-          description={experience.description}
-          className="apple-section-contrast"
-        >
-          <ArchiveSceneModule scene={experience} sectionLabel={experience.stageLabel} />
-        </ArchiveSection>
+      <ArchiveSection
+        id="the-experience"
+        eyebrow={experience.eyebrow}
+        title={experience.title}
+        description={experience.description}
+        className="apple-section-contrast"
+      >
+        <ArchiveSceneModule scene={experience} sectionLabel={experience.stageLabel} />
+      </ArchiveSection>
 
-        <ArchiveSection
-          id="how-it-works"
-          eyebrow={process.eyebrow}
-          title={process.title}
-          description={process.description}
-        >
-          <ProcessTimeline process={process} swipeHint={processSwipeHint} />
-        </ArchiveSection>
+      <ArchiveSection
+        id="how-it-works"
+        eyebrow={process.eyebrow}
+        title={process.title}
+        description={process.description}
+      >
+        <ProcessTimeline process={process} swipeHint={processSwipeHint} />
+      </ArchiveSection>
 
-        <ArchiveSection
-          id="what-we-preserve"
-          eyebrow={preserve.eyebrow}
-          title={preserve.title}
-          description={preserve.description}
-          className="apple-section-editorial"
-        >
-          <PreserveEditorial preserve={preserve} />
-        </ArchiveSection>
+      <ArchiveSection
+        id="what-we-preserve"
+        eyebrow={preserve.eyebrow}
+        title={preserve.title}
+        description={preserve.description}
+        className="apple-section-editorial"
+      >
+        <PreserveEditorial preserve={preserve} />
+      </ArchiveSection>
 
-        <ArchiveSection
-          id="inquire"
-          eyebrow={inquiry.eyebrow}
-          title={inquiry.title}
-          description={inquiry.description}
-          className="apple-section-inquiry"
-        >
-          <InquiryArchiveForm inquiry={inquiry} />
-          <PublicAdminAccess label={globalContent.adminEntryLabel} />
-        </ArchiveSection>
-      </div>
+      <ArchiveSection
+        id="inquire"
+        eyebrow={inquiry.eyebrow}
+        title={inquiry.title}
+        description={inquiry.description}
+        className="apple-section-inquiry"
+      >
+        <InquiryArchiveForm inquiry={inquiry} />
+        <PublicAdminAccess label={globalContent.adminEntryLabel} />
+      </ArchiveSection>
     </div>
   );
 }

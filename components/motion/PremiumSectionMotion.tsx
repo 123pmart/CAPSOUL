@@ -1,6 +1,19 @@
 "use client";
 
-import { useEffect, type ReactNode } from "react";
+import {
+  motion,
+  useReducedMotion,
+  useScroll,
+  useTransform,
+  type MotionValue,
+} from "framer-motion";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type ReactNode,
+} from "react";
 
 type PremiumSectionVariant = "hero" | "archive" | "experience" | "process" | "preserve" | "inquire";
 
@@ -10,293 +23,193 @@ type PremiumSectionMotionProps = {
   variant: PremiumSectionVariant;
 };
 
-const TUNNEL_SCENE_CHANGE_EVENT = "capsoul:tunnel-scene-change";
-const TUNNEL_SCENE_NAVIGATE_EVENT = "capsoul:tunnel-scene-navigate";
-const sectionSpacing = 1500;
-const lerpAmount = 0.05;
-const wheelMultiplier = 0.5;
-const touchMultiplier = 2.25;
-const keyboardStep = 460;
-const opacityRange = 900;
-const interactiveSelector =
-  'input, textarea, select, [contenteditable="true"]';
+type MotionVars = CSSProperties &
+  Record<string, string | number | MotionValue<string> | MotionValue<number>>;
 
-function getScenes() {
-  return Array.from(
-    document.querySelectorAll<HTMLElement>(
-      ".tunnel-wrapper > .section-layer, .scroll-container > .scene",
-    ),
-  );
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const query = window.matchMedia("(max-width: 767px)");
+    const update = () => setIsMobile(query.matches);
+
+    update();
+    query.addEventListener("change", update);
+
+    return () => query.removeEventListener("change", update);
+  }, []);
+
+  return isMobile;
 }
 
-function clamp(value: number, min: number, max: number) {
-  return Math.max(min, Math.min(value, max));
+function useCardVars(progress: MotionValue<number>, index: number, isMobile: boolean) {
+  const start = isMobile ? 0.08 + index * 0.07 : 0.08 + index * 0.092;
+  const end = isMobile ? start + 0.26 : start + 0.32;
+  const y = useTransform(progress, [start, end], isMobile ? ["30px", "0px"] : ["86px", "0px"]);
+  const opacity = useTransform(progress, [start, end], [isMobile ? 0.68 : 0.48, 1]);
+  const scale = useTransform(progress, [start, end], isMobile ? [0.982, 1] : [0.885, 1]);
+
+  return { y, opacity, scale };
 }
 
-function normalizeSceneClasses(scenes: HTMLElement[], currentIdx: number, currentProgress: number) {
-  scenes.forEach((scene, index) => {
-    const zPosition = index * sectionSpacing - currentProgress;
-    const visible = Math.abs(zPosition) < sectionSpacing * 1.55;
-    scene.classList.toggle("active", index === currentIdx);
-    scene.classList.toggle("exit", index < currentIdx);
-    scene.dataset.sceneState = index === currentIdx ? "active" : index < currentIdx ? "exit" : "background";
-    scene.setAttribute("aria-hidden", index === currentIdx ? "false" : "true");
-    scene.setAttribute("tabIndex", "-1");
-    scene.style.pointerEvents = index === currentIdx ? "auto" : "none";
-    scene.style.visibility = visible ? "visible" : "hidden";
-
-    const inertScene = scene as HTMLElement & { inert?: boolean };
-    inertScene.inert = index !== currentIdx;
-  });
-}
-
-function dispatchSceneChange(scene: HTMLElement, index: number) {
-  window.dispatchEvent(
-    new CustomEvent(TUNNEL_SCENE_CHANGE_EVENT, {
-      detail: {
-        id: scene.id,
-        index,
-        atmosphereSection: scene.dataset.atmosphereSection,
-      },
-    }),
-  );
-}
-
-function findSceneIndex(scenes: HTMLElement[], id: string) {
-  return scenes.findIndex((scene) => scene.id === id);
-}
-
-function shouldIgnoreKeyboardTarget(target: EventTarget | null) {
-  if (!(target instanceof Element)) {
-    return false;
-  }
-
-  return Boolean(target.closest('input, textarea, select, [contenteditable="true"]'));
-}
-
-export function navigateTunnelToScene(id: string) {
-  window.dispatchEvent(
-    new CustomEvent(TUNNEL_SCENE_NAVIGATE_EVENT, {
-      detail: { id },
-    }),
-  );
-}
-
-class TunnelScroll {
-  private container: HTMLElement;
-  private sections: HTMLElement[];
-  private currentProgress: number;
-  private targetProgress: number;
-  private maxProgress: number;
-  private activeIndex: number;
-  private rafId = 0;
-  private touchLastY = 0;
-  private reducedMotionQuery: MediaQueryList;
-
-  constructor(container: HTMLElement, sections: HTMLElement[]) {
-    this.container = container;
-    this.sections = sections;
-    const initialIndex = Math.max(0, sections.findIndex((section) => section.classList.contains("active")));
-    this.currentProgress = initialIndex * sectionSpacing;
-    this.targetProgress = this.currentProgress;
-    this.maxProgress = Math.max(0, (sections.length - 1) * sectionSpacing);
-    this.activeIndex = initialIndex;
-    this.reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-  }
-
-  start() {
-    this.container.dataset.tunnelEngine = "lerp";
-    document.documentElement.dataset.tunnelReducedMotion = this.reducedMotionQuery.matches ? "true" : "false";
-    this.applySceneTransforms(true);
-    this.syncActiveScene(true);
-
-    window.addEventListener("wheel", this.handleWheel, { passive: false });
-    window.addEventListener("keydown", this.handleKeyDown);
-    window.addEventListener("touchstart", this.handleTouchStart, { passive: true });
-    window.addEventListener("touchmove", this.handleTouchMove, { passive: false });
-    window.addEventListener(TUNNEL_SCENE_NAVIGATE_EVENT, this.handleNavigate);
-    window.addEventListener("resize", this.handleResize);
-    this.reducedMotionQuery.addEventListener("change", this.handleReducedMotionChange);
-
-    this.rafId = window.requestAnimationFrame(this.animate);
-  }
-
-  destroy() {
-    window.cancelAnimationFrame(this.rafId);
-    window.removeEventListener("wheel", this.handleWheel);
-    window.removeEventListener("keydown", this.handleKeyDown);
-    window.removeEventListener("touchstart", this.handleTouchStart);
-    window.removeEventListener("touchmove", this.handleTouchMove);
-    window.removeEventListener(TUNNEL_SCENE_NAVIGATE_EVENT, this.handleNavigate);
-    window.removeEventListener("resize", this.handleResize);
-    this.reducedMotionQuery.removeEventListener("change", this.handleReducedMotionChange);
-  }
-
-  private addProgress(delta: number) {
-    this.targetProgress = clamp(this.targetProgress + delta, 0, this.maxProgress);
-  }
-
-  private goToIndex(index: number) {
-    this.targetProgress = clamp(index * sectionSpacing, 0, this.maxProgress);
-  }
-
-  private applySceneTransforms(force = false) {
-    const reducedMotion = this.reducedMotionQuery.matches;
-
-    this.sections.forEach((section, index) => {
-      const zPosition = index * sectionSpacing - this.currentProgress;
-      const opacity = reducedMotion ? (index === this.activeIndex ? 1 : 0) : clamp(1 - Math.abs(zPosition / opacityRange), 0, 1);
-      const shouldHide = !reducedMotion && Math.abs(zPosition) > sectionSpacing * 1.55;
-
-      if (force || section.style.transform !== `translate3d(0px, 0px, ${zPosition}px)`) {
-        section.style.transform = reducedMotion ? "translate3d(0, 0, 0)" : `translate3d(0, 0, ${zPosition.toFixed(2)}px)`;
-      }
-
-      section.style.opacity = opacity.toFixed(3);
-      section.style.visibility = shouldHide ? "hidden" : "visible";
-    });
-  }
-
-  private syncActiveScene(force = false) {
-    const nextIndex = clamp(Math.round(this.currentProgress / sectionSpacing), 0, this.sections.length - 1);
-
-    if (!force && nextIndex === this.activeIndex) {
-      return;
-    }
-
-    this.activeIndex = nextIndex;
-    normalizeSceneClasses(this.sections, this.activeIndex, this.currentProgress);
-    dispatchSceneChange(this.sections[this.activeIndex], this.activeIndex);
-  }
-
-  private animate = () => {
-    this.currentProgress += (this.targetProgress - this.currentProgress) * lerpAmount;
-
-    if (Math.abs(this.targetProgress - this.currentProgress) < 0.05) {
-      this.currentProgress = this.targetProgress;
-    }
-
-    this.container.style.setProperty("--tunnel-progress", this.currentProgress.toFixed(2));
-    this.applySceneTransforms();
-    this.syncActiveScene();
-    this.rafId = window.requestAnimationFrame(this.animate);
-  };
-
-  private handleWheel = (event: WheelEvent) => {
-    event.preventDefault();
-    this.addProgress(event.deltaY * wheelMultiplier);
-  };
-
-  private handleKeyDown = (event: KeyboardEvent) => {
-    if (shouldIgnoreKeyboardTarget(event.target)) return;
-
-    if (["ArrowDown", "PageDown", " "].includes(event.key)) {
-      event.preventDefault();
-      this.addProgress(event.key === "ArrowDown" ? keyboardStep : sectionSpacing);
-      return;
-    }
-
-    if (["ArrowUp", "PageUp"].includes(event.key)) {
-      event.preventDefault();
-      this.addProgress(event.key === "ArrowUp" ? -keyboardStep : -sectionSpacing);
-      return;
-    }
-
-    if (event.key === "Home") {
-      event.preventDefault();
-      this.goToIndex(0);
-    } else if (event.key === "End") {
-      event.preventDefault();
-      this.goToIndex(this.sections.length - 1);
-    }
-  };
-
-  private handleTouchStart = (event: TouchEvent) => {
-    this.touchLastY = event.touches[0]?.clientY ?? 0;
-  };
-
-  private handleTouchMove = (event: TouchEvent) => {
-    const nextY = event.touches[0]?.clientY ?? this.touchLastY;
-    const delta = this.touchLastY - nextY;
-    this.touchLastY = nextY;
-    event.preventDefault();
-    this.addProgress(delta * touchMultiplier);
-  };
-
-  private handleNavigate = (event: Event) => {
-    const id = (event as CustomEvent<{ id?: string }>).detail?.id;
-
-    if (!id) return;
-
-    const nextIdx = findSceneIndex(this.sections, id);
-
-    if (nextIdx >= 0) {
-      this.goToIndex(nextIdx);
-    }
-  };
-
-  private handleResize = () => {
-    this.maxProgress = Math.max(0, (this.sections.length - 1) * sectionSpacing);
-    this.targetProgress = clamp(this.targetProgress, 0, this.maxProgress);
-    this.currentProgress = clamp(this.currentProgress, 0, this.maxProgress);
-    this.applySceneTransforms(true);
-  };
-
-  private handleReducedMotionChange = () => {
-    document.documentElement.dataset.tunnelReducedMotion = this.reducedMotionQuery.matches ? "true" : "false";
-    this.applySceneTransforms(true);
-  };
-}
-
-export function startTunnelScrollNavigation() {
-  const container = document.querySelector<HTMLElement>(".tunnel-wrapper, .scroll-container");
-  const scenes = getScenes();
-
-  if (!container || !scenes.length) {
-    let cleanup: (() => void) | undefined;
-    let cancelled = false;
-    const frame = window.requestAnimationFrame(() => {
-      if (cancelled) return;
-      cleanup = startTunnelScrollNavigation();
-    });
-
-    return () => {
-      cancelled = true;
-      window.cancelAnimationFrame(frame);
-      cleanup?.();
-    };
-  }
-
-  const tunnel = new TunnelScroll(container, scenes);
-
-  tunnel.start();
-
-  return () => {
-    tunnel.destroy();
-  };
-}
+const reducedVars: MotionVars = {
+  position: "relative",
+  "--pm-section-y": "0px",
+  "--pm-section-opacity": 1,
+  "--pm-section-scale": 1,
+  "--pm-title-y": "0px",
+  "--pm-title-opacity": 1,
+  "--pm-hero-y": "0px",
+  "--pm-hero-opacity": 1,
+  "--pm-hero-scale": 1,
+  "--pm-media-y": "0px",
+  "--pm-media-opacity": 1,
+  "--pm-media-scale": 1,
+  "--pm-left-x": "0px",
+  "--pm-right-x": "0px",
+  "--pm-row-x": "0px",
+  "--pm-archive-y": "0px",
+  "--pm-archive-opacity": 1,
+  "--pm-archive-scale": 1,
+  "--pm-gallery-scale": 1,
+  "--pm-card-x-0": "0px",
+  "--pm-card-x-1": "0px",
+  "--pm-card-x-2": "0px",
+  "--pm-card-x-3": "0px",
+  "--pm-card-x-4": "0px",
+  "--pm-card-y-0": "0px",
+  "--pm-card-y-1": "0px",
+  "--pm-card-y-2": "0px",
+  "--pm-card-y-3": "0px",
+  "--pm-card-y-4": "0px",
+  "--pm-card-opacity-0": 1,
+  "--pm-card-opacity-1": 1,
+  "--pm-card-opacity-2": 1,
+  "--pm-card-opacity-3": 1,
+  "--pm-card-opacity-4": 1,
+  "--pm-card-scale-0": 1,
+  "--pm-card-scale-1": 1,
+  "--pm-card-scale-2": 1,
+  "--pm-card-scale-3": 1,
+  "--pm-card-scale-4": 1,
+  "--pm-card-rotate-0": "0deg",
+  "--pm-card-rotate-1": "0deg",
+  "--pm-card-rotate-2": "0deg",
+  "--pm-card-rotate-3": "0deg",
+  "--pm-card-rotate-4": "0deg",
+};
 
 export function PremiumSectionMotion({
   children,
   className = "",
   variant,
 }: PremiumSectionMotionProps) {
+  const ref = useRef<HTMLDivElement | null>(null);
+  const isMobile = useIsMobile();
+  const prefersReducedMotion = useReducedMotion();
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end start"],
+  });
+
+  const sectionY = useTransform(scrollYProgress, [0.02, 0.42], isMobile ? ["28px", "0px"] : ["58px", "0px"]);
+  const sectionOpacity = useTransform(scrollYProgress, [0.02, 0.3], [isMobile ? 0.84 : 0.74, 1]);
+  const sectionScale = useTransform(scrollYProgress, [0.02, 0.44], isMobile ? [0.992, 1] : [0.955, 1]);
+  const titleY = useTransform(scrollYProgress, [0.02, 0.38], isMobile ? ["20px", "0px"] : ["40px", "0px"]);
+
+  const heroY = useTransform(scrollYProgress, [0.24, 0.78], isMobile ? ["0px", "0px"] : ["0px", "-82px"]);
+  const heroOpacity = useTransform(scrollYProgress, [0.24, 0.78], isMobile ? [1, 1] : [1, 0.86]);
+  const heroScale = useTransform(scrollYProgress, [0.24, 0.78], isMobile ? [1, 1] : [1, 0.955]);
+  const mediaY = useTransform(scrollYProgress, [0.04, 0.46], isMobile ? ["34px", "0px"] : ["112px", "0px"]);
+  const mediaOpacity = useTransform(scrollYProgress, [0.04, 0.32], [isMobile ? 0.78 : 0.66, 1]);
+  const mediaScale = useTransform(scrollYProgress, [0.04, 0.46], isMobile ? [0.985, 1] : [0.9, 1]);
+
+  const archiveY = useTransform(scrollYProgress, [0.02, 0.46], isMobile ? ["34px", "0px"] : ["104px", "0px"]);
+  const archiveOpacity = useTransform(scrollYProgress, [0.02, 0.32], [isMobile ? 0.82 : 0.7, 1]);
+  const archiveScale = useTransform(scrollYProgress, [0.02, 0.46], isMobile ? [0.985, 1] : [0.875, 1]);
+
+  const leftX = useTransform(scrollYProgress, [0.08, 0.46], isMobile ? ["0px", "0px"] : ["-82px", "0px"]);
+  const rightX = useTransform(scrollYProgress, [0.08, 0.46], isMobile ? ["0px", "0px"] : ["82px", "0px"]);
+  const rowX = useTransform(scrollYProgress, [0.05, 0.46], isMobile ? ["0px", "0px"] : ["112px", "0px"]);
+  const galleryScale = useTransform(scrollYProgress, [0.06, 0.44], isMobile ? [0.988, 1] : [0.905, 1]);
+
+  const card0 = useCardVars(scrollYProgress, 0, isMobile);
+  const card1 = useCardVars(scrollYProgress, 1, isMobile);
+  const card2 = useCardVars(scrollYProgress, 2, isMobile);
+  const card3 = useCardVars(scrollYProgress, 3, isMobile);
+  const card4 = useCardVars(scrollYProgress, 4, isMobile);
+
+  const heroCardStack = variant === "hero";
+  const cardX0 = useTransform(scrollYProgress, [0.08, 0.38], isMobile || heroCardStack ? ["0px", "0px"] : ["-118px", "0px"]);
+  const cardX1 = useTransform(scrollYProgress, [0.16, 0.44], isMobile || heroCardStack ? ["0px", "0px"] : ["-36px", "0px"]);
+  const cardX2 = useTransform(scrollYProgress, [0.24, 0.5], ["0px", "0px"]);
+  const cardX3 = useTransform(scrollYProgress, [0.32, 0.58], isMobile || heroCardStack ? ["0px", "0px"] : ["48px", "0px"]);
+  const cardX4 = useTransform(scrollYProgress, [0.4, 0.66], isMobile || heroCardStack ? ["0px", "0px"] : ["118px", "0px"]);
+  const cardRotate0 = useTransform(scrollYProgress, [0.08, 0.38], isMobile || heroCardStack ? ["0deg", "0deg"] : ["-6deg", "0deg"]);
+  const cardRotate1 = useTransform(scrollYProgress, [0.16, 0.44], isMobile || heroCardStack ? ["0deg", "0deg"] : ["3deg", "0deg"]);
+  const cardRotate2 = useTransform(scrollYProgress, [0.24, 0.5], isMobile || heroCardStack ? ["0deg", "0deg"] : ["-1.5deg", "0deg"]);
+  const cardRotate3 = useTransform(scrollYProgress, [0.32, 0.58], isMobile || heroCardStack ? ["0deg", "0deg"] : ["3.8deg", "0deg"]);
+  const cardRotate4 = useTransform(scrollYProgress, [0.4, 0.66], isMobile || heroCardStack ? ["0deg", "0deg"] : ["-5deg", "0deg"]);
+
+  const style: MotionVars = prefersReducedMotion
+    ? reducedVars
+    : {
+        position: "relative",
+        "--pm-section-y": sectionY,
+        "--pm-section-opacity": sectionOpacity,
+        "--pm-section-scale": sectionScale,
+        "--pm-title-y": titleY,
+        "--pm-title-opacity": 1,
+        "--pm-hero-y": heroY,
+        "--pm-hero-opacity": heroOpacity,
+        "--pm-hero-scale": heroScale,
+        "--pm-media-y": mediaY,
+        "--pm-media-opacity": mediaOpacity,
+        "--pm-media-scale": mediaScale,
+        "--pm-left-x": leftX,
+        "--pm-right-x": rightX,
+        "--pm-row-x": rowX,
+        "--pm-archive-y": archiveY,
+        "--pm-archive-opacity": archiveOpacity,
+        "--pm-archive-scale": archiveScale,
+        "--pm-gallery-scale": galleryScale,
+        "--pm-card-x-0": cardX0,
+        "--pm-card-x-1": cardX1,
+        "--pm-card-x-2": cardX2,
+        "--pm-card-x-3": cardX3,
+        "--pm-card-x-4": cardX4,
+        "--pm-card-y-0": card0.y,
+        "--pm-card-y-1": card1.y,
+        "--pm-card-y-2": card2.y,
+        "--pm-card-y-3": card3.y,
+        "--pm-card-y-4": card4.y,
+        "--pm-card-opacity-0": card0.opacity,
+        "--pm-card-opacity-1": card1.opacity,
+        "--pm-card-opacity-2": card2.opacity,
+        "--pm-card-opacity-3": card3.opacity,
+        "--pm-card-opacity-4": card4.opacity,
+        "--pm-card-scale-0": card0.scale,
+        "--pm-card-scale-1": card1.scale,
+        "--pm-card-scale-2": card2.scale,
+        "--pm-card-scale-3": card3.scale,
+        "--pm-card-scale-4": card4.scale,
+        "--pm-card-rotate-0": cardRotate0,
+        "--pm-card-rotate-1": cardRotate1,
+        "--pm-card-rotate-2": cardRotate2,
+        "--pm-card-rotate-3": cardRotate3,
+        "--pm-card-rotate-4": cardRotate4,
+      };
+
   return (
-    <div className="scene-scroll" data-premium-motion-scroll={variant}>
-      <div
-        className={["content", className].filter(Boolean).join(" ")}
-        data-premium-motion={variant}
-      >
-        {children}
-      </div>
-    </div>
+    <motion.div
+      ref={ref}
+      className={["premium-section-motion", `premium-section-motion-${variant}`, className]
+        .filter(Boolean)
+        .join(" ")}
+      data-premium-motion={variant}
+      style={style}
+    >
+      {children}
+    </motion.div>
   );
 }
-
-export function TunnelScrollController() {
-  useEffect(() => startTunnelScrollNavigation(), []);
-
-  return null;
-}
-
-export { TUNNEL_SCENE_CHANGE_EVENT };

@@ -82,7 +82,7 @@ export default async function RootLayout({
         >
           Skip to content
         </a>
-        <div className="relative isolate min-h-[100svh] overflow-x-clip">
+        <div className="relative isolate min-h-[100svh]">
           <SiteThemeProvider initialTheme={initialTheme}>
             <SiteLocaleProvider locale={locale} globalContent={siteContent.global}>
               <PublicVisualScope>
@@ -90,7 +90,7 @@ export default async function RootLayout({
                   <SiteHeader />
                   <main
                     id="main-content"
-                    className="relative min-h-[100svh] w-full max-w-full overflow-x-clip pt-[var(--header-offset-mobile)] sm:pt-[var(--header-offset-desktop)]"
+                    className="relative min-h-[100svh] w-full max-w-full pt-[var(--header-offset-mobile)] sm:pt-[var(--header-offset-desktop)]"
                   >
                     {children}
                     <div className="md:hidden">
