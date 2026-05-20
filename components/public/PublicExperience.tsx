@@ -601,7 +601,7 @@ function ArchiveSection({
       data-atmosphere-section={getAtmosphereSectionForId(id)}
       data-motion-section
       data-scroll-mode={scrollMode}
-      className={`scene apple-section motion-section ${className}`.trim()}
+      className={`scene section-layer apple-section motion-section ${className}`.trim()}
     >
       {motion ? (
         <PremiumSectionMotion
@@ -715,7 +715,7 @@ function ArchiveHero({
       data-atmosphere-section="hero"
       data-motion-section
       data-scroll-mode="internal"
-      className="scene active apple-hero motion-section"
+      className="scene section-layer active apple-hero motion-section"
     >
       <PremiumSectionMotion variant="hero" className="apple-hero-inner motion-section-flow">
         <div className="apple-section-kicker motion-eyebrow">
@@ -838,7 +838,7 @@ function EmotionalValue({
   return (
     <section
       id="archive"
-      className="scene apple-value-band motion-section"
+      className="scene section-layer apple-value-band motion-section"
       data-atmosphere-section="archive"
       data-active-index={activeIndex}
       data-motion-section
@@ -1576,7 +1576,7 @@ export function PublicExperience({
         ))}
       </nav>
 
-      <div className="scroll-container">
+      <div className="scroll-container tunnel-wrapper">
         <ArchiveHero home={home} stepLabelPrefix={archiveStepLabelPrefix} />
         <EmotionalValue stepLabelPrefix={archiveStepLabelPrefix} />
 

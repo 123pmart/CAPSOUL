@@ -12,25 +12,38 @@ type PremiumSectionMotionProps = {
 
 const TUNNEL_SCENE_CHANGE_EVENT = "capsoul:tunnel-scene-change";
 const TUNNEL_SCENE_NAVIGATE_EVENT = "capsoul:tunnel-scene-navigate";
-const animationDuration = 1100;
-const boundaryEpsilon = 2;
-const wheelBoundaryThreshold = 8;
-const touchBoundaryThreshold = 54;
-const keyboardScrollRatio = 0.78;
+const sectionSpacing = 1500;
+const lerpAmount = 0.05;
+const wheelMultiplier = 0.5;
+const touchMultiplier = 2.25;
+const keyboardStep = 460;
+const opacityRange = 900;
 const interactiveSelector =
-  'input, textarea, select, button, a, [contenteditable="true"], [role="button"], [role="link"]';
+  'input, textarea, select, [contenteditable="true"]';
 
 function getScenes() {
-  return Array.from(document.querySelectorAll<HTMLElement>(".scroll-container > .scene"));
+  return Array.from(
+    document.querySelectorAll<HTMLElement>(
+      ".tunnel-wrapper > .section-layer, .scroll-container > .scene",
+    ),
+  );
 }
 
-function normalizeSceneClasses(scenes: HTMLElement[], currentIdx: number) {
+function clamp(value: number, min: number, max: number) {
+  return Math.max(min, Math.min(value, max));
+}
+
+function normalizeSceneClasses(scenes: HTMLElement[], currentIdx: number, currentProgress: number) {
   scenes.forEach((scene, index) => {
+    const zPosition = index * sectionSpacing - currentProgress;
+    const visible = Math.abs(zPosition) < sectionSpacing * 1.55;
     scene.classList.toggle("active", index === currentIdx);
     scene.classList.toggle("exit", index < currentIdx);
     scene.dataset.sceneState = index === currentIdx ? "active" : index < currentIdx ? "exit" : "background";
     scene.setAttribute("aria-hidden", index === currentIdx ? "false" : "true");
-    scene.setAttribute("tabIndex", index === currentIdx ? "-1" : "-1");
+    scene.setAttribute("tabIndex", "-1");
+    scene.style.pointerEvents = index === currentIdx ? "auto" : "none";
+    scene.style.visibility = visible ? "visible" : "hidden";
 
     const inertScene = scene as HTMLElement & { inert?: boolean };
     inertScene.inert = index !== currentIdx;
@@ -53,54 +66,6 @@ function findSceneIndex(scenes: HTMLElement[], id: string) {
   return scenes.findIndex((scene) => scene.id === id);
 }
 
-function getSceneScroll(scene: HTMLElement | undefined) {
-  if (!scene || scene.dataset.scrollMode !== "internal") {
-    return null;
-  }
-
-  return scene.querySelector<HTMLElement>(".scene-scroll");
-}
-
-function isScrollable(scroller: HTMLElement | null) {
-  return Boolean(scroller && scroller.scrollHeight > scroller.clientHeight + boundaryEpsilon);
-}
-
-function isAtTop(scroller: HTMLElement) {
-  return scroller.scrollTop <= boundaryEpsilon;
-}
-
-function isAtBottom(scroller: HTMLElement) {
-  return scroller.scrollTop + scroller.clientHeight >= scroller.scrollHeight - boundaryEpsilon;
-}
-
-function routeInternalScroll(scene: HTMLElement | undefined, deltaY: number) {
-  const scroller = getSceneScroll(scene);
-
-  if (!isScrollable(scroller)) {
-    return false;
-  }
-
-  if (!scroller) {
-    return false;
-  }
-
-  if (deltaY > 0 && !isAtBottom(scroller)) {
-    scroller.scrollBy({ top: deltaY, behavior: "auto" });
-    return true;
-  }
-
-  if (deltaY < 0 && !isAtTop(scroller)) {
-    scroller.scrollBy({ top: deltaY, behavior: "auto" });
-    return true;
-  }
-
-  return false;
-}
-
-function isInteractiveTarget(target: EventTarget | null) {
-  return target instanceof Element && Boolean(target.closest(interactiveSelector));
-}
-
 function shouldIgnoreKeyboardTarget(target: EventTarget | null) {
   if (!(target instanceof Element)) {
     return false;
@@ -117,10 +82,177 @@ export function navigateTunnelToScene(id: string) {
   );
 }
 
+class TunnelScroll {
+  private container: HTMLElement;
+  private sections: HTMLElement[];
+  private currentProgress: number;
+  private targetProgress: number;
+  private maxProgress: number;
+  private activeIndex: number;
+  private rafId = 0;
+  private touchLastY = 0;
+  private reducedMotionQuery: MediaQueryList;
+
+  constructor(container: HTMLElement, sections: HTMLElement[]) {
+    this.container = container;
+    this.sections = sections;
+    const initialIndex = Math.max(0, sections.findIndex((section) => section.classList.contains("active")));
+    this.currentProgress = initialIndex * sectionSpacing;
+    this.targetProgress = this.currentProgress;
+    this.maxProgress = Math.max(0, (sections.length - 1) * sectionSpacing);
+    this.activeIndex = initialIndex;
+    this.reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+  }
+
+  start() {
+    this.container.dataset.tunnelEngine = "lerp";
+    document.documentElement.dataset.tunnelReducedMotion = this.reducedMotionQuery.matches ? "true" : "false";
+    this.applySceneTransforms(true);
+    this.syncActiveScene(true);
+
+    window.addEventListener("wheel", this.handleWheel, { passive: false });
+    window.addEventListener("keydown", this.handleKeyDown);
+    window.addEventListener("touchstart", this.handleTouchStart, { passive: true });
+    window.addEventListener("touchmove", this.handleTouchMove, { passive: false });
+    window.addEventListener(TUNNEL_SCENE_NAVIGATE_EVENT, this.handleNavigate);
+    window.addEventListener("resize", this.handleResize);
+    this.reducedMotionQuery.addEventListener("change", this.handleReducedMotionChange);
+
+    this.rafId = window.requestAnimationFrame(this.animate);
+  }
+
+  destroy() {
+    window.cancelAnimationFrame(this.rafId);
+    window.removeEventListener("wheel", this.handleWheel);
+    window.removeEventListener("keydown", this.handleKeyDown);
+    window.removeEventListener("touchstart", this.handleTouchStart);
+    window.removeEventListener("touchmove", this.handleTouchMove);
+    window.removeEventListener(TUNNEL_SCENE_NAVIGATE_EVENT, this.handleNavigate);
+    window.removeEventListener("resize", this.handleResize);
+    this.reducedMotionQuery.removeEventListener("change", this.handleReducedMotionChange);
+  }
+
+  private addProgress(delta: number) {
+    this.targetProgress = clamp(this.targetProgress + delta, 0, this.maxProgress);
+  }
+
+  private goToIndex(index: number) {
+    this.targetProgress = clamp(index * sectionSpacing, 0, this.maxProgress);
+  }
+
+  private applySceneTransforms(force = false) {
+    const reducedMotion = this.reducedMotionQuery.matches;
+
+    this.sections.forEach((section, index) => {
+      const zPosition = index * sectionSpacing - this.currentProgress;
+      const opacity = reducedMotion ? (index === this.activeIndex ? 1 : 0) : clamp(1 - Math.abs(zPosition / opacityRange), 0, 1);
+      const shouldHide = !reducedMotion && Math.abs(zPosition) > sectionSpacing * 1.55;
+
+      if (force || section.style.transform !== `translate3d(0px, 0px, ${zPosition}px)`) {
+        section.style.transform = reducedMotion ? "translate3d(0, 0, 0)" : `translate3d(0, 0, ${zPosition.toFixed(2)}px)`;
+      }
+
+      section.style.opacity = opacity.toFixed(3);
+      section.style.visibility = shouldHide ? "hidden" : "visible";
+    });
+  }
+
+  private syncActiveScene(force = false) {
+    const nextIndex = clamp(Math.round(this.currentProgress / sectionSpacing), 0, this.sections.length - 1);
+
+    if (!force && nextIndex === this.activeIndex) {
+      return;
+    }
+
+    this.activeIndex = nextIndex;
+    normalizeSceneClasses(this.sections, this.activeIndex, this.currentProgress);
+    dispatchSceneChange(this.sections[this.activeIndex], this.activeIndex);
+  }
+
+  private animate = () => {
+    this.currentProgress += (this.targetProgress - this.currentProgress) * lerpAmount;
+
+    if (Math.abs(this.targetProgress - this.currentProgress) < 0.05) {
+      this.currentProgress = this.targetProgress;
+    }
+
+    this.container.style.setProperty("--tunnel-progress", this.currentProgress.toFixed(2));
+    this.applySceneTransforms();
+    this.syncActiveScene();
+    this.rafId = window.requestAnimationFrame(this.animate);
+  };
+
+  private handleWheel = (event: WheelEvent) => {
+    event.preventDefault();
+    this.addProgress(event.deltaY * wheelMultiplier);
+  };
+
+  private handleKeyDown = (event: KeyboardEvent) => {
+    if (shouldIgnoreKeyboardTarget(event.target)) return;
+
+    if (["ArrowDown", "PageDown", " "].includes(event.key)) {
+      event.preventDefault();
+      this.addProgress(event.key === "ArrowDown" ? keyboardStep : sectionSpacing);
+      return;
+    }
+
+    if (["ArrowUp", "PageUp"].includes(event.key)) {
+      event.preventDefault();
+      this.addProgress(event.key === "ArrowUp" ? -keyboardStep : -sectionSpacing);
+      return;
+    }
+
+    if (event.key === "Home") {
+      event.preventDefault();
+      this.goToIndex(0);
+    } else if (event.key === "End") {
+      event.preventDefault();
+      this.goToIndex(this.sections.length - 1);
+    }
+  };
+
+  private handleTouchStart = (event: TouchEvent) => {
+    this.touchLastY = event.touches[0]?.clientY ?? 0;
+  };
+
+  private handleTouchMove = (event: TouchEvent) => {
+    const nextY = event.touches[0]?.clientY ?? this.touchLastY;
+    const delta = this.touchLastY - nextY;
+    this.touchLastY = nextY;
+    event.preventDefault();
+    this.addProgress(delta * touchMultiplier);
+  };
+
+  private handleNavigate = (event: Event) => {
+    const id = (event as CustomEvent<{ id?: string }>).detail?.id;
+
+    if (!id) return;
+
+    const nextIdx = findSceneIndex(this.sections, id);
+
+    if (nextIdx >= 0) {
+      this.goToIndex(nextIdx);
+    }
+  };
+
+  private handleResize = () => {
+    this.maxProgress = Math.max(0, (this.sections.length - 1) * sectionSpacing);
+    this.targetProgress = clamp(this.targetProgress, 0, this.maxProgress);
+    this.currentProgress = clamp(this.currentProgress, 0, this.maxProgress);
+    this.applySceneTransforms(true);
+  };
+
+  private handleReducedMotionChange = () => {
+    document.documentElement.dataset.tunnelReducedMotion = this.reducedMotionQuery.matches ? "true" : "false";
+    this.applySceneTransforms(true);
+  };
+}
+
 export function startTunnelScrollNavigation() {
+  const container = document.querySelector<HTMLElement>(".tunnel-wrapper, .scroll-container");
   const scenes = getScenes();
 
-  if (!scenes.length) {
+  if (!container || !scenes.length) {
     let cleanup: (() => void) | undefined;
     let cancelled = false;
     const frame = window.requestAnimationFrame(() => {
@@ -135,163 +267,12 @@ export function startTunnelScrollNavigation() {
     };
   }
 
-  let currentIdx = Math.max(0, scenes.findIndex((scene) => scene.classList.contains("active")));
-  let isAnimating = false;
-  let touchStartY = 0;
-  let touchStartSceneIndex = currentIdx;
+  const tunnel = new TunnelScroll(container, scenes);
 
-  normalizeSceneClasses(scenes, currentIdx);
-  dispatchSceneChange(scenes[currentIdx], currentIdx);
-
-  const goTo = (nextIdx: number) => {
-    if (isAnimating || nextIdx === currentIdx || nextIdx < 0 || nextIdx > scenes.length - 1) {
-      return;
-    }
-
-    isAnimating = true;
-    const previousScene = scenes[currentIdx];
-    const activeElement = document.activeElement;
-    const shouldMoveFocus =
-      activeElement === document.body ||
-      activeElement === null ||
-      (activeElement instanceof HTMLElement && previousScene.contains(activeElement));
-    currentIdx = nextIdx;
-    normalizeSceneClasses(scenes, currentIdx);
-    dispatchSceneChange(scenes[currentIdx], currentIdx);
-
-    if (shouldMoveFocus) {
-      scenes[currentIdx].focus({ preventScroll: true });
-    }
-
-    window.setTimeout(() => {
-      isAnimating = false;
-    }, animationDuration);
-  };
-
-  const handleWheel = (event: WheelEvent) => {
-    if (isInteractiveTarget(event.target)) {
-      return;
-    }
-
-    if (isAnimating) return;
-
-    const activeScene = scenes[currentIdx];
-
-    if (routeInternalScroll(activeScene, event.deltaY)) {
-      event.preventDefault();
-      return;
-    }
-
-    if (Math.abs(event.deltaY) < wheelBoundaryThreshold) {
-      return;
-    }
-
-    event.preventDefault();
-
-    if (event.deltaY > 0 && currentIdx < scenes.length - 1) {
-      goTo(currentIdx + 1);
-    } else if (event.deltaY < 0 && currentIdx > 0) {
-      goTo(currentIdx - 1);
-    }
-  };
-
-  const handleKeyDown = (event: KeyboardEvent) => {
-    if (shouldIgnoreKeyboardTarget(event.target)) return;
-    if (isAnimating) return;
-
-    const activeScene = scenes[currentIdx];
-    const scroller = getSceneScroll(activeScene);
-    const scrollDistance = scroller ? Math.max(240, scroller.clientHeight * keyboardScrollRatio) : 0;
-
-    if (["ArrowDown", "PageDown", " "].includes(event.key)) {
-      event.preventDefault();
-      if (scroller && isScrollable(scroller) && !isAtBottom(scroller)) {
-        scroller.scrollBy({ top: event.key === "ArrowDown" ? 160 : scrollDistance, behavior: "smooth" });
-        return;
-      }
-      goTo(currentIdx + 1);
-    } else if (["ArrowUp", "PageUp"].includes(event.key)) {
-      event.preventDefault();
-      if (scroller && isScrollable(scroller) && !isAtTop(scroller)) {
-        scroller.scrollBy({ top: event.key === "ArrowUp" ? -160 : -scrollDistance, behavior: "smooth" });
-        return;
-      }
-      goTo(currentIdx - 1);
-    } else if (event.key === "Home") {
-      event.preventDefault();
-      goTo(0);
-    } else if (event.key === "End") {
-      event.preventDefault();
-      goTo(scenes.length - 1);
-    }
-  };
-
-  const handleNavigate = (event: Event) => {
-    const id = (event as CustomEvent<{ id?: string }>).detail?.id;
-
-    if (!id) return;
-
-    const nextIdx = findSceneIndex(scenes, id);
-
-    if (nextIdx >= 0) {
-      goTo(nextIdx);
-    }
-  };
-
-  const handleTouchStart = (event: TouchEvent) => {
-    touchStartY = event.touches[0]?.clientY ?? 0;
-    touchStartSceneIndex = currentIdx;
-  };
-
-  const handleTouchEnd = (event: TouchEvent) => {
-    if (isAnimating) return;
-    if (touchStartSceneIndex !== currentIdx) return;
-
-    const touchEndY = event.changedTouches[0]?.clientY ?? touchStartY;
-    const delta = touchStartY - touchEndY;
-
-    if (Math.abs(delta) < touchBoundaryThreshold) return;
-
-    const activeScene = scenes[currentIdx];
-    const scroller = getSceneScroll(activeScene);
-
-    if (scroller && isScrollable(scroller)) {
-      if (delta > 0 && !isAtBottom(scroller)) {
-        return;
-      }
-
-      if (delta < 0 && !isAtTop(scroller)) {
-        return;
-      }
-    }
-
-    if (delta > 0) {
-      goTo(currentIdx + 1);
-    } else {
-      goTo(currentIdx - 1);
-    }
-  };
-
-  const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-  const syncReducedMotion = () => {
-    document.documentElement.dataset.tunnelReducedMotion = reducedMotionQuery.matches ? "true" : "false";
-  };
-
-  syncReducedMotion();
-  reducedMotionQuery.addEventListener("change", syncReducedMotion);
-  window.addEventListener("wheel", handleWheel, { passive: false });
-  window.addEventListener("keydown", handleKeyDown);
-  window.addEventListener(TUNNEL_SCENE_NAVIGATE_EVENT, handleNavigate);
-  window.addEventListener("touchstart", handleTouchStart, { passive: true });
-  window.addEventListener("touchend", handleTouchEnd, { passive: true });
+  tunnel.start();
 
   return () => {
-    window.removeEventListener("wheel", handleWheel);
-    window.removeEventListener("keydown", handleKeyDown);
-    window.removeEventListener(TUNNEL_SCENE_NAVIGATE_EVENT, handleNavigate);
-    window.removeEventListener("touchstart", handleTouchStart);
-    window.removeEventListener("touchend", handleTouchEnd);
-    reducedMotionQuery.removeEventListener("change", syncReducedMotion);
+    tunnel.destroy();
   };
 }
 

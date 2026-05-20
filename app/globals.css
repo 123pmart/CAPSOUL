@@ -11232,7 +11232,13 @@ html[data-theme="dark"] .public-visual-scope .apple-value-card {
   }
 }
 
-/* Z-axis tunnel navigation: browser Y scrolling is locked; wheel changes scene classes. */
+:root {
+  --bg-color: #0d0d0d;
+  --text-primary: #f4f4f4;
+  --transition-speed: 1.5s;
+}
+
+/* Cinematic 3D tunnel: browser Y scrolling is locked; virtual scroll drives Z-depth. */
 body,
 html {
   margin: 0;
@@ -11241,9 +11247,13 @@ html {
   max-width: 100%;
   height: 100%;
   overflow: hidden;
-  background: #000;
-  color: #fff;
+  background-color: var(--bg-color);
+  color: var(--text-primary);
   font-family: sans-serif;
+}
+
+body {
+  perspective: 1500px;
 }
 
 .public-visual-scope,
@@ -11267,16 +11277,21 @@ html {
   overflow-x: hidden;
 }
 
+.tunnel-wrapper,
 .scroll-container {
-  position: relative;
+  position: fixed;
+  inset: 0;
   width: 100vw;
   height: 100vh;
   max-width: 100%;
   overflow: hidden;
-  perspective: 1200px;
+  perspective: 1500px;
   transform-style: preserve-3d;
+  will-change: transform;
+  touch-action: none;
 }
 
+.tunnel-wrapper > .section-layer,
 .scroll-container > .scene {
   position: absolute;
   top: 0;
@@ -11289,28 +11304,26 @@ html {
   align-items: center;
   overflow: hidden;
   opacity: 0;
-  transform: translate3d(0, 0, -720px) scale(0.78);
-  transition:
-    transform 1100ms cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 900ms cubic-bezier(0.22, 1, 0.36, 1);
+  transform: translateZ(-1000px);
+  transition: opacity 0.8s ease-out;
   pointer-events: none;
   transform-style: preserve-3d;
   backface-visibility: hidden;
   will-change: transform, opacity;
 }
 
+.tunnel-wrapper > .section-layer.active,
+.tunnel-wrapper > .section-layer[data-scene-state="active"],
 .scroll-container > .scene.active,
 .scroll-container > .scene[data-scene-state="active"] {
-  opacity: 1 !important;
-  transform: translate3d(0, 0, 0) scale(1) !important;
   pointer-events: auto;
   z-index: 2;
 }
 
+.tunnel-wrapper > .section-layer.exit,
+.tunnel-wrapper > .section-layer[data-scene-state="exit"],
 .scroll-container > .scene.exit,
 .scroll-container > .scene[data-scene-state="exit"] {
-  opacity: 0 !important;
-  transform: translate3d(0, 0, 520px) scale(1.28) !important;
   pointer-events: none;
   z-index: 3;
 }
@@ -11480,10 +11493,14 @@ html {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .tunnel-wrapper,
   .scroll-container {
     perspective: none;
   }
 
+  .tunnel-wrapper > .section-layer,
+  .tunnel-wrapper > .section-layer.active,
+  .tunnel-wrapper > .section-layer.exit,
   .scroll-container > .scene,
   .scroll-container > .scene.active,
   .scroll-container > .scene.exit {
