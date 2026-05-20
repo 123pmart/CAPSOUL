@@ -11238,6 +11238,7 @@ html {
   margin: 0;
   padding: 0;
   width: 100%;
+  max-width: 100%;
   height: 100%;
   overflow: hidden;
   background: #000;
@@ -11288,41 +11289,93 @@ html {
   align-items: center;
   overflow: hidden;
   opacity: 0;
-  transform: translateZ(-600px) scale(0.5);
+  transform: translate3d(0, 0, -720px) scale(0.78);
   transition:
-    transform 1.2s cubic-bezier(0.1, 0.8, 0.2, 1),
-    opacity 1.2s;
+    transform 1100ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 900ms cubic-bezier(0.22, 1, 0.36, 1);
   pointer-events: none;
   transform-style: preserve-3d;
   backface-visibility: hidden;
   will-change: transform, opacity;
 }
 
-.scroll-container > .scene.active {
-  opacity: 1;
-  transform: translateZ(0px) scale(1);
+.scroll-container > .scene.active,
+.scroll-container > .scene[data-scene-state="active"] {
+  opacity: 1 !important;
+  transform: translate3d(0, 0, 0) scale(1) !important;
   pointer-events: auto;
   z-index: 2;
 }
 
-.scroll-container > .scene.exit {
-  opacity: 0;
-  transform: translateZ(600px) scale(2.5);
+.scroll-container > .scene.exit,
+.scroll-container > .scene[data-scene-state="exit"] {
+  opacity: 0 !important;
+  transform: translate3d(0, 0, 520px) scale(1.28) !important;
   pointer-events: none;
   z-index: 3;
 }
 
-.scroll-container > .scene > .content {
-  width: min(100%, var(--shell-max, 1180px));
-  max-width: calc(100vw - (var(--shell-gutter, 1rem) * 2));
-  max-height: calc(100vh - clamp(4rem, 9vh, 6.5rem));
-  overflow: visible;
+.scroll-container > .scene > .scene-scroll {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding-bottom: env(safe-area-inset-bottom);
   transform-style: preserve-3d;
   backface-visibility: hidden;
 }
 
-.scroll-container > .scene.apple-hero > .content {
-  padding-top: clamp(3.5rem, 8vh, 5.75rem);
+.scroll-container > .scene > .scene-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.scroll-container > .scene[data-scroll-mode="locked"] > .scene-scroll {
+  overflow-y: hidden;
+}
+
+.scroll-container > .scene > .scene-scroll::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0.18;
+  background:
+    radial-gradient(circle at 50% 50%, transparent 0 44%, rgba(0, 0, 0, 0.22) 100%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.14), transparent 28%, transparent 70%, rgba(0, 0, 0, 0.18));
+  transition: opacity 900ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.scroll-container > .scene.active > .scene-scroll::before,
+.scroll-container > .scene[data-scene-state="active"] > .scene-scroll::before {
+  opacity: 0;
+}
+
+.scroll-container > .scene.exit > .scene-scroll::before,
+.scroll-container > .scene[data-scene-state="exit"] > .scene-scroll::before {
+  opacity: 0.32;
+}
+
+.scroll-container > .scene > .scene-scroll > .content {
+  width: min(100%, var(--shell-max, 1180px));
+  max-width: calc(100vw - (var(--shell-gutter, 1rem) * 2));
+  min-height: 100%;
+  max-height: none;
+  overflow: visible;
+  box-sizing: border-box;
+  padding-block: clamp(2rem, 4.5vh, 4rem);
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+}
+
+.scroll-container > .scene.apple-hero > .scene-scroll > .content {
+  padding-top: clamp(3.25rem, 8vh, 5.5rem);
 }
 
 .scroll-container > .scene.apple-value-band,
@@ -11330,27 +11383,128 @@ html {
   padding-block: 0;
 }
 
-.scroll-container > .scene.apple-section > .content,
-.scroll-container > .scene.apple-value-band > .content {
+.scroll-container > .scene.apple-section > .scene-scroll > .content,
+.scroll-container > .scene.apple-value-band > .scene-scroll > .content {
   display: grid;
   align-content: center;
 }
 
-@media (max-width: 767px) {
-  .scroll-container > .scene > .content {
-    max-width: calc(100vw - 1.5rem);
-    max-height: calc(100vh - 4.25rem);
+.scroll-container > .scene .motion-title {
+  clip-path: inset(0 0 100% 0);
+  opacity: 0.88;
+  transform: translate3d(0, 0, 42px) scale(0.985);
+  transition:
+    clip-path 860ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 700ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 880ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.scroll-container > .scene.active .motion-title,
+.scroll-container > .scene[data-scene-state="active"] .motion-title {
+  clip-path: inset(0 0 0 0);
+  opacity: 1;
+  transform: translate3d(0, 0, 52px) scale(1);
+}
+
+.scroll-container > .scene .motion-eyebrow,
+.scroll-container > .scene .motion-copy,
+.scroll-container > .scene .motion-card,
+.scroll-container > .scene .motion-media,
+.scroll-container > .scene .motion-stagger > * {
+  opacity: 0;
+  transform: translate3d(0, 0, -110px) scale(0.95);
+  transition:
+    opacity 760ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 960ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.scroll-container > .scene.active .motion-eyebrow,
+.scroll-container > .scene.active .motion-copy,
+.scroll-container > .scene.active .motion-card,
+.scroll-container > .scene.active .motion-media,
+.scroll-container > .scene.active .motion-stagger > *,
+.scroll-container > .scene[data-scene-state="active"] .motion-eyebrow,
+.scroll-container > .scene[data-scene-state="active"] .motion-copy,
+.scroll-container > .scene[data-scene-state="active"] .motion-card,
+.scroll-container > .scene[data-scene-state="active"] .motion-media,
+.scroll-container > .scene[data-scene-state="active"] .motion-stagger > * {
+  opacity: 1;
+  transform: translate3d(0, 0, 24px) scale(1);
+}
+
+.scroll-container > .scene.active .motion-copy,
+.scroll-container > .scene[data-scene-state="active"] .motion-copy {
+  transition-delay: 130ms;
+}
+
+.scroll-container > .scene.active .motion-card,
+.scroll-container > .scene[data-scene-state="active"] .motion-card {
+  transition-delay: 220ms;
+}
+
+.scroll-container > .scene.active .motion-media,
+.scroll-container > .scene[data-scene-state="active"] .motion-media {
+  transition-delay: 280ms;
+  animation: tunnelMediaBreathe 980ms cubic-bezier(0.22, 1, 0.36, 1) 360ms both;
+}
+
+.scroll-container > .scene.active .motion-stagger > *,
+.scroll-container > .scene[data-scene-state="active"] .motion-stagger > * {
+  transition-delay: calc(180ms + (var(--motion-stagger-index, 0) * 90ms));
+}
+
+@keyframes tunnelMediaBreathe {
+  0% {
+    transform: translate3d(0, 0, 16px) scale(0.985);
   }
 
-  .scroll-container > .scene.apple-hero > .content {
-    padding-top: clamp(2.25rem, 6vh, 3.25rem);
+  56% {
+    transform: translate3d(0, 0, 34px) scale(1.012);
+  }
+
+  100% {
+    transform: translate3d(0, 0, 24px) scale(1);
+  }
+}
+
+@media (max-width: 767px) {
+  .scroll-container > .scene > .scene-scroll > .content {
+    max-width: calc(100vw - 1.5rem);
+    min-height: 100%;
+    padding-block: clamp(1.35rem, 4.5vh, 2.75rem);
+  }
+
+  .scroll-container > .scene.apple-hero > .scene-scroll > .content {
+    padding-top: clamp(2rem, 6vh, 3rem);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .scroll-container {
+    perspective: none;
+  }
+
   .scroll-container > .scene,
   .scroll-container > .scene.active,
   .scroll-container > .scene.exit {
-    transition: none;
+    transform: none !important;
+    transition: opacity 180ms ease !important;
+  }
+
+  .scroll-container > .scene .motion-title,
+  .scroll-container > .scene .motion-eyebrow,
+  .scroll-container > .scene .motion-copy,
+  .scroll-container > .scene .motion-card,
+  .scroll-container > .scene .motion-media,
+  .scroll-container > .scene .motion-stagger > * {
+    animation: none !important;
+    clip-path: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .scroll-container > .scene > .scene-scroll::before {
+    display: none;
   }
 }

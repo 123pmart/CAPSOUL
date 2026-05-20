@@ -576,6 +576,7 @@ function ArchiveSection({
           : id === "inquire"
             ? { variant: "inquire" as const }
             : null;
+  const scrollMode = id === "how-it-works" ? "locked" : "internal";
   const sectionContent = (
     <>
       <div className="apple-section-kicker motion-eyebrow">
@@ -599,6 +600,7 @@ function ArchiveSection({
       data-archive-section
       data-atmosphere-section={getAtmosphereSectionForId(id)}
       data-motion-section
+      data-scroll-mode={scrollMode}
       className={`scene apple-section motion-section ${className}`.trim()}
     >
       {motion ? (
@@ -712,6 +714,7 @@ function ArchiveHero({
       data-archive-section
       data-atmosphere-section="hero"
       data-motion-section
+      data-scroll-mode="internal"
       className="scene active apple-hero motion-section"
     >
       <PremiumSectionMotion variant="hero" className="apple-hero-inner motion-section-flow">
@@ -839,6 +842,7 @@ function EmotionalValue({
       data-atmosphere-section="archive"
       data-active-index={activeIndex}
       data-motion-section
+      data-scroll-mode="internal"
       style={{
         "--active-archive-index": activeIndex,
       } as CSSProperties}
