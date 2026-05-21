@@ -6,6 +6,7 @@ export function AtmosphereBackdrop() {
     >
       <span className="atmosphere-layer atmosphere-layer-ambient" />
       <span className="atmosphere-layer atmosphere-layer-frost" />
+      <span className="atmosphere-layer atmosphere-layer-glass" />
       <span className="atmosphere-layer atmosphere-layer-vignette" />
       <span className="atmosphere-bloom atmosphere-bloom-one" />
       <span className="atmosphere-bloom atmosphere-bloom-two" />
