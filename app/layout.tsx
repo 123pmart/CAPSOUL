@@ -18,6 +18,7 @@ import {
 } from "@/lib/site-theme";
 
 import "./globals.css";
+import "./liquid-glass.css";
 
 const siteThemeInitScript = `
 (() => {

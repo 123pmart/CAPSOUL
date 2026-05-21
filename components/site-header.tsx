@@ -109,7 +109,7 @@ export function SiteHeader() {
 
             <nav
               aria-label="Primary navigation"
-              className="header-nav-shell hidden items-center justify-self-center gap-1 rounded-full px-1.5 py-1.5 lg:inline-flex"
+              className="header-nav-shell liquid-glass-panel hidden items-center justify-self-center gap-1 rounded-full px-1.5 py-1.5 lg:inline-flex"
             >
               {navigationItems.map((item) => {
                 const active = isSceneRouteActive(activePathname, item.href);
@@ -172,7 +172,7 @@ export function SiteHeader() {
                 aria-label={isOpen ? "Close menu" : "Open menu"}
                 aria-expanded={isOpen}
                 aria-controls="mobile-navigation"
-                className="header-menu-button flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[var(--text-primary)]"
+                className="header-menu-button liquid-glass-panel flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[var(--text-primary)]"
                 onClick={() => setIsOpen((value) => !value)}
               >
                 <span className="relative block h-4 w-5">

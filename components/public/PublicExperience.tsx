@@ -833,7 +833,7 @@ function ArchiveVisualFrame({
   }
 
   return (
-    <div className="apple-visual-frame apple-liquid-surface">
+    <div className="apple-visual-frame apple-liquid-surface liquid-glass-panel">
       <span className="apple-liquid-layer" aria-hidden="true" />
       {showToolbar ? (
         <div className="apple-visual-toolbar">
@@ -914,7 +914,7 @@ function ArchiveHero({
           ) : null}
         </div>
         <div className="apple-hero-stage motion-media">
-          <div className="apple-hero-record" data-reveal style={revealDelay(4)}>
+          <div className="apple-hero-record liquid-glass-panel" data-reveal style={revealDelay(4)}>
             <ArchiveVisualFrame
               image={heroStep.image}
               fallbackImage={heroStep.fallbackImage}
@@ -931,7 +931,7 @@ function ArchiveHero({
           >
             {processCards.map((step, index) => (
               <div
-                className="apple-hero-chapter apple-liquid-surface"
+                className="apple-hero-chapter apple-liquid-surface liquid-glass-panel"
                 key={`hero-chapter-${index}`}
                 data-reveal
                 style={revealDelay(index + 5)}
@@ -970,7 +970,7 @@ function ArchiveValueCard({
 }) {
   return (
     <article
-      className="apple-value-card apple-liquid-surface"
+      className="apple-value-card apple-liquid-surface liquid-glass-panel"
       key={`archive-value-card-${index}`}
       data-reveal
       data-active={isActive ? "true" : "false"}
@@ -990,7 +990,7 @@ function ArchiveValueCard({
       onBlur={onBlur}
     >
       <span className="apple-liquid-layer" aria-hidden="true" />
-      <span>{archiveLabelPrefix} {index + 1}</span>
+      <span>{formatArchiveCardLabel(archiveLabelPrefix, index)}</span>
       <h3>{pillar.title}</h3>
       <p className="apple-value-card-preview">{pillar.summary}</p>
       <div className="apple-value-card-detail">
@@ -998,6 +998,10 @@ function ArchiveValueCard({
       </div>
     </article>
   );
+}
+
+function formatArchiveCardLabel(prefix: string, index: number) {
+  return `${prefix} ${String(index + 1).padStart(2, "0")}`.toLocaleUpperCase();
 }
 
 function EmotionalValue({
@@ -1048,7 +1052,7 @@ function EmotionalValue({
             <span className="apple-archive-sheet apple-archive-sheet-two" />
             <span className="apple-archive-sheet apple-archive-sheet-three" />
           </div>
-          <div className="apple-value-statement">
+          <div className="apple-value-statement liquid-glass-panel">
             <span>{archive.eyebrow}</span>
             <h2 data-reveal style={revealDelay(1)}>{archive.headline}</h2>
             <div className="apple-archive-record-line" aria-hidden="true">
@@ -1165,7 +1169,7 @@ function ArchiveSceneModule({
 
   return (
     <div className="apple-scene-module motion-stagger">
-      <div className="apple-record-feature motion-media" data-reveal style={revealDelay(1)}>
+      <div className="apple-record-feature liquid-glass-panel motion-media" data-reveal style={revealDelay(1)}>
         <div className="experience-content-container">
           <AnimatePresence initial={false} custom={direction} mode="wait">
             <motion.div
@@ -1230,7 +1234,7 @@ function ProcessStepCard({
 }) {
   return (
     <article
-      className="apple-process-card apple-liquid-surface how-it-works-card"
+      className="apple-process-card apple-liquid-surface liquid-glass-panel how-it-works-card"
       key={`process-step-${index}`}
       data-reveal
       style={{
@@ -1366,7 +1370,7 @@ function PreserveEditorial({ preserve }: { preserve: ResolvedSceneContent }) {
     <div className="apple-preserve-layout motion-stagger">
       {featured ? (
         <article
-          className="apple-preserve-feature apple-liquid-surface motion-media"
+          className="apple-preserve-feature apple-liquid-surface liquid-glass-panel motion-media"
           data-reveal
         >
           <span className="apple-liquid-layer" aria-hidden="true" />
@@ -1385,7 +1389,7 @@ function PreserveEditorial({ preserve }: { preserve: ResolvedSceneContent }) {
       <div className="apple-preserve-grid">
         {remaining.map((step, index) => (
           <article
-            className="apple-preserve-card apple-liquid-surface"
+            className="apple-preserve-card apple-liquid-surface liquid-glass-panel"
             key={`preserve-card-${index}`}
             data-reveal
             style={{
@@ -1574,7 +1578,7 @@ function InquiryArchiveForm({
   return (
     <div className="apple-inquiry-layout motion-stagger">
       <form
-        className="apple-inquiry-form"
+        className="apple-inquiry-form liquid-glass-panel"
         onSubmit={handleSubmit}
         data-reveal
       >
@@ -1646,7 +1650,7 @@ function InquiryArchiveForm({
       </form>
 
       <aside
-        className="apple-inquiry-support motion-media"
+        className="apple-inquiry-support liquid-glass-panel motion-media"
         data-reveal
         style={revealDelay(1)}
       >
