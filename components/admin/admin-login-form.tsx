@@ -46,7 +46,7 @@ export function AdminLoginForm() {
       <div className="scene-shell scene-shell-cool scene-pad lg:min-h-[calc(100dvh-8rem)]">
         <div className="content-frame-compact relative z-10 flex justify-center py-4 sm:py-6 lg:min-h-[calc(100dvh-10rem)] lg:items-center">
           <form
-            className="panel-strong w-full max-w-[28rem] rounded-[1.6rem] p-4 sm:p-6"
+            className="admin-login-card panel-strong w-full max-w-[28rem] rounded-[1.6rem] p-4 sm:p-6"
             onSubmit={handleSubmit}
           >
             <div className="space-y-2">
