@@ -12253,6 +12253,300 @@ html[data-theme="dark"] .public-visual-scope :is(.apple-process-card, .apple-pre
   box-shadow: inset 0 1px 0 color-mix(in srgb, var(--admin-glass-highlight) 70%, transparent);
 }
 
+/* Surgical visible-component material pass: remove ghost frames, then target live surfaces directly. */
+.public-visual-scope {
+  --capsoul-visible-glass-fill: rgba(255, 255, 255, 0.68);
+  --capsoul-visible-glass-fill-strong: rgba(255, 255, 255, 0.82);
+  --capsoul-visible-glass-fill-soft: rgba(247, 244, 238, 0.48);
+  --capsoul-visible-glass-border: rgba(20, 20, 20, 0.105);
+  --capsoul-visible-glass-border-strong: rgba(20, 20, 20, 0.15);
+  --capsoul-visible-glass-highlight: rgba(255, 255, 255, 0.88);
+  --capsoul-visible-glass-edge: rgba(255, 255, 255, 0.52);
+  --capsoul-visible-glass-shadow: 0 18px 58px rgba(32, 29, 24, 0.1);
+  --capsoul-visible-glass-shadow-strong: 0 26px 82px rgba(32, 29, 24, 0.14);
+}
+
+html[data-theme="dark"] .public-visual-scope {
+  --capsoul-visible-glass-fill: rgba(17, 18, 21, 0.66);
+  --capsoul-visible-glass-fill-strong: rgba(31, 32, 36, 0.78);
+  --capsoul-visible-glass-fill-soft: rgba(8, 9, 11, 0.58);
+  --capsoul-visible-glass-border: rgba(255, 255, 255, 0.13);
+  --capsoul-visible-glass-border-strong: rgba(255, 255, 255, 0.18);
+  --capsoul-visible-glass-highlight: rgba(255, 255, 255, 0.17);
+  --capsoul-visible-glass-edge: rgba(255, 255, 255, 0.085);
+  --capsoul-visible-glass-shadow: 0 22px 74px rgba(0, 0, 0, 0.34);
+  --capsoul-visible-glass-shadow-strong: 0 32px 104px rgba(0, 0, 0, 0.48);
+}
+
+.public-visual-scope :is(
+  .apple-hero-stage,
+  .apple-value-band,
+  .apple-value-grid,
+  .apple-scene-module,
+  .apple-record-list,
+  .apple-record-feature,
+  .apple-process-grid,
+  .apple-preserve-layout,
+  .apple-inquiry-layout
+)::before,
+.public-visual-scope :is(
+  .apple-hero-stage,
+  .apple-value-band,
+  .apple-value-grid,
+  .apple-scene-module,
+  .apple-record-list,
+  .apple-record-feature,
+  .apple-process-grid,
+  .apple-preserve-layout,
+  .apple-inquiry-layout
+)::after {
+  content: none !important;
+  display: none !important;
+}
+
+.public-visual-scope .apple-archive-sheets {
+  display: none !important;
+}
+
+.public-visual-scope .atmosphere-backdrop {
+  opacity: 0.72;
+  background:
+    radial-gradient(ellipse at 18% 12%, rgba(232, 223, 207, 0.34), transparent 34vmax),
+    radial-gradient(ellipse at 84% 18%, rgba(181, 196, 210, 0.18), transparent 32vmax),
+    radial-gradient(ellipse at 50% 78%, rgba(255, 255, 255, 0.34), transparent 38vmax),
+    linear-gradient(180deg, rgba(255, 253, 248, 0.42), transparent 48%, rgba(22, 21, 19, 0.045));
+}
+
+.public-visual-scope .atmosphere-layer-ambient {
+  opacity: 0.64;
+  background:
+    radial-gradient(ellipse at 50% -4%, rgba(255, 255, 255, 0.56), transparent 42%),
+    radial-gradient(ellipse at 22% 58%, rgba(232, 223, 207, 0.18), transparent 44%),
+    radial-gradient(ellipse at 82% 64%, rgba(181, 196, 210, 0.13), transparent 42%);
+}
+
+.public-visual-scope .atmosphere-layer-frost {
+  opacity: 0.48;
+  background:
+    linear-gradient(115deg, rgba(255, 255, 255, 0.2), transparent 28%, rgba(255, 255, 255, 0.11) 66%, transparent),
+    radial-gradient(ellipse at 50% 46%, rgba(255, 255, 255, 0.12), transparent 58%);
+}
+
+.public-visual-scope .atmosphere-layer-glass {
+  display: none;
+}
+
+.public-visual-scope .atmosphere-layer-vignette {
+  opacity: 0.56;
+  background:
+    radial-gradient(ellipse at center, transparent 50%, rgba(20, 18, 16, 0.08) 100%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent 32%, rgba(20, 18, 16, 0.05));
+}
+
+html[data-theme="dark"] .public-visual-scope .atmosphere-backdrop {
+  opacity: 0.66;
+  background:
+    radial-gradient(ellipse at 18% 12%, rgba(33, 46, 68, 0.34), transparent 36vmax),
+    radial-gradient(ellipse at 84% 18%, rgba(92, 108, 130, 0.16), transparent 34vmax),
+    radial-gradient(ellipse at 50% 82%, rgba(255, 255, 255, 0.045), transparent 38vmax),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent 44%, rgba(0, 0, 0, 0.24));
+}
+
+html[data-theme="dark"] .public-visual-scope .atmosphere-layer-ambient {
+  opacity: 0.58;
+  background:
+    radial-gradient(ellipse at 50% -4%, rgba(255, 255, 255, 0.07), transparent 42%),
+    radial-gradient(ellipse at 22% 58%, rgba(34, 48, 70, 0.2), transparent 44%),
+    radial-gradient(ellipse at 82% 64%, rgba(92, 108, 130, 0.1), transparent 42%);
+}
+
+html[data-theme="dark"] .public-visual-scope .atmosphere-layer-frost {
+  opacity: 0.42;
+  background:
+    linear-gradient(115deg, rgba(255, 255, 255, 0.04), transparent 30%, rgba(92, 108, 130, 0.04) 68%, transparent),
+    radial-gradient(ellipse at 50% 46%, rgba(255, 255, 255, 0.03), transparent 58%);
+}
+
+html[data-theme="dark"] .public-visual-scope .atmosphere-layer-vignette {
+  opacity: 0.68;
+  background:
+    radial-gradient(ellipse at center, transparent 46%, rgba(0, 0, 0, 0.38) 100%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.018), transparent 34%, rgba(0, 0, 0, 0.22));
+}
+
+.public-visual-scope :is(
+  .header-nav-shell,
+  .apple-value-statement,
+  .apple-value-card,
+  .apple-record-feature,
+  .apple-process-card,
+  .apple-preserve-feature,
+  .apple-preserve-card,
+  .apple-inquiry-form,
+  .apple-inquiry-support,
+  .apple-hero-record,
+  .apple-hero-chapter,
+  .apple-visual-frame
+) {
+  border: 1px solid var(--capsoul-visible-glass-border) !important;
+  background:
+    linear-gradient(120deg, rgba(255, 255, 255, 0.18), transparent 22% 64%, rgba(255, 255, 255, 0.1)),
+    radial-gradient(ellipse at 22% 0%, color-mix(in srgb, var(--capsoul-visible-glass-highlight) 62%, transparent), transparent 42%),
+    linear-gradient(145deg, var(--capsoul-visible-glass-fill-strong), var(--capsoul-visible-glass-fill-soft)) !important;
+  box-shadow:
+    inset 0 1px 0 var(--capsoul-visible-glass-highlight),
+    inset 0 -1px 0 var(--capsoul-visible-glass-edge),
+    var(--capsoul-visible-glass-shadow) !important;
+  backdrop-filter: blur(16px) saturate(124%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(124%) !important;
+}
+
+html[data-theme="dark"] .public-visual-scope :is(
+  .header-nav-shell,
+  .apple-value-card,
+  .apple-record-feature,
+  .apple-process-card,
+  .apple-preserve-feature,
+  .apple-preserve-card,
+  .apple-inquiry-form,
+  .apple-inquiry-support,
+  .apple-hero-record,
+  .apple-hero-chapter,
+  .apple-visual-frame
+) {
+  background:
+    linear-gradient(120deg, rgba(255, 255, 255, 0.055), transparent 22% 64%, rgba(255, 255, 255, 0.035)),
+    radial-gradient(ellipse at 22% 0%, color-mix(in srgb, var(--capsoul-visible-glass-highlight) 76%, transparent), transparent 42%),
+    linear-gradient(145deg, var(--capsoul-visible-glass-fill-strong), var(--capsoul-visible-glass-fill-soft)) !important;
+}
+
+.public-visual-scope .apple-value-statement {
+  border-color: rgba(255, 255, 255, 0.16) !important;
+  background:
+    linear-gradient(118deg, rgba(255, 255, 255, 0.16), transparent 24% 68%, rgba(255, 255, 255, 0.08)),
+    radial-gradient(ellipse at 18% 0%, rgba(255, 255, 255, 0.2), transparent 44%),
+    linear-gradient(180deg, rgba(18, 18, 19, 0.98), rgba(2, 3, 5, 0.98)) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.065),
+    0 34px 110px rgba(0, 0, 0, 0.24) !important;
+}
+
+.public-visual-scope .apple-value-card {
+  min-height: auto;
+  background:
+    linear-gradient(120deg, rgba(255, 255, 255, 0.24), transparent 26% 66%, rgba(255, 255, 255, 0.12)),
+    radial-gradient(ellipse at 18% 0%, rgba(255, 255, 255, 0.74), transparent 42%),
+    linear-gradient(160deg, rgba(255, 255, 255, 0.78), rgba(245, 242, 236, 0.6)) !important;
+  color: #191919;
+}
+
+.public-visual-scope .apple-value-card > span:not(.apple-liquid-layer) {
+  color: rgba(20, 20, 20, 0.58) !important;
+  font-family: var(--font-sans);
+  font-size: clamp(0.66rem, 1.8vw, 0.74rem);
+  font-style: normal;
+  font-weight: 820;
+  letter-spacing: 0.16em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.public-visual-scope .apple-value-card h3 {
+  color: #151515;
+  line-height: 1.05;
+}
+
+.public-visual-scope .apple-value-card-preview,
+.public-visual-scope .apple-value-card-detail {
+  color: rgba(20, 20, 20, 0.68);
+  line-height: 1.5;
+}
+
+html[data-theme="dark"] .public-visual-scope .apple-value-card {
+  color: rgba(255, 255, 255, 0.94);
+  background:
+    linear-gradient(120deg, rgba(255, 255, 255, 0.065), transparent 26% 66%, rgba(255, 255, 255, 0.04)),
+    radial-gradient(ellipse at 18% 0%, rgba(255, 255, 255, 0.13), transparent 42%),
+    linear-gradient(160deg, rgba(29, 30, 34, 0.82), rgba(7, 8, 10, 0.72)) !important;
+}
+
+html[data-theme="dark"] .public-visual-scope .apple-value-card > span:not(.apple-liquid-layer) {
+  color: rgba(224, 231, 242, 0.74) !important;
+}
+
+html[data-theme="dark"] .public-visual-scope .apple-value-card h3 {
+  color: rgba(255, 255, 255, 0.96);
+}
+
+html[data-theme="dark"] .public-visual-scope .apple-value-card-preview,
+html[data-theme="dark"] .public-visual-scope .apple-value-card-detail {
+  color: rgba(246, 248, 251, 0.74);
+}
+
+@media (min-width: 1024px) {
+  .public-visual-scope .apple-value-grid,
+  .public-visual-scope .apple-value-grid[data-active-index] {
+    height: clamp(16.75rem, 15.8vw, 18.75rem);
+    overflow: visible;
+  }
+
+  .public-visual-scope .apple-value-card {
+    overflow: hidden;
+  }
+
+  .public-visual-scope .apple-value-card:is(:hover, :focus, :focus-visible, [data-expanded="true"]) {
+    overflow: visible;
+  }
+
+  .public-visual-scope .apple-value-card-preview {
+    display: block;
+    overflow: visible;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: unset;
+  }
+
+  .public-visual-scope .apple-value-card-detail {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transform: translate3d(0, 0.2rem, 0);
+  }
+
+  .public-visual-scope .apple-value-card:is(:hover, :focus, :focus-visible, [data-expanded="true"]) .apple-value-card-preview,
+  .public-visual-scope .apple-value-card:is(:hover, :focus, :focus-visible, [data-expanded="true"]) .apple-value-card-detail {
+    display: block;
+    max-height: 10rem;
+    opacity: 1;
+    overflow: visible;
+    -webkit-line-clamp: unset;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@media (max-width: 1023px) {
+  .public-visual-scope .apple-value-grid,
+  .public-visual-scope .apple-value-grid[data-active-index] {
+    gap: clamp(0.74rem, 2.8vw, 0.96rem);
+  }
+
+  .public-visual-scope .apple-value-card {
+    height: auto;
+    min-height: 0;
+    padding: clamp(1rem, 4vw, 1.22rem);
+  }
+
+  .public-visual-scope .apple-value-card-preview,
+  .public-visual-scope .apple-value-card-detail {
+    display: block;
+    max-height: none;
+    opacity: 1;
+    overflow: visible;
+    -webkit-line-clamp: unset;
+    transform: none;
+  }
+}
+
 .admin-visual-scope[data-admin-theme] :is(.panel, .panel-strong, .admin-dashboard-shell, .admin-login-card, .admin-lead-card, .archive-chip, .media-caption, .film-frame) {
   border-color: var(--admin-glass-border);
   background:
