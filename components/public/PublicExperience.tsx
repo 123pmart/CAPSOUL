@@ -449,6 +449,146 @@ function usePublicAtmosphereSection() {
   return activeSection;
 }
 
+function useMinimalPublicRevealMotion() {
+  useEffect(() => {
+    const elements = Array.from(
+      document.querySelectorAll<HTMLElement>("[data-reveal]"),
+    );
+
+    if (!elements.length) {
+      return;
+    }
+
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const pending = new Set(elements);
+
+    if (prefersReducedMotion || typeof IntersectionObserver === "undefined") {
+      elements.forEach((element) => element.classList.add("is-visible"));
+      return;
+    }
+
+    let frame = 0;
+    const timers: number[] = [];
+    document.documentElement.classList.add("capsoul-reveal-ready");
+    const settleTimers = new Map<HTMLElement, number>();
+
+    const clearMotionStyles = (element: HTMLElement) => {
+      element.style.removeProperty("opacity");
+      element.style.removeProperty("transform");
+      element.style.removeProperty("transition-property");
+      element.style.removeProperty("transition-duration");
+      element.style.removeProperty("transition-timing-function");
+      element.style.removeProperty("will-change");
+    };
+
+    const prepareReveal = (element: HTMLElement) => {
+      element.classList.add("capsoul-reveal-pending");
+      element.style.setProperty("opacity", "0", "important");
+      element.style.setProperty("transform", "translate3d(0, 10px, 0) scale(0.965)", "important");
+      element.style.setProperty("transition-property", "opacity, transform");
+      element.style.setProperty("transition-duration", window.matchMedia("(max-width: 767px)").matches ? "540ms" : "640ms");
+      element.style.setProperty("transition-timing-function", "cubic-bezier(0.22, 1, 0.36, 1)");
+      element.style.setProperty("will-change", "opacity, transform");
+    };
+
+    const revealElement = (element: HTMLElement) => {
+      element.classList.add("is-visible");
+      element.classList.remove("capsoul-reveal-pending");
+      element.style.setProperty("opacity", "1", "important");
+      element.style.setProperty("transform", "translate3d(0, 0, 0) scale(1)", "important");
+
+      const existingTimer = settleTimers.get(element);
+      if (existingTimer) {
+        window.clearTimeout(existingTimer);
+      }
+
+      const transitionDelay = window.getComputedStyle(element).transitionDelay;
+      const delayMs = transitionDelay.endsWith("ms")
+        ? Number.parseFloat(transitionDelay)
+        : Number.parseFloat(transitionDelay) * 1000;
+
+      settleTimers.set(
+        element,
+        window.setTimeout(() => {
+          clearMotionStyles(element);
+          settleTimers.delete(element);
+        }, 760 + (Number.isFinite(delayMs) ? delayMs : 0)),
+      );
+    };
+
+    elements.forEach(prepareReveal);
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting || !(entry.target instanceof HTMLElement)) {
+            return;
+          }
+
+          revealElement(entry.target);
+          pending.delete(entry.target);
+          observer.unobserve(entry.target);
+        });
+      },
+      {
+        root: null,
+        rootMargin: "0px 0px -12% 0px",
+        threshold: 0.14,
+      },
+    );
+
+    elements.forEach((element) => observer.observe(element));
+
+    const revealVisibleElements = () => {
+      const triggerY = window.innerHeight * 0.9;
+
+      pending.forEach((element) => {
+        const rect = element.getBoundingClientRect();
+
+        if (rect.top <= triggerY && rect.bottom >= -24) {
+          revealElement(element);
+          pending.delete(element);
+          observer.unobserve(element);
+        }
+      });
+
+      frame = 0;
+    };
+
+    const scheduleReveal = () => {
+      if (frame) {
+        window.cancelAnimationFrame(frame);
+      }
+
+      frame = window.requestAnimationFrame(revealVisibleElements);
+    };
+
+    revealVisibleElements();
+    scheduleReveal();
+    timers.push(window.setTimeout(revealVisibleElements, 80));
+    timers.push(window.setTimeout(revealVisibleElements, 240));
+    window.addEventListener("scroll", scheduleReveal, { passive: true });
+    window.addEventListener("resize", scheduleReveal);
+
+    return () => {
+      if (frame) {
+        window.cancelAnimationFrame(frame);
+      }
+
+      timers.forEach((timer) => window.clearTimeout(timer));
+      settleTimers.forEach((timer) => window.clearTimeout(timer));
+      observer.disconnect();
+      document.documentElement.classList.remove("capsoul-reveal-ready");
+      elements.forEach((element) => {
+        element.classList.remove("capsoul-reveal-pending");
+        clearMotionStyles(element);
+      });
+      window.removeEventListener("scroll", scheduleReveal);
+      window.removeEventListener("resize", scheduleReveal);
+    };
+  }, []);
+}
+
 function formatBudgetValue(value: number) {
   if (value >= budgetSliderMax) {
     return "$25,000+";
@@ -814,15 +954,19 @@ function ArchiveValueCard({
   index,
   archiveLabelPrefix,
   isActive,
+  isExpanded,
   onHover,
   onFocus,
+  onBlur,
 }: {
   pillar: ArchivePillar;
   index: number;
   archiveLabelPrefix: string;
   isActive: boolean;
+  isExpanded: boolean;
   onHover: (index: number) => void;
   onFocus: (index: number) => void;
+  onBlur: () => void;
 }) {
   return (
     <article
@@ -830,6 +974,7 @@ function ArchiveValueCard({
       key={`archive-value-card-${index}`}
       data-reveal
       data-active={isActive ? "true" : "false"}
+      data-expanded={isExpanded ? "true" : "false"}
       tabIndex={0}
       style={{
         "--motion-stagger-index": index,
@@ -841,6 +986,8 @@ function ArchiveValueCard({
         }
       }}
       onFocus={() => onFocus(index)}
+      onClick={() => onFocus(index)}
+      onBlur={onBlur}
     >
       <span className="apple-liquid-layer" aria-hidden="true" />
       <span>{archiveLabelPrefix} {index + 1}</span>
@@ -860,9 +1007,20 @@ function EmotionalValue({
 }) {
   const archiveGridRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
   const archive = PRIVATE_MEMORY_ARCHIVE[getPublicLocale(stepLabelPrefix)];
   const pillars = archive.pillars;
   const activePillar = pillars[activeIndex] ?? pillars[0];
+
+  const activateArchiveCard = useCallback((index: number) => {
+    setActiveIndex(index);
+    setExpandedIndex(index);
+  }, []);
+
+  const resetArchiveCards = useCallback(() => {
+    setActiveIndex(0);
+    setExpandedIndex(null);
+  }, []);
 
   useIsomorphicLayoutEffect(() => {
     const grid = archiveGridRef.current;
@@ -905,7 +1063,7 @@ function EmotionalValue({
           data-active-index={activeIndex}
           onPointerLeave={(event: PointerEvent<HTMLElement>) => {
             if (isFineHoverPointer(event)) {
-              setActiveIndex(0);
+              resetArchiveCards();
             }
           }}
           style={{
@@ -920,8 +1078,10 @@ function EmotionalValue({
               index={index}
               archiveLabelPrefix={archive.labelPrefix}
               isActive={index === activeIndex}
-              onHover={setActiveIndex}
-              onFocus={setActiveIndex}
+              isExpanded={expandedIndex === index}
+              onHover={activateArchiveCard}
+              onFocus={activateArchiveCard}
+              onBlur={() => setExpandedIndex(null)}
             />
           ))}
         </div>
@@ -1560,6 +1720,7 @@ export function PublicExperience({
   );
   const activeId = usePublicActiveSection(sections);
   const activeAtmosphereSection = usePublicAtmosphereSection();
+  useMinimalPublicRevealMotion();
   const archiveStepLabelPrefix = globalContent.navigation.home === "Inicio" ? "Paso" : "Step";
   const processSwipeHint = globalContent.navigation.home === "Inicio" ? "Desliza" : "Swipe";
   const railItems = useMemo<Array<{ key: PublicSectionKey; label: string }>>(
