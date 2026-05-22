@@ -3886,38 +3886,6 @@ html[data-theme="dark"] body {
   opacity: 0.42;
 }
 
-.atmosphere-bloom {
-  position: absolute;
-  width: min(76vmax, 82rem);
-  height: min(76vmax, 82rem);
-  border-radius: 999px;
-  opacity: 0.09;
-  pointer-events: none;
-  transform: translate3d(0, 0, 0);
-  mix-blend-mode: soft-light;
-}
-
-.atmosphere-bloom-one {
-  top: -34vmax;
-  left: -24vmax;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.54) 0%, rgba(255, 255, 255, 0.18) 30%, transparent 66%);
-}
-
-.atmosphere-bloom-two {
-  right: -30vmax;
-  top: 20svh;
-  background: radial-gradient(circle, rgba(25, 25, 25, 0.18) 0%, rgba(20, 20, 20, 0.07) 34%, transparent 68%);
-}
-
-.atmosphere-bloom-three {
-  left: 28vw;
-  bottom: -38vmax;
-  width: min(68vmax, 74rem);
-  height: min(68vmax, 74rem);
-  background: radial-gradient(circle, rgba(178, 142, 82, 0.16) 0%, rgba(178, 142, 82, 0.055) 32%, transparent 66%);
-  opacity: 0.09;
-}
-
 html[data-theme="dark"] .atmosphere-backdrop {
   opacity: 0.58;
 }
@@ -3931,18 +3899,6 @@ html[data-theme="dark"] .atmosphere-backdrop::before {
 
 html[data-theme="dark"] .atmosphere-backdrop::after {
   opacity: 0.28;
-}
-
-html[data-theme="dark"] .atmosphere-bloom-one {
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.12) 0%, rgba(210, 222, 236, 0.052) 32%, transparent 68%);
-}
-
-html[data-theme="dark"] .atmosphere-bloom-two {
-  background: radial-gradient(circle, rgba(70, 88, 108, 0.18) 0%, rgba(44, 54, 66, 0.065) 34%, transparent 68%);
-}
-
-html[data-theme="dark"] .atmosphere-bloom-three {
-  background: radial-gradient(circle, rgba(185, 148, 84, 0.11) 0%, rgba(94, 72, 40, 0.04) 34%, transparent 68%);
 }
 
 /* Premium documentary studio atmosphere. Gradients only; no text, images, canvas, or spacers. */
@@ -3971,31 +3927,6 @@ html[data-theme="dark"] .atmosphere-bloom-three {
   opacity: 0.22;
 }
 
-.atmosphere-bloom {
-  mix-blend-mode: multiply;
-}
-
-.atmosphere-bloom-one {
-  top: -28vmax;
-  left: -18vmax;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.48) 0%, rgba(210, 200, 180, 0.13) 32%, transparent 68%);
-  opacity: 0.08;
-}
-
-.atmosphere-bloom-two {
-  right: -24vmax;
-  top: 14svh;
-  background: radial-gradient(circle, rgba(180, 195, 210, 0.13) 0%, rgba(180, 195, 210, 0.052) 34%, transparent 70%);
-  opacity: 0.075;
-}
-
-.atmosphere-bloom-three {
-  left: 22vw;
-  bottom: -34vmax;
-  background: radial-gradient(circle, rgba(215, 185, 125, 0.12) 0%, rgba(215, 185, 125, 0.038) 34%, transparent 68%);
-  opacity: 0.065;
-}
-
 html[data-theme="dark"] .atmosphere-backdrop {
   opacity: 0.42;
   background:
@@ -4017,25 +3948,6 @@ html[data-theme="dark"] .atmosphere-backdrop::after {
     radial-gradient(ellipse at 90% 74%, rgba(70, 84, 104, 0.08), transparent 36%),
     linear-gradient(90deg, rgba(255, 255, 255, 0.02), transparent 40%, rgba(255, 255, 255, 0.018));
   opacity: 0.24;
-}
-
-html[data-theme="dark"] .atmosphere-bloom {
-  mix-blend-mode: screen;
-}
-
-html[data-theme="dark"] .atmosphere-bloom-one {
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, rgba(30, 45, 70, 0.1) 36%, transparent 70%);
-  opacity: 0.1;
-}
-
-html[data-theme="dark"] .atmosphere-bloom-two {
-  background: radial-gradient(circle, rgba(30, 45, 70, 0.2) 0%, rgba(30, 45, 70, 0.08) 34%, transparent 70%);
-  opacity: 0.1;
-}
-
-html[data-theme="dark"] .atmosphere-bloom-three {
-  background: radial-gradient(circle, rgba(86, 101, 122, 0.13) 0%, rgba(70, 84, 104, 0.048) 34%, transparent 70%);
-  opacity: 0.08;
 }
 
 .apple-hero,
@@ -10470,10 +10382,6 @@ html[data-theme="dark"] .public-visual-scope .atmosphere-backdrop {
     linear-gradient(180deg, rgba(255, 255, 255, 0.028), transparent 38%, rgba(0, 0, 0, 0.1));
 }
 
-html[data-theme="dark"] .public-visual-scope .atmosphere-bloom-three {
-  background: radial-gradient(circle, rgba(104, 124, 150, 0.14) 0%, rgba(104, 124, 150, 0.048) 34%, transparent 68%);
-}
-
 .public-visual-scope :is(
   .apple-hero-record,
   .apple-record-feature,
@@ -10835,47 +10743,12 @@ html[data-theme="dark"] .public-visual-scope {
     radial-gradient(ellipse at 50% 50%, rgba(20, 20, 20, 0.028), transparent 62%);
 }
 
-.public-visual-scope .atmosphere-bloom {
-  opacity: 0.2;
-  transform: translate3d(0, 0, 0);
-}
-
-.public-visual-scope .atmosphere-bloom-one {
-  width: 42vmax;
-  height: 42vmax;
-  background: radial-gradient(circle, rgba(220, 208, 184, 0.28) 0%, rgba(220, 208, 184, 0.08) 38%, transparent 70%);
-}
-
-.public-visual-scope .atmosphere-bloom-two {
-  width: 36vmax;
-  height: 36vmax;
-  background: radial-gradient(circle, rgba(174, 192, 210, 0.18) 0%, rgba(174, 192, 210, 0.056) 40%, transparent 72%);
-}
-
-.public-visual-scope .atmosphere-bloom-three {
-  width: 32vmax;
-  height: 32vmax;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.052) 38%, transparent 70%);
-}
-
 html[data-theme="dark"] .public-visual-scope .atmosphere-backdrop {
   opacity: 0.42;
   background:
     radial-gradient(ellipse at 17% 8%, rgba(26, 42, 68, 0.18), transparent 38vmax),
     radial-gradient(ellipse at 84% 20%, rgba(255, 255, 255, 0.038), transparent 32vmax),
     linear-gradient(180deg, rgba(255, 255, 255, 0.024), transparent 42%, rgba(0, 0, 0, 0.1));
-}
-
-html[data-theme="dark"] .public-visual-scope .atmosphere-bloom-one {
-  background: radial-gradient(circle, rgba(38, 58, 90, 0.42) 0%, rgba(38, 58, 90, 0.13) 38%, transparent 70%);
-}
-
-html[data-theme="dark"] .public-visual-scope .atmosphere-bloom-two {
-  background: radial-gradient(circle, rgba(238, 238, 232, 0.11) 0%, rgba(238, 238, 232, 0.035) 40%, transparent 72%);
-}
-
-html[data-theme="dark"] .public-visual-scope .atmosphere-bloom-three {
-  background: radial-gradient(circle, rgba(102, 122, 150, 0.2) 0%, rgba(102, 122, 150, 0.056) 38%, transparent 70%);
 }
 
 .public-visual-scope .apple-archive-experience {
@@ -11420,15 +11293,6 @@ body {
     radial-gradient(ellipse at 50% 50%, rgba(18, 18, 18, 0.024), transparent 66%);
 }
 
-.public-visual-scope .atmosphere-bloom {
-  opacity: 0.14;
-  transform: translate3d(0, 0, 0);
-  transition-property: opacity, transform;
-  transition-duration: 600ms;
-  transition-timing-function: var(--cinematic-ease, cubic-bezier(0.22, 1, 0.36, 1));
-  will-change: auto;
-}
-
 html[data-theme="dark"] .public-visual-scope .atmosphere-backdrop {
   opacity: 0.32;
   background:
@@ -11748,7 +11612,6 @@ html[data-theme="dark"] .public-visual-scope .atmosphere-backdrop {
 
 @media (prefers-reduced-motion: reduce) {
   .public-visual-scope .atmosphere-backdrop,
-  .public-visual-scope .atmosphere-bloom,
   .public-visual-scope .chip-marquee[data-overflow="true"] .chip-marquee-track {
     animation: none !important;
     transform: none !important;
@@ -12530,156 +12393,6 @@ html[data-theme="dark"] .public-visual-scope .atmosphere-layer-vignette {
     linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 30%, rgba(0, 0, 0, 0.28));
 }
 
-.liquid-glass-object {
-  position: absolute;
-  z-index: 0;
-  pointer-events: none;
-  transform: translate3d(0, 0, 0);
-  will-change: transform;
-  animation: liquid-glass-drift 34s cubic-bezier(0.22, 1, 0.36, 1) infinite alternate;
-}
-
-.liquid-glass-ring {
-  border-radius: 999px;
-  opacity: 0.5;
-  background:
-    radial-gradient(ellipse at 34% 28%, rgba(255, 255, 255, 0.78), transparent 12%),
-    radial-gradient(closest-side, transparent 58%, var(--liquid-object-pearl) 63%, var(--liquid-object-silver) 72%, transparent 83%),
-    conic-gradient(from 132deg, transparent 0 16%, rgba(255, 255, 255, 0.78) 22%, var(--liquid-object-silver) 34%, transparent 48%, var(--liquid-object-champagne) 62%, rgba(255, 255, 255, 0.5) 76%, transparent 92%);
-  box-shadow:
-    inset 0 0 42px rgba(255, 255, 255, 0.16),
-    0 32px 90px rgba(40, 50, 64, 0.18);
-  filter: blur(0.35px);
-}
-
-.liquid-glass-orb {
-  border-radius: 999px;
-  opacity: 0.62;
-  background:
-    radial-gradient(circle at 32% 24%, rgba(255, 255, 255, 0.92), transparent 15%),
-    radial-gradient(circle at 48% 54%, var(--liquid-object-silver), rgba(255, 255, 255, 0.08) 48%, transparent 72%);
-  box-shadow:
-    inset -18px -22px 36px rgba(8, 12, 18, 0.14),
-    inset 14px 14px 28px rgba(255, 255, 255, 0.2),
-    0 26px 74px rgba(50, 64, 82, 0.2);
-  filter: blur(0.7px);
-}
-
-.liquid-glass-capsule,
-.liquid-glass-plate {
-  border: 1px solid rgba(255, 255, 255, 0.26);
-  background:
-    linear-gradient(128deg, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0.08) 38%, rgba(255, 255, 255, 0.16)),
-    radial-gradient(ellipse at 24% 18%, var(--liquid-object-pearl), transparent 34%);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.38),
-    inset 0 -1px 0 rgba(10, 12, 16, 0.12),
-    0 28px 78px rgba(28, 36, 48, 0.18);
-  opacity: 0.44;
-  backdrop-filter: blur(4px) saturate(118%);
-  -webkit-backdrop-filter: blur(4px) saturate(118%);
-}
-
-.liquid-glass-capsule {
-  border-radius: 999px;
-}
-
-.liquid-glass-plate {
-  border-radius: clamp(2.2rem, 5vw, 5rem);
-}
-
-.liquid-glass-ring-one {
-  width: clamp(19rem, 36vw, 43rem);
-  height: clamp(19rem, 36vw, 43rem);
-  right: max(-11rem, -8vw);
-  top: clamp(5rem, 10vw, 15rem);
-}
-
-.liquid-glass-ring-two {
-  width: clamp(14rem, 26vw, 32rem);
-  height: clamp(14rem, 26vw, 32rem);
-  left: max(-9rem, -7vw);
-  top: clamp(34rem, 62vw, 58rem);
-  animation-delay: -9s;
-}
-
-.liquid-glass-orb-one {
-  width: clamp(6rem, 12vw, 13rem);
-  height: clamp(6rem, 12vw, 13rem);
-  left: clamp(1.8rem, 7vw, 9rem);
-  top: clamp(10rem, 18vw, 19rem);
-  animation-delay: -4s;
-}
-
-.liquid-glass-orb-two {
-  width: clamp(4.25rem, 8vw, 9rem);
-  height: clamp(4.25rem, 8vw, 9rem);
-  right: clamp(2rem, 9vw, 11rem);
-  top: clamp(49rem, 72vw, 70rem);
-  animation-delay: -15s;
-}
-
-.liquid-glass-orb-three {
-  width: clamp(2.6rem, 5vw, 5.5rem);
-  height: clamp(2.6rem, 5vw, 5.5rem);
-  left: clamp(62%, 68vw, 72%);
-  top: clamp(25rem, 42vw, 42rem);
-  opacity: 0.5;
-  animation-delay: -20s;
-}
-
-.liquid-glass-capsule-one {
-  --liquid-rotate: -8deg;
-  width: clamp(9rem, 19vw, 23rem);
-  height: clamp(3.2rem, 6vw, 7rem);
-  left: clamp(6rem, 18vw, 24rem);
-  top: clamp(18rem, 31vw, 34rem);
-  animation-delay: -7s;
-}
-
-.liquid-glass-capsule-two {
-  --liquid-rotate: 10deg;
-  width: clamp(8rem, 16vw, 19rem);
-  height: clamp(2.6rem, 5vw, 6rem);
-  right: clamp(6rem, 17vw, 22rem);
-  top: clamp(78rem, 104vw, 96rem);
-  animation-delay: -18s;
-}
-
-.liquid-glass-plate-one {
-  --liquid-rotate: -2deg;
-  width: clamp(14rem, 25vw, 30rem);
-  height: clamp(8rem, 14vw, 16rem);
-  left: clamp(34%, 40vw, 42%);
-  top: clamp(92rem, 124vw, 116rem);
-  opacity: 0.34;
-  animation-delay: -12s;
-}
-
-html[data-theme="dark"] .liquid-glass-ring {
-  opacity: 0.34;
-  box-shadow:
-    inset 0 0 42px rgba(255, 255, 255, 0.09),
-    0 34px 92px rgba(0, 0, 0, 0.34);
-}
-
-html[data-theme="dark"] .liquid-glass-orb {
-  opacity: 0.44;
-  box-shadow:
-    inset -18px -22px 36px rgba(0, 0, 0, 0.24),
-    inset 14px 14px 28px rgba(255, 255, 255, 0.08),
-    0 28px 78px rgba(0, 0, 0, 0.36);
-}
-
-html[data-theme="dark"] .liquid-glass-capsule,
-html[data-theme="dark"] .liquid-glass-plate {
-  opacity: 0.32;
-  border-color: rgba(255, 255, 255, 0.16);
-  background:
-    linear-gradient(128deg, rgba(255, 255, 255, 0.085), rgba(255, 255, 255, 0.02) 38%, rgba(145, 170, 205, 0.07)),
-    radial-gradient(ellipse at 24% 18%, rgba(255, 255, 255, 0.12), transparent 34%);
-}
-
 .liquid-glass-panel,
 .public-visual-scope :is(
   .header-nav-shell,
@@ -12936,41 +12649,12 @@ html[data-theme="dark"] .public-visual-scope .apple-value-card-detail {
     transform: none;
   }
 
-  .liquid-glass-object {
-    opacity: 0.45;
-  }
-
-  .liquid-glass-ring-one {
-    right: -12rem;
-    top: 8rem;
-  }
-
-  .liquid-glass-ring-two {
-    left: -11rem;
-    top: 44rem;
-  }
 }
 
 @media (max-width: 767px) {
   .public-visual-scope :is(.apple-value-card, .apple-record-feature, .apple-process-card, .apple-preserve-card, .apple-inquiry-form, .apple-inquiry-support, .apple-visual-frame) {
     backdrop-filter: blur(16px) saturate(136%) !important;
     -webkit-backdrop-filter: blur(16px) saturate(136%) !important;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .liquid-glass-object {
-    animation: none !important;
-    transform: translate3d(0, 0, 0) !important;
-  }
-}
-
-@keyframes liquid-glass-drift {
-  0% {
-    transform: translate3d(0, 0, 0) rotate(var(--liquid-rotate, 0deg));
-  }
-  100% {
-    transform: translate3d(0.85rem, -1.15rem, 0) rotate(calc(var(--liquid-rotate, 0deg) + 2deg));
   }
 }
 
