@@ -1047,11 +1047,6 @@ function EmotionalValue({
     >
       <PremiumSectionMotion variant="archive" className="apple-value-choreography">
         <div className="apple-value-archive-shell motion-media" data-reveal>
-          <div className="apple-archive-sheets" aria-hidden="true" data-active-index={activeIndex}>
-            <span className="apple-archive-sheet apple-archive-sheet-one" />
-            <span className="apple-archive-sheet apple-archive-sheet-two" />
-            <span className="apple-archive-sheet apple-archive-sheet-three" />
-          </div>
           <div className="apple-value-statement liquid-glass-panel">
             <span>{archive.eyebrow}</span>
             <h2 data-reveal style={revealDelay(1)}>{archive.headline}</h2>
