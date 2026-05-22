@@ -944,6 +944,35 @@ function ArchiveHero({
   );
 }
 
+function ArchiveValueCard({
+  pillar,
+  index,
+  archiveLabelPrefix,
+}: {
+  pillar: ArchivePillar;
+  index: number;
+  archiveLabelPrefix: string;
+}) {
+  return (
+    <article
+      className="apple-value-card apple-liquid-surface liquid-glass-panel"
+      data-reveal
+      style={{
+        "--motion-stagger-index": index,
+        "--reveal-delay": `${Math.min(index * 80, 280)}ms`,
+      } as CSSProperties}
+    >
+      <span className="apple-liquid-layer" aria-hidden="true" />
+      <span className="apple-value-card-label">
+        {archiveLabelPrefix} {String(index + 1).padStart(2, "0")}
+      </span>
+      <h3>{pillar.title}</h3>
+      <p className="apple-value-card-preview">{pillar.summary}</p>
+      <p className="apple-value-card-detail">{pillar.detail}</p>
+    </article>
+  );
+}
+
 function EmotionalValue({
   stepLabelPrefix,
 }: {
@@ -969,6 +998,16 @@ function EmotionalValue({
             </div>
             <p>{archiveSummary}</p>
           </div>
+        </div>
+        <div className="apple-value-grid motion-stagger">
+          {archive.pillars.map((pillar, index) => (
+            <ArchiveValueCard
+              key={`archive-value-card-${index}`}
+              pillar={pillar}
+              index={index}
+              archiveLabelPrefix={archive.labelPrefix}
+            />
+          ))}
         </div>
       </PremiumSectionMotion>
     </section>
