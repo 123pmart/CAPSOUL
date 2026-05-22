@@ -11,7 +11,6 @@ import {
   type CSSProperties,
   type FormEvent,
   type MouseEvent,
-  type PointerEvent,
   type ReactNode,
 } from "react";
 import { usePathname } from "next/navigation";
@@ -272,10 +271,6 @@ const detailItemReveal = {
     transition: { duration: 0.48, ease: revealEase },
   },
 } as const;
-
-function isFineHoverPointer(event: { pointerType: string }) {
-  return event.pointerType === "mouse" || event.pointerType === "pen";
-}
 
 type ChipMarqueeRowProps = {
   className: string;
@@ -949,101 +944,20 @@ function ArchiveHero({
   );
 }
 
-function ArchiveValueCard({
-  pillar,
-  index,
-  archiveLabelPrefix,
-  isActive,
-  isExpanded,
-  onHover,
-  onFocus,
-  onBlur,
-}: {
-  pillar: ArchivePillar;
-  index: number;
-  archiveLabelPrefix: string;
-  isActive: boolean;
-  isExpanded: boolean;
-  onHover: (index: number) => void;
-  onFocus: (index: number) => void;
-  onBlur: () => void;
-}) {
-  return (
-    <article
-      className="apple-value-card apple-liquid-surface liquid-glass-panel"
-      key={`archive-value-card-${index}`}
-      data-reveal
-      data-active={isActive ? "true" : "false"}
-      data-expanded={isExpanded ? "true" : "false"}
-      tabIndex={0}
-      style={{
-        "--motion-stagger-index": index,
-        "--reveal-delay": `${Math.min(index * 90, 360)}ms`,
-      } as CSSProperties}
-      onPointerEnter={(event: PointerEvent<HTMLElement>) => {
-        if (isFineHoverPointer(event)) {
-          onHover(index);
-        }
-      }}
-      onFocus={() => onFocus(index)}
-      onClick={() => onFocus(index)}
-      onBlur={onBlur}
-    >
-      <span className="apple-liquid-layer" aria-hidden="true" />
-      <span>{formatArchiveCardLabel(archiveLabelPrefix, index)}</span>
-      <h3>{pillar.title}</h3>
-      <p className="apple-value-card-preview">{pillar.summary}</p>
-      <div className="apple-value-card-detail">
-        {pillar.detail}
-      </div>
-    </article>
-  );
-}
-
-function formatArchiveCardLabel(prefix: string, index: number) {
-  return `${prefix} ${String(index + 1).padStart(2, "0")}`.toLocaleUpperCase();
-}
-
 function EmotionalValue({
   stepLabelPrefix,
 }: {
   stepLabelPrefix: string;
 }) {
-  const archiveGridRef = useRef<HTMLDivElement>(null);
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
   const archive = PRIVATE_MEMORY_ARCHIVE[getPublicLocale(stepLabelPrefix)];
-  const pillars = archive.pillars;
-  const activePillar = pillars[activeIndex] ?? pillars[0];
-
-  const activateArchiveCard = useCallback((index: number) => {
-    setActiveIndex(index);
-    setExpandedIndex(index);
-  }, []);
-
-  const resetArchiveCards = useCallback(() => {
-    setActiveIndex(0);
-    setExpandedIndex(null);
-  }, []);
-
-  useIsomorphicLayoutEffect(() => {
-    const grid = archiveGridRef.current;
-
-    if (grid) {
-      grid.scrollLeft = 0;
-    }
-  }, [pillars.length]);
+  const archiveSummary = archive.pillars[0]?.summary ?? archive.headline;
 
   return (
     <section
       className="apple-value-band motion-section"
       data-atmosphere-section="archive"
-      data-active-index={activeIndex}
       data-motion-section
       data-reveal
-      style={{
-        "--active-archive-index": activeIndex,
-      } as CSSProperties}
     >
       <PremiumSectionMotion variant="archive" className="apple-value-choreography">
         <div className="apple-value-archive-shell motion-media" data-reveal>
@@ -1051,38 +965,10 @@ function EmotionalValue({
             <span>{archive.eyebrow}</span>
             <h2 data-reveal style={revealDelay(1)}>{archive.headline}</h2>
             <div className="apple-archive-record-line" aria-hidden="true">
-              <span style={{ "--archive-progress-scale": (activeIndex + 1) / pillars.length } as CSSProperties} />
+              <span style={{ "--archive-progress-scale": 1 } as CSSProperties} />
             </div>
-            <p>{activePillar?.summary ?? archive.headline}</p>
+            <p>{archiveSummary}</p>
           </div>
-        </div>
-        <div
-          ref={archiveGridRef}
-          className="apple-value-grid motion-stagger"
-          data-active-index={activeIndex}
-          onPointerLeave={(event: PointerEvent<HTMLElement>) => {
-            if (isFineHoverPointer(event)) {
-              resetArchiveCards();
-            }
-          }}
-          style={{
-            "--active-archive-index": activeIndex,
-            "--archive-card-index-x": `calc(${12.5 + activeIndex * 25}% - 0.32rem)`,
-          } as CSSProperties}
-        >
-          {pillars.map((pillar, index) => (
-            <ArchiveValueCard
-              key={`archive-value-card-${index}`}
-              pillar={pillar}
-              index={index}
-              archiveLabelPrefix={archive.labelPrefix}
-              isActive={index === activeIndex}
-              isExpanded={expandedIndex === index}
-              onHover={activateArchiveCard}
-              onFocus={activateArchiveCard}
-              onBlur={() => setExpandedIndex(null)}
-            />
-          ))}
         </div>
       </PremiumSectionMotion>
     </section>
