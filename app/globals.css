@@ -12116,6 +12116,357 @@ html[data-theme="dark"] .public-visual-scope :is(.apple-process-card, .apple-pre
   box-shadow: inset 0 1px 0 color-mix(in srgb, var(--admin-glass-highlight) 70%, transparent);
 }
 
+/* End-of-file repair override: final guard against older experimental cascades. */
+.public-visual-scope .atmosphere-backdrop {
+  opacity: 0.58 !important;
+  background:
+    radial-gradient(ellipse at 50% -18%, rgba(255, 255, 255, 0.72), transparent 46vmax),
+    radial-gradient(ellipse at 18% 12%, rgba(150, 150, 150, 0.12), transparent 42vmax),
+    radial-gradient(ellipse at 88% 22%, rgba(210, 210, 210, 0.12), transparent 38vmax),
+    linear-gradient(180deg, #fafafa, transparent 38%, rgba(250, 250, 250, 0.56)) !important;
+}
+
+html[data-theme="dark"] .public-visual-scope .atmosphere-backdrop {
+  background:
+    radial-gradient(ellipse at 50% -18%, rgba(255, 255, 255, 0.052), transparent 44vmax),
+    radial-gradient(ellipse at 18% 12%, rgba(120, 120, 120, 0.08), transparent 42vmax),
+    radial-gradient(ellipse at 88% 22%, rgba(70, 70, 70, 0.1), transparent 38vmax),
+    linear-gradient(180deg, #000000, transparent 36%, rgba(0, 0, 0, 0.34)) !important;
+}
+
+.public-visual-scope .apple-value-card-detail {
+  display: block !important;
+  max-height: var(--archive-detail-max, 0px) !important;
+  opacity: var(--archive-detail-opacity, 0) !important;
+  overflow: var(--archive-detail-overflow, hidden) !important;
+}
+
+.public-visual-scope .apple-value-card:is(:hover, :focus, :focus-visible, [data-expanded="true"]) .apple-value-card-detail {
+  max-height: var(--archive-detail-max, 12rem) !important;
+  opacity: var(--archive-detail-opacity, 1) !important;
+  overflow: var(--archive-detail-overflow, visible) !important;
+  transform: translate3d(0, 0, 0) !important;
+}
+
+.public-visual-scope .apple-value-card-detail-expanded {
+  display: block !important;
+  color: var(--material-muted) !important;
+  font-size: clamp(0.78rem, 0.9vw, 0.88rem) !important;
+  line-height: 1.42 !important;
+  margin: 0 !important;
+  max-height: 12rem !important;
+  opacity: 1 !important;
+  overflow: visible !important;
+  transform: translate3d(0, 0, 0) !important;
+  transition-property: opacity, max-height !important;
+  transition-duration: 420ms !important;
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1) !important;
+}
+
+.public-visual-scope .apple-value-card[data-expanded="true"] .apple-value-card-detail,
+.public-visual-scope .apple-value-card:hover .apple-value-card-detail,
+.public-visual-scope .apple-value-card:focus .apple-value-card-detail,
+.public-visual-scope .apple-value-card:focus-visible .apple-value-card-detail {
+  display: block !important;
+  max-height: 12rem !important;
+  opacity: 1 !important;
+  overflow: visible !important;
+  transform: translate3d(0, 0, 0) !important;
+}
+
+/* End-of-file repair override: final guard against older experimental cascades. */
+.public-visual-scope .atmosphere-backdrop {
+  opacity: 0.58 !important;
+  background:
+    radial-gradient(ellipse at 50% -18%, rgba(255, 255, 255, 0.72), transparent 46vmax),
+    radial-gradient(ellipse at 18% 12%, rgba(150, 150, 150, 0.12), transparent 42vmax),
+    radial-gradient(ellipse at 88% 22%, rgba(210, 210, 210, 0.12), transparent 38vmax),
+    linear-gradient(180deg, #fafafa, transparent 38%, rgba(250, 250, 250, 0.56)) !important;
+}
+
+html[data-theme="dark"] .public-visual-scope .atmosphere-backdrop {
+  background:
+    radial-gradient(ellipse at 50% -18%, rgba(255, 255, 255, 0.052), transparent 44vmax),
+    radial-gradient(ellipse at 18% 12%, rgba(120, 120, 120, 0.08), transparent 42vmax),
+    radial-gradient(ellipse at 88% 22%, rgba(70, 70, 70, 0.1), transparent 38vmax),
+    linear-gradient(180deg, #000000, transparent 36%, rgba(0, 0, 0, 0.34)) !important;
+}
+
+.public-visual-scope .apple-value-card-detail {
+  display: block !important;
+  max-height: var(--archive-detail-max, 0px) !important;
+  opacity: var(--archive-detail-opacity, 0) !important;
+  overflow: var(--archive-detail-overflow, hidden) !important;
+}
+
+.public-visual-scope .apple-value-card:is(:hover, :focus, :focus-visible, [data-expanded="true"]) .apple-value-card-detail {
+  max-height: var(--archive-detail-max, 12rem) !important;
+  opacity: var(--archive-detail-opacity, 1) !important;
+  overflow: var(--archive-detail-overflow, visible) !important;
+  transform: translate3d(0, 0, 0) !important;
+}
+
+/* Critical public repair lock: keep the visible UI stable, monochrome, and unclipped. */
+.public-visual-scope {
+  --capsoul-env-base: #fafafa;
+  --capsoul-env-soft: rgba(255, 255, 255, 0.72);
+  --capsoul-env-diffuse: rgba(150, 150, 150, 0.12);
+  --capsoul-env-cool: rgba(210, 210, 210, 0.12);
+}
+
+html[data-theme="dark"] .public-visual-scope {
+  --capsoul-env-base: #000000;
+  --capsoul-env-soft: rgba(255, 255, 255, 0.055);
+  --capsoul-env-diffuse: rgba(120, 120, 120, 0.08);
+  --capsoul-env-cool: rgba(70, 70, 70, 0.1);
+}
+
+.public-visual-scope .atmosphere-backdrop {
+  opacity: 0.58 !important;
+  background:
+    radial-gradient(ellipse at 50% -18%, var(--capsoul-env-soft), transparent 46vmax),
+    radial-gradient(ellipse at 18% 12%, var(--capsoul-env-diffuse), transparent 42vmax),
+    radial-gradient(ellipse at 88% 22%, var(--capsoul-env-cool), transparent 38vmax),
+    linear-gradient(180deg, var(--capsoul-env-base), transparent 38%, color-mix(in srgb, var(--capsoul-env-base) 56%, transparent)) !important;
+}
+
+html[data-theme="dark"] .public-visual-scope .atmosphere-backdrop {
+  background:
+    radial-gradient(ellipse at 50% -18%, rgba(255, 255, 255, 0.052), transparent 44vmax),
+    radial-gradient(ellipse at 18% 12%, rgba(120, 120, 120, 0.08), transparent 42vmax),
+    radial-gradient(ellipse at 88% 22%, rgba(70, 70, 70, 0.1), transparent 38vmax),
+    linear-gradient(180deg, #000000, transparent 36%, rgba(0, 0, 0, 0.34)) !important;
+}
+
+.public-visual-scope .apple-budget-shell {
+  overflow: visible !important;
+}
+
+.public-visual-scope .apple-budget-track {
+  position: relative !important;
+  display: block !important;
+  height: 0.5rem !important;
+  min-height: 0.5rem !important;
+  border-radius: 999px !important;
+  overflow: visible !important;
+}
+
+.public-visual-scope .apple-budget-track::before {
+  content: none !important;
+}
+
+.public-visual-scope .apple-budget-progress {
+  position: absolute !important;
+  inset: 0 auto 0 0 !important;
+  top: 0 !important;
+  height: 100% !important;
+  width: var(--budget-progress, 50%) !important;
+  border-radius: inherit !important;
+  transform: none !important;
+}
+
+.public-visual-scope .apple-budget-input {
+  position: absolute !important;
+  inset: 50% 0 auto 0 !important;
+  width: 100% !important;
+  height: 2rem !important;
+  margin: 0 !important;
+  transform: translate3d(0, -50%, 0) !important;
+  background: transparent !important;
+}
+
+.public-visual-scope .apple-budget-input::-webkit-slider-runnable-track {
+  height: 0.5rem !important;
+  background: transparent !important;
+}
+
+.public-visual-scope .apple-budget-input::-moz-range-track {
+  height: 0.5rem !important;
+  background: transparent !important;
+}
+
+.public-visual-scope .apple-budget-input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 1.1rem !important;
+  height: 1.1rem !important;
+  margin-top: -0.3rem !important;
+}
+
+.public-visual-scope .apple-budget-input::-moz-range-thumb {
+  width: 1.1rem !important;
+  height: 1.1rem !important;
+}
+
+.public-visual-scope .apple-value-grid,
+.public-visual-scope .apple-value-grid[data-active-index] {
+  height: auto !important;
+  overflow: visible !important;
+}
+
+.public-visual-scope .apple-value-card {
+  cursor: pointer;
+  overflow: hidden !important;
+}
+
+.public-visual-scope .apple-value-card-preview {
+  display: -webkit-box !important;
+  overflow: hidden !important;
+  -webkit-box-orient: vertical !important;
+  -webkit-line-clamp: 2 !important;
+}
+
+.public-visual-scope .apple-value-card-detail {
+  display: block !important;
+  max-height: 0 !important;
+  opacity: 0 !important;
+  overflow: hidden !important;
+  transform: translate3d(0, 0.18rem, 0);
+  transition-property: opacity, transform, max-height;
+  transition-duration: 420ms;
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.public-visual-scope .apple-value-card:is(:hover, :focus, :focus-visible, [data-expanded="true"]) {
+  overflow: visible !important;
+}
+
+.public-visual-scope .apple-value-card:is(:hover, :focus, :focus-visible, [data-expanded="true"]) .apple-value-card-preview {
+  display: block !important;
+  overflow: visible !important;
+  -webkit-line-clamp: unset !important;
+}
+
+.public-visual-scope .apple-value-card:is(:hover, :focus, :focus-visible, [data-expanded="true"]) .apple-value-card-detail {
+  max-height: 12rem !important;
+  opacity: 1 !important;
+  overflow: visible !important;
+  transform: translate3d(0, 0, 0);
+}
+
+@media (min-width: 1024px) {
+  .public-visual-scope .apple-value-grid,
+  .public-visual-scope .apple-value-grid[data-active-index] {
+    display: flex !important;
+    width: min(980px, calc(100vw - 4rem)) !important;
+    max-width: min(980px, calc(100vw - 4rem)) !important;
+    align-items: stretch !important;
+  }
+
+  .public-visual-scope .apple-value-card {
+    flex: 1 1 0 !important;
+    min-height: clamp(10.5rem, 11vw, 12rem) !important;
+    height: auto !important;
+  }
+
+  .public-visual-scope .apple-value-grid:has(.apple-value-card:is(:hover, :focus, :focus-visible, [data-expanded="true"])) .apple-value-card {
+    flex-grow: 0.88 !important;
+    opacity: 0.94;
+  }
+
+  .public-visual-scope .apple-value-grid:has(.apple-value-card:is(:hover, :focus, :focus-visible, [data-expanded="true"])) .apple-value-card:is(:hover, :focus, :focus-visible, [data-expanded="true"]) {
+    flex-grow: 1.9 !important;
+    min-height: clamp(14rem, 14vw, 16.5rem) !important;
+    opacity: 1;
+  }
+}
+
+@media (max-width: 1023px) {
+  .public-visual-scope .apple-value-card {
+    min-height: 10.25rem !important;
+  }
+
+  .public-visual-scope .apple-value-card[data-expanded="true"] {
+    min-height: 15rem !important;
+  }
+}
+
+.public-visual-scope .apple-process-shell {
+  width: min(1120px, calc(100vw - 4rem)) !important;
+  max-width: 100% !important;
+  margin-inline: auto !important;
+}
+
+.public-visual-scope .apple-process-grid {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-inline: auto !important;
+  gap: clamp(0.7rem, 1vw, 1.05rem) !important;
+}
+
+@media (min-width: 768px) {
+  .public-visual-scope .apple-process-grid {
+    display: grid !important;
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+    overflow: visible !important;
+    padding-inline: 0 !important;
+    scroll-snap-type: none !important;
+  }
+
+  .public-visual-scope .apple-process-card {
+    width: auto !important;
+    min-width: 0 !important;
+    min-height: 12.75rem !important;
+    scroll-snap-align: none !important;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1100px) {
+  .public-visual-scope .apple-process-shell {
+    width: min(944px, calc(100vw - 5rem)) !important;
+  }
+
+  .public-visual-scope .apple-process-card {
+    padding: clamp(0.9rem, 1.4vw, 1.15rem) !important;
+  }
+
+  .public-visual-scope .apple-process-card h3 {
+    font-size: clamp(0.98rem, 1.5vw, 1.18rem) !important;
+  }
+
+  .public-visual-scope .apple-process-card p {
+    font-size: clamp(0.74rem, 1.1vw, 0.82rem) !important;
+    line-height: 1.45 !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .public-visual-scope .apple-process-shell {
+    width: calc(100vw - 2rem) !important;
+    max-width: calc(100vw - 2rem) !important;
+    margin-left: calc(50% - 50vw + 1rem) !important;
+    margin-right: auto !important;
+  }
+
+  .public-visual-scope .apple-process-grid {
+    display: flex !important;
+    overflow-x: auto !important;
+    overflow-y: visible !important;
+    scroll-snap-type: x mandatory !important;
+    padding-inline: max(0.875rem, calc((100% - min(76vw, 19.25rem)) / 2)) !important;
+  }
+
+  .public-visual-scope .apple-process-card {
+    flex: 0 0 min(76vw, 19.25rem) !important;
+    width: min(76vw, 19.25rem) !important;
+    min-width: min(76vw, 19.25rem) !important;
+    min-height: 12.75rem !important;
+    scroll-snap-align: center !important;
+  }
+
+  .public-visual-scope .apple-section-contrast .apple-record-feature-content {
+    gap: 1rem !important;
+  }
+
+  .public-visual-scope .apple-section-contrast .apple-record-detail {
+    margin-top: 1.05rem !important;
+  }
+
+  .public-visual-scope .apple-section-contrast .apple-record-detail h3 {
+    font-size: clamp(2rem, 8.5vw, 2.75rem) !important;
+    line-height: 1 !important;
+  }
+}
+
 /* Last-word liquid-glass cascade: keeps the visual target from being buried by older material passes. */
 .public-visual-scope .atmosphere-backdrop {
   opacity: 0.95 !important;
@@ -13309,4 +13660,50 @@ html[data-theme="dark"] .public-visual-scope .atmosphere-backdrop {
   border-color: var(--admin-glass-border);
   background: color-mix(in srgb, var(--admin-glass-fill-strong) 72%, transparent);
   box-shadow: inset 0 1px 0 color-mix(in srgb, var(--admin-glass-highlight) 70%, transparent);
+}
+
+/* Critical repair override: archive details are controlled by live card state. */
+.public-visual-scope .apple-value-card-detail {
+  display: block !important;
+  max-height: var(--archive-detail-max, 0px) !important;
+  opacity: var(--archive-detail-opacity, 0) !important;
+  overflow: var(--archive-detail-overflow, hidden) !important;
+}
+
+.public-visual-scope .apple-value-card:is(:hover, :focus, :focus-visible, [data-expanded="true"]) .apple-value-card-detail {
+  max-height: var(--archive-detail-max, 12rem) !important;
+  opacity: var(--archive-detail-opacity, 1) !important;
+  overflow: var(--archive-detail-overflow, visible) !important;
+  transform: translate3d(0, 0, 0) !important;
+}
+/* End-of-file repair override: final guard against older experimental cascades. */
+.public-visual-scope .atmosphere-backdrop {
+  opacity: 0.58 !important;
+  background:
+    radial-gradient(ellipse at 50% -18%, rgba(255, 255, 255, 0.72), transparent 46vmax),
+    radial-gradient(ellipse at 18% 12%, rgba(150, 150, 150, 0.12), transparent 42vmax),
+    radial-gradient(ellipse at 88% 22%, rgba(210, 210, 210, 0.12), transparent 38vmax),
+    linear-gradient(180deg, #fafafa, transparent 38%, rgba(250, 250, 250, 0.56)) !important;
+}
+
+html[data-theme="dark"] .public-visual-scope .atmosphere-backdrop {
+  background:
+    radial-gradient(ellipse at 50% -18%, rgba(255, 255, 255, 0.052), transparent 44vmax),
+    radial-gradient(ellipse at 18% 12%, rgba(120, 120, 120, 0.08), transparent 42vmax),
+    radial-gradient(ellipse at 88% 22%, rgba(70, 70, 70, 0.1), transparent 38vmax),
+    linear-gradient(180deg, #000000, transparent 36%, rgba(0, 0, 0, 0.34)) !important;
+}
+
+.public-visual-scope .apple-value-card-detail {
+  display: block !important;
+  max-height: var(--archive-detail-max, 0px) !important;
+  opacity: var(--archive-detail-opacity, 0) !important;
+  overflow: var(--archive-detail-overflow, hidden) !important;
+}
+
+.public-visual-scope .apple-value-card:is(:hover, :focus, :focus-visible, [data-expanded="true"]) .apple-value-card-detail {
+  max-height: var(--archive-detail-max, 12rem) !important;
+  opacity: var(--archive-detail-opacity, 1) !important;
+  overflow: var(--archive-detail-overflow, visible) !important;
+  transform: translate3d(0, 0, 0) !important;
 }

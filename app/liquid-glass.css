@@ -518,6 +518,10 @@ html[data-theme="dark"] .public-visual-scope :is(.apple-cta-secondary, .button-s
   flex-direction: column;
   gap: 0.62rem;
   overflow: hidden;
+  cursor: pointer;
+  transition-property: transform, opacity, background-color, border-color;
+  transition-duration: 420ms;
+  transition-timing-function: var(--material-ease);
 }
 
 .public-visual-scope .apple-value-card-label {
@@ -536,16 +540,52 @@ html[data-theme="dark"] .public-visual-scope :is(.apple-cta-secondary, .button-s
 }
 
 .public-visual-scope .apple-value-card-preview,
-.public-visual-scope .apple-value-card-detail {
+.public-visual-scope .apple-value-card-detail,
+.public-visual-scope .apple-value-card-detail-expanded {
   color: var(--material-muted) !important;
   font-size: clamp(0.78rem, 0.9vw, 0.88rem) !important;
   line-height: 1.42;
   margin: 0 !important;
-  overflow: visible !important;
+  overflow: hidden !important;
+}
+
+.public-visual-scope .apple-value-card-preview {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 
 .public-visual-scope .apple-value-card-detail {
-  display: none !important;
+  display: block !important;
+  max-height: 0;
+  opacity: 0;
+  transition-property: opacity, max-height;
+  transition-duration: 420ms;
+  transition-timing-function: var(--material-ease);
+}
+
+.public-visual-scope .apple-value-card:is(:hover, :focus-visible, [data-expanded="true"]) {
+  min-height: clamp(13.5rem, 15vw, 17rem) !important;
+  transform: translate3d(0, -3px, 0) scale(1.01);
+  overflow: visible;
+}
+
+.public-visual-scope .apple-value-card:is(:hover, :focus-visible, [data-expanded="true"]) .apple-value-card-preview {
+  -webkit-line-clamp: 3;
+}
+
+.public-visual-scope .apple-value-card:is(:hover, :focus-visible, [data-expanded="true"]) .apple-value-card-detail {
+  max-height: 12rem !important;
+  opacity: 1 !important;
+  overflow: visible !important;
+}
+
+.public-visual-scope .apple-value-card-detail-expanded {
+  display: block !important;
+  max-height: 12rem !important;
+  opacity: 1 !important;
+  overflow: visible !important;
+  transform: translate3d(0, 0, 0) !important;
 }
 
 @media (min-width: 1024px) {
@@ -568,6 +608,10 @@ html[data-theme="dark"] .public-visual-scope :is(.apple-cta-secondary, .button-s
   .public-visual-scope .apple-value-card {
     min-height: 10.25rem !important;
   }
+
+  .public-visual-scope .apple-value-card[data-expanded="true"] {
+    min-height: 15rem !important;
+  }
 }
 
 .public-visual-scope .apple-section-contrast .apple-section-inner,
@@ -589,6 +633,7 @@ html[data-theme="dark"] .public-visual-scope :is(.apple-cta-secondary, .button-s
 .public-visual-scope .apple-section-contrast .apple-record-detail {
   text-align: center;
   gap: clamp(0.65rem, 1vw, 0.9rem) !important;
+  margin-top: clamp(0.85rem, 1.8vw, 1.35rem) !important;
 }
 
 .public-visual-scope .apple-section-contrast .apple-record-detail h3 {
@@ -644,15 +689,16 @@ html[data-theme="dark"] .public-visual-scope :is(.apple-cta-secondary, .button-s
 }
 
 .public-visual-scope .apple-process-shell {
-  max-width: min(1180px, calc(100vw - 2rem));
+  width: min(1120px, calc(100vw - 4rem));
+  max-width: 100%;
   margin-inline: auto;
 }
 
 .public-visual-scope .apple-process-grid {
-  width: min(1180px, calc(100vw - 2rem)) !important;
-  max-width: min(1180px, calc(100vw - 2rem)) !important;
+  width: 100% !important;
+  max-width: 100% !important;
   margin-inline: auto !important;
-  gap: clamp(1rem, 1.45vw, 1.4rem) !important;
+  gap: clamp(0.7rem, 1vw, 1.05rem) !important;
 }
 
 .public-visual-scope .apple-process-card {
@@ -681,7 +727,7 @@ html[data-theme="dark"] .public-visual-scope :is(.apple-cta-secondary, .button-s
   line-height: 1.58;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 768px) {
   .public-visual-scope .apple-process-grid {
     display: grid !important;
     grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
@@ -693,23 +739,51 @@ html[data-theme="dark"] .public-visual-scope :is(.apple-cta-secondary, .button-s
   .public-visual-scope .apple-process-card {
     width: auto !important;
     min-width: 0 !important;
-    min-height: 13rem !important;
+    min-height: 12.75rem !important;
     scroll-snap-align: none !important;
   }
 }
 
-@media (max-width: 1023px) {
+@media (min-width: 768px) and (max-width: 1100px) {
+  .public-visual-scope .apple-process-shell {
+    width: min(944px, calc(100vw - 5rem));
+  }
+
+  .public-visual-scope .apple-process-card {
+    padding: clamp(0.9rem, 1.4vw, 1.15rem) !important;
+  }
+
+  .public-visual-scope .apple-process-card h3 {
+    font-size: clamp(0.98rem, 1.5vw, 1.18rem) !important;
+  }
+
+  .public-visual-scope .apple-process-card p {
+    font-size: clamp(0.74rem, 1.1vw, 0.82rem) !important;
+    line-height: 1.45;
+  }
+}
+
+@media (max-width: 767px) {
+  .public-visual-scope .apple-process-shell {
+    width: calc(100vw - 2rem) !important;
+    max-width: calc(100vw - 2rem) !important;
+    margin-left: calc(50% - 50vw + 1rem) !important;
+    margin-right: auto !important;
+  }
+
   .public-visual-scope .apple-process-grid {
     display: flex !important;
     overflow-x: auto !important;
     overflow-y: visible !important;
     scroll-snap-type: x mandatory !important;
-    padding-inline: max(1rem, calc((100vw - min(82vw, 22rem)) / 2)) !important;
+    padding-inline: max(0.875rem, calc((100vw - min(76vw, 19.25rem)) / 2)) !important;
   }
 
   .public-visual-scope .apple-process-card {
-    flex: 0 0 min(82vw, 22rem) !important;
-    min-height: 14rem !important;
+    flex: 0 0 min(76vw, 19.25rem) !important;
+    width: min(76vw, 19.25rem) !important;
+    min-width: min(76vw, 19.25rem) !important;
+    min-height: 12.75rem !important;
     scroll-snap-align: center !important;
   }
 }
@@ -786,6 +860,7 @@ html[data-theme="dark"] .public-visual-scope .apple-input {
 .public-visual-scope .apple-budget-shell {
   padding: 1rem !important;
   background: rgba(255, 255, 255, 0.34) !important;
+  overflow: visible !important;
 }
 
 html[data-theme="dark"] .public-visual-scope .apple-budget-shell {
@@ -799,10 +874,17 @@ html[data-theme="dark"] .public-visual-scope .apple-budget-shell {
 }
 
 .public-visual-scope .apple-budget-track {
-  height: 0.42rem !important;
+  position: relative !important;
+  display: block !important;
+  height: 0.5rem !important;
+  min-height: 0.5rem !important;
   border-radius: 999px !important;
   background: rgba(18, 18, 18, 0.1) !important;
   overflow: visible !important;
+}
+
+.public-visual-scope .apple-budget-track::before {
+  content: none !important;
 }
 
 html[data-theme="dark"] .public-visual-scope .apple-budget-track {
@@ -810,19 +892,52 @@ html[data-theme="dark"] .public-visual-scope .apple-budget-track {
 }
 
 .public-visual-scope .apple-budget-progress {
+  position: absolute !important;
+  inset: 0 auto 0 0 !important;
+  top: 0 !important;
+  transform: none !important;
+  width: var(--budget-progress, 50%) !important;
   height: 100% !important;
   border-radius: inherit !important;
   background: #111111 !important;
   box-shadow: none !important;
+  pointer-events: none;
 }
 
 html[data-theme="dark"] .public-visual-scope .apple-budget-progress {
   background: #f4f4f4 !important;
 }
 
+.public-visual-scope .apple-budget-input {
+  -webkit-appearance: none;
+  appearance: none;
+  position: absolute !important;
+  inset: 50% 0 auto 0 !important;
+  width: 100% !important;
+  height: 2rem !important;
+  margin: 0 !important;
+  transform: translate3d(0, -50%, 0);
+  background: transparent !important;
+  cursor: pointer;
+}
+
+.public-visual-scope .apple-budget-input::-webkit-slider-runnable-track {
+  height: 0.5rem !important;
+  border: 0 !important;
+  background: transparent !important;
+}
+
+.public-visual-scope .apple-budget-input::-moz-range-track {
+  height: 0.5rem !important;
+  border: 0 !important;
+  background: transparent !important;
+}
+
 .public-visual-scope .apple-budget-input::-webkit-slider-thumb {
+  -webkit-appearance: none;
   width: 1.1rem !important;
   height: 1.1rem !important;
+  margin-top: -0.3rem !important;
   border: 1px solid rgba(18, 18, 18, 0.18) !important;
   border-radius: 999px !important;
   background: #ffffff !important;
@@ -900,4 +1015,26 @@ html[data-theme="dark"] .public-visual-scope .apple-budget-input::-moz-range-thu
     scroll-behavior: auto !important;
     transition-duration: 0.001ms !important;
   }
+}
+
+.public-visual-scope .apple-value-card[data-expanded="true"] > .apple-value-card-detail,
+.public-visual-scope .apple-value-card:hover > .apple-value-card-detail,
+.public-visual-scope .apple-value-card:focus > .apple-value-card-detail,
+.public-visual-scope .apple-value-card:focus-visible > .apple-value-card-detail {
+  display: block !important;
+  max-height: 12rem !important;
+  opacity: 1 !important;
+  overflow: visible !important;
+  transform: translate3d(0, 0, 0) !important;
+}
+
+.public-visual-scope .apple-value-card[data-expanded="true"] .apple-value-card-detail,
+.public-visual-scope .apple-value-card:hover .apple-value-card-detail,
+.public-visual-scope .apple-value-card:focus .apple-value-card-detail,
+.public-visual-scope .apple-value-card:focus-visible .apple-value-card-detail {
+  display: block !important;
+  max-height: 12rem !important;
+  opacity: 1 !important;
+  overflow: visible !important;
+  transform: translate3d(0, 0, 0) !important;
 }
