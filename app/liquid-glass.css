@@ -1794,41 +1794,42 @@ html[data-theme="dark"] body div.public-visual-scope {
   .public-visual-scope :is(.apple-hero-title, .apple-section-title) {
     white-space: nowrap !important;
     text-wrap: nowrap !important;
-    width: max-content !important;
-    max-width: calc(100vw - 3rem) !important;
+    width: 100% !important;
     margin-inline: auto !important;
     overflow: visible !important;
   }
 
   .public-visual-scope .apple-hero-title {
-    font-size: clamp(64px, 8.5vw, 132px) !important;
-    line-height: 0.86 !important;
+    max-width: min(96vw, 1480px) !important;
+    font-size: clamp(56px, 6.5vw, 112px) !important;
+    line-height: 0.88 !important;
   }
 
   .public-visual-scope .apple-section-title {
-    font-size: clamp(46px, 6.2vw, 92px) !important;
-    line-height: 0.86 !important;
+    max-width: min(94vw, 1180px) !important;
+    font-size: clamp(42px, 4.8vw, 78px) !important;
+    line-height: 0.9 !important;
   }
 }
 
 @media (min-width: 768px) and (max-width: 899px) {
   .public-visual-scope .apple-hero-title {
-    font-size: clamp(48px, 6.9vw, 56px) !important;
+    font-size: clamp(48px, 6.4vw, 56px) !important;
   }
 
   .public-visual-scope .apple-section-title {
-    font-size: clamp(38px, 5.5vw, 44px) !important;
+    font-size: clamp(38px, 5.2vw, 42px) !important;
   }
 }
 
 @media (max-width: 767px) {
   .public-visual-scope .apple-section-title {
-    white-space: nowrap !important;
-    text-wrap: nowrap !important;
-    width: max-content !important;
-    max-width: calc(100vw - 2rem) !important;
-    font-size: clamp(30px, 9.2vw, 42px) !important;
-    line-height: 0.88 !important;
+    white-space: normal !important;
+    text-wrap: balance !important;
+    width: 100% !important;
+    max-width: min(100%, calc(100vw - 2rem)) !important;
+    font-size: clamp(2.25rem, 10.4vw, 3.35rem) !important;
+    line-height: 0.9 !important;
     margin-inline: auto !important;
   }
 
@@ -1844,12 +1845,15 @@ html[data-theme="dark"] body div.public-visual-scope {
   position: relative !important;
   isolation: isolate !important;
   align-items: center !important;
-  gap: clamp(1rem, 2.2vw, 2rem) !important;
+  justify-content: center !important;
+  width: min(100%, 980px) !important;
+  margin-inline: auto !important;
+  gap: clamp(18px, 2.4vw, 36px) !important;
 }
 
 @media (min-width: 1024px) {
   .public-visual-scope .apple-hero-stage {
-    grid-template-columns: minmax(0, 1.12fr) minmax(280px, 0.58fr) !important;
+    grid-template-columns: minmax(420px, 680px) minmax(190px, 280px) !important;
   }
 }
 
@@ -1861,6 +1865,15 @@ html[data-theme="dark"] body div.public-visual-scope {
 .public-visual-scope .apple-hero-chapters {
   align-self: center !important;
   gap: clamp(0.7rem, 1.2vw, 1rem) !important;
+}
+
+.public-visual-scope .apple-hero-record .apple-visual-image-wrap {
+  aspect-ratio: 16 / 9 !important;
+  max-height: clamp(19rem, 31vw, 27rem) !important;
+}
+
+.public-visual-scope .apple-hero-chapter {
+  min-height: clamp(104px, 9vw, 128px) !important;
 }
 
 .public-visual-scope .apple-section-contrast .apple-section-body,
@@ -1889,24 +1902,43 @@ html[data-theme="dark"] .public-visual-scope #inquire .apple-section-body::befor
 }
 
 .public-visual-scope .apple-section-contrast .apple-record-feature {
-  width: min(100%, 920px) !important;
+  width: min(760px, 88vw) !important;
   margin-inline: auto !important;
-  padding: clamp(1rem, 2.4vw, 2rem) !important;
+  padding: clamp(24px, 3vw, 42px) !important;
+  overflow: visible !important;
 }
 
 .public-visual-scope .apple-section-contrast .apple-record-feature-content {
+  display: flex !important;
+  flex-direction: column !important;
   align-items: center !important;
-  gap: clamp(1.05rem, 2vw, 1.55rem) !important;
+  gap: clamp(14px, 1.8vw, 24px) !important;
   text-align: center !important;
+  overflow: visible !important;
+}
+
+.public-visual-scope .apple-section-contrast .experience-content-container {
+  min-height: 0 !important;
+  overflow: visible !important;
+  justify-content: start !important;
 }
 
 .public-visual-scope .apple-section-contrast .apple-record-feature .apple-visual-frame {
-  width: min(100%, 620px) !important;
+  width: min(100%, 560px) !important;
   margin-inline: auto !important;
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+.public-visual-scope .apple-section-contrast .apple-record-feature .apple-visual-image-wrap {
+  aspect-ratio: 16 / 10 !important;
+  max-height: clamp(12rem, 24vw, 18rem) !important;
+  overflow: hidden !important;
 }
 
 .public-visual-scope .apple-section-contrast .apple-record-detail {
-  width: min(100%, 680px) !important;
+  width: 100% !important;
+  max-width: 100% !important;
   margin-inline: auto !important;
   display: flex !important;
   flex-direction: column !important;
@@ -1915,12 +1947,15 @@ html[data-theme="dark"] .public-visual-scope #inquire .apple-section-body::befor
 }
 
 .public-visual-scope .apple-section-contrast .apple-record-detail h3 {
-  width: auto !important;
+  width: 100% !important;
   max-width: 100% !important;
-  white-space: nowrap !important;
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: unset !important;
   text-align: center !important;
-  font-size: clamp(2.25rem, 5vw, 4.35rem) !important;
-  line-height: 0.94 !important;
+  text-wrap: balance !important;
+  font-size: clamp(2rem, 3.8vw, 3.65rem) !important;
+  line-height: 0.96 !important;
 }
 
 .public-visual-scope .apple-section-contrast .apple-record-detail p {
@@ -1940,11 +1975,11 @@ html[data-theme="dark"] .public-visual-scope #inquire .apple-section-body::befor
 }
 
 .public-visual-scope .apple-process-shell {
-  width: min(100%, 1120px) !important;
+  width: min(100%, 1140px) !important;
   margin-inline: auto !important;
   position: relative !important;
   isolation: isolate !important;
-  padding: clamp(1rem, 2vw, 1.6rem) !important;
+  padding: clamp(18px, 2vw, 28px) !important;
 }
 
 .public-visual-scope .apple-process-shell::before {
@@ -1952,13 +1987,14 @@ html[data-theme="dark"] .public-visual-scope #inquire .apple-section-body::befor
   position: absolute !important;
   z-index: -1 !important;
   pointer-events: none !important;
-  inset: 50% clamp(0.7rem, 1.6vw, 1.2rem) auto !important;
-  height: 1px !important;
-  background: var(--composition-rule-light) !important;
+  inset: 0 !important;
+  height: auto !important;
+  border-radius: clamp(28px, 3vw, 44px) !important;
+  background: var(--composition-plane-light) !important;
 }
 
 html[data-theme="dark"] .public-visual-scope .apple-process-shell::before {
-  background: var(--composition-rule-dark) !important;
+  background: var(--composition-plane-dark) !important;
 }
 
 .public-visual-scope .apple-process-grid::before,
@@ -1967,7 +2003,7 @@ html[data-theme="dark"] .public-visual-scope .apple-process-shell::before {
 }
 
 .public-visual-scope .apple-process-grid {
-  width: min(100%, 1040px) !important;
+  width: min(100%, 1080px) !important;
   margin-inline: auto !important;
   align-items: stretch !important;
   gap: clamp(14px, 1.4vw, 22px) !important;
@@ -1976,7 +2012,7 @@ html[data-theme="dark"] .public-visual-scope .apple-process-shell::before {
 @media (min-width: 768px) {
   .public-visual-scope .apple-process-grid {
     display: grid !important;
-    grid-template-columns: repeat(5, minmax(118px, 1fr)) !important;
+    grid-template-columns: repeat(5, minmax(120px, 1fr)) !important;
     overflow: visible !important;
     padding: 0 !important;
   }
@@ -1989,7 +2025,7 @@ html[data-theme="dark"] .public-visual-scope .apple-process-shell::before {
 }
 
 .public-visual-scope .apple-process-card {
-  min-height: clamp(168px, 13vw, 210px) !important;
+  min-height: clamp(178px, 12vw, 220px) !important;
   height: auto !important;
   padding: clamp(16px, 1.6vw, 24px) !important;
   display: flex !important;
@@ -2011,9 +2047,9 @@ html[data-theme="dark"] .public-visual-scope .apple-process-shell::before {
 }
 
 .public-visual-scope .apple-process-card p {
-  max-width: 18ch !important;
+  max-width: 22ch !important;
   margin-inline: auto !important;
-  line-height: 1.42 !important;
+  line-height: 1.38 !important;
 }
 
 .public-visual-scope .apple-process-card:nth-child(1) {
@@ -2081,10 +2117,10 @@ html[data-theme="dark"] .public-visual-scope .apple-process-shell::before {
 }
 
 .public-visual-scope .apple-inquiry-layout {
-  width: min(100%, 1080px) !important;
+  width: min(100%, 1040px) !important;
   margin-inline: auto !important;
   align-items: stretch !important;
-  gap: clamp(16px, 2vw, 28px) !important;
+  gap: clamp(20px, 2.4vw, 36px) !important;
   position: relative !important;
   isolation: isolate !important;
 }
@@ -2109,7 +2145,8 @@ html[data-theme="dark"] .public-visual-scope .apple-inquiry-layout::before {
 
 @media (min-width: 1024px) {
   .public-visual-scope .apple-inquiry-layout {
-    grid-template-columns: minmax(0, 1.03fr) minmax(340px, 0.97fr) !important;
+    grid-template-columns: minmax(420px, 560px) minmax(320px, 460px) !important;
+    justify-content: center !important;
   }
 }
 
@@ -2175,11 +2212,12 @@ html[data-theme="dark"] .public-visual-scope .apple-inquiry-layout::before {
   }
 
   .public-visual-scope .apple-process-card {
-    flex: 0 0 clamp(280px, 76vw, 330px) !important;
-    width: clamp(280px, 76vw, 330px) !important;
-    min-width: clamp(280px, 76vw, 330px) !important;
-    min-height: 180px !important;
-    max-height: 230px !important;
+    flex: 0 0 clamp(276px, 74vw, 320px) !important;
+    width: clamp(276px, 74vw, 320px) !important;
+    min-width: clamp(276px, 74vw, 320px) !important;
+    min-height: 176px !important;
+    max-height: 220px !important;
+    padding: 18px 20px !important;
     scroll-snap-align: center !important;
   }
 
@@ -2197,7 +2235,8 @@ html[data-theme="dark"] .public-visual-scope .apple-inquiry-layout::before {
   }
 
   .public-visual-scope .apple-section-contrast .apple-record-feature {
-    padding: clamp(1rem, 4vw, 1.25rem) !important;
+    width: calc(100vw - 32px) !important;
+    padding: 22px 18px !important;
   }
 
   .public-visual-scope .apple-section-contrast .apple-record-feature-content {
@@ -2206,8 +2245,9 @@ html[data-theme="dark"] .public-visual-scope .apple-inquiry-layout::before {
 
   .public-visual-scope .apple-section-contrast .apple-record-detail h3 {
     white-space: normal !important;
-    width: min(100%, 11.5ch) !important;
-    font-size: clamp(2rem, 10vw, 3.1rem) !important;
+    width: 100% !important;
+    font-size: clamp(1.9rem, 9.3vw, 2.65rem) !important;
+    line-height: 0.98 !important;
   }
 
   .public-visual-scope .apple-inquiry-layout {
@@ -2237,9 +2277,11 @@ html[data-theme="dark"] body .public-visual-scope {
   opacity: 0.18 !important;
   background-color: transparent !important;
   background-image:
-    repeating-radial-gradient(circle at 12% 18%, rgba(0, 0, 0, 0.2) 0 0.42px, transparent 0.55px 3.4px),
-    repeating-radial-gradient(circle at 72% 68%, rgba(0, 0, 0, 0.11) 0 0.36px, transparent 0.52px 4.2px),
+    radial-gradient(circle, rgba(0, 0, 0, 0.11) 0 0.45px, transparent 0.7px),
+    radial-gradient(circle, rgba(0, 0, 0, 0.055) 0 0.35px, transparent 0.65px),
     linear-gradient(180deg, rgba(0, 0, 0, 0.018), transparent 32%, rgba(0, 0, 0, 0.012)) !important;
+  background-position: 0 0, 2px 3px, 0 0 !important;
+  background-size: 4px 4px, 7px 7px, auto !important;
   mix-blend-mode: multiply !important;
 }
 
@@ -2251,8 +2293,10 @@ html[data-theme="dark"] body .public-visual-scope {
 html[data-theme="dark"] .public-visual-scope .atmosphere-backdrop {
   opacity: 0.26 !important;
   background-image:
-    repeating-radial-gradient(circle at 14% 20%, rgba(255, 255, 255, 0.2) 0 0.42px, transparent 0.56px 3.5px),
-    repeating-radial-gradient(circle at 78% 68%, rgba(255, 255, 255, 0.12) 0 0.34px, transparent 0.5px 4.3px),
+    radial-gradient(circle, rgba(255, 255, 255, 0.08) 0 0.45px, transparent 0.7px),
+    radial-gradient(circle, rgba(255, 255, 255, 0.055) 0 0.35px, transparent 0.65px),
     linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 36%, rgba(255, 255, 255, 0.014)) !important;
+  background-position: 0 0, 2px 3px, 0 0 !important;
+  background-size: 4px 4px, 7px 7px, auto !important;
   mix-blend-mode: screen !important;
 }

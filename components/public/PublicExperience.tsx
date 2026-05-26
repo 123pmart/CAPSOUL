@@ -1021,7 +1021,7 @@ function ProcessStepCard({
       data-reveal
       style={{
         "--motion-stagger-index": index,
-        "--reveal-delay": `${Math.min(index * 90, 360)}ms`,
+        "--reveal-delay": `${Math.min(index * 50, 260)}ms`,
       } as CSSProperties}
     >
       <span className="apple-liquid-layer" aria-hidden="true" />

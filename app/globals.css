@@ -12170,9 +12170,11 @@ html[data-theme="dark"] body .public-visual-scope {
   opacity: 0.18 !important;
   background-color: transparent !important;
   background-image:
-    repeating-radial-gradient(circle at 12% 18%, rgba(0, 0, 0, 0.2) 0 0.42px, transparent 0.55px 3.4px),
-    repeating-radial-gradient(circle at 72% 68%, rgba(0, 0, 0, 0.11) 0 0.36px, transparent 0.52px 4.2px),
+    radial-gradient(circle, rgba(0, 0, 0, 0.11) 0 0.45px, transparent 0.7px),
+    radial-gradient(circle, rgba(0, 0, 0, 0.055) 0 0.35px, transparent 0.65px),
     linear-gradient(180deg, rgba(0, 0, 0, 0.018), transparent 32%, rgba(0, 0, 0, 0.012)) !important;
+  background-position: 0 0, 2px 3px, 0 0 !important;
+  background-size: 4px 4px, 7px 7px, auto !important;
   mix-blend-mode: multiply !important;
 }
 
@@ -12184,9 +12186,11 @@ html[data-theme="dark"] body .public-visual-scope {
 html[data-theme="dark"] .public-visual-scope .atmosphere-backdrop {
   opacity: 0.26 !important;
   background-image:
-    repeating-radial-gradient(circle at 14% 20%, rgba(255, 255, 255, 0.2) 0 0.42px, transparent 0.56px 3.5px),
-    repeating-radial-gradient(circle at 78% 68%, rgba(255, 255, 255, 0.12) 0 0.34px, transparent 0.5px 4.3px),
+    radial-gradient(circle, rgba(255, 255, 255, 0.08) 0 0.45px, transparent 0.7px),
+    radial-gradient(circle, rgba(255, 255, 255, 0.055) 0 0.35px, transparent 0.65px),
     linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 36%, rgba(255, 255, 255, 0.014)) !important;
+  background-position: 0 0, 2px 3px, 0 0 !important;
+  background-size: 4px 4px, 7px 7px, auto !important;
   mix-blend-mode: screen !important;
 }
 
