@@ -137,13 +137,13 @@ const budgetSliderDefault = 12500;
 const revealEase = [0.22, 1, 0.36, 1] as const;
 
 const primaryButtonMotion = {
-  whileHover: { y: -2, scale: 1.015 },
-  whileTap: { scale: 0.985 },
-  transition: { duration: 0.2, ease: measuredEase },
+  whileHover: { y: -2 },
+  whileTap: { scale: 0.99 },
+  transition: { duration: 0.24, ease: measuredEase },
 } as const;
 
-function revealDelay(index: number, step = 90): CSSProperties {
-  return { "--reveal-delay": `${Math.min(index * step, 360)}ms` } as CSSProperties;
+function revealDelay(index: number, step = 50): CSSProperties {
+  return { "--reveal-delay": `${Math.min(index * step, 260)}ms` } as CSSProperties;
 }
 
 function MagneticPrimaryAnchor({
@@ -413,7 +413,7 @@ function useMinimalPublicRevealMotion() {
       element.style.setProperty("opacity", "0", "important");
       element.style.setProperty("transform", "translate3d(0, 8px, 0) scale(0.985)", "important");
       element.style.setProperty("transition-property", "opacity, transform");
-      element.style.setProperty("transition-duration", window.matchMedia("(max-width: 767px)").matches ? "540ms" : "640ms");
+      element.style.setProperty("transition-duration", "480ms");
       element.style.setProperty("transition-timing-function", "cubic-bezier(0.22, 1, 0.36, 1)");
       element.style.setProperty("will-change", "opacity, transform");
     };
@@ -439,7 +439,7 @@ function useMinimalPublicRevealMotion() {
         window.setTimeout(() => {
           clearMotionStyles(element);
           settleTimers.delete(element);
-        }, 760 + (Number.isFinite(delayMs) ? delayMs : 0)),
+        }, 620 + (Number.isFinite(delayMs) ? delayMs : 0)),
       );
     };
 
@@ -1176,7 +1176,7 @@ function PreserveEditorial({ preserve }: { preserve: ResolvedSceneContent }) {
             data-reveal
             style={{
               "--motion-stagger-index": index + 1,
-              "--reveal-delay": `${Math.min((index + 1) * 90, 360)}ms`,
+              "--reveal-delay": `${Math.min((index + 1) * 50, 260)}ms`,
             } as CSSProperties}
           >
             <span className="apple-liquid-layer" aria-hidden="true" />
@@ -1434,7 +1434,7 @@ function InquiryArchiveForm({
       <aside
         className="apple-inquiry-support liquid-glass-panel motion-media"
         data-reveal
-        style={revealDelay(1)}
+        style={revealDelay(1, 80)}
       >
         <AnimatePresence initial={false} mode="wait">
           {activeSupport ? (

@@ -12148,6 +12148,48 @@ html[data-theme="dark"] .public-visual-scope .atmosphere-backdrop {
   transform: translate3d(0, 0, 0) !important;
 }
 
+/* Final public homepage background guard: monochrome paper grain only. */
+.public-visual-scope {
+  background: #fbfbfb !important;
+  background-color: #fbfbfb !important;
+}
+
+html[data-theme="light"] .public-visual-scope,
+html[data-theme="light"] body .public-visual-scope {
+  background: #fbfbfb !important;
+  background-color: #fbfbfb !important;
+}
+
+html[data-theme="dark"] .public-visual-scope,
+html[data-theme="dark"] body .public-visual-scope {
+  background: #000000 !important;
+  background-color: #000000 !important;
+}
+
+.public-visual-scope .atmosphere-backdrop {
+  opacity: 0.18 !important;
+  background-color: transparent !important;
+  background-image:
+    repeating-radial-gradient(circle at 12% 18%, rgba(0, 0, 0, 0.2) 0 0.42px, transparent 0.55px 3.4px),
+    repeating-radial-gradient(circle at 72% 68%, rgba(0, 0, 0, 0.11) 0 0.36px, transparent 0.52px 4.2px),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.018), transparent 32%, rgba(0, 0, 0, 0.012)) !important;
+  mix-blend-mode: multiply !important;
+}
+
+.public-visual-scope .atmosphere-backdrop::before,
+.public-visual-scope .atmosphere-backdrop::after {
+  content: none !important;
+}
+
+html[data-theme="dark"] .public-visual-scope .atmosphere-backdrop {
+  opacity: 0.26 !important;
+  background-image:
+    repeating-radial-gradient(circle at 14% 20%, rgba(255, 255, 255, 0.2) 0 0.42px, transparent 0.56px 3.5px),
+    repeating-radial-gradient(circle at 78% 68%, rgba(255, 255, 255, 0.12) 0 0.34px, transparent 0.5px 4.3px),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 36%, rgba(255, 255, 255, 0.014)) !important;
+  mix-blend-mode: screen !important;
+}
+
 .public-visual-scope .apple-value-card-detail-expanded {
   display: block !important;
   color: var(--material-muted) !important;
