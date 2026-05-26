@@ -953,40 +953,13 @@ function ArchiveValueCard({
   index: number;
   archiveLabelPrefix: string;
 }) {
-  const [isPinned, setIsPinned] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
-  const isExpanded = isPinned || isHovered;
-
-  const toggleExpanded = () => {
-    setIsPinned((value) => !value);
-  };
-
   return (
     <article
       className="apple-value-card apple-liquid-surface liquid-glass-panel"
       data-reveal
-      data-expanded={isExpanded ? "true" : "false"}
-      role="button"
-      tabIndex={0}
-      aria-expanded={isExpanded}
-      aria-label={`${archiveLabelPrefix} ${String(index + 1).padStart(2, "0")}: ${pillar.title}`}
-      onClick={toggleExpanded}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      onFocus={() => setIsHovered(true)}
-      onBlur={() => setIsHovered(false)}
-      onKeyDown={(event) => {
-        if (event.key === "Enter" || event.key === " ") {
-          event.preventDefault();
-          toggleExpanded();
-        }
-      }}
       style={{
         "--motion-stagger-index": index,
         "--reveal-delay": `${Math.min(index * 80, 280)}ms`,
-        "--archive-detail-max": isExpanded ? "12rem" : "0px",
-        "--archive-detail-opacity": isExpanded ? "1" : "0",
-        "--archive-detail-overflow": isExpanded ? "visible" : "hidden",
       } as CSSProperties}
     >
       <span className="apple-liquid-layer" aria-hidden="true" />
@@ -995,9 +968,6 @@ function ArchiveValueCard({
       </span>
       <h3>{pillar.title}</h3>
       <p className="apple-value-card-preview">{pillar.summary}</p>
-      <p className={isExpanded ? "apple-value-card-detail-expanded" : "apple-value-card-detail"}>
-        {pillar.detail}
-      </p>
     </article>
   );
 }
