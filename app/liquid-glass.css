@@ -1001,3 +1001,753 @@ html[data-theme="dark"] .public-visual-scope .apple-budget-input::-moz-range-thu
     transition-duration: 0.001ms !important;
   }
 }
+
+/* CAPSOUL creative direction reset: archival, matte, monochrome, editorial. */
+.public-visual-scope {
+  --archive-paper: #fbfbfb;
+  --archive-ink: #050505;
+  --archive-muted: rgba(5, 5, 5, 0.58);
+  --archive-soft: rgba(5, 5, 5, 0.38);
+  --archive-line: rgba(5, 5, 5, 0.11);
+  --archive-line-strong: rgba(5, 5, 5, 0.18);
+  --archive-panel: rgba(255, 255, 255, 0.92);
+  --archive-panel-subtle: rgba(255, 255, 255, 0.82);
+  --archive-panel-deep: rgba(246, 246, 246, 0.94);
+  --archive-shadow: 0 18px 54px rgba(0, 0, 0, 0.065), 0 2px 10px rgba(0, 0, 0, 0.035);
+  --archive-shadow-quiet: 0 10px 32px rgba(0, 0, 0, 0.045);
+  --archive-radius-card: clamp(14px, 1.3vw, 22px);
+  --archive-radius-panel: clamp(18px, 1.8vw, 30px);
+  --archive-section-tight: clamp(56px, 6vw, 92px);
+  --archive-section-open: clamp(84px, 8.5vw, 138px);
+  --archive-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  color: var(--archive-ink) !important;
+  background: var(--archive-paper) !important;
+  background-color: var(--archive-paper) !important;
+}
+
+html[data-theme="dark"] .public-visual-scope {
+  --archive-paper: #000000;
+  --archive-ink: #ffffff;
+  --archive-muted: rgba(255, 255, 255, 0.62);
+  --archive-soft: rgba(255, 255, 255, 0.4);
+  --archive-line: rgba(255, 255, 255, 0.12);
+  --archive-line-strong: rgba(255, 255, 255, 0.2);
+  --archive-panel: rgba(12, 12, 12, 0.94);
+  --archive-panel-subtle: rgba(18, 18, 18, 0.9);
+  --archive-panel-deep: rgba(6, 6, 6, 0.96);
+  --archive-shadow: 0 18px 54px rgba(0, 0, 0, 0.62), inset 0 1px 0 rgba(255, 255, 255, 0.055);
+  --archive-shadow-quiet: 0 12px 36px rgba(0, 0, 0, 0.48);
+  color: var(--archive-ink) !important;
+  background: var(--archive-paper) !important;
+  background-color: var(--archive-paper) !important;
+}
+
+.public-visual-scope .atmosphere-backdrop {
+  opacity: 1 !important;
+  background: var(--archive-paper) !important;
+}
+
+.public-visual-scope .atmosphere-backdrop::before,
+.public-visual-scope .atmosphere-layer-ambient,
+.public-visual-scope .atmosphere-layer-frost,
+.public-visual-scope .atmosphere-layer-mineral {
+  display: none !important;
+}
+
+.public-visual-scope .atmosphere-layer-grain,
+.public-visual-scope .atmosphere-backdrop::after {
+  display: block !important;
+  opacity: 0.2 !important;
+  mix-blend-mode: multiply !important;
+  background-image:
+    radial-gradient(circle, rgba(0, 0, 0, 0.18) 0 0.026rem, transparent 0.034rem),
+    radial-gradient(circle, rgba(0, 0, 0, 0.11) 0 0.02rem, transparent 0.03rem),
+    radial-gradient(circle, rgba(0, 0, 0, 0.075) 0 0.018rem, transparent 0.028rem) !important;
+  background-size: 0.52rem 0.52rem, 0.74rem 0.74rem, 1.05rem 1.05rem !important;
+  background-position:
+    0 var(--atmosphere-drift-grain, 0px),
+    0 var(--atmosphere-drift-soft, 0px),
+    0 var(--atmosphere-drift, 0px) !important;
+}
+
+html[data-theme="dark"] .public-visual-scope .atmosphere-layer-grain,
+html[data-theme="dark"] .public-visual-scope .atmosphere-backdrop::after {
+  opacity: 0.22 !important;
+  mix-blend-mode: screen !important;
+  background-image:
+    radial-gradient(circle, rgba(255, 255, 255, 0.16) 0 0.024rem, transparent 0.034rem),
+    radial-gradient(circle, rgba(255, 255, 255, 0.1) 0 0.02rem, transparent 0.03rem),
+    radial-gradient(circle, rgba(255, 255, 255, 0.07) 0 0.018rem, transparent 0.028rem) !important;
+}
+
+.public-visual-scope .atmosphere-layer-vignette {
+  opacity: 0.18 !important;
+  background:
+    radial-gradient(ellipse at center, transparent 62%, rgba(0, 0, 0, 0.045) 100%),
+    linear-gradient(180deg, transparent, transparent 74%, rgba(0, 0, 0, 0.035)) !important;
+}
+
+html[data-theme="dark"] .public-visual-scope .atmosphere-layer-vignette {
+  opacity: 0.5 !important;
+  background:
+    radial-gradient(ellipse at center, transparent 56%, rgba(0, 0, 0, 0.72) 100%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.18), transparent 24%, transparent 72%, rgba(0, 0, 0, 0.58)) !important;
+}
+
+.public-visual-scope .apple-archive-experience,
+.public-visual-scope .apple-section-inner,
+.public-visual-scope .apple-hero-inner,
+.public-visual-scope .premium-section-motion {
+  color: var(--archive-ink) !important;
+}
+
+.public-visual-scope .premium-section-motion,
+.public-visual-scope [data-premium-motion] {
+  transform: none !important;
+}
+
+.public-visual-scope :is(
+  .liquid-glass-panel,
+  .apple-record-feature,
+  .apple-process-card,
+  .apple-preserve-feature,
+  .apple-preserve-card,
+  .apple-inquiry-form,
+  .apple-inquiry-support,
+  .apple-hero-record,
+  .apple-hero-chapter,
+  .apple-visual-frame,
+  .apple-budget-shell,
+  .apple-input,
+  .ui-chip,
+  .nav-pill,
+  .header-nav-shell,
+  .header-menu-button,
+  .theme-toggle,
+  [aria-label="Language selector"]
+) {
+  color: var(--archive-ink) !important;
+  border: 1px solid var(--archive-line) !important;
+  border-radius: var(--archive-radius-card) !important;
+  background: var(--archive-panel) !important;
+  background-image: none !important;
+  box-shadow: var(--archive-shadow-quiet) !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+.public-visual-scope :is(.apple-record-feature, .apple-preserve-feature, .apple-inquiry-form, .apple-inquiry-support, .apple-hero-record) {
+  border-radius: var(--archive-radius-panel) !important;
+  background: var(--archive-panel-subtle) !important;
+  box-shadow: var(--archive-shadow) !important;
+}
+
+.public-visual-scope :is(.apple-section, .apple-section-contrast, .apple-hero) {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.public-visual-scope .apple-section {
+  padding-block: var(--archive-section-open) !important;
+}
+
+.public-visual-scope .apple-section-contrast {
+  padding-block: var(--archive-section-tight) !important;
+}
+
+.public-visual-scope .apple-section-editorial {
+  padding-block: clamp(72px, 7vw, 118px) !important;
+}
+
+.public-visual-scope .apple-section-inquiry {
+  padding-top: var(--archive-section-open) !important;
+  padding-bottom: clamp(76px, 8vw, 128px) !important;
+}
+
+.public-visual-scope .apple-hero {
+  min-height: auto !important;
+  padding-top: clamp(64px, 8vh, 104px) !important;
+  padding-bottom: clamp(72px, 8vw, 122px) !important;
+}
+
+.public-visual-scope .apple-section-inner,
+.public-visual-scope .apple-hero-inner {
+  width: min(100%, 1180px) !important;
+  margin-inline: auto !important;
+}
+
+.public-visual-scope :is(.apple-section-kicker, .apple-archive-index-label, .apple-visual-toolbar, .apple-record-detail > span, .apple-preserve-card > span, .apple-preserve-feature > span, .apple-field label, .apple-budget-top label, .apple-hero-chapter > span, .apple-process-card > span:not(.apple-liquid-layer), .apple-inquiry-copy > span) {
+  color: var(--archive-soft) !important;
+  font-size: clamp(0.62rem, 0.72vw, 0.76rem) !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.18em !important;
+  line-height: 1.15 !important;
+  text-transform: uppercase !important;
+}
+
+.public-visual-scope .apple-hero-title,
+.public-visual-scope .apple-section-title {
+  color: var(--archive-ink) !important;
+  font-weight: 950 !important;
+  letter-spacing: 0 !important;
+  text-transform: uppercase !important;
+  text-wrap: balance;
+}
+
+.public-visual-scope .apple-hero-title {
+  max-width: 10.8ch !important;
+  font-size: clamp(4.5rem, 14vw, 12rem) !important;
+  line-height: 0.76 !important;
+  margin-top: clamp(0.65rem, 1vw, 0.95rem) !important;
+  margin-bottom: clamp(1rem, 1.8vw, 1.6rem) !important;
+}
+
+.public-visual-scope .apple-section-title {
+  max-width: 11.6ch !important;
+  margin-inline: auto !important;
+  font-size: clamp(3.3rem, 8.8vw, 8rem) !important;
+  line-height: 0.82 !important;
+}
+
+.public-visual-scope .apple-section-copy,
+.public-visual-scope .apple-hero-copy,
+.public-visual-scope :is(.apple-record-detail p, .apple-preserve-feature p, .apple-preserve-card p, .apple-process-card p, .apple-inquiry-copy p, .apple-visual-frame p, .apple-hero-chapter p, .apple-inquiry-note) {
+  color: var(--archive-muted) !important;
+  font-weight: 420 !important;
+  line-height: 1.62 !important;
+}
+
+.public-visual-scope .apple-hero-copy {
+  max-width: 52ch !important;
+  font-size: clamp(1rem, 1.35vw, 1.24rem) !important;
+}
+
+.public-visual-scope .apple-section-copy {
+  max-width: 46rem !important;
+  margin-top: clamp(0.8rem, 1.5vw, 1.2rem) !important;
+  font-size: clamp(0.98rem, 1.1vw, 1.16rem) !important;
+}
+
+.public-visual-scope .apple-hero-stage {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1.16fr) minmax(260px, 0.54fr) !important;
+  align-items: stretch !important;
+  gap: clamp(1.2rem, 3.2vw, 3rem) !important;
+  margin-top: clamp(2.1rem, 4.8vw, 4.5rem) !important;
+}
+
+.public-visual-scope .apple-hero-record {
+  min-height: 0 !important;
+  padding: clamp(0.75rem, 1.1vw, 1rem) !important;
+}
+
+.public-visual-scope .apple-visual-frame {
+  overflow: hidden !important;
+  padding: clamp(0.8rem, 1.2vw, 1.05rem) !important;
+  background: var(--archive-panel-deep) !important;
+}
+
+.public-visual-scope .apple-visual-image-wrap {
+  border-radius: calc(var(--archive-radius-card) - 6px) !important;
+  overflow: hidden !important;
+  background: #0a0a0a !important;
+}
+
+.public-visual-scope .apple-visual-image-wrap img {
+  filter: grayscale(0.04) contrast(1.02) !important;
+}
+
+.public-visual-scope .apple-hero-chapters {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: clamp(0.72rem, 1.1vw, 1rem) !important;
+}
+
+.public-visual-scope .apple-hero-chapter {
+  min-height: auto !important;
+  padding: clamp(0.95rem, 1.35vw, 1.2rem) !important;
+  display: grid !important;
+  gap: 0.42rem !important;
+}
+
+.public-visual-scope .apple-hero-chapter strong {
+  color: var(--archive-ink) !important;
+  font-size: clamp(1rem, 1.2vw, 1.16rem) !important;
+  line-height: 1.05 !important;
+  text-transform: uppercase !important;
+}
+
+.public-visual-scope .apple-hero-actions {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 0.7rem !important;
+}
+
+.public-visual-scope :is(.apple-cta, .button-primary, .button-secondary) {
+  min-height: 2.65rem !important;
+  padding: 0.76rem 1.08rem !important;
+  border-radius: 999px !important;
+  font-size: 0.76rem !important;
+  font-weight: 850 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  transition-property: transform, opacity, border-color, background-color, color !important;
+  transition-duration: 260ms !important;
+  transition-timing-function: var(--archive-ease) !important;
+}
+
+.public-visual-scope :is(.apple-cta-primary, .button-primary) {
+  color: #ffffff !important;
+  border-color: #050505 !important;
+  background: #050505 !important;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12) !important;
+}
+
+html[data-theme="dark"] .public-visual-scope :is(.apple-cta-primary, .button-primary) {
+  color: #050505 !important;
+  border-color: #ffffff !important;
+  background: #ffffff !important;
+}
+
+.public-visual-scope :is(.apple-cta-secondary, .button-secondary) {
+  color: var(--archive-ink) !important;
+  border-color: var(--archive-line) !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.public-visual-scope .apple-record-feature {
+  width: min(100%, 900px) !important;
+  margin-inline: auto !important;
+  padding: clamp(1rem, 2.4vw, 2rem) !important;
+}
+
+.public-visual-scope .apple-record-feature-content {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: clamp(1rem, 2vw, 1.65rem) !important;
+}
+
+.public-visual-scope .apple-section-contrast .apple-visual-frame {
+  width: min(100%, 620px) !important;
+  max-height: none !important;
+}
+
+.public-visual-scope .apple-record-detail {
+  width: min(100%, 720px) !important;
+  margin-inline: auto !important;
+  display: grid !important;
+  justify-items: center !important;
+  gap: 0.72rem !important;
+  text-align: center !important;
+}
+
+.public-visual-scope .apple-record-detail h3 {
+  width: min(100%, 18ch) !important;
+  color: var(--archive-ink) !important;
+  font-size: clamp(2.3rem, 4.9vw, 4.85rem) !important;
+  line-height: 0.92 !important;
+  font-weight: 900 !important;
+  letter-spacing: 0 !important;
+  white-space: normal !important;
+  text-wrap: balance;
+}
+
+.public-visual-scope .apple-record-tags,
+.public-visual-scope .apple-trust-grid {
+  max-width: 100% !important;
+}
+
+.public-visual-scope .ui-chip {
+  color: var(--archive-ink) !important;
+  min-height: 2.15rem !important;
+  padding: 0.52rem 0.72rem !important;
+  border-radius: 999px !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.public-visual-scope .compact-scene-progress,
+.public-visual-scope .apple-process-scroll-dots {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.public-visual-scope .compact-scene-dot,
+.public-visual-scope .apple-process-scroll-dot {
+  width: 0.42rem !important;
+  height: 0.42rem !important;
+  border: 0 !important;
+  background: var(--archive-ink) !important;
+  opacity: 0.22 !important;
+  box-shadow: none !important;
+}
+
+.public-visual-scope .compact-scene-dot-active,
+.public-visual-scope .apple-process-scroll-dot-active {
+  opacity: 0.86 !important;
+}
+
+.public-visual-scope .apple-process-shell {
+  width: min(1100px, calc(100vw - 3rem)) !important;
+  max-width: 100% !important;
+  margin-inline: auto !important;
+}
+
+.public-visual-scope .apple-process-grid {
+  gap: clamp(0.85rem, 1.25vw, 1.15rem) !important;
+}
+
+.public-visual-scope .apple-process-card {
+  min-height: clamp(190px, 16vw, 230px) !important;
+  padding: clamp(1rem, 1.5vw, 1.35rem) !important;
+  justify-content: space-between !important;
+}
+
+.public-visual-scope .apple-process-card h3 {
+  color: var(--archive-ink) !important;
+  font-size: clamp(1.2rem, 1.55vw, 1.62rem) !important;
+  line-height: 0.98 !important;
+  font-weight: 900 !important;
+  text-transform: uppercase !important;
+}
+
+.public-visual-scope .apple-process-card p {
+  max-width: 24ch !important;
+  font-size: clamp(0.8rem, 0.9vw, 0.9rem) !important;
+  line-height: 1.48 !important;
+}
+
+.public-visual-scope .apple-preserve-layout {
+  width: min(1120px, calc(100vw - 3rem)) !important;
+  margin-inline: auto !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr) !important;
+  gap: clamp(1rem, 2vw, 1.8rem) !important;
+  align-items: stretch !important;
+}
+
+.public-visual-scope .apple-preserve-feature {
+  min-height: clamp(360px, 38vw, 520px) !important;
+  padding: clamp(1.3rem, 2.5vw, 2.25rem) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-end !important;
+}
+
+.public-visual-scope .apple-preserve-feature h3 {
+  max-width: 11ch !important;
+  color: var(--archive-ink) !important;
+  font-size: clamp(2.6rem, 5.8vw, 6rem) !important;
+  line-height: 0.84 !important;
+  font-weight: 930 !important;
+  letter-spacing: 0 !important;
+  text-transform: uppercase !important;
+}
+
+.public-visual-scope .apple-preserve-grid {
+  display: grid !important;
+  gap: clamp(0.8rem, 1.25vw, 1.05rem) !important;
+}
+
+.public-visual-scope .apple-preserve-card {
+  min-height: auto !important;
+  padding: clamp(1rem, 1.45vw, 1.35rem) !important;
+}
+
+.public-visual-scope .apple-preserve-card h3 {
+  color: var(--archive-ink) !important;
+  font-size: clamp(1.25rem, 1.65vw, 1.65rem) !important;
+  line-height: 1 !important;
+  font-weight: 900 !important;
+  text-transform: uppercase !important;
+}
+
+.public-visual-scope .apple-inquiry-layout {
+  width: min(1180px, calc(100vw - 3rem)) !important;
+  margin-inline: auto !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1.08fr) minmax(320px, 0.78fr) !important;
+  gap: clamp(1rem, 2.2vw, 2rem) !important;
+  align-items: start !important;
+}
+
+.public-visual-scope .apple-inquiry-form,
+.public-visual-scope .apple-inquiry-support {
+  padding: clamp(1.1rem, 2.2vw, 2rem) !important;
+}
+
+.public-visual-scope .apple-inquiry-copy h3 {
+  color: var(--archive-ink) !important;
+  font-size: clamp(1.9rem, 3.3vw, 3.6rem) !important;
+  line-height: 0.95 !important;
+  font-weight: 900 !important;
+  letter-spacing: 0 !important;
+  text-transform: uppercase !important;
+}
+
+.public-visual-scope .apple-form-grid {
+  gap: clamp(0.8rem, 1.2vw, 1rem) !important;
+}
+
+.public-visual-scope .apple-input {
+  min-height: 3rem !important;
+  color: var(--archive-ink) !important;
+  border-color: var(--archive-line) !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.public-visual-scope .apple-textarea {
+  min-height: 7.5rem !important;
+}
+
+.public-visual-scope .apple-budget-shell {
+  padding: clamp(0.95rem, 1.35vw, 1.2rem) !important;
+  background: var(--archive-panel-deep) !important;
+  box-shadow: var(--archive-shadow-quiet) !important;
+}
+
+.public-visual-scope .apple-budget-top {
+  align-items: baseline !important;
+}
+
+.public-visual-scope .apple-budget-top span {
+  color: var(--archive-ink) !important;
+  font-size: clamp(1.2rem, 2vw, 1.9rem) !important;
+  font-weight: 900 !important;
+  letter-spacing: 0 !important;
+}
+
+.public-visual-scope .apple-budget-track {
+  height: 0.5rem !important;
+  min-height: 0.5rem !important;
+  background: rgba(0, 0, 0, 0.11) !important;
+  border: 0 !important;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.04) !important;
+  overflow: visible !important;
+}
+
+html[data-theme="dark"] .public-visual-scope .apple-budget-track {
+  background: rgba(255, 255, 255, 0.16) !important;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05) !important;
+}
+
+.public-visual-scope .apple-budget-progress {
+  height: 0.5rem !important;
+  background: var(--archive-ink) !important;
+  box-shadow: none !important;
+}
+
+.public-visual-scope .apple-budget-input {
+  height: 28px !important;
+}
+
+.public-visual-scope .apple-budget-input::-webkit-slider-thumb {
+  width: 24px !important;
+  height: 24px !important;
+  margin-top: -8px !important;
+  border: 2px solid var(--archive-paper) !important;
+  background: var(--archive-ink) !important;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.16) !important;
+}
+
+.public-visual-scope .apple-budget-input::-moz-range-thumb {
+  width: 24px !important;
+  height: 24px !important;
+  border: 2px solid var(--archive-paper) !important;
+  background: var(--archive-ink) !important;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.16) !important;
+}
+
+.public-visual-scope .apple-admin-access {
+  margin-top: clamp(1rem, 1.8vw, 1.5rem) !important;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .public-visual-scope :is(.apple-cta, .button-primary, .button-secondary, .apple-process-card, .apple-preserve-card, .apple-hero-chapter, .nav-pill, .theme-toggle):hover {
+    transform: translate3d(0, -3px, 0) !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .public-visual-scope .apple-process-grid {
+    display: grid !important;
+    grid-template-columns: repeat(5, minmax(136px, 1fr)) !important;
+    align-items: stretch !important;
+    overflow: visible !important;
+  }
+}
+
+@media (max-width: 1023px) {
+  .public-visual-scope .apple-hero-stage,
+  .public-visual-scope .apple-preserve-layout,
+  .public-visual-scope .apple-inquiry-layout {
+    grid-template-columns: 1fr !important;
+  }
+
+  .public-visual-scope .apple-hero-title {
+    font-size: clamp(4rem, 17vw, 8rem) !important;
+  }
+
+  .public-visual-scope .apple-section-title {
+    font-size: clamp(3.1rem, 12vw, 6.5rem) !important;
+  }
+
+  .public-visual-scope .apple-hero-chapters {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .public-visual-scope .apple-record-feature {
+    width: min(100%, 760px) !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .public-visual-scope {
+    --archive-section-tight: clamp(48px, 12vw, 70px);
+    --archive-section-open: clamp(58px, 14vw, 86px);
+  }
+
+  .public-visual-scope .apple-section-inner,
+  .public-visual-scope .apple-hero-inner {
+    width: min(100%, calc(100vw - 2rem)) !important;
+  }
+
+  .public-visual-scope .apple-hero {
+    padding-top: clamp(54px, 11vh, 82px) !important;
+  }
+
+  .public-visual-scope .apple-hero-title {
+    width: 100% !important;
+    max-width: 100% !important;
+    font-size: clamp(3.45rem, 18vw, 5.65rem) !important;
+    line-height: 0.78 !important;
+  }
+
+  .public-visual-scope .apple-hero-copy {
+    font-size: 0.98rem !important;
+    line-height: 1.55 !important;
+  }
+
+  .public-visual-scope .apple-hero-stage {
+    gap: 0.9rem !important;
+    margin-top: 1.6rem !important;
+  }
+
+  .public-visual-scope .apple-hero-chapters {
+    grid-template-columns: 1fr !important;
+  }
+
+  .public-visual-scope .apple-hero-chapter {
+    padding: 0.95rem 1rem !important;
+  }
+
+  .public-visual-scope .apple-section-title {
+    width: 100% !important;
+    max-width: 100% !important;
+    font-size: clamp(2.72rem, 14.6vw, 4.36rem) !important;
+    line-height: 0.84 !important;
+    overflow-wrap: break-word;
+  }
+
+  .public-visual-scope .apple-section-copy {
+    font-size: 0.95rem !important;
+    line-height: 1.55 !important;
+  }
+
+  .public-visual-scope .apple-record-feature {
+    padding: 1rem !important;
+  }
+
+  .public-visual-scope .apple-section-contrast .apple-visual-frame {
+    width: 100% !important;
+  }
+
+  .public-visual-scope .apple-record-detail h3 {
+    font-size: clamp(2.1rem, 10.5vw, 3.2rem) !important;
+    width: min(100%, 11ch) !important;
+  }
+
+  .public-visual-scope .apple-process-shell {
+    width: calc(100vw - 1.5rem) !important;
+  }
+
+  .public-visual-scope .apple-process-grid {
+    display: flex !important;
+    overflow-x: auto !important;
+    scroll-snap-type: x mandatory !important;
+    gap: 14px !important;
+    padding-inline: max(18px, calc((100vw - 318px) / 2)) !important;
+    scroll-padding-inline: max(18px, calc((100vw - 318px) / 2)) !important;
+  }
+
+  .public-visual-scope .apple-process-card {
+    flex: 0 0 clamp(276px, 76vw, 318px) !important;
+    width: clamp(276px, 76vw, 318px) !important;
+    min-width: clamp(276px, 76vw, 318px) !important;
+    min-height: 184px !important;
+    max-height: none !important;
+    padding: 1rem !important;
+    scroll-snap-align: center !important;
+  }
+
+  .public-visual-scope .apple-process-card h3 {
+    font-size: clamp(1.16rem, 5.2vw, 1.42rem) !important;
+  }
+
+  .public-visual-scope .apple-process-card p {
+    font-size: 0.82rem !important;
+    line-height: 1.45 !important;
+  }
+
+  .public-visual-scope .apple-preserve-layout,
+  .public-visual-scope .apple-inquiry-layout {
+    width: min(100%, calc(100vw - 2rem)) !important;
+  }
+
+  .public-visual-scope .apple-preserve-feature {
+    min-height: 300px !important;
+  }
+
+  .public-visual-scope .apple-preserve-feature h3 {
+    font-size: clamp(2.7rem, 14vw, 4.25rem) !important;
+  }
+
+  .public-visual-scope .apple-preserve-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .public-visual-scope .apple-inquiry-form,
+  .public-visual-scope .apple-inquiry-support {
+    padding: 1rem !important;
+  }
+
+  .public-visual-scope .apple-inquiry-tabs {
+    gap: 0.45rem !important;
+  }
+
+  .public-visual-scope .apple-inquiry-tab {
+    min-height: 2.2rem !important;
+    padding-inline: 0.62rem !important;
+    font-size: 0.68rem !important;
+  }
+
+  .public-visual-scope .apple-inquiry-copy h3 {
+    font-size: clamp(1.95rem, 10vw, 3rem) !important;
+  }
+}
+
+.public-visual-scope {
+  background-color: #fbfbfb !important;
+}
+
+html[data-theme="dark"] .public-visual-scope {
+  background-color: #000000 !important;
+}
+
+html[data-theme="dark"] body div.public-visual-scope {
+  background: #000000 !important;
+  background-color: #000000 !important;
+}
