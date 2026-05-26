@@ -1,52 +1,93 @@
 /* CAPSOUL restrained monochrome material system.
    This file intentionally overrides prior experimental visual layers with one quiet surface language. */
 
+:root {
+  --surface-bg-light: #ffffff;
+  --surface-bg-dark: #000000;
+  --text-main-light: #080808;
+  --text-muted-light: rgba(0, 0, 0, 0.62);
+  --text-main-dark: #ffffff;
+  --text-muted-dark: rgba(255, 255, 255, 0.64);
+  --radius-card: clamp(22px, 2vw, 34px);
+  --radius-panel: clamp(28px, 3vw, 48px);
+  --radius-pill: 999px;
+  --space-section-y: clamp(72px, 9vw, 150px);
+  --space-card-gap: clamp(14px, 2vw, 28px);
+  --space-panel-pad: clamp(20px, 3vw, 46px);
+  --shadow-card-light:
+    0 18px 50px rgba(0, 0, 0, 0.08),
+    0 2px 10px rgba(0, 0, 0, 0.04);
+  --shadow-card-dark:
+    0 18px 50px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
 .public-visual-scope,
 .admin-visual-scope {
-  --material-radius-control: 999px;
-  --material-radius-card: clamp(22px, 1.7vw, 32px);
-  --material-radius-panel: clamp(30px, 2.6vw, 48px);
-  --material-bg: #f8f8f8;
-  --material-bg-soft: #ededed;
-  --material-panel: rgba(255, 255, 255, 0.38);
-  --material-panel-strong: rgba(255, 255, 255, 0.72);
-  --material-panel-muted: rgba(242, 242, 242, 0.32);
-  --material-border: rgba(18, 18, 18, 0.1);
-  --material-border-strong: rgba(18, 18, 18, 0.16);
-  --material-highlight: rgba(255, 255, 255, 0.72);
-  --material-inner-edge: rgba(18, 18, 18, 0.06);
-  --material-reflection: rgba(255, 255, 255, 0.22);
-  --material-shadow: 0 18px 48px rgba(12, 12, 12, 0.08), 0 2px 10px rgba(12, 12, 12, 0.04);
-  --material-shadow-strong: 0 26px 76px rgba(12, 12, 12, 0.12), 0 6px 18px rgba(12, 12, 12, 0.06);
-  --material-control-bg: rgba(255, 255, 255, 0.5);
-  --material-control-border: rgba(18, 18, 18, 0.12);
-  --material-control-shadow: 0 10px 28px rgba(12, 12, 12, 0.08);
+  --surface-bg-light: #ffffff;
+  --surface-bg-dark: #000000;
+  --text-main-light: #080808;
+  --text-muted-light: rgba(0, 0, 0, 0.62);
+  --text-main-dark: #ffffff;
+  --text-muted-dark: rgba(255, 255, 255, 0.64);
+  --radius-card: clamp(22px, 2vw, 34px);
+  --radius-panel: clamp(28px, 3vw, 48px);
+  --radius-pill: 999px;
+  --space-section-y: clamp(72px, 9vw, 150px);
+  --space-card-gap: clamp(14px, 2vw, 28px);
+  --space-panel-pad: clamp(20px, 3vw, 46px);
+  --shadow-card-light:
+    0 18px 50px rgba(0, 0, 0, 0.08),
+    0 2px 10px rgba(0, 0, 0, 0.04);
+  --shadow-card-dark:
+    0 18px 50px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  --material-radius-control: var(--radius-pill);
+  --material-radius-card: var(--radius-card);
+  --material-radius-panel: var(--radius-panel);
+  --material-bg: var(--surface-bg-light);
+  --material-bg-soft: #f5f5f5;
+  --material-panel: rgba(255, 255, 255, 0.78);
+  --material-panel-strong: rgba(255, 255, 255, 0.92);
+  --material-panel-muted: rgba(255, 255, 255, 0.66);
+  --material-border: rgba(0, 0, 0, 0.08);
+  --material-border-strong: rgba(0, 0, 0, 0.12);
+  --material-highlight: rgba(255, 255, 255, 0.82);
+  --material-inner-edge: rgba(0, 0, 0, 0.045);
+  --material-shadow: var(--shadow-card-light);
+  --material-shadow-strong:
+    0 24px 70px rgba(0, 0, 0, 0.1),
+    0 4px 16px rgba(0, 0, 0, 0.05);
+  --material-control-bg: rgba(255, 255, 255, 0.86);
+  --material-control-border: rgba(0, 0, 0, 0.1);
+  --material-control-shadow: 0 10px 28px rgba(0, 0, 0, 0.07);
   --material-ease: cubic-bezier(0.22, 1, 0.36, 1);
-  --material-text: #111111;
-  --material-muted: rgba(17, 17, 17, 0.64);
+  --material-text: var(--text-main-light);
+  --material-muted: var(--text-muted-light);
   color-scheme: light;
 }
 
 html[data-theme="dark"] .public-visual-scope,
 html[data-theme="dark"] .admin-visual-scope,
 .admin-visual-scope[data-admin-theme="dark"] {
-  --material-bg: #000000;
-  --material-bg-soft: #080808;
-  --material-panel: rgba(20, 20, 20, 0.5);
-  --material-panel-strong: rgba(34, 34, 34, 0.64);
-  --material-panel-muted: rgba(8, 8, 8, 0.36);
-  --material-border: rgba(255, 255, 255, 0.16);
-  --material-border-strong: rgba(255, 255, 255, 0.22);
-  --material-highlight: rgba(255, 255, 255, 0.18);
-  --material-inner-edge: rgba(0, 0, 0, 0.42);
-  --material-reflection: rgba(255, 255, 255, 0.08);
-  --material-shadow: 0 22px 58px rgba(0, 0, 0, 0.38), 0 4px 14px rgba(0, 0, 0, 0.28);
-  --material-shadow-strong: 0 34px 92px rgba(0, 0, 0, 0.54), 0 8px 22px rgba(0, 0, 0, 0.34);
-  --material-control-bg: rgba(25, 26, 26, 0.58);
-  --material-control-border: rgba(255, 255, 255, 0.16);
-  --material-control-shadow: 0 14px 36px rgba(0, 0, 0, 0.36);
-  --material-text: #f4f4f4;
-  --material-muted: rgba(244, 244, 244, 0.66);
+  --material-bg: var(--surface-bg-dark);
+  --material-bg-soft: #050505;
+  --material-panel: rgba(0, 0, 0, 0.72);
+  --material-panel-strong: rgba(0, 0, 0, 0.88);
+  --material-panel-muted: rgba(0, 0, 0, 0.58);
+  --material-border: rgba(255, 255, 255, 0.1);
+  --material-border-strong: rgba(255, 255, 255, 0.16);
+  --material-highlight: rgba(255, 255, 255, 0.1);
+  --material-inner-edge: rgba(255, 255, 255, 0.05);
+  --material-shadow: var(--shadow-card-dark);
+  --material-shadow-strong:
+    0 24px 70px rgba(0, 0, 0, 0.58),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  --material-control-bg: rgba(0, 0, 0, 0.78);
+  --material-control-border: rgba(255, 255, 255, 0.12);
+  --material-control-shadow: 0 14px 36px rgba(0, 0, 0, 0.45);
+  --material-text: var(--text-main-dark);
+  --material-muted: var(--text-muted-dark);
   color-scheme: dark;
 }
 
@@ -58,17 +99,13 @@ body {
 
 .public-visual-scope,
 .admin-visual-scope {
-  background:
-    radial-gradient(ellipse at 50% -14%, rgba(255, 255, 255, 0.58), transparent 42vmax),
-    linear-gradient(180deg, var(--material-bg) 0%, var(--material-bg-soft) 52%, var(--material-bg) 100%);
+  background: var(--material-bg) !important;
 }
 
 html[data-theme="dark"] .public-visual-scope,
 html[data-theme="dark"] .admin-visual-scope,
 .admin-visual-scope[data-admin-theme="dark"] {
-  background:
-    radial-gradient(ellipse at 50% -18%, rgba(255, 255, 255, 0.07), transparent 42vmax),
-    linear-gradient(180deg, var(--material-bg) 0%, var(--material-bg-soft) 50%, #030404 100%);
+  background: var(--material-bg) !important;
 }
 
 .public-visual-scope .atmosphere-backdrop {
@@ -78,22 +115,12 @@ html[data-theme="dark"] .admin-visual-scope,
   overflow: hidden;
   pointer-events: none;
   opacity: 1 !important;
-  background:
-    radial-gradient(ellipse at 50% -8%, rgba(255, 255, 255, 0.7), transparent 42vmax),
-    radial-gradient(ellipse at 16% 18%, rgba(184, 184, 184, 0.14), transparent 44vmax),
-    radial-gradient(ellipse at 84% 20%, rgba(220, 220, 220, 0.18), transparent 42vmax),
-    radial-gradient(ellipse at 50% 92%, rgba(20, 20, 20, 0.05), transparent 52vmax),
-    linear-gradient(180deg, #fafafa 0%, #eeeeee 48%, #ffffff 100%) !important;
+  background: var(--surface-bg-light) !important;
   transform: translate3d(0, 0, 0);
 }
 
 html[data-theme="dark"] .public-visual-scope .atmosphere-backdrop {
-  background:
-    radial-gradient(ellipse at 50% -10%, rgba(255, 255, 255, 0.06), transparent 42vmax),
-    radial-gradient(ellipse at 22% 22%, rgba(90, 90, 90, 0.16), transparent 44vmax),
-    radial-gradient(ellipse at 84% 20%, rgba(130, 130, 130, 0.08), transparent 42vmax),
-    radial-gradient(ellipse at 50% 92%, rgba(0, 0, 0, 0.44), transparent 52vmax),
-    linear-gradient(180deg, #000000 0%, #080808 48%, #000000 100%) !important;
+  background: var(--surface-bg-dark) !important;
 }
 
 .public-visual-scope .atmosphere-backdrop::before,
@@ -114,55 +141,45 @@ html[data-theme="dark"] .public-visual-scope .atmosphere-backdrop {
 .public-visual-scope .atmosphere-layer-ambient,
 .public-visual-scope .atmosphere-layer-frost,
 .public-visual-scope .atmosphere-layer-mineral {
-  background:
-    radial-gradient(ellipse at 50% 22%, rgba(255, 255, 255, 0.2), transparent 48%),
-    radial-gradient(ellipse at 28% 68%, rgba(160, 164, 164, 0.08), transparent 46%),
-    radial-gradient(ellipse at 76% 66%, rgba(255, 255, 255, 0.14), transparent 44%);
-  opacity: 0.7;
+  display: none !important;
 }
 
 .public-visual-scope .atmosphere-layer-frost {
-  opacity: 0.34;
-  background:
-    linear-gradient(112deg, rgba(255, 255, 255, 0.18), transparent 34%, rgba(255, 255, 255, 0.08) 68%, transparent),
-    radial-gradient(ellipse at center, rgba(255, 255, 255, 0.08), transparent 64%);
+  display: none !important;
 }
 
 .public-visual-scope .atmosphere-layer-grain,
 .public-visual-scope .atmosphere-backdrop::after {
-  opacity: 0.08;
+  opacity: 0.22;
   mix-blend-mode: multiply;
   background-image:
-    repeating-radial-gradient(circle at 0 0, rgba(20, 20, 20, 0.18) 0 0.022rem, transparent 0.03rem 0.2rem),
-    repeating-linear-gradient(90deg, rgba(20, 20, 20, 0.08) 0 1px, transparent 1px 5px);
+    repeating-radial-gradient(circle at 0 0, rgba(0, 0, 0, 0.18) 0 0.018rem, transparent 0.026rem 0.18rem),
+    repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.045) 0 1px, transparent 1px 6px);
   background-size: 0.58rem 0.58rem, 0.46rem 0.46rem;
   background-position: 0 var(--atmosphere-drift, 0px), 0 var(--atmosphere-drift-grain, 0px);
 }
 
 .public-visual-scope .atmosphere-layer-vignette {
-  opacity: 0.52;
+  opacity: 0.22;
   background:
-    radial-gradient(ellipse at center, transparent 48%, rgba(0, 0, 0, 0.07) 100%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent 28%, rgba(0, 0, 0, 0.035));
+    radial-gradient(ellipse at center, transparent 58%, rgba(0, 0, 0, 0.06) 100%),
+    linear-gradient(180deg, transparent, transparent 72%, rgba(0, 0, 0, 0.035));
 }
 
 html[data-theme="dark"] .public-visual-scope .atmosphere-backdrop::before,
 html[data-theme="dark"] .public-visual-scope .atmosphere-layer-ambient,
 html[data-theme="dark"] .public-visual-scope .atmosphere-layer-frost,
 html[data-theme="dark"] .public-visual-scope .atmosphere-layer-mineral {
-  background:
-    radial-gradient(ellipse at 50% 20%, rgba(255, 255, 255, 0.045), transparent 48%),
-    radial-gradient(ellipse at 28% 68%, rgba(96, 96, 96, 0.09), transparent 46%),
-    radial-gradient(ellipse at 76% 66%, rgba(255, 255, 255, 0.025), transparent 44%);
+  display: none !important;
 }
 
 html[data-theme="dark"] .public-visual-scope .atmosphere-layer-grain,
 html[data-theme="dark"] .public-visual-scope .atmosphere-backdrop::after {
-  opacity: 0.1;
+  opacity: 0.2;
   mix-blend-mode: screen;
   background-image:
-    repeating-radial-gradient(circle at 0 0, rgba(255, 255, 255, 0.14) 0 0.018rem, transparent 0.026rem 0.22rem),
-    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.055) 0 1px, transparent 1px 5px);
+    repeating-radial-gradient(circle at 0 0, rgba(255, 255, 255, 0.16) 0 0.016rem, transparent 0.024rem 0.2rem),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.05) 0 1px, transparent 1px 6px);
 }
 
 .public-visual-scope .atmosphere-layer-ambient {
@@ -174,10 +191,10 @@ html[data-theme="dark"] .public-visual-scope .atmosphere-backdrop::after {
 }
 
 html[data-theme="dark"] .public-visual-scope .atmosphere-layer-vignette {
-  opacity: 0.72;
+  opacity: 0.42;
   background:
-    radial-gradient(ellipse at center, transparent 42%, rgba(0, 0, 0, 0.55) 100%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 28%, rgba(0, 0, 0, 0.28));
+    radial-gradient(ellipse at center, transparent 52%, rgba(0, 0, 0, 0.54) 100%),
+    linear-gradient(180deg, transparent, transparent 72%, rgba(0, 0, 0, 0.24));
 }
 
 .public-visual-scope::before,
@@ -333,15 +350,13 @@ html[data-theme="dark"] .public-visual-scope .atmosphere-layer-vignette {
   isolation: isolate;
   border: 1px solid var(--material-border) !important;
   border-radius: var(--material-radius-card) !important;
-  background:
-    linear-gradient(145deg, var(--material-panel-strong), var(--material-panel)),
-    linear-gradient(315deg, rgba(255, 255, 255, 0.24), transparent 42%, rgba(0, 0, 0, 0.025)) !important;
+  background: var(--material-panel-strong) !important;
   box-shadow:
     inset 0 1px 0 var(--material-highlight),
     inset 0 -1px 0 var(--material-inner-edge),
     var(--material-shadow) !important;
-  -webkit-backdrop-filter: blur(14px) saturate(112%);
-  backdrop-filter: blur(14px) saturate(112%);
+  -webkit-backdrop-filter: blur(10px) saturate(104%);
+  backdrop-filter: blur(10px) saturate(104%);
   backface-visibility: hidden;
   transform: translateZ(0);
   transition-property: transform, opacity, color, background-color, border-color;
