@@ -411,7 +411,7 @@ function useMinimalPublicRevealMotion() {
     const prepareReveal = (element: HTMLElement) => {
       element.classList.add("capsoul-reveal-pending");
       element.style.setProperty("opacity", "0", "important");
-      element.style.setProperty("transform", "translate3d(0, 8px, 0) scale(0.985)", "important");
+      element.style.setProperty("transform", "translateY(8px) scale(0.985)", "important");
       element.style.setProperty("transition-property", "opacity, transform");
       element.style.setProperty("transition-duration", "480ms");
       element.style.setProperty("transition-timing-function", "cubic-bezier(0.22, 1, 0.36, 1)");
@@ -422,7 +422,7 @@ function useMinimalPublicRevealMotion() {
       element.classList.add("is-visible");
       element.classList.remove("capsoul-reveal-pending");
       element.style.setProperty("opacity", "1", "important");
-      element.style.setProperty("transform", "translate3d(0, 0, 0) scale(1)", "important");
+      element.style.setProperty("transform", "translateY(0) scale(1)", "important");
 
       const existingTimer = settleTimers.get(element);
       if (existingTimer) {

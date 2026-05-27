@@ -12148,6 +12148,53 @@ html[data-theme="dark"] .public-visual-scope .atmosphere-backdrop {
   transform: translate3d(0, 0, 0) !important;
 }
 
+/* Final homepage background contract duplicated here because compiled globals can land after public overrides. */
+html[data-theme="light"],
+html[data-theme="light"] body,
+html[data-theme="light"] .public-visual-scope,
+html[data-theme="light"] .public-visual-scope #main-content {
+  background: #fbfbfb !important;
+  background-color: #fbfbfb !important;
+}
+
+html[data-theme="dark"],
+html[data-theme="dark"] body,
+html[data-theme="dark"] .public-visual-scope,
+html[data-theme="dark"] .public-visual-scope #main-content {
+  background: #000000 !important;
+  background-color: #000000 !important;
+}
+
+.public-visual-scope .atmosphere-backdrop {
+  opacity: 0.14 !important;
+  background-color: transparent !important;
+  background-image:
+    radial-gradient(circle, rgba(0, 0, 0, 0.1) 0 0.35px, transparent 0.6px),
+    radial-gradient(circle, rgba(0, 0, 0, 0.06) 0 0.25px, transparent 0.55px) !important;
+  background-position:
+    0 var(--atmosphere-drift, 0px),
+    2px var(--atmosphere-drift-grain, 0px) !important;
+  background-size: 5px 5px, 9px 9px !important;
+  mix-blend-mode: multiply !important;
+}
+
+html[data-theme="dark"] .public-visual-scope .atmosphere-backdrop {
+  opacity: 0.18 !important;
+  background-image:
+    radial-gradient(circle, rgba(255, 255, 255, 0.08) 0 0.35px, transparent 0.6px),
+    radial-gradient(circle, rgba(255, 255, 255, 0.052) 0 0.25px, transparent 0.55px) !important;
+  mix-blend-mode: screen !important;
+}
+
+.public-visual-scope .atmosphere-backdrop::before,
+.public-visual-scope .atmosphere-backdrop::after,
+.public-visual-scope .atmosphere-layer {
+  content: none !important;
+  display: none !important;
+  opacity: 0 !important;
+  background: none !important;
+}
+
 /* Final public homepage background guard: monochrome paper grain only. */
 .public-visual-scope {
   background: #fbfbfb !important;
@@ -13752,4 +13799,51 @@ html[data-theme="dark"] .public-visual-scope .atmosphere-backdrop {
   opacity: var(--archive-detail-opacity, 1) !important;
   overflow: var(--archive-detail-overflow, visible) !important;
   transform: translate3d(0, 0, 0) !important;
+}
+
+/* Absolute final homepage background contract. */
+html[data-theme="light"],
+html[data-theme="light"] body,
+html[data-theme="light"] .public-visual-scope,
+html[data-theme="light"] .public-visual-scope #main-content {
+  background: #fbfbfb !important;
+  background-color: #fbfbfb !important;
+}
+
+html[data-theme="dark"],
+html[data-theme="dark"] body,
+html[data-theme="dark"] .public-visual-scope,
+html[data-theme="dark"] .public-visual-scope #main-content {
+  background: #000000 !important;
+  background-color: #000000 !important;
+}
+
+.public-visual-scope .atmosphere-backdrop {
+  opacity: 0.14 !important;
+  background-color: transparent !important;
+  background-image:
+    radial-gradient(circle, rgba(0, 0, 0, 0.1) 0 0.35px, transparent 0.6px),
+    radial-gradient(circle, rgba(0, 0, 0, 0.06) 0 0.25px, transparent 0.55px) !important;
+  background-position:
+    0 var(--atmosphere-drift, 0px),
+    2px var(--atmosphere-drift-grain, 0px) !important;
+  background-size: 5px 5px, 9px 9px !important;
+  mix-blend-mode: multiply !important;
+}
+
+html[data-theme="dark"] .public-visual-scope .atmosphere-backdrop {
+  opacity: 0.18 !important;
+  background-image:
+    radial-gradient(circle, rgba(255, 255, 255, 0.08) 0 0.35px, transparent 0.6px),
+    radial-gradient(circle, rgba(255, 255, 255, 0.052) 0 0.25px, transparent 0.55px) !important;
+  mix-blend-mode: screen !important;
+}
+
+.public-visual-scope .atmosphere-backdrop::before,
+.public-visual-scope .atmosphere-backdrop::after,
+.public-visual-scope .atmosphere-layer {
+  content: none !important;
+  display: none !important;
+  opacity: 0 !important;
+  background: none !important;
 }
