@@ -249,6 +249,22 @@ function useMagneticButton(ref: RefObject<HTMLElement | null>, strength = 0.35) 
   }, [ref, strength]);
 }
 
+function useMediaQuery(query: string) {
+  const [matches, setMatches] = useState(false);
+
+  useEffect(() => {
+    const media = window.matchMedia(query);
+    const update = () => setMatches(media.matches);
+
+    update();
+    media.addEventListener("change", update);
+
+    return () => media.removeEventListener("change", update);
+  }, [query]);
+
+  return matches;
+}
+
 function MagneticButtonFrame({
   children,
   strength = 0.35,
@@ -339,31 +355,36 @@ const detailItemReveal = {
 
 const heroTitleVariants = {
   hidden: {},
-  visible: { transition: { staggerChildren: 0.06, delayChildren: 0.15 } },
+  visible: { transition: { staggerChildren: 0.09, delayChildren: 0.2 } },
 } as const;
 
 const heroTitleWordVariants = {
-  hidden: { opacity: 0, y: 28, skewX: -2 },
+  hidden: {
+    opacity: 0,
+    clipPath: "inset(100% 0% 0% 0%)",
+    y: 24,
+  },
   visible: {
     opacity: 1,
+    clipPath: "inset(0% 0% 0% 0%)",
     y: 0,
-    skewX: 0,
-    transition: { duration: 0.7, ease: revealEase },
+    transition: { duration: 0.75, ease: revealEase },
   },
 } as const;
 
 const processContainerVariants = {
   hidden: {},
-  visible: { transition: { staggerChildren: 0.09, delayChildren: 0.2 } },
+  visible: { transition: { staggerChildren: 0.08, delayChildren: 0.15 } },
 } as const;
 
 const processCardVariants = {
-  hidden: { opacity: 0, y: 16, scale: 0.97 },
+  hidden: { opacity: 0, y: 22, scale: 0.96, filter: "blur(3px)" },
   visible: {
     opacity: 1,
     y: 0,
     scale: 1,
-    transition: { duration: 0.55, ease: revealEase },
+    filter: "blur(0px)",
+    transition: { duration: 0.62, ease: revealEase },
   },
 } as const;
 
@@ -930,7 +951,7 @@ function ArchiveVisualFrame({
   }
 
   return (
-    <div className="apple-visual-frame apple-liquid-surface liquid-glass-panel" ref={frameRef}>
+    <div className="apple-visual-frame apple-liquid-surface liquid-glass-panel capsoul-glass" ref={frameRef}>
       <span className="apple-liquid-layer" aria-hidden="true" />
       {showToolbar ? (
         <div className="apple-visual-toolbar">
@@ -957,7 +978,7 @@ function ArchiveVisualFrame({
   );
 }
 
-function HeroHeadline({ title }: { title: string }) {
+function HeroHeadline({ style, title }: { style?: MotionStyle; title: string }) {
   const [isReady, setIsReady] = useState(false);
   const words = useMemo(() => title.split(/\s+/).filter(Boolean), [title]);
 
@@ -972,17 +993,22 @@ function HeroHeadline({ title }: { title: string }) {
         className="apple-hero-title"
         initial="hidden"
         key={title}
+        aria-label={title}
+        style={style}
         variants={heroTitleVariants}
       >
         {words.map((word, index) => (
-          <motion.span
-            className="apple-hero-title-word"
+          <span
+            className="apple-hero-title-word-wrap"
             key={`${word}-${index}`}
-            variants={heroTitleWordVariants}
           >
-            {word}
-            {index < words.length - 1 ? "\u00A0" : null}
-          </motion.span>
+            <motion.span
+              className="apple-hero-title-word"
+              variants={heroTitleWordVariants}
+            >
+              {word}
+            </motion.span>
+          </span>
         ))}
       </motion.h1>
     </AnimatePresence>
@@ -996,8 +1022,16 @@ function ArchiveHero({
   home: ResolvedSceneContent;
   stepLabelPrefix: string;
 }) {
+  const heroRef = useRef<HTMLElement | null>(null);
   const heroRecordRef = useRef<HTMLDivElement | null>(null);
   const handleLink = useSectionLink();
+  const reduceMotion = useReducedMotion();
+  const isDesktop = useMediaQuery("(min-width: 768px)");
+  const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
+  const recordY = useTransform(scrollYProgress, [0, 1], [0, reduceMotion ? 0 : -55]);
+  const chaptersY = useTransform(scrollYProgress, [0, 1], [0, reduceMotion ? 0 : -28]);
+  const titleY = useTransform(scrollYProgress, [0, 1], [0, reduceMotion ? 0 : -18]);
+  const copyY = useTransform(scrollYProgress, [0, 1], [0, reduceMotion ? 0 : -10]);
   const locale = getPublicLocale(stepLabelPrefix);
   const heroStep = home.steps[0];
   const processCards = HOME_PROCESS_CARDS[locale];
@@ -1012,15 +1046,16 @@ function ArchiveHero({
       data-motion-section
       className="apple-hero motion-section"
       data-reveal
+      ref={heroRef}
     >
       <PremiumSectionMotion variant="hero" className="apple-hero-inner motion-section-flow">
         <SectionKicker>
           {home.eyebrow}
         </SectionKicker>
-        <HeroHeadline title={home.title} />
-        <p className="apple-hero-copy motion-copy" data-reveal style={revealDelay(2)}>
+        <HeroHeadline title={home.title} style={{ y: titleY }} />
+        <motion.p className="apple-hero-copy" style={{ y: copyY }}>
           {home.description}
-        </p>
+        </motion.p>
         <div className="apple-hero-actions motion-card" data-reveal style={revealDelay(3)}>
           {home.primaryAction ? (
             <MagneticPrimaryAnchor
@@ -1036,31 +1071,36 @@ function ArchiveHero({
             </MagneticSecondaryAnchor>
           ) : null}
         </div>
-        <div className="apple-hero-stage motion-media">
-          <div
-            className="apple-hero-record apple-liquid-surface liquid-glass-panel"
-            data-reveal
-            ref={heroRecordRef}
-            style={revealDelay(4)}
-          >
-            <span className="apple-liquid-layer" aria-hidden="true" />
-            <ArchiveVisualFrame
-              image={heroStep.image}
-              fallbackImage={heroStep.fallbackImage}
-              label={heroStep.mediaLabel}
-              caption={heroStep.mediaCaption}
-              objectPosition={heroStep.objectPosition}
-              priority
-              showToolbar={false}
-            />
-          </div>
-          <div
-            className="apple-hero-chapters"
+        <div className="apple-hero-stage">
+          <motion.div className="apple-hero-record-parallax" style={{ y: recordY }}>
+            <motion.div
+              animate={reduceMotion || !isDesktop ? undefined : { y: [0, -8, 0] }}
+              className="apple-hero-record apple-liquid-surface liquid-glass-panel capsoul-glass"
+              data-reveal
+              ref={heroRecordRef}
+              style={revealDelay(4)}
+              transition={{ duration: 6, ease: "easeInOut", repeat: Infinity }}
+            >
+              <span className="apple-liquid-layer" aria-hidden="true" />
+              <ArchiveVisualFrame
+                image={heroStep.image}
+                fallbackImage={heroStep.fallbackImage}
+                label={heroStep.mediaLabel}
+                caption={heroStep.mediaCaption}
+                objectPosition={heroStep.objectPosition}
+                priority
+                showToolbar={false}
+              />
+            </motion.div>
+          </motion.div>
+          <motion.div
+            className="apple-hero-chapters capsoul-glass"
             aria-label="Opening process steps"
+            style={{ y: chaptersY }}
           >
             {processCards.map((step, index) => (
               <div
-                className="apple-hero-chapter apple-liquid-surface liquid-glass-panel"
+                className="apple-hero-chapter apple-liquid-surface liquid-glass-panel capsoul-glass"
                 key={`hero-chapter-${index}`}
                 data-reveal
                 style={revealDelay(index + 5)}
@@ -1071,7 +1111,7 @@ function ArchiveHero({
                 <p>{step.summary}</p>
               </div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </PremiumSectionMotion>
     </section>
@@ -1215,7 +1255,7 @@ function ArchiveSceneModule({
 
   return (
     <div className="apple-scene-module motion-stagger">
-      <div className="apple-record-feature liquid-glass-panel motion-media" data-reveal style={revealDelay(1)}>
+      <div className="apple-record-feature liquid-glass-panel capsoul-glass motion-media" data-reveal style={revealDelay(1)}>
         <div className="experience-content-container">
           <AnimatePresence initial={false} custom={direction} mode="wait">
             <motion.div
@@ -1280,7 +1320,7 @@ function ProcessStepCard({
 }) {
   return (
     <motion.article
-      className="apple-process-card apple-liquid-surface liquid-glass-panel how-it-works-card"
+      className="apple-process-card apple-liquid-surface liquid-glass-panel capsoul-glass how-it-works-card"
       key={`process-step-${index}`}
       data-reveal
       variants={processCardVariants}
@@ -1299,10 +1339,8 @@ function ProcessStepCard({
 
 function ProcessTimeline({
   process,
-  swipeHint,
 }: {
   process: ResolvedSceneContent;
-  swipeHint: string;
 }) {
   const scrollerRef = useRef<HTMLDivElement>(null);
   const isResettingScrollRef = useRef(true);
@@ -1399,7 +1437,20 @@ function ProcessTimeline({
         ))}
       </motion.div>
       <div className="apple-process-scroll-cue" aria-hidden="true">
-        <span className="apple-process-swipe-hint">{swipeHint}</span>
+        <div className="process-drag-cue">
+          <motion.div
+            animate={{ scaleX: [0.4, 1, 0.4] }}
+            className="process-drag-line"
+            transition={{ duration: 2.4, ease: "easeInOut", repeat: Infinity }}
+          />
+          <motion.div
+            animate={{ x: [0, 6, 0] }}
+            className="process-drag-arrow"
+            transition={{ duration: 1.8, ease: "easeInOut", repeat: Infinity, delay: 0.3 }}
+          >
+            →
+          </motion.div>
+        </div>
         <span className="apple-process-scroll-dots">
           {process.steps.map((step, index) => (
             <span
@@ -1423,7 +1474,7 @@ function PreserveEditorial({ preserve }: { preserve: ResolvedSceneContent }) {
     <div className="apple-preserve-layout motion-stagger">
       {featured ? (
         <article
-          className="apple-preserve-feature apple-liquid-surface liquid-glass-panel motion-media"
+          className="apple-preserve-feature apple-liquid-surface liquid-glass-panel capsoul-glass motion-media"
           data-reveal
           ref={featuredRef}
         >
@@ -1440,12 +1491,19 @@ function PreserveEditorial({ preserve }: { preserve: ResolvedSceneContent }) {
           />
         </article>
       ) : null}
-      <div className="apple-preserve-grid">
+      <motion.div
+        className="apple-preserve-grid"
+        initial="hidden"
+        variants={processContainerVariants}
+        viewport={{ once: true, margin: "-8%" }}
+        whileInView="visible"
+      >
         {remaining.map((step, index) => (
-          <article
-            className="apple-preserve-card apple-liquid-surface liquid-glass-panel"
+          <motion.article
+            className="apple-preserve-card apple-liquid-surface liquid-glass-panel capsoul-glass"
             key={`preserve-card-${index}`}
             data-reveal
+            variants={processCardVariants}
             style={{
               "--motion-stagger-index": index + 1,
               "--reveal-delay": `${Math.min((index + 1) * 50, 260)}ms`,
@@ -1455,9 +1513,9 @@ function PreserveEditorial({ preserve }: { preserve: ResolvedSceneContent }) {
             <span>{step.label}</span>
             <h3>{step.title}</h3>
             <p>{step.summary}</p>
-          </article>
+          </motion.article>
         ))}
-      </div>
+      </motion.div>
     </div>
   );
 }
@@ -1632,7 +1690,7 @@ function InquiryArchiveForm({
   return (
     <div className="apple-inquiry-layout motion-stagger">
       <form
-        className="apple-inquiry-form liquid-glass-panel"
+        className="apple-inquiry-form liquid-glass-panel capsoul-glass"
         onSubmit={handleSubmit}
         data-reveal
       >
@@ -1704,7 +1762,7 @@ function InquiryArchiveForm({
       </form>
 
       <aside
-        className="apple-inquiry-support liquid-glass-panel motion-media"
+        className="apple-inquiry-support liquid-glass-panel capsoul-glass motion-media"
         data-reveal
         style={revealDelay(1, 80)}
       >
@@ -1780,7 +1838,6 @@ export function PublicExperience({
   const activeAtmosphereSection = usePublicAtmosphereSection();
   useMinimalPublicRevealMotion();
   const processStepLabelPrefix = globalContent.navigation.home === "Inicio" ? "Paso" : "Step";
-  const processSwipeHint = globalContent.navigation.home === "Inicio" ? "Desliza" : "Swipe";
   const railItems = useMemo<Array<{ key: PublicSectionKey; label: string }>>(
     () => [
       { key: "hero", label: formatRailLabel(home.title) },
@@ -1806,6 +1863,27 @@ export function PublicExperience({
     return () => window.cancelAnimationFrame(frame);
   }, [pathname]);
 
+  const handleSectionNav = useCallback((sectionId: ImmersiveSectionId) => {
+    const scope = document.querySelector<HTMLElement>(".public-visual-scope");
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (!scope || prefersReducedMotion) {
+      scrollToPublicSection(sectionId);
+      return;
+    }
+
+    scope.style.transition = "filter 0.22s ease";
+    scope.style.filter = "blur(4px)";
+
+    window.setTimeout(() => {
+      scrollToPublicSection(sectionId);
+
+      window.setTimeout(() => {
+        scope.style.filter = "";
+      }, 220);
+    }, 120);
+  }, []);
+
   return (
     <div className="apple-archive-experience" data-active-section={activeAtmosphereSection}>
       <ArchiveIndexLine items={railItems} activeKey={activeAtmosphereSection} />
@@ -1818,7 +1896,7 @@ export function PublicExperience({
             className={activeId === section.id ? "apple-side-dot apple-side-dot-active" : "apple-side-dot"}
             aria-label={`Go to ${section.label} section`}
             aria-current={activeId === section.id ? "page" : undefined}
-            onClick={() => scrollToPublicSection(section.id)}
+            onClick={() => handleSectionNav(section.id)}
           >
             <span>{section.label}</span>
           </button>
@@ -1843,7 +1921,7 @@ export function PublicExperience({
         title={process.title}
         description={process.description}
       >
-        <ProcessTimeline process={process} swipeHint={processSwipeHint} />
+        <ProcessTimeline process={process} />
       </ArchiveSection>
 
       <ArchiveSection

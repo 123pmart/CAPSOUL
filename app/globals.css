@@ -13985,3 +13985,225 @@ html[data-theme] .public-visual-scope .atmosphere-backdrop .atmosphere-layer-fro
 html[data-theme] .public-visual-scope .atmosphere-backdrop .atmosphere-layer-mineral {
   display: block !important;
 }
+
+.scene-transition-veil {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+  backdrop-filter: blur(0px);
+}
+
+.public-visual-scope .capsoul-glass {
+  background:
+    radial-gradient(ellipse at 18% 0%, rgba(255,255,255,0.72) 0%, transparent 52%),
+    linear-gradient(
+      160deg,
+      rgba(255,255,255,0.68) 0%,
+      rgba(255,255,255,0.38) 40%,
+      rgba(255,255,255,0.22) 100%
+    ) !important;
+  backdrop-filter: blur(28px) saturate(180%) brightness(1.04) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(180%) brightness(1.04) !important;
+  border: 1px solid rgba(255,255,255,0.72) !important;
+  box-shadow:
+    0 2px 0 0 rgba(255,255,255,0.9) inset,
+    0 -1px 0 0 rgba(0,0,0,0.06) inset,
+    0 8px 32px rgba(0,0,0,0.07),
+    0 32px 80px rgba(0,0,0,0.10),
+    0 64px 160px rgba(0,0,0,0.06) !important;
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+html[data-theme=dark] .public-visual-scope .capsoul-glass {
+  background:
+    radial-gradient(ellipse at 18% 0%, rgba(255,255,255,0.10) 0%, transparent 52%),
+    linear-gradient(
+      160deg,
+      rgba(255,255,255,0.09) 0%,
+      rgba(255,255,255,0.04) 40%,
+      rgba(0,0,0,0.18) 100%
+    ) !important;
+  backdrop-filter: blur(32px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(32px) saturate(160%) !important;
+  border: 1px solid rgba(255,255,255,0.13) !important;
+  box-shadow:
+    0 2px 0 0 rgba(255,255,255,0.08) inset,
+    0 -1px 0 0 rgba(0,0,0,0.4) inset,
+    0 8px 32px rgba(0,0,0,0.35),
+    0 32px 80px rgba(0,0,0,0.45) !important;
+}
+
+.atmosphere-orb {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(80px);
+  mix-blend-mode: soft-light;
+  will-change: transform, opacity;
+}
+
+.atmosphere-orb-1 {
+  width: clamp(400px, 60vw, 900px);
+  height: clamp(400px, 60vw, 900px);
+  background: radial-gradient(circle, var(--accent-soft, rgba(150,160,180,0.3)), transparent 70%);
+  top: -15%;
+  left: 20%;
+}
+
+.atmosphere-orb-2 {
+  width: clamp(300px, 50vw, 700px);
+  height: clamp(300px, 50vw, 700px);
+  background: radial-gradient(circle, var(--glass-highlight, rgba(255,255,255,0.2)), transparent 70%);
+  bottom: 10%;
+  right: 15%;
+}
+
+.atmosphere-orb-3 {
+  width: clamp(250px, 40vw, 600px);
+  height: clamp(250px, 40vw, 600px);
+  background: radial-gradient(circle, var(--accent-ice-strong, rgba(180,195,220,0.15)), transparent 70%);
+  top: 40%;
+  left: -10%;
+}
+
+.process-drag-cue {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  opacity: 0.35;
+  margin-top: 0.75rem;
+}
+
+.process-drag-line {
+  height: 1px;
+  width: 2.5rem;
+  background: var(--text-muted);
+  transform-origin: left;
+  border-radius: 999px;
+}
+
+.process-drag-arrow {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+  line-height: 1;
+}
+
+.apple-section-kicker {
+  position: relative;
+  overflow: hidden;
+}
+
+.apple-section-kicker::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 20%,
+    rgba(255,255,255,0.55) 50%,
+    transparent 80%
+  );
+  transform: translateX(-100%);
+  animation: kickerShimmer 4.5s ease-in-out infinite;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+@keyframes kickerShimmer {
+  0% { transform: translateX(-100%); }
+  30% { transform: translateX(200%); }
+  100% { transform: translateX(200%); }
+}
+
+.public-visual-scope .apple-hero-inner {
+  transform: translateZ(0);
+  isolation: isolate;
+}
+
+.public-visual-scope .apple-hero-title {
+  transform: translateZ(12px);
+  filter: drop-shadow(0 4px 24px rgba(0,0,0,0.08));
+}
+
+.public-visual-scope .apple-hero-title-word-wrap {
+  display: inline-block;
+  overflow: hidden;
+  margin-right: 0.22em;
+}
+
+.public-visual-scope .apple-hero-title-word-wrap:last-child {
+  margin-right: 0;
+}
+
+.public-visual-scope .apple-hero-stage {
+  transform: translateZ(-4px) scale(0.998);
+}
+
+.public-visual-scope .apple-hero-record {
+  transform: translateZ(8px);
+  filter: drop-shadow(0 16px 48px rgba(0,0,0,0.10));
+}
+
+.public-visual-scope .apple-process-shell {
+  perspective: 1400px;
+}
+
+.public-visual-scope .apple-process-grid {
+  transform-style: preserve-3d;
+}
+
+.public-visual-scope .apple-process-card:nth-child(1) { transform: translateZ(6px); }
+.public-visual-scope .apple-process-card:nth-child(2) { transform: translateZ(10px); }
+.public-visual-scope .apple-process-card:nth-child(3) { transform: translateZ(14px); }
+.public-visual-scope .apple-process-card:nth-child(4) { transform: translateZ(10px); }
+.public-visual-scope .apple-process-card:nth-child(5) { transform: translateZ(6px); }
+
+.site-footer {
+  position: relative;
+  z-index: 10;
+  padding-top: clamp(2rem, 4vw, 3.5rem);
+  padding-bottom: clamp(1rem, 2vw, 1.5rem);
+}
+
+@media (max-width: 767px) {
+  .apple-process-scroll-dots {
+    display: none;
+  }
+
+  .apple-process-shell {
+    padding-bottom: clamp(1.5rem, 4vw, 2.5rem);
+  }
+
+  #how-it-works {
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  .site-footer-inner {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+    gap: 1.5rem;
+  }
+
+  .site-footer-nav {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem 1.25rem;
+  }
+
+  .site-footer-legal {
+    align-items: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .apple-section-kicker::after {
+    animation: none;
+  }
+}

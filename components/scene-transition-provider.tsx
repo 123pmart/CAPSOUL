@@ -9,7 +9,7 @@ import {
   type ReactNode,
 } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 
 import {
   SceneTransitionContext,
@@ -32,6 +32,7 @@ export function SceneTransitionProvider({ children }: { children: ReactNode }) {
   const responsiveSceneMode = useResponsiveSceneMode();
   const [phase, setPhase] = useState<TransitionPhase>("idle");
   const [pendingPath, setPendingPath] = useState<string | null>(null);
+  const [activeSection, setActiveSection] = useState("initial");
   const pendingRef = useRef<PendingNavigation | null>(null);
   const previousPathRef = useRef(pathname);
   const shouldResetScrollRef = useRef(false);
@@ -147,6 +148,25 @@ export function SceneTransitionProvider({ children }: { children: ReactNode }) {
     };
   }, [enterDurationMs, pathname, reduceMotion]);
 
+  useEffect(() => {
+    const experience = document.querySelector<HTMLElement>(".apple-archive-experience");
+
+    if (!experience) {
+      return;
+    }
+
+    const updateActiveSection = () => {
+      setActiveSection(experience.dataset.activeSection || "initial");
+    };
+
+    updateActiveSection();
+
+    const observer = new MutationObserver(updateActiveSection);
+    observer.observe(experience, { attributes: true, attributeFilter: ["data-active-section"] });
+
+    return () => observer.disconnect();
+  }, [pathname]);
+
   const value = useMemo(
     () => ({
       phase,
@@ -160,6 +180,16 @@ export function SceneTransitionProvider({ children }: { children: ReactNode }) {
   return (
     <SceneTransitionContext.Provider value={value}>
       {children}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={activeSection}
+          className="scene-transition-veil"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0 }}
+        />
+      </AnimatePresence>
       <SceneTransitionOverlay />
     </SceneTransitionContext.Provider>
   );

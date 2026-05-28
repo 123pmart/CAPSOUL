@@ -6,7 +6,6 @@ export function SiteFooter() {
       <div className="site-footer-inner">
         <div className="site-footer-brand">
           <BrandMark compact />
-          <span className="site-footer-wordmark">CAPSOUL</span>
           <p className="site-footer-tagline">Legacy Documentary Studio</p>
         </div>
         <nav className="site-footer-nav" aria-label="Footer navigation">
