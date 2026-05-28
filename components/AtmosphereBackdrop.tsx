@@ -1,57 +1,22 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 
 export function AtmosphereBackdrop() {
-  const backdropRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    const element = backdropRef.current;
-
-    if (!element || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      return;
-    }
-
-    let animationFrame = 0;
-
-    const updateDrift = () => {
-      animationFrame = 0;
-      const drift = Math.min(72, window.scrollY * 0.018);
-      element.style.setProperty("--atmosphere-drift", `${drift}px`);
-      element.style.setProperty("--atmosphere-drift-soft", `${drift * -0.2}px`);
-      element.style.setProperty("--atmosphere-drift-frost", `${drift * -0.35}px`);
-      element.style.setProperty("--atmosphere-drift-grain", `${drift * -0.55}px`);
-    };
-
-    const requestDrift = () => {
-      if (animationFrame) {
-        return;
-      }
-
-      animationFrame = window.requestAnimationFrame(updateDrift);
-    };
-
-    updateDrift();
-    window.addEventListener("scroll", requestDrift, { passive: true });
-
-    return () => {
-      window.removeEventListener("scroll", requestDrift);
-
-      if (animationFrame) {
-        window.cancelAnimationFrame(animationFrame);
-      }
-    };
-  }, []);
+  const prefersReducedMotion = useReducedMotion();
+  const { scrollY } = useScroll();
+  const ambientY = useTransform(scrollY, [0, 1000], [0, prefersReducedMotion ? 0 : -60]);
+  const frostY = useTransform(scrollY, [0, 1000], [0, prefersReducedMotion ? 0 : -30]);
+  const mineralY = useTransform(scrollY, [0, 1000], [0, prefersReducedMotion ? 0 : -15]);
 
   return (
     <div
-      ref={backdropRef}
       aria-hidden="true"
       className="atmosphere-backdrop"
     >
-      <span className="atmosphere-layer atmosphere-layer-ambient" />
-      <span className="atmosphere-layer atmosphere-layer-frost" />
-      <span className="atmosphere-layer atmosphere-layer-mineral" />
+      <motion.span className="atmosphere-layer atmosphere-layer-ambient" style={{ y: ambientY }} />
+      <motion.span className="atmosphere-layer atmosphere-layer-frost" style={{ y: frostY }} />
+      <motion.span className="atmosphere-layer atmosphere-layer-mineral" style={{ y: mineralY }} />
       <span className="atmosphere-layer atmosphere-layer-grain" />
       <span className="atmosphere-layer atmosphere-layer-vignette" />
     </div>

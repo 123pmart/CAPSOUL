@@ -11,14 +11,18 @@ import {
   type CSSProperties,
   type FormEvent,
   type MouseEvent,
+  type RefObject,
   type ReactNode,
 } from "react";
 import { usePathname } from "next/navigation";
 import {
   AnimatePresence,
   motion,
+  useScroll,
+  useTransform,
   useReducedMotion,
   type HTMLMotionProps,
+  type MotionStyle,
 } from "framer-motion";
 
 import { CompactSceneControls } from "@/components/compact-scene-controls";
@@ -32,7 +36,6 @@ import {
 } from "@/components/immersive-scroll-context";
 import { contentSwapTransition, measuredEase } from "@/components/motion-config";
 import { PremiumSectionMotion } from "@/components/motion/PremiumSectionMotion";
-import { useMagneticMotion } from "@/components/use-magnetic-motion";
 import type {
   GlobalSiteContent,
   ResolvedInquiryContent,
@@ -146,24 +149,138 @@ function revealDelay(index: number, step = 50): CSSProperties {
   return { "--reveal-delay": `${Math.min(index * step, 260)}ms` } as CSSProperties;
 }
 
+function useLiquidSurface(ref: RefObject<HTMLElement | null>) {
+  useEffect(() => {
+    const element = ref.current;
+
+    if (!element || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      return;
+    }
+
+    let resetTimer = 0;
+
+    const resetVars = () => {
+      element.style.setProperty("--pointer-x", "50%");
+      element.style.setProperty("--pointer-y", "42%");
+      element.style.setProperty("--liquid-tilt-x", "0deg");
+      element.style.setProperty("--liquid-tilt-y", "0deg");
+    };
+
+    const handleMove = (event: PointerEvent) => {
+      const rect = element.getBoundingClientRect();
+
+      if (!rect.width || !rect.height) {
+        return;
+      }
+
+      const pointerX = ((event.clientX - rect.left) / rect.width) * 100;
+      const pointerY = ((event.clientY - rect.top) / rect.height) * 100;
+
+      element.style.setProperty("--pointer-x", `${pointerX}%`);
+      element.style.setProperty("--pointer-y", `${pointerY}%`);
+      element.style.setProperty("--liquid-tilt-x", `${(pointerY - 50) * -0.06}deg`);
+      element.style.setProperty("--liquid-tilt-y", `${(pointerX - 50) * 0.06}deg`);
+    };
+
+    const handleEnter = () => {
+      window.clearTimeout(resetTimer);
+      element.classList.add("is-liquid-active");
+      element.style.transformStyle = "preserve-3d";
+      element.style.perspective = "800px";
+    };
+
+    const handleLeave = () => {
+      element.classList.remove("is-liquid-active");
+      resetVars();
+      resetTimer = window.setTimeout(() => {
+        element.style.transformStyle = "";
+        element.style.perspective = "";
+      }, 520);
+    };
+
+    resetVars();
+    element.addEventListener("pointerenter", handleEnter);
+    element.addEventListener("pointermove", handleMove);
+    element.addEventListener("pointerleave", handleLeave);
+
+    return () => {
+      window.clearTimeout(resetTimer);
+      element.removeEventListener("pointerenter", handleEnter);
+      element.removeEventListener("pointermove", handleMove);
+      element.removeEventListener("pointerleave", handleLeave);
+    };
+  }, [ref]);
+}
+
+function useMagneticButton(ref: RefObject<HTMLElement | null>, strength = 0.35) {
+  useEffect(() => {
+    const element = ref.current;
+
+    if (!element || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      return;
+    }
+
+    const handleMove = (event: PointerEvent) => {
+      const rect = element.getBoundingClientRect();
+      const x = (event.clientX - rect.left - rect.width / 2) * strength;
+      const y = (event.clientY - rect.top - rect.height / 2) * strength;
+
+      element.style.transform = `translate(${x}px, ${y}px)`;
+    };
+
+    const handleLeave = () => {
+      element.style.transform = "";
+      element.style.transition = "transform 0.5s cubic-bezier(0.22, 1, 0.36, 1)";
+    };
+
+    const handleEnter = () => {
+      element.style.transition = "transform 0.15s linear";
+    };
+
+    element.addEventListener("pointermove", handleMove);
+    element.addEventListener("pointerleave", handleLeave);
+    element.addEventListener("pointerenter", handleEnter);
+
+    return () => {
+      element.removeEventListener("pointermove", handleMove);
+      element.removeEventListener("pointerleave", handleLeave);
+      element.removeEventListener("pointerenter", handleEnter);
+    };
+  }, [ref, strength]);
+}
+
+function MagneticButtonFrame({
+  children,
+  strength = 0.35,
+}: {
+  children: ReactNode;
+  strength?: number;
+}) {
+  const frameRef = useRef<HTMLSpanElement | null>(null);
+  useMagneticButton(frameRef, strength);
+
+  return (
+    <span className="apple-cta-magnetic-wrap" ref={frameRef}>
+      {children}
+    </span>
+  );
+}
+
 function MagneticPrimaryAnchor({
   children,
   className = "",
   ...props
 }: HTMLMotionProps<"a">) {
-  const magnetic = useMagneticMotion(6);
-
   return (
-    <motion.a
-      {...props}
-      className={`apple-cta apple-cta-primary ${className}`.trim()}
-      style={magnetic.style}
-      onPointerMove={magnetic.onPointerMove}
-      onPointerLeave={magnetic.onPointerLeave}
-      {...primaryButtonMotion}
-    >
-      {children}
-    </motion.a>
+    <MagneticButtonFrame>
+      <motion.a
+        {...props}
+        className={`apple-cta apple-cta-primary ${className}`.trim()}
+        {...primaryButtonMotion}
+      >
+        {children}
+      </motion.a>
+    </MagneticButtonFrame>
   );
 }
 
@@ -172,19 +289,34 @@ function MagneticPrimaryButton({
   className = "",
   ...props
 }: HTMLMotionProps<"button">) {
-  const magnetic = useMagneticMotion(6);
-
   return (
-    <motion.button
-      {...props}
-      className={`apple-cta apple-cta-primary ${className}`.trim()}
-      style={magnetic.style}
-      onPointerMove={magnetic.onPointerMove}
-      onPointerLeave={magnetic.onPointerLeave}
-      {...primaryButtonMotion}
-    >
-      {children}
-    </motion.button>
+    <MagneticButtonFrame>
+      <motion.button
+        {...props}
+        className={`apple-cta apple-cta-primary ${className}`.trim()}
+        {...primaryButtonMotion}
+      >
+        {children}
+      </motion.button>
+    </MagneticButtonFrame>
+  );
+}
+
+function MagneticSecondaryAnchor({
+  children,
+  className = "",
+  ...props
+}: HTMLMotionProps<"a">) {
+  return (
+    <MagneticButtonFrame strength={0.28}>
+      <motion.a
+        {...props}
+        className={`apple-cta apple-cta-secondary ${className}`.trim()}
+        {...primaryButtonMotion}
+      >
+        {children}
+      </motion.a>
+    </MagneticButtonFrame>
   );
 }
 
@@ -202,6 +334,36 @@ const detailItemReveal = {
     opacity: 1,
     clipPath: "inset(0 0 0% 0)",
     transition: { duration: 0.48, ease: revealEase },
+  },
+} as const;
+
+const heroTitleVariants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.06, delayChildren: 0.15 } },
+} as const;
+
+const heroTitleWordVariants = {
+  hidden: { opacity: 0, y: 28, skewX: -2 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    skewX: 0,
+    transition: { duration: 0.7, ease: revealEase },
+  },
+} as const;
+
+const processContainerVariants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.09, delayChildren: 0.2 } },
+} as const;
+
+const processCardVariants = {
+  hidden: { opacity: 0, y: 16, scale: 0.97 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: { duration: 0.55, ease: revealEase },
   },
 } as const;
 
@@ -378,72 +540,63 @@ function usePublicAtmosphereSection() {
 
 function useMinimalPublicRevealMotion() {
   useEffect(() => {
-    const elements = Array.from(
-      document.querySelectorAll<HTMLElement>("[data-reveal]"),
+    const motionSelector = ".motion-eyebrow, .motion-title, .motion-copy, .motion-card, .motion-media";
+    const motionSections = Array.from(
+      document.querySelectorAll<HTMLElement>(".public-visual-scope [data-motion-section], .public-visual-scope .motion-section"),
+    );
+    const sectionTargets = Array.from(
+      document.querySelectorAll<HTMLElement>(".public-visual-scope .motion-section"),
     );
 
-    if (!elements.length) {
+    motionSections.forEach((section) => {
+      const sectionMotionElements = Array.from(
+        section.querySelectorAll<HTMLElement>(motionSelector),
+      );
+
+      sectionMotionElements.forEach((element, index) => {
+        element.setAttribute("data-reveal", "");
+        element.style.setProperty("--reveal-delay", `${index * 80}ms`);
+      });
+    });
+
+    const elements = Array.from(
+      new Set([
+        ...Array.from(document.querySelectorAll<HTMLElement>(".public-visual-scope [data-reveal]")),
+        ...Array.from(document.querySelectorAll<HTMLElement>(`.public-visual-scope :is(${motionSelector})`)),
+      ]),
+    ).filter((element) => !element.classList.contains("motion-section"));
+    const observedElements = Array.from(new Set([...elements, ...sectionTargets]));
+
+    if (!observedElements.length) {
       return;
     }
 
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const pending = new Set(elements);
+    const pending = new Set(observedElements);
 
     if (prefersReducedMotion || typeof IntersectionObserver === "undefined") {
-      elements.forEach((element) => element.classList.add("is-visible"));
+      observedElements.forEach((element) => element.classList.add("is-visible"));
       return;
     }
 
     let frame = 0;
     const timers: number[] = [];
     document.documentElement.classList.add("capsoul-reveal-ready");
-    const settleTimers = new Map<HTMLElement, number>();
-
-    const clearMotionStyles = (element: HTMLElement) => {
-      element.style.removeProperty("opacity");
-      element.style.removeProperty("transform");
-      element.style.removeProperty("transition-property");
-      element.style.removeProperty("transition-duration");
-      element.style.removeProperty("transition-timing-function");
-      element.style.removeProperty("will-change");
-    };
 
     const prepareReveal = (element: HTMLElement) => {
+      if (element.classList.contains("motion-section")) {
+        return;
+      }
+
       element.classList.add("capsoul-reveal-pending");
-      element.style.setProperty("opacity", "0", "important");
-      element.style.setProperty("transform", "translateY(8px) scale(0.985)", "important");
-      element.style.setProperty("transition-property", "opacity, transform");
-      element.style.setProperty("transition-duration", "480ms");
-      element.style.setProperty("transition-timing-function", "cubic-bezier(0.22, 1, 0.36, 1)");
-      element.style.setProperty("will-change", "opacity, transform");
     };
 
     const revealElement = (element: HTMLElement) => {
       element.classList.add("is-visible");
       element.classList.remove("capsoul-reveal-pending");
-      element.style.setProperty("opacity", "1", "important");
-      element.style.setProperty("transform", "translateY(0) scale(1)", "important");
-
-      const existingTimer = settleTimers.get(element);
-      if (existingTimer) {
-        window.clearTimeout(existingTimer);
-      }
-
-      const transitionDelay = window.getComputedStyle(element).transitionDelay;
-      const delayMs = transitionDelay.endsWith("ms")
-        ? Number.parseFloat(transitionDelay)
-        : Number.parseFloat(transitionDelay) * 1000;
-
-      settleTimers.set(
-        element,
-        window.setTimeout(() => {
-          clearMotionStyles(element);
-          settleTimers.delete(element);
-        }, 620 + (Number.isFinite(delayMs) ? delayMs : 0)),
-      );
     };
 
-    elements.forEach(prepareReveal);
+    observedElements.forEach(prepareReveal);
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -464,7 +617,7 @@ function useMinimalPublicRevealMotion() {
       },
     );
 
-    elements.forEach((element) => observer.observe(element));
+    observedElements.forEach((element) => observer.observe(element));
 
     const revealVisibleElements = () => {
       const triggerY = window.innerHeight * 0.9;
@@ -503,12 +656,10 @@ function useMinimalPublicRevealMotion() {
       }
 
       timers.forEach((timer) => window.clearTimeout(timer));
-      settleTimers.forEach((timer) => window.clearTimeout(timer));
       observer.disconnect();
       document.documentElement.classList.remove("capsoul-reveal-ready");
-      elements.forEach((element) => {
+      observedElements.forEach((element) => {
         element.classList.remove("capsoul-reveal-pending");
-        clearMotionStyles(element);
       });
       window.removeEventListener("scroll", scheduleReveal);
       window.removeEventListener("resize", scheduleReveal);
@@ -679,9 +830,9 @@ function ArchiveSection({
             : null;
   const sectionContent = (
     <>
-      <div className="apple-section-kicker motion-eyebrow" data-reveal>
+      <SectionKicker>
         {eyebrow}
-      </div>
+      </SectionKicker>
       <h2 className="apple-section-title motion-title" data-reveal style={revealDelay(1)}>
         {title}
       </h2>
@@ -719,6 +870,23 @@ function ArchiveSection({
   );
 }
 
+function SectionKicker({ children }: { children: ReactNode }) {
+  const reduceMotion = useReducedMotion();
+
+  return (
+    <motion.div
+      initial={reduceMotion ? false : { opacity: 0, scale: 0.88, filter: "blur(4px)" }}
+      whileInView={reduceMotion ? undefined : { opacity: 1, scale: 1, filter: "blur(0px)" }}
+      viewport={{ once: true, margin: "-10%" }}
+      transition={{ duration: 0.5, ease: revealEase }}
+      className="apple-section-kicker motion-eyebrow"
+      data-reveal
+    >
+      {children}
+    </motion.div>
+  );
+}
+
 function ArchiveVisualFrame({
   image,
   fallbackImage,
@@ -738,11 +906,13 @@ function ArchiveVisualFrame({
   priority?: boolean;
   showToolbar?: boolean;
 }) {
+  const frameRef = useRef<HTMLDivElement | null>(null);
   const initialImage = normalizeMediaImageSource(image);
   const fallbackSrc = normalizeMediaImageSource(fallbackImage);
   const imageAltLabel = label || indexLabel || caption || "Archive";
   const [renderedImage, setRenderedImage] = useState(initialImage);
   const [imageFailed, setImageFailed] = useState(false);
+  useLiquidSurface(frameRef);
 
   useEffect(() => {
     setRenderedImage(initialImage);
@@ -760,7 +930,7 @@ function ArchiveVisualFrame({
   }
 
   return (
-    <div className="apple-visual-frame apple-liquid-surface liquid-glass-panel">
+    <div className="apple-visual-frame apple-liquid-surface liquid-glass-panel" ref={frameRef}>
       <span className="apple-liquid-layer" aria-hidden="true" />
       {showToolbar ? (
         <div className="apple-visual-toolbar">
@@ -788,10 +958,34 @@ function ArchiveVisualFrame({
 }
 
 function HeroHeadline({ title }: { title: string }) {
+  const [isReady, setIsReady] = useState(false);
+  const words = useMemo(() => title.split(/\s+/).filter(Boolean), [title]);
+
+  useEffect(() => {
+    setIsReady(true);
+  }, []);
+
   return (
-    <h1 className="apple-hero-title motion-title" data-reveal style={revealDelay(1)}>
-      {title}
-    </h1>
+    <AnimatePresence initial={false} mode="wait">
+      <motion.h1
+        animate={isReady ? "visible" : "hidden"}
+        className="apple-hero-title"
+        initial="hidden"
+        key={title}
+        variants={heroTitleVariants}
+      >
+        {words.map((word, index) => (
+          <motion.span
+            className="apple-hero-title-word"
+            key={`${word}-${index}`}
+            variants={heroTitleWordVariants}
+          >
+            {word}
+            {index < words.length - 1 ? "\u00A0" : null}
+          </motion.span>
+        ))}
+      </motion.h1>
+    </AnimatePresence>
   );
 }
 
@@ -802,11 +996,13 @@ function ArchiveHero({
   home: ResolvedSceneContent;
   stepLabelPrefix: string;
 }) {
+  const heroRecordRef = useRef<HTMLDivElement | null>(null);
   const handleLink = useSectionLink();
   const locale = getPublicLocale(stepLabelPrefix);
   const heroStep = home.steps[0];
   const processCards = HOME_PROCESS_CARDS[locale];
   const processStepPrefix = stepLabelPrefix.toLocaleUpperCase();
+  useLiquidSurface(heroRecordRef);
 
   return (
     <section
@@ -818,9 +1014,9 @@ function ArchiveHero({
       data-reveal
     >
       <PremiumSectionMotion variant="hero" className="apple-hero-inner motion-section-flow">
-        <div className="apple-section-kicker motion-eyebrow" data-reveal>
+        <SectionKicker>
           {home.eyebrow}
-        </div>
+        </SectionKicker>
         <HeroHeadline title={home.title} />
         <p className="apple-hero-copy motion-copy" data-reveal style={revealDelay(2)}>
           {home.description}
@@ -835,13 +1031,19 @@ function ArchiveHero({
             </MagneticPrimaryAnchor>
           ) : null}
           {home.secondaryAction ? (
-            <a className="apple-cta apple-cta-secondary" href={home.secondaryAction.href} onClick={(event) => handleLink(home.secondaryAction?.href ?? "", event)}>
+            <MagneticSecondaryAnchor href={home.secondaryAction.href} onClick={(event) => handleLink(home.secondaryAction?.href ?? "", event)}>
               {home.secondaryAction.label}
-            </a>
+            </MagneticSecondaryAnchor>
           ) : null}
         </div>
         <div className="apple-hero-stage motion-media">
-          <div className="apple-hero-record liquid-glass-panel" data-reveal style={revealDelay(4)}>
+          <div
+            className="apple-hero-record apple-liquid-surface liquid-glass-panel"
+            data-reveal
+            ref={heroRecordRef}
+            style={revealDelay(4)}
+          >
+            <span className="apple-liquid-layer" aria-hidden="true" />
             <ArchiveVisualFrame
               image={heroStep.image}
               fallbackImage={heroStep.fallbackImage}
@@ -880,6 +1082,22 @@ function formatRailLabel(value: string) {
   return value.replace(/\.$/, "");
 }
 
+function getSectionElementIdForKey(key: PublicSectionKey): ImmersiveSectionId {
+  switch (key) {
+    case "experience":
+      return "the-experience";
+    case "process":
+      return "how-it-works";
+    case "preserve":
+      return "what-we-preserve";
+    case "inquire":
+      return "inquire";
+    case "hero":
+    default:
+      return "home";
+  }
+}
+
 function ArchiveIndexLine({
   items,
   activeKey,
@@ -887,15 +1105,61 @@ function ArchiveIndexLine({
   items: Array<{ key: PublicSectionKey; label: string }>;
   activeKey: PublicSectionKey;
 }) {
+  const { scrollY } = useScroll();
   const activeIndex = Math.max(0, items.findIndex((item) => item.key === activeKey));
   const activeLabel = items[activeIndex]?.label ?? items[0]?.label ?? "";
   const denominator = Math.max(1, items.length - 1);
+  const markerTop = useTransform(scrollY, (latest) => {
+    if (typeof document === "undefined") {
+      return `${(activeIndex / denominator) * 100}%`;
+    }
+
+    const viewportProgress = items
+      .map((item, index) => {
+        const section = document.getElementById(getSectionElementIdForKey(item.key));
+
+        if (!section) {
+          return null;
+        }
+
+        const rect = section.getBoundingClientRect();
+        const sectionTop = latest + rect.top;
+        const travel = Math.max(1, section.offsetHeight - window.innerHeight * 0.35);
+        const progress = Math.min(1, Math.max(0, (latest - sectionTop + window.innerHeight * 0.18) / travel));
+
+        return {
+          index,
+          progress,
+          top: sectionTop,
+          bottom: sectionTop + section.offsetHeight,
+        };
+      })
+      .filter((item): item is { index: number; progress: number; top: number; bottom: number } => Boolean(item));
+
+    const current = viewportProgress.find((section) => latest >= section.top - window.innerHeight * 0.2 && latest < section.bottom - window.innerHeight * 0.2)
+      ?? viewportProgress.reduce((closest, section) => {
+        if (!closest) {
+          return section;
+        }
+
+        return Math.abs(latest - section.top) < Math.abs(latest - closest.top) ? section : closest;
+      }, null as { index: number; progress: number; top: number; bottom: number } | null);
+
+    if (!current) {
+      return `${(activeIndex / denominator) * 100}%`;
+    }
+
+    const start = (current.index / denominator) * 100;
+    const end = (Math.min(items.length - 1, current.index + 1) / denominator) * 100;
+
+    return `${start + (end - start) * current.progress}%`;
+  });
 
   return (
-    <div
+    <motion.div
       className="apple-archive-index"
       aria-hidden="true"
-      style={{ "--archive-marker-top": `${(activeIndex / denominator) * 100}%` } as CSSProperties}
+      style={{ "--archive-marker-top": markerTop } as MotionStyle}
     >
       <span className="apple-archive-index-label">{activeLabel}</span>
       <div className="apple-archive-index-track">
@@ -908,7 +1172,7 @@ function ArchiveIndexLine({
           />
         ))}
       </div>
-    </div>
+    </motion.div>
   );
 }
 
@@ -1015,10 +1279,11 @@ function ProcessStepCard({
   index: number;
 }) {
   return (
-    <article
+    <motion.article
       className="apple-process-card apple-liquid-surface liquid-glass-panel how-it-works-card"
       key={`process-step-${index}`}
       data-reveal
+      variants={processCardVariants}
       style={{
         "--motion-stagger-index": index,
         "--reveal-delay": `${Math.min(index * 50, 260)}ms`,
@@ -1028,7 +1293,7 @@ function ProcessStepCard({
       <span>{String(index + 1).padStart(2, "0")}</span>
       <h3>{step.label}</h3>
       <p>{step.detail}</p>
-    </article>
+    </motion.article>
   );
 }
 
@@ -1102,10 +1367,14 @@ function ProcessTimeline({
 
   return (
     <div className="apple-process-shell">
-      <div
+      <motion.div
         ref={scrollerRef}
         className="apple-process-grid motion-stagger"
         data-scroll-ready={isScrollReady ? "true" : "false"}
+        initial="hidden"
+        variants={processContainerVariants}
+        viewport={{ once: true, margin: "-12%" }}
+        whileInView="visible"
         onScroll={() => {
           if (isResettingScrollRef.current) {
             const scroller = scrollerRef.current;
@@ -1128,7 +1397,7 @@ function ProcessTimeline({
             index={index}
           />
         ))}
-      </div>
+      </motion.div>
       <div className="apple-process-scroll-cue" aria-hidden="true">
         <span className="apple-process-swipe-hint">{swipeHint}</span>
         <span className="apple-process-scroll-dots">
@@ -1145,8 +1414,10 @@ function ProcessTimeline({
 }
 
 function PreserveEditorial({ preserve }: { preserve: ResolvedSceneContent }) {
+  const featuredRef = useRef<HTMLElement | null>(null);
   const featured = preserve.steps[0];
   const remaining = preserve.steps.slice(1);
+  useLiquidSurface(featuredRef);
 
   return (
     <div className="apple-preserve-layout motion-stagger">
@@ -1154,6 +1425,7 @@ function PreserveEditorial({ preserve }: { preserve: ResolvedSceneContent }) {
         <article
           className="apple-preserve-feature apple-liquid-surface liquid-glass-panel motion-media"
           data-reveal
+          ref={featuredRef}
         >
           <span className="apple-liquid-layer" aria-hidden="true" />
           <span>{featured.mediaLabel}</span>

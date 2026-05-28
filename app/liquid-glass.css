@@ -2370,8 +2370,7 @@ html[data-theme="dark"] .public-visual-scope .atmosphere-backdrop {
 }
 
 .public-visual-scope .atmosphere-backdrop::before,
-.public-visual-scope .atmosphere-backdrop::after,
-.public-visual-scope .atmosphere-layer {
+.public-visual-scope .atmosphere-backdrop::after {
   content: none !important;
   display: none !important;
   opacity: 0 !important;
@@ -3229,4 +3228,104 @@ html[data-theme="dark"] .public-visual-scope .apple-inquiry-layout::before {
     width: 100% !important;
     grid-template-columns: 1fr !important;
   }
+}
+
+/* Motion activation layer: restores class-driven reveal transitions without changing theme tokens. */
+@media (prefers-reduced-motion: no-preference) {
+  .public-visual-scope .motion-eyebrow[data-reveal] {
+    opacity: 0 !important;
+    transform: translateY(10px) !important;
+    transition:
+      opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms),
+      transform 0.55s cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms) !important;
+  }
+
+  .public-visual-scope .motion-title[data-reveal] {
+    opacity: 0 !important;
+    transform: translateY(18px) !important;
+    transition:
+      opacity 0.72s cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms),
+      transform 0.72s cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms) !important;
+  }
+
+  .public-visual-scope .motion-copy[data-reveal] {
+    opacity: 0 !important;
+    transform: translateY(12px) !important;
+    transition:
+      opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms),
+      transform 0.65s cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms) !important;
+  }
+
+  .public-visual-scope .motion-card[data-reveal] {
+    opacity: 0 !important;
+    transform: translateY(20px) scale(0.98) !important;
+    transition:
+      opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms),
+      transform 0.6s cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms) !important;
+  }
+
+  .public-visual-scope .motion-media[data-reveal] {
+    opacity: 0 !important;
+    transform: translateY(24px) scale(0.97) !important;
+    transition:
+      opacity 0.78s cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms),
+      transform 0.78s cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms) !important;
+  }
+
+  .public-visual-scope .motion-section[data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .public-visual-scope [data-reveal].is-visible {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+.public-visual-scope .apple-hero-title-word {
+  display: inline-block;
+}
+
+.public-visual-scope .apple-cta-magnetic-wrap {
+  display: inline-flex;
+  position: relative;
+  will-change: transform;
+}
+
+.public-visual-scope .apple-cta-magnetic-wrap > .apple-cta {
+  width: 100%;
+}
+
+.public-visual-scope :is(.apple-liquid-surface, .apple-hero-record) > .apple-liquid-layer {
+  display: block !important;
+  opacity: 0;
+  transition: opacity 180ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.public-visual-scope :is(.apple-liquid-surface, .apple-hero-record).is-liquid-active {
+  transform: rotateX(var(--liquid-tilt-x, 0deg)) rotateY(var(--liquid-tilt-y, 0deg)) translateZ(0) !important;
+}
+
+.public-visual-scope :is(.apple-liquid-surface, .apple-hero-record).is-liquid-active > .apple-liquid-layer {
+  opacity: 1;
+}
+
+.public-visual-scope .atmosphere-layer,
+.public-visual-scope .atmosphere-layer-ambient,
+.public-visual-scope .atmosphere-layer-frost,
+.public-visual-scope .atmosphere-layer-mineral {
+  display: block !important;
+}
+
+.public-visual-scope .atmosphere-layer-ambient {
+  opacity: 0.32 !important;
+}
+
+.public-visual-scope .atmosphere-layer-frost {
+  opacity: 0.22 !important;
+}
+
+.public-visual-scope .atmosphere-layer-mineral {
+  opacity: 0.14 !important;
 }

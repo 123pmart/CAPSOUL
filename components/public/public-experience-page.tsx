@@ -1,4 +1,5 @@
 import { PublicExperience } from "@/components/public/PublicExperience";
+import { SiteFooter } from "@/components/site-footer";
 import {
   getResolvedExperienceScene,
   getResolvedHomeScene,
@@ -19,13 +20,16 @@ export async function PublicExperiencePage() {
   const inquiryScene = await getResolvedInquiryScene(locale);
 
   return (
-    <PublicExperience
-      globalContent={siteContent.global}
-      home={homeScene}
-      experience={experienceScene}
-      process={processScene}
-      preserve={preserveScene}
-      inquiry={inquiryScene}
-    />
+    <>
+      <PublicExperience
+        globalContent={siteContent.global}
+        home={homeScene}
+        experience={experienceScene}
+        process={processScene}
+        preserve={preserveScene}
+        inquiry={inquiryScene}
+      />
+      <SiteFooter />
+    </>
   );
 }
