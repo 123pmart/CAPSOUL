@@ -3,10 +3,12 @@ import type { Metadata } from "next";
 import { cookies } from "next/headers";
 
 import { AdminEntry } from "@/components/admin/admin-entry";
+import { ScrollProgress } from "@/components/ScrollProgress";
 import { SceneTransitionProvider } from "@/components/scene-transition-provider";
 import { SiteLocaleProvider } from "@/components/site-locale-provider";
 import { SiteHeader } from "@/components/site-header";
 import { SiteThemeProvider } from "@/components/site-theme-provider";
+import { SmoothScroll } from "@/components/SmoothScroll";
 import { PublicVisualScope } from "@/components/public-visual-scope";
 import { company } from "@/content/site";
 import { getRequestSiteLocale } from "@/lib/site-locale";
@@ -86,20 +88,23 @@ export default async function RootLayout({
         <div className="relative isolate min-h-[100svh]">
           <SiteThemeProvider initialTheme={initialTheme}>
             <SiteLocaleProvider locale={locale} globalContent={siteContent.global}>
-              <PublicVisualScope>
-                <SceneTransitionProvider>
-                  <SiteHeader />
-                  <main
-                    id="main-content"
-                    className="relative min-h-[100svh] w-full max-w-full pt-[var(--header-offset-mobile)] sm:pt-[var(--header-offset-desktop)]"
-                  >
-                    {children}
-                    <div className="md:hidden">
-                      <AdminEntry inline />
-                    </div>
-                  </main>
-                </SceneTransitionProvider>
-              </PublicVisualScope>
+              <SmoothScroll>
+                <ScrollProgress />
+                <PublicVisualScope>
+                  <SceneTransitionProvider>
+                    <SiteHeader />
+                    <main
+                      id="main-content"
+                      className="relative min-h-[100svh] w-full max-w-full pt-[var(--header-offset-mobile)] sm:pt-[var(--header-offset-desktop)]"
+                    >
+                      {children}
+                      <div className="md:hidden">
+                        <AdminEntry inline />
+                      </div>
+                    </main>
+                  </SceneTransitionProvider>
+                </PublicVisualScope>
+              </SmoothScroll>
             </SiteLocaleProvider>
           </SiteThemeProvider>
         </div>

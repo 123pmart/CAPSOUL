@@ -18,6 +18,8 @@ import { usePathname } from "next/navigation";
 import {
   AnimatePresence,
   motion,
+  useInView,
+  useMotionTemplate,
   useScroll,
   useTransform,
   useReducedMotion,
@@ -249,22 +251,6 @@ function useMagneticButton(ref: RefObject<HTMLElement | null>, strength = 0.35) 
   }, [ref, strength]);
 }
 
-function useMediaQuery(query: string) {
-  const [matches, setMatches] = useState(false);
-
-  useEffect(() => {
-    const media = window.matchMedia(query);
-    const update = () => setMatches(media.matches);
-
-    update();
-    media.addEventListener("change", update);
-
-    return () => media.removeEventListener("change", update);
-  }, [query]);
-
-  return matches;
-}
-
 function MagneticButtonFrame({
   children,
   strength = 0.35,
@@ -374,18 +360,32 @@ const heroTitleWordVariants = {
 
 const processContainerVariants = {
   hidden: {},
-  visible: { transition: { staggerChildren: 0.08, delayChildren: 0.15 } },
+  visible: { transition: { staggerChildren: 0.08, delayChildren: 0.1 } },
 } as const;
 
 const processCardVariants = {
-  hidden: { opacity: 0, y: 22, scale: 0.96, filter: "blur(3px)" },
+  hidden: { opacity: 0, y: 32, rotateX: 8, scale: 0.94 },
   visible: {
     opacity: 1,
     y: 0,
+    rotateX: 0,
     scale: 1,
-    filter: "blur(0px)",
-    transition: { duration: 0.62, ease: revealEase },
+    transition: { duration: 0.7, ease: revealEase },
   },
+} as const;
+
+const preserveCardVariants = {
+  hidden: { opacity: 0, clipPath: "inset(100% 0% 0% 0%)", y: 12 },
+  visible: (index: number) => ({
+    opacity: 1,
+    clipPath: "inset(0% 0% 0% 0%)",
+    y: 0,
+    transition: {
+      delay: index * 0.07,
+      duration: 0.62,
+      ease: revealEase,
+    },
+  }),
 } as const;
 
 type ChipMarqueeRowProps = {
@@ -1026,12 +1026,16 @@ function ArchiveHero({
   const heroRecordRef = useRef<HTMLDivElement | null>(null);
   const handleLink = useSectionLink();
   const reduceMotion = useReducedMotion();
-  const isDesktop = useMediaQuery("(min-width: 768px)");
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
   const recordY = useTransform(scrollYProgress, [0, 1], [0, reduceMotion ? 0 : -55]);
   const chaptersY = useTransform(scrollYProgress, [0, 1], [0, reduceMotion ? 0 : -28]);
   const titleY = useTransform(scrollYProgress, [0, 1], [0, reduceMotion ? 0 : -18]);
   const copyY = useTransform(scrollYProgress, [0, 1], [0, reduceMotion ? 0 : -10]);
+  const heroScale = useTransform(scrollYProgress, [0, 1], [1, reduceMotion ? 1 : 0.92]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.6], [1, reduceMotion ? 1 : 0]);
+  const heroBlur = useTransform(scrollYProgress, [0, 0.5], [0, reduceMotion ? 0 : 8]);
+  const heroY = useTransform(scrollYProgress, [0, 1], [0, reduceMotion ? 0 : -60]);
+  const heroFilter = useMotionTemplate`blur(${heroBlur}px)`;
   const locale = getPublicLocale(stepLabelPrefix);
   const heroStep = home.steps[0];
   const processCards = HOME_PROCESS_CARDS[locale];
@@ -1048,72 +1052,80 @@ function ArchiveHero({
       data-reveal
       ref={heroRef}
     >
-      <PremiumSectionMotion variant="hero" className="apple-hero-inner motion-section-flow">
-        <SectionKicker>
-          {home.eyebrow}
-        </SectionKicker>
-        <HeroHeadline title={home.title} style={{ y: titleY }} />
-        <motion.p className="apple-hero-copy" style={{ y: copyY }}>
-          {home.description}
-        </motion.p>
-        <div className="apple-hero-actions motion-card" data-reveal style={revealDelay(3)}>
-          {home.primaryAction ? (
-            <MagneticPrimaryAnchor
-              href={home.primaryAction.href}
-              onClick={(event) => handleLink(home.primaryAction?.href ?? "", event)}
-            >
-              {home.primaryAction.label}
-            </MagneticPrimaryAnchor>
-          ) : null}
-          {home.secondaryAction ? (
-            <MagneticSecondaryAnchor href={home.secondaryAction.href} onClick={(event) => handleLink(home.secondaryAction?.href ?? "", event)}>
-              {home.secondaryAction.label}
-            </MagneticSecondaryAnchor>
-          ) : null}
-        </div>
-        <div className="apple-hero-stage">
-          <motion.div className="apple-hero-record-parallax" style={{ y: recordY }}>
-            <motion.div
-              animate={reduceMotion || !isDesktop ? undefined : { y: [0, -8, 0] }}
-              className="apple-hero-record apple-liquid-surface liquid-glass-panel capsoul-glass"
-              data-reveal
-              ref={heroRecordRef}
-              style={revealDelay(4)}
-              transition={{ duration: 6, ease: "easeInOut", repeat: Infinity }}
-            >
-              <span className="apple-liquid-layer" aria-hidden="true" />
-              <ArchiveVisualFrame
-                image={heroStep.image}
-                fallbackImage={heroStep.fallbackImage}
-                label={heroStep.mediaLabel}
-                caption={heroStep.mediaCaption}
-                objectPosition={heroStep.objectPosition}
-                priority
-                showToolbar={false}
-              />
-            </motion.div>
-          </motion.div>
-          <motion.div
-            className="apple-hero-chapters capsoul-glass"
-            aria-label="Opening process steps"
-            style={{ y: chaptersY }}
-          >
-            {processCards.map((step, index) => (
-              <div
-                className="apple-hero-chapter apple-liquid-surface liquid-glass-panel capsoul-glass"
-                key={`hero-chapter-${index}`}
+      <motion.div
+        className="apple-hero-inner-motion-wrap"
+        style={{
+          scale: heroScale,
+          opacity: heroOpacity,
+          filter: heroFilter,
+          y: heroY,
+        }}
+      >
+        <PremiumSectionMotion variant="hero" className="apple-hero-inner motion-section-flow">
+          <SectionKicker>
+            {home.eyebrow}
+          </SectionKicker>
+          <HeroHeadline title={home.title} style={{ y: titleY }} />
+          <motion.p className="apple-hero-copy motion-copy" data-reveal style={{ ...revealDelay(2), y: copyY }}>
+            {home.description}
+          </motion.p>
+          <div className="apple-hero-actions motion-card" data-reveal style={revealDelay(3)}>
+            {home.primaryAction ? (
+              <MagneticPrimaryAnchor
+                href={home.primaryAction.href}
+                onClick={(event) => handleLink(home.primaryAction?.href ?? "", event)}
+              >
+                {home.primaryAction.label}
+              </MagneticPrimaryAnchor>
+            ) : null}
+            {home.secondaryAction ? (
+              <MagneticSecondaryAnchor href={home.secondaryAction.href} onClick={(event) => handleLink(home.secondaryAction?.href ?? "", event)}>
+                {home.secondaryAction.label}
+              </MagneticSecondaryAnchor>
+            ) : null}
+          </div>
+          <div className="apple-hero-stage">
+            <motion.div className="apple-hero-record-parallax" style={{ y: recordY }}>
+              <motion.div
+                className="apple-hero-record apple-liquid-surface liquid-glass-panel capsoul-glass"
                 data-reveal
-                style={revealDelay(index + 5)}
+                ref={heroRecordRef}
+                style={revealDelay(4)}
               >
                 <span className="apple-liquid-layer" aria-hidden="true" />
-                <span>{processStepPrefix} {index + 1}</span>
-                <strong>{step.label}</strong>
-                <p>{step.summary}</p>
-              </div>
-            ))}
-          </motion.div>
-        </div>
-      </PremiumSectionMotion>
+                <ArchiveVisualFrame
+                  image={heroStep.image}
+                  fallbackImage={heroStep.fallbackImage}
+                  label={heroStep.mediaLabel}
+                  caption={heroStep.mediaCaption}
+                  objectPosition={heroStep.objectPosition}
+                  priority
+                  showToolbar={false}
+                />
+              </motion.div>
+            </motion.div>
+            <motion.div
+              className="apple-hero-chapters capsoul-glass"
+              aria-label="Opening process steps"
+              style={{ y: chaptersY }}
+            >
+              {processCards.map((step, index) => (
+                <div
+                  className="apple-hero-chapter apple-liquid-surface liquid-glass-panel capsoul-glass"
+                  key={`hero-chapter-${index}`}
+                  data-reveal
+                  style={revealDelay(index + 5)}
+                >
+                  <span className="apple-liquid-layer" aria-hidden="true" />
+                  <span>{processStepPrefix} {index + 1}</span>
+                  <strong>{step.label}</strong>
+                  <p>{step.summary}</p>
+                </div>
+              ))}
+            </motion.div>
+          </div>
+        </PremiumSectionMotion>
+      </motion.div>
     </section>
   );
 }
@@ -1324,6 +1336,11 @@ function ProcessStepCard({
       key={`process-step-${index}`}
       data-reveal
       variants={processCardVariants}
+      whileHover={{
+        y: -6,
+        scale: 1.02,
+        transition: { duration: 0.22, ease: revealEase },
+      }}
       style={{
         "--motion-stagger-index": index,
         "--reveal-delay": `${Math.min(index * 50, 260)}ms`,
@@ -1343,6 +1360,8 @@ function ProcessTimeline({
   process: ResolvedSceneContent;
 }) {
   const scrollerRef = useRef<HTMLDivElement>(null);
+  const processRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(processRef, { once: true, margin: "-10%" });
   const isResettingScrollRef = useRef(true);
   const [activeIndex, setActiveIndex] = useState(0);
   const [isScrollReady, setIsScrollReady] = useState(false);
@@ -1406,13 +1425,16 @@ function ProcessTimeline({
   return (
     <div className="apple-process-shell">
       <motion.div
-        ref={scrollerRef}
+        ref={(node) => {
+          scrollerRef.current = node;
+          processRef.current = node;
+        }}
         className="apple-process-grid motion-stagger"
         data-scroll-ready={isScrollReady ? "true" : "false"}
+        animate={isInView ? "visible" : "hidden"}
         initial="hidden"
+        style={{ perspective: 1400, transformStyle: "preserve-3d" }}
         variants={processContainerVariants}
-        viewport={{ once: true, margin: "-12%" }}
-        whileInView="visible"
         onScroll={() => {
           if (isResettingScrollRef.current) {
             const scroller = scrollerRef.current;
@@ -1502,8 +1524,16 @@ function PreserveEditorial({ preserve }: { preserve: ResolvedSceneContent }) {
           <motion.article
             className="apple-preserve-card apple-liquid-surface liquid-glass-panel capsoul-glass"
             key={`preserve-card-${index}`}
+            custom={index}
             data-reveal
-            variants={processCardVariants}
+            initial="hidden"
+            variants={preserveCardVariants}
+            viewport={{ once: true, margin: "-8%" }}
+            whileHover={{
+              y: -4,
+              transition: { duration: 0.2, ease: revealEase },
+            }}
+            whileInView="visible"
             style={{
               "--motion-stagger-index": index + 1,
               "--reveal-delay": `${Math.min((index + 1) * 50, 260)}ms`,

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 import { usePathname } from "next/navigation";
 
 import { AtmosphereBackdrop } from "@/components/AtmosphereBackdrop";
@@ -9,6 +9,7 @@ import { useSiteTheme } from "@/components/site-theme-provider";
 export function PublicVisualScope({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const { theme } = useSiteTheme();
+  const scopeRef = useRef<HTMLDivElement | null>(null);
   const isAdminRoute = pathname?.startsWith("/admin") ?? false;
 
   useEffect(() => {
@@ -37,6 +38,42 @@ export function PublicVisualScope({ children }: { children: ReactNode }) {
     };
   }, [isAdminRoute, theme]);
 
+  useEffect(() => {
+    if (isAdminRoute) {
+      return undefined;
+    }
+
+    const scope = scopeRef.current;
+
+    if (!scope) {
+      return undefined;
+    }
+
+    let observer: MutationObserver | null = null;
+    let rafId = 0;
+
+    const syncActiveSection = () => {
+      const experience = document.querySelector<HTMLElement>(".apple-archive-experience");
+      const activeSection = experience?.dataset.activeSection || "hero";
+
+      scope.dataset.activeSection = activeSection;
+
+      if (!experience || observer) {
+        return;
+      }
+
+      observer = new MutationObserver(syncActiveSection);
+      observer.observe(experience, { attributes: true, attributeFilter: ["data-active-section"] });
+    };
+
+    rafId = window.requestAnimationFrame(syncActiveSection);
+
+    return () => {
+      window.cancelAnimationFrame(rafId);
+      observer?.disconnect();
+    };
+  }, [isAdminRoute, pathname]);
+
   if (isAdminRoute) {
     return (
       <div className="admin-visual-scope" data-admin-theme={theme}>
@@ -46,7 +83,7 @@ export function PublicVisualScope({ children }: { children: ReactNode }) {
   }
 
   return (
-    <div className="public-visual-scope">
+    <div className="public-visual-scope" data-active-section="hero" ref={scopeRef}>
       <AtmosphereBackdrop />
       {children}
     </div>

@@ -1,55 +1,68 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { useEffect, useRef } from "react";
 
 export function AtmosphereBackdrop() {
-  const prefersReducedMotion = useReducedMotion();
+  const orb1Ref = useRef<HTMLDivElement | null>(null);
+  const orb2Ref = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      return undefined;
+    }
+
+    let raf = 0;
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
+    let orb1X = mouseX;
+    let orb1Y = mouseY;
+    let orb2X = mouseX;
+    let orb2Y = mouseY;
+
+    const handleMouse = (event: MouseEvent) => {
+      mouseX = event.clientX;
+      mouseY = event.clientY;
+    };
+
+    const animate = () => {
+      orb1X += (mouseX - orb1X) * 0.032;
+      orb1Y += (mouseY - orb1Y) * 0.032;
+      orb2X += (window.innerWidth - mouseX - orb2X) * 0.018;
+      orb2Y += (window.innerHeight - mouseY - orb2Y) * 0.018;
+
+      if (orb1Ref.current) {
+        const xPercent = (orb1X / window.innerWidth) * 100 - 50;
+        const yPercent = (orb1Y / window.innerHeight) * 100 - 50;
+        orb1Ref.current.style.transform = `translate(${xPercent * 0.22}px, ${yPercent * 0.22}px)`;
+      }
+
+      if (orb2Ref.current) {
+        const xPercent = (orb2X / window.innerWidth) * 100 - 50;
+        const yPercent = (orb2Y / window.innerHeight) * 100 - 50;
+        orb2Ref.current.style.transform = `translate(${xPercent * 0.12}px, ${yPercent * 0.12}px)`;
+      }
+
+      raf = window.requestAnimationFrame(animate);
+    };
+
+    window.addEventListener("mousemove", handleMouse, { passive: true });
+    raf = window.requestAnimationFrame(animate);
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouse);
+      window.cancelAnimationFrame(raf);
+    };
+  }, []);
 
   return (
-    <div
-      aria-hidden="true"
-      className="atmosphere-backdrop"
-    >
+    <div aria-hidden="true" className="atmosphere-backdrop">
       <span className="atmosphere-layer atmosphere-layer-frost" />
       <span className="atmosphere-layer atmosphere-layer-mineral" />
       <span className="atmosphere-layer atmosphere-layer-vignette" />
-      <motion.span
-        className="atmosphere-layer atmosphere-layer-ambient"
-        animate={prefersReducedMotion ? undefined : {
-          backgroundPosition: ["0% 0%", "100% 100%", "0% 0%"],
-          opacity: [0.55, 0.72, 0.55],
-        }}
-        transition={{ duration: 18, ease: "easeInOut", repeat: Infinity }}
-      />
-      <motion.div
-        className="atmosphere-orb atmosphere-orb-1"
-        animate={prefersReducedMotion ? undefined : {
-          x: [0, 40, -20, 0],
-          y: [0, -30, 20, 0],
-          scale: [1, 1.12, 0.94, 1],
-          opacity: [0.18, 0.28, 0.14, 0.18],
-        }}
-        transition={{ duration: 22, ease: "easeInOut", repeat: Infinity }}
-      />
-      <motion.div
-        className="atmosphere-orb atmosphere-orb-2"
-        animate={prefersReducedMotion ? undefined : {
-          x: [0, -50, 30, 0],
-          y: [0, 40, -25, 0],
-          scale: [1, 0.88, 1.08, 1],
-          opacity: [0.12, 0.22, 0.1, 0.12],
-        }}
-        transition={{ duration: 28, ease: "easeInOut", repeat: Infinity, delay: 4 }}
-      />
-      <motion.div
-        className="atmosphere-orb atmosphere-orb-3"
-        animate={prefersReducedMotion ? undefined : {
-          x: [0, 25, -35, 0],
-          y: [0, -20, 35, 0],
-          opacity: [0.08, 0.16, 0.06, 0.08],
-        }}
-        transition={{ duration: 34, ease: "easeInOut", repeat: Infinity, delay: 8 }}
-      />
+      <span className="atmosphere-layer atmosphere-layer-ambient" />
+      <div ref={orb1Ref} className="atmosphere-orb atmosphere-orb-1" />
+      <div ref={orb2Ref} className="atmosphere-orb atmosphere-orb-2" />
+      <div className="atmosphere-orb atmosphere-orb-3" />
     </div>
   );
 }
