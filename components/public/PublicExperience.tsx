@@ -1229,6 +1229,10 @@ function ArchiveIndexLine({
 }
 
 function PublicAdminAccess({ label }: { label: string }) {
+  if (process.env.NODE_ENV === "production") {
+    return null;
+  }
+
   return (
     <div className="apple-admin-access">
       <a href="/admin" aria-label={`${label} access`}>
@@ -1766,7 +1770,9 @@ function InquiryArchiveForm({
         <div className="apple-inquiry-actions">
           <button
             type="button"
-            className="apple-cta apple-cta-secondary"
+            className="apple-cta apple-cta-secondary form-nav-prev"
+            data-action="previous"
+            aria-label="Go to previous step"
             disabled={activeIndex === 0}
             onClick={() => setActiveIndex((current) => Math.max(0, current - 1))}
           >
@@ -1894,24 +1900,7 @@ export function PublicExperience({
   }, [pathname]);
 
   const handleSectionNav = useCallback((sectionId: ImmersiveSectionId) => {
-    const scope = document.querySelector<HTMLElement>(".public-visual-scope");
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    if (!scope || prefersReducedMotion) {
-      scrollToPublicSection(sectionId);
-      return;
-    }
-
-    scope.style.transition = "filter 0.22s ease";
-    scope.style.filter = "blur(4px)";
-
-    window.setTimeout(() => {
-      scrollToPublicSection(sectionId);
-
-      window.setTimeout(() => {
-        scope.style.filter = "";
-      }, 220);
-    }, 120);
+    scrollToPublicSection(sectionId);
   }, []);
 
   return (

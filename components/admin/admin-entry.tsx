@@ -9,7 +9,7 @@ export function AdminEntry({ inline = false }: { inline?: boolean }) {
   const pathname = usePathname();
   const { globalContent } = useSiteLocale();
 
-  if (pathname?.startsWith("/admin")) {
+  if (process.env.NODE_ENV === "production" || pathname?.startsWith("/admin")) {
     return null;
   }
 

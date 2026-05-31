@@ -24,10 +24,6 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
 
     lenisRef.current = lenis;
 
-    lenis.on("scroll", () => {
-      window.dispatchEvent(new Event("scroll", { bubbles: true }));
-    });
-
     let rafId = 0;
 
     const raf = (time: number) => {

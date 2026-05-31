@@ -4,6 +4,7 @@ import { useEffect, useRef, type ReactNode } from "react";
 import { usePathname } from "next/navigation";
 
 import { AtmosphereBackdrop } from "@/components/AtmosphereBackdrop";
+import HeavenCanvas from "@/components/HeavenCanvas";
 import { useSiteTheme } from "@/components/site-theme-provider";
 
 export function PublicVisualScope({ children }: { children: ReactNode }) {
@@ -84,6 +85,7 @@ export function PublicVisualScope({ children }: { children: ReactNode }) {
 
   return (
     <div className="public-visual-scope" data-active-section="hero" ref={scopeRef}>
+      <HeavenCanvas />
       <AtmosphereBackdrop />
       {children}
     </div>
