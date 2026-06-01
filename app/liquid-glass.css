@@ -146,13 +146,21 @@ body {
   }
 }
 
-.public-visual-scope,
+.public-visual-scope {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
 .admin-visual-scope {
   background: var(--material-bg) !important;
   background-color: var(--material-bg) !important;
 }
 
-html[data-theme="dark"] .public-visual-scope,
+html[data-theme="dark"] .public-visual-scope {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
 html[data-theme="dark"] .admin-visual-scope,
 .admin-visual-scope[data-admin-theme="dark"] {
   background: var(--material-bg) !important;
@@ -162,7 +170,7 @@ html[data-theme="dark"] .admin-visual-scope,
 .public-visual-scope .atmosphere-backdrop {
   position: fixed !important;
   inset: 0 !important;
-  z-index: 1;
+  z-index: 0;
   overflow: hidden;
   pointer-events: none;
   opacity: 1 !important;
@@ -978,8 +986,8 @@ html[data-theme="dark"] .public-visual-scope .apple-budget-input::-moz-range-thu
   --archive-section-open: clamp(84px, 8.5vw, 138px);
   --archive-ease: cubic-bezier(0.22, 1, 0.36, 1);
   color: var(--archive-ink) !important;
-  background: var(--archive-paper) !important;
-  background-color: var(--archive-paper) !important;
+  background: transparent !important;
+  background-color: transparent !important;
 }
 
 html[data-theme="dark"] .public-visual-scope {
@@ -995,8 +1003,8 @@ html[data-theme="dark"] .public-visual-scope {
   --archive-shadow: 0 18px 54px rgba(0, 0, 0, 0.62), inset 0 1px 0 rgba(255, 255, 255, 0.055);
   --archive-shadow-quiet: 0 12px 36px rgba(0, 0, 0, 0.48);
   color: var(--archive-ink) !important;
-  background: var(--archive-paper) !important;
-  background-color: var(--archive-paper) !important;
+  background: transparent !important;
+  background-color: transparent !important;
 }
 
 .public-visual-scope .atmosphere-layer-vignette {
@@ -1659,16 +1667,16 @@ html[data-theme="dark"] .public-visual-scope .apple-budget-track {
 }
 
 .public-visual-scope {
-  background-color: #fbfbfb !important;
+  background-color: transparent !important;
 }
 
 html[data-theme="dark"] .public-visual-scope {
-  background-color: #000000 !important;
+  background-color: transparent !important;
 }
 
 html[data-theme="dark"] body div.public-visual-scope {
-  background: #000000 !important;
-  background-color: #000000 !important;
+  background: transparent !important;
+  background-color: transparent !important;
 }
 
 /* CAPSOUL composition correction: editorial fit, section rhythm, and stable card systems. */
@@ -2196,29 +2204,25 @@ html[data-theme="dark"] .public-visual-scope .apple-inquiry-layout::before {
     inset 0 1px 0 rgba(255, 255, 255, 0.06);
   --composition-plane-light: rgba(0, 0, 0, 0.025);
   --composition-plane-dark: rgba(255, 255, 255, 0.035);
-  background: #fbfbfb !important;
-  background-color: #fbfbfb !important;
+  background: transparent !important;
+  background-color: transparent !important;
 }
 
 html[data-theme="dark"] .public-visual-scope {
-  background: #000000 !important;
-  background-color: #000000 !important;
+  background: transparent !important;
+  background-color: transparent !important;
 }
 
-html[data-theme="light"],
-html[data-theme="light"] body,
 html[data-theme="light"] .public-visual-scope,
 html[data-theme="light"] .public-visual-scope #main-content {
-  background: #fbfbfb !important;
-  background-color: #fbfbfb !important;
+  background: transparent !important;
+  background-color: transparent !important;
 }
 
-html[data-theme="dark"],
-html[data-theme="dark"] body,
 html[data-theme="dark"] .public-visual-scope,
 html[data-theme="dark"] .public-visual-scope #main-content {
-  background: #000000 !important;
-  background-color: #000000 !important;
+  background: transparent !important;
+  background-color: transparent !important;
 }
 
 .public-visual-scope :is(
@@ -3190,7 +3194,11 @@ html[data-theme="dark"] .public-visual-scope .apple-inquiry-layout::before {
 .public-visual-scope .atmosphere-backdrop {
   opacity: 0.72 !important;
   mix-blend-mode: normal !important;
-  background: transparent !important;
+  background:
+    radial-gradient(at 50% -18%, #ffffffb8, transparent 46vmax),
+    radial-gradient(at 18% 12%, #9696961f, transparent 42vmax),
+    radial-gradient(at 88% 22%, #d2d2d21f, transparent 38vmax),
+    linear-gradient(#fafafa, transparent 38%, #fafafa8f) !important;
   contain: style;
   overflow: hidden;
 }
@@ -3206,7 +3214,11 @@ html[data-theme="dark"] .public-visual-scope .apple-inquiry-layout::before {
 
 html[data-theme="dark"] .public-visual-scope .atmosphere-backdrop {
   opacity: 0.62 !important;
-  background: transparent !important;
+  background:
+    radial-gradient(at 50% -18%, #ffffff0d, transparent 44vmax),
+    radial-gradient(at 18% 12%, #78787814, transparent 42vmax),
+    radial-gradient(at 88% 22%, #4646461a, transparent 38vmax),
+    linear-gradient(#000, transparent 36%, #00000057) !important;
 }
 
 html[data-theme] .public-visual-scope .atmosphere-backdrop .atmosphere-layer-ambient,

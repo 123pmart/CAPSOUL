@@ -18,25 +18,8 @@ export function PublicVisualScope({ children }: { children: ReactNode }) {
       return undefined;
     }
 
-    const background = theme === "dark" ? "#000000" : "#fbfbfb";
-    const main = document.getElementById("main-content");
-    const previousHtmlBackground = document.documentElement.style.backgroundColor;
-    const previousBodyBackground = document.body.style.backgroundColor;
-    const previousMainBackground = main?.style.backgroundColor ?? "";
-
-    document.documentElement.style.backgroundColor = background;
-    document.body.style.backgroundColor = background;
-    if (main) {
-      main.style.backgroundColor = background;
-    }
-
-    return () => {
-      document.documentElement.style.backgroundColor = previousHtmlBackground;
-      document.body.style.backgroundColor = previousBodyBackground;
-      if (main) {
-        main.style.backgroundColor = previousMainBackground;
-      }
-    };
+    // Do not override body background — let globals.css gradient show through
+    return undefined;
   }, [isAdminRoute, theme]);
 
   useEffect(() => {
