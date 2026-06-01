@@ -18,8 +18,6 @@ import { usePathname } from "next/navigation";
 import {
   AnimatePresence,
   motion,
-  useInView,
-  useMotionTemplate,
   useScroll,
   useTransform,
   useReducedMotion,
@@ -364,13 +362,12 @@ const processContainerVariants = {
 } as const;
 
 const processCardVariants = {
-  hidden: { opacity: 0, y: 32, rotateX: 8, scale: 0.94 },
+  hidden: { opacity: 0, y: 10, scale: 0.985 },
   visible: {
     opacity: 1,
     y: 0,
-    rotateX: 0,
     scale: 1,
-    transition: { duration: 0.7, ease: revealEase },
+    transition: { duration: 0.48, ease: revealEase },
   },
 } as const;
 
@@ -892,19 +889,10 @@ function ArchiveSection({
 }
 
 function SectionKicker({ children }: { children: ReactNode }) {
-  const reduceMotion = useReducedMotion();
-
   return (
-    <motion.div
-      initial={reduceMotion ? false : { opacity: 0, scale: 0.88, filter: "blur(4px)" }}
-      whileInView={reduceMotion ? undefined : { opacity: 1, scale: 1, filter: "blur(0px)" }}
-      viewport={{ once: true, margin: "-10%" }}
-      transition={{ duration: 0.5, ease: revealEase }}
-      className="apple-section-kicker motion-eyebrow"
-      data-reveal
-    >
+    <div className="apple-section-kicker motion-eyebrow" data-reveal>
       {children}
-    </motion.div>
+    </div>
   );
 }
 
@@ -1022,20 +1010,8 @@ function ArchiveHero({
   home: ResolvedSceneContent;
   stepLabelPrefix: string;
 }) {
-  const heroRef = useRef<HTMLElement | null>(null);
   const heroRecordRef = useRef<HTMLDivElement | null>(null);
   const handleLink = useSectionLink();
-  const reduceMotion = useReducedMotion();
-  const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
-  const recordY = useTransform(scrollYProgress, [0, 1], [0, reduceMotion ? 0 : -55]);
-  const chaptersY = useTransform(scrollYProgress, [0, 1], [0, reduceMotion ? 0 : -28]);
-  const titleY = useTransform(scrollYProgress, [0, 1], [0, reduceMotion ? 0 : -18]);
-  const copyY = useTransform(scrollYProgress, [0, 1], [0, reduceMotion ? 0 : -10]);
-  const heroScale = useTransform(scrollYProgress, [0, 1], [1, reduceMotion ? 1 : 0.92]);
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.6], [1, reduceMotion ? 1 : 0]);
-  const heroBlur = useTransform(scrollYProgress, [0, 0.5], [0, 0]);
-  const heroY = useTransform(scrollYProgress, [0, 1], [0, reduceMotion ? 0 : -60]);
-  const heroFilter = useMotionTemplate`blur(${heroBlur}px)`;
   const locale = getPublicLocale(stepLabelPrefix);
   const heroStep = home.steps[0];
   const processCards = HOME_PROCESS_CARDS[locale];
@@ -1050,23 +1026,13 @@ function ArchiveHero({
       data-motion-section
       className="apple-hero motion-section"
       data-reveal
-      ref={heroRef}
     >
-      <motion.div
-        className="apple-hero-inner-motion-wrap"
-        style={{
-          scale: heroScale,
-          opacity: heroOpacity,
-          filter: heroFilter,
-          y: heroY,
-        }}
-      >
-        <PremiumSectionMotion variant="hero" className="apple-hero-inner motion-section-flow">
+      <PremiumSectionMotion variant="hero" className="apple-hero-inner motion-section-flow">
           <SectionKicker>
             {home.eyebrow}
           </SectionKicker>
-          <HeroHeadline title={home.title} style={{ y: titleY }} />
-          <motion.p className="apple-hero-copy motion-copy" data-reveal style={{ ...revealDelay(2), y: copyY }}>
+          <HeroHeadline title={home.title} />
+          <motion.p className="apple-hero-copy motion-copy" data-reveal style={revealDelay(2)}>
             {home.description}
           </motion.p>
           <div className="apple-hero-actions motion-card" data-reveal style={revealDelay(3)}>
@@ -1085,7 +1051,7 @@ function ArchiveHero({
             ) : null}
           </div>
           <div className="apple-hero-stage">
-            <motion.div className="apple-hero-record-parallax" style={{ y: recordY }}>
+            <div className="apple-hero-record-parallax">
               <motion.div
                 className="apple-hero-record apple-liquid-surface liquid-glass-panel capsoul-glass"
                 data-reveal
@@ -1103,11 +1069,10 @@ function ArchiveHero({
                   showToolbar={false}
                 />
               </motion.div>
-            </motion.div>
-            <motion.div
+            </div>
+            <div
               className="apple-hero-chapters capsoul-glass"
               aria-label="Opening process steps"
-              style={{ y: chaptersY }}
             >
               {processCards.map((step, index) => (
                 <div
@@ -1122,10 +1087,9 @@ function ArchiveHero({
                   <p>{step.summary}</p>
                 </div>
               ))}
-            </motion.div>
+            </div>
           </div>
-        </PremiumSectionMotion>
-      </motion.div>
+      </PremiumSectionMotion>
     </section>
   );
 }
@@ -1157,6 +1121,7 @@ function ArchiveIndexLine({
   items: Array<{ key: PublicSectionKey; label: string }>;
   activeKey: PublicSectionKey;
 }) {
+  const [isMounted, setIsMounted] = useState(false);
   const { scrollY } = useScroll();
   const activeIndex = Math.max(0, items.findIndex((item) => item.key === activeKey));
   const activeLabel = items[activeIndex]?.label ?? items[0]?.label ?? "";
@@ -1207,11 +1172,15 @@ function ArchiveIndexLine({
     return `${start + (end - start) * current.progress}%`;
   });
 
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   return (
     <motion.div
       className="apple-archive-index"
       aria-hidden="true"
-      style={{ "--archive-marker-top": markerTop } as MotionStyle}
+      style={{ "--archive-marker-top": isMounted ? markerTop : "0%" } as MotionStyle}
     >
       <span className="apple-archive-index-label">{activeLabel}</span>
       <div className="apple-archive-index-track">
@@ -1341,8 +1310,8 @@ function ProcessStepCard({
       data-reveal
       variants={processCardVariants}
       whileHover={{
-        y: -6,
-        scale: 1.02,
+        y: -3,
+        scale: 1.005,
         transition: { duration: 0.22, ease: revealEase },
       }}
       style={{
@@ -1364,8 +1333,6 @@ function ProcessTimeline({
   process: ResolvedSceneContent;
 }) {
   const scrollerRef = useRef<HTMLDivElement>(null);
-  const processRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(processRef, { once: true, margin: "-10%" });
   const isResettingScrollRef = useRef(true);
   const [activeIndex, setActiveIndex] = useState(0);
   const [isScrollReady, setIsScrollReady] = useState(false);
@@ -1431,13 +1398,11 @@ function ProcessTimeline({
       <motion.div
         ref={(node) => {
           scrollerRef.current = node;
-          processRef.current = node;
         }}
         className="apple-process-grid motion-stagger"
         data-scroll-ready={isScrollReady ? "true" : "false"}
-        animate={isInView ? "visible" : "hidden"}
-        initial="hidden"
-        style={{ perspective: 1400, transformStyle: "preserve-3d" }}
+        animate="visible"
+        initial={false}
         variants={processContainerVariants}
         onScroll={() => {
           if (isResettingScrollRef.current) {
@@ -1519,10 +1484,9 @@ function PreserveEditorial({ preserve }: { preserve: ResolvedSceneContent }) {
       ) : null}
       <motion.div
         className="apple-preserve-grid"
-        initial="hidden"
+        animate="visible"
+        initial={false}
         variants={processContainerVariants}
-        viewport={{ once: true, margin: "-8%" }}
-        whileInView="visible"
       >
         {remaining.map((step, index) => (
           <motion.article
@@ -1530,14 +1494,13 @@ function PreserveEditorial({ preserve }: { preserve: ResolvedSceneContent }) {
             key={`preserve-card-${index}`}
             custom={index}
             data-reveal
-            initial="hidden"
+            animate="visible"
+            initial={false}
             variants={preserveCardVariants}
-            viewport={{ once: true, margin: "-8%" }}
             whileHover={{
               y: -4,
               transition: { duration: 0.2, ease: revealEase },
             }}
-            whileInView="visible"
             style={{
               "--motion-stagger-index": index + 1,
               "--reveal-delay": `${Math.min((index + 1) * 50, 260)}ms`,

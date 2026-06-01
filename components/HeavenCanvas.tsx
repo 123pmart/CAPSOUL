@@ -16,20 +16,6 @@ function clamp(value: number, lower: number, upper: number) {
   return Math.max(lower, Math.min(upper, value));
 }
 
-function hexToRgb(hex: string) {
-  const matches = hex.replace("#", "").match(/.{2}/g);
-
-  if (!matches) {
-    return { r: 166, g: 195, b: 226 };
-  }
-
-  return {
-    r: Number.parseInt(matches[0], 16),
-    g: Number.parseInt(matches[1], 16),
-    b: Number.parseInt(matches[2], 16),
-  };
-}
-
 export default function HeavenCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const rafRef = useRef(0);
@@ -48,21 +34,19 @@ export default function HeavenCanvas() {
     }
 
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const rootStyle = window.getComputedStyle(document.documentElement);
-    const accent = hexToRgb(rootStyle.getPropertyValue("--accent-primary").trim() || "#a6c3e2");
     let width = 0;
     let height = 0;
     let elapsed = 0;
     let particles: CloudParticle[] = [];
 
     const spawnParticles = () => {
-      particles = Array.from({ length: 18 }, () => ({
+      particles = Array.from({ length: 10 }, () => ({
         x: Math.random() * width,
-        y: Math.random() * height * 0.6,
-        radius: clamp(width * 0.08 + Math.random() * width * 0.22, 80, 480),
-        opacity: 0.18 + Math.random() * 0.28,
-        speedX: (Math.random() - 0.5) * 0.18,
-        speedY: (Math.random() - 0.5) * 0.07,
+        y: Math.random() * height * 0.72,
+        radius: clamp(width * 0.14 + Math.random() * width * 0.2, 150, 560),
+        opacity: 0.16 + Math.random() * 0.12,
+        speedX: (Math.random() - 0.5) * 0.08,
+        speedY: (Math.random() - 0.5) * 0.025,
         phase: Math.random() * Math.PI * 2,
       }));
     };
@@ -77,6 +61,7 @@ export default function HeavenCanvas() {
 
     const draw = () => {
       context.clearRect(0, 0, width, height);
+      const isDark = document.documentElement.dataset.theme === "dark";
 
       for (const particle of particles) {
         particle.x += particle.speedX;
@@ -91,7 +76,9 @@ export default function HeavenCanvas() {
         }
 
         const radius = particle.radius * (Math.sin(elapsed * 0.0008 + particle.phase) * 0.015 + 1);
-        const alpha = particle.opacity * (0.85 + Math.sin(elapsed * 0.0006 + particle.phase) * 0.15);
+        const alpha = particle.opacity * (0.9 + Math.sin(elapsed * 0.00045 + particle.phase) * 0.1);
+        const coreAlpha = isDark ? alpha * 0.22 : alpha;
+        const edgeAlpha = isDark ? alpha * 0.14 : alpha * 0.34;
         const gradient = context.createRadialGradient(
           particle.x,
           particle.y,
@@ -101,8 +88,8 @@ export default function HeavenCanvas() {
           radius,
         );
 
-        gradient.addColorStop(0, `rgba(${accent.r},${accent.g},${accent.b},${alpha.toFixed(3)})`);
-        gradient.addColorStop(0.45, `rgba(255,255,255,${(alpha * 0.55).toFixed(3)})`);
+        gradient.addColorStop(0, `rgba(255,255,255,${coreAlpha.toFixed(3)})`);
+        gradient.addColorStop(0.56, `rgba(220,232,242,${edgeAlpha.toFixed(3)})`);
         gradient.addColorStop(1, "rgba(255,255,255,0)");
         context.beginPath();
         context.arc(particle.x, particle.y, radius, 0, Math.PI * 2);
@@ -112,8 +99,8 @@ export default function HeavenCanvas() {
 
       const topGlow = context.createRadialGradient(width * 0.5, 0, 0, width * 0.5, 0, width * 0.55);
 
-      topGlow.addColorStop(0, `rgba(${accent.r},${accent.g},${accent.b},0.38)`);
-      topGlow.addColorStop(1, `rgba(${accent.r},${accent.g},${accent.b},0)`);
+      topGlow.addColorStop(0, `rgba(255,255,255,${isDark ? "0.035" : "0.14"})`);
+      topGlow.addColorStop(1, "rgba(255,255,255,0)");
       context.fillStyle = topGlow;
       context.fillRect(0, 0, width, height * 0.5);
       elapsed += 1;
@@ -152,7 +139,7 @@ export default function HeavenCanvas() {
         height: "100%",
         pointerEvents: "none",
         zIndex: 0,
-        opacity: 0.9,
+        opacity: 0.62,
         mixBlendMode: "normal",
       }}
     />
