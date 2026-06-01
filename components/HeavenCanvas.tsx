@@ -60,7 +60,7 @@ export default function HeavenCanvas() {
         x: Math.random() * width,
         y: Math.random() * height * 0.6,
         radius: clamp(width * 0.08 + Math.random() * width * 0.22, 80, 480),
-        opacity: 0.04 + Math.random() * 0.11,
+        opacity: 0.12 + Math.random() * 0.22,
         speedX: (Math.random() - 0.5) * 0.18,
         speedY: (Math.random() - 0.5) * 0.07,
         phase: Math.random() * Math.PI * 2,
@@ -112,7 +112,7 @@ export default function HeavenCanvas() {
 
       const topGlow = context.createRadialGradient(width * 0.5, 0, 0, width * 0.5, 0, width * 0.55);
 
-      topGlow.addColorStop(0, `rgba(${accent.r},${accent.g},${accent.b},0.14)`);
+      topGlow.addColorStop(0, `rgba(${accent.r},${accent.g},${accent.b},0.32)`);
       topGlow.addColorStop(1, `rgba(${accent.r},${accent.g},${accent.b},0)`);
       context.fillStyle = topGlow;
       context.fillRect(0, 0, width, height * 0.5);
@@ -152,7 +152,7 @@ export default function HeavenCanvas() {
         height: "100%",
         pointerEvents: "none",
         zIndex: 0,
-        opacity: 0.55,
+        opacity: 1,
         mixBlendMode: "normal",
       }}
     />

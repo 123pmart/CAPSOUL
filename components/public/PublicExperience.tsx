@@ -1033,7 +1033,7 @@ function ArchiveHero({
   const copyY = useTransform(scrollYProgress, [0, 1], [0, reduceMotion ? 0 : -10]);
   const heroScale = useTransform(scrollYProgress, [0, 1], [1, reduceMotion ? 1 : 0.92]);
   const heroOpacity = useTransform(scrollYProgress, [0, 0.6], [1, reduceMotion ? 1 : 0]);
-  const heroBlur = useTransform(scrollYProgress, [0, 0.5], [0, reduceMotion ? 0 : 8]);
+  const heroBlur = useTransform(scrollYProgress, [0, 0.5], [0, 0]);
   const heroY = useTransform(scrollYProgress, [0, 1], [0, reduceMotion ? 0 : -60]);
   const heroFilter = useMotionTemplate`blur(${heroBlur}px)`;
   const locale = getPublicLocale(stepLabelPrefix);

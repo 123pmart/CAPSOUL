@@ -162,16 +162,16 @@ html[data-theme="dark"] .admin-visual-scope,
 .public-visual-scope .atmosphere-backdrop {
   position: fixed !important;
   inset: 0 !important;
-  z-index: 0;
+  z-index: 1;
   overflow: hidden;
   pointer-events: none;
   opacity: 1 !important;
-  background: var(--surface-bg-light) !important;
+  background: transparent !important;
   transform: translate3d(0, 0, 0);
 }
 
 html[data-theme="dark"] .public-visual-scope .atmosphere-backdrop {
-  background: var(--surface-bg-dark) !important;
+  background: transparent !important;
 }
 
 .public-visual-scope .atmosphere-backdrop::before,
@@ -3190,11 +3190,7 @@ html[data-theme="dark"] .public-visual-scope .apple-inquiry-layout::before {
 .public-visual-scope .atmosphere-backdrop {
   opacity: 0.72 !important;
   mix-blend-mode: normal !important;
-  background:
-    radial-gradient(at 50% -18%, #ffffffb8, transparent 46vmax),
-    radial-gradient(at 18% 12%, #9696961f, transparent 42vmax),
-    radial-gradient(at 88% 22%, #d2d2d21f, transparent 38vmax),
-    linear-gradient(#fafafa, transparent 38%, #fafafa8f) !important;
+  background: transparent !important;
   contain: style;
   overflow: hidden;
 }
@@ -3210,11 +3206,7 @@ html[data-theme="dark"] .public-visual-scope .apple-inquiry-layout::before {
 
 html[data-theme="dark"] .public-visual-scope .atmosphere-backdrop {
   opacity: 0.62 !important;
-  background:
-    radial-gradient(at 50% -18%, #ffffff0d, transparent 44vmax),
-    radial-gradient(at 18% 12%, #78787814, transparent 42vmax),
-    radial-gradient(at 88% 22%, #4646461a, transparent 38vmax),
-    linear-gradient(#000, transparent 36%, #00000057) !important;
+  background: transparent !important;
 }
 
 html[data-theme] .public-visual-scope .atmosphere-backdrop .atmosphere-layer-ambient,
