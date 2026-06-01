@@ -996,6 +996,7 @@ function HeroHeadline({ style, title }: { style?: MotionStyle; title: string }) 
             >
               {word}
             </motion.span>
+            {index < words.length - 1 ? " " : null}
           </span>
         ))}
       </motion.h1>

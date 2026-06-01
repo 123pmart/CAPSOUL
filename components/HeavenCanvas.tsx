@@ -11,6 +11,8 @@ interface CloudField {
   driftY: number;
   phase: number;
   scaleVariation: number;
+  stretchX: number;
+  stretchY: number;
 }
 
 function clamp(value: number, lower: number, upper: number) {
@@ -55,16 +57,19 @@ export default function HeavenCanvas() {
     let width = 0;
     let height = 0;
     let elapsed = 0;
+    let previousFrameTime = 0;
     const random = createSeededRandom(0xc4a50f);
-    const fields: CloudField[] = Array.from({ length: 12 }, () => ({
+    const fields: CloudField[] = Array.from({ length: 18 }, () => ({
       x: random(),
-      y: random() * 0.92,
-      radiusScale: 0.2 + random() * 0.24,
-      opacity: 0.76 + random() * 0.2,
-      driftX: (random() - 0.5) * 0.000004,
-      driftY: (random() - 0.5) * 0.0000018,
+      y: random(),
+      radiusScale: 0.28 + random() * 0.47,
+      opacity: 0.82 + random() * 0.18,
+      driftX: (random() < 0.5 ? -1 : 1) * (0.003 + random() * 0.009),
+      driftY: (random() < 0.5 ? -1 : 1) * (0.0015 + random() * 0.004),
       phase: random() * Math.PI * 2,
-      scaleVariation: 0.018 + random() * 0.018,
+      scaleVariation: 0.025 + random() * 0.035,
+      stretchX: 0.94 + random() * 0.46,
+      stretchY: 0.72 + random() * 0.32,
     }));
 
     const resize = () => {
@@ -82,57 +87,68 @@ export default function HeavenCanvas() {
       const isDark = document.documentElement.dataset.theme === "dark";
       const time = prefersReducedMotion ? 0 : elapsed;
 
-      context.globalAlpha = isDark ? 0.32 : 0.9;
+      context.globalAlpha = isDark ? 0.5 : 1;
 
       for (const field of fields) {
         const x = wrapNormalized(field.x + time * field.driftX) * width;
         const y = wrapNormalized(field.y + time * field.driftY) * height;
         const radius = clamp(
-          Math.max(width, height) * field.radiusScale,
-          240,
-          820,
-        ) * (Math.sin(time * 0.00045 + field.phase) * field.scaleVariation + 1);
-        const alpha = field.opacity * (0.94 + Math.sin(time * 0.0003 + field.phase) * 0.06);
+          Math.min(width, height) * field.radiusScale,
+          260,
+          980,
+        ) * (Math.sin(time * 0.08 + field.phase) * field.scaleVariation + 1);
+        const alpha = field.opacity * (0.96 + Math.sin(time * 0.06 + field.phase) * 0.04);
+
+        context.save();
+        context.translate(x, y);
+        context.scale(field.stretchX, field.stretchY);
+
         const gradient = context.createRadialGradient(
-          x,
-          y,
           0,
-          x,
-          y,
+          0,
+          0,
+          0,
+          0,
           radius,
         );
 
         if (isDark) {
-          gradient.addColorStop(0, `rgba(255,255,255,${(alpha * 0.075).toFixed(3)})`);
-          gradient.addColorStop(0.36, `rgba(230,234,240,${(alpha * 0.055).toFixed(3)})`);
-          gradient.addColorStop(0.68, `rgba(190,198,210,${(alpha * 0.028).toFixed(3)})`);
-          gradient.addColorStop(1, "rgba(190,198,210,0)");
+          gradient.addColorStop(0, `rgba(255,255,255,${(alpha * 0.14).toFixed(3)})`);
+          gradient.addColorStop(0.28, `rgba(235,240,248,${(alpha * 0.1).toFixed(3)})`);
+          gradient.addColorStop(0.52, `rgba(200,210,222,${(alpha * 0.065).toFixed(3)})`);
+          gradient.addColorStop(0.76, `rgba(160,170,185,${(alpha * 0.035).toFixed(3)})`);
+          gradient.addColorStop(1, "rgba(160,170,185,0)");
         } else {
-          gradient.addColorStop(0, `rgba(255,255,255,${(alpha * 0.62).toFixed(3)})`);
-          gradient.addColorStop(0.32, `rgba(255,255,255,${(alpha * 0.42).toFixed(3)})`);
-          gradient.addColorStop(0.58, `rgba(228,234,240,${(alpha * 0.18).toFixed(3)})`);
-          gradient.addColorStop(0.78, `rgba(214,222,230,${(alpha * 0.08).toFixed(3)})`);
-          gradient.addColorStop(1, "rgba(214,222,230,0)");
+          gradient.addColorStop(0, `rgba(255,255,255,${(alpha * 0.78).toFixed(3)})`);
+          gradient.addColorStop(0.22, `rgba(255,255,255,${(alpha * 0.58).toFixed(3)})`);
+          gradient.addColorStop(0.45, `rgba(232,238,244,${(alpha * 0.34).toFixed(3)})`);
+          gradient.addColorStop(0.66, `rgba(205,216,226,${(alpha * 0.18).toFixed(3)})`);
+          gradient.addColorStop(0.84, `rgba(180,194,208,${(alpha * 0.08).toFixed(3)})`);
+          gradient.addColorStop(1, "rgba(180,194,208,0)");
         }
 
         context.beginPath();
-        context.arc(x, y, radius, 0, Math.PI * 2);
+        context.arc(0, 0, radius, 0, Math.PI * 2);
         context.fillStyle = gradient;
         context.fill();
+        context.restore();
       }
 
-      context.globalAlpha = isDark ? 0.28 : 0.78;
+      context.globalAlpha = isDark ? 0.44 : 0.92;
       const topGlow = context.createRadialGradient(width * 0.5, 0, 0, width * 0.5, 0, width * 0.55);
 
-      topGlow.addColorStop(0, `rgba(255,255,255,${isDark ? "0.055" : "0.24"})`);
+      topGlow.addColorStop(0, `rgba(255,255,255,${isDark ? "0.09" : "0.36"})`);
       topGlow.addColorStop(1, "rgba(255,255,255,0)");
       context.fillStyle = topGlow;
       context.fillRect(0, 0, width, height * 0.5);
       context.globalAlpha = 1;
-      elapsed += 1;
     };
 
-    const loop = () => {
+    const loop = (frameTime: number) => {
+      if (previousFrameTime) {
+        elapsed += Math.min((frameTime - previousFrameTime) / 1000, 0.1);
+      }
+      previousFrameTime = frameTime;
       draw();
       rafRef.current = window.requestAnimationFrame(loop);
     };
@@ -145,7 +161,7 @@ export default function HeavenCanvas() {
     if (prefersReducedMotion) {
       draw();
     } else {
-      loop();
+      rafRef.current = window.requestAnimationFrame(loop);
     }
 
     return () => {
@@ -158,13 +174,14 @@ export default function HeavenCanvas() {
     <canvas
       ref={canvasRef}
       aria-hidden="true"
+      className="heaven-canvas"
       style={{
         position: "fixed",
         inset: 0,
         width: "100%",
         height: "100%",
         pointerEvents: "none",
-        zIndex: 0,
+        zIndex: "var(--z-atmosphere, 0)",
         opacity: 1,
         mixBlendMode: "normal",
       }}
