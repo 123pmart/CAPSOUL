@@ -979,6 +979,7 @@ function HeroHeadline({ style, title }: { style?: MotionStyle; title: string }) 
       <motion.h1
         animate={isReady ? "visible" : "hidden"}
         className="apple-hero-title"
+        data-hero-title
         initial="hidden"
         key={title}
         aria-label={title}
@@ -987,6 +988,7 @@ function HeroHeadline({ style, title }: { style?: MotionStyle; title: string }) 
       >
         {words.map((word, index) => (
           <span
+            aria-hidden="true"
             className="apple-hero-title-word-wrap"
             key={`${word}-${index}`}
           >

@@ -2,171 +2,192 @@
 
 import { useEffect, useRef } from "react";
 
-interface CloudField {
+type CloudField = {
   x: number;
   y: number;
-  radiusScale: number;
-  opacity: number;
+  radius: number;
   driftX: number;
   driftY: number;
   phase: number;
+  phaseSpeed: number;
+  alpha: number;
   scaleVariation: number;
-  stretchX: number;
-  stretchY: number;
-}
-
-function clamp(value: number, lower: number, upper: number) {
-  return Math.max(lower, Math.min(upper, value));
-}
+  squashX: number;
+  squashY: number;
+};
 
 function createSeededRandom(seed: number) {
-  let value = seed;
+  return function random() {
+    let value = (seed += 0x6d2b79f5);
+    value = Math.imul(value ^ (value >>> 15), value | 1);
+    value ^= value + Math.imul(value ^ (value >>> 7), value | 61);
 
-  return () => {
-    value += 0x6d2b79f5;
-    let result = value;
-    result = Math.imul(result ^ (result >>> 15), result | 1);
-    result ^= result + Math.imul(result ^ (result >>> 7), result | 61);
-
-    return ((result ^ (result >>> 14)) >>> 0) / 4294967296;
+    return ((value ^ (value >>> 14)) >>> 0) / 4294967296;
   };
+}
+
+function getThemeIsDark() {
+  const root = document.documentElement;
+  const theme = `${root.getAttribute("data-theme") ?? ""} ${root.className}`;
+
+  return theme.includes("dark");
 }
 
 function wrapNormalized(value: number) {
   return ((value % 1) + 1) % 1;
 }
 
+function buildFields(width: number, height: number, isDark: boolean): CloudField[] {
+  const random = createSeededRandom(isDark ? 94421 : 38291);
+  const minViewport = Math.min(width, height);
+  const count = isDark ? 16 : 22;
+
+  return Array.from({ length: count }, (_, index) => {
+    const band = index / Math.max(1, count - 1);
+
+    return {
+      x: random(),
+      y: 0.04 + band * 0.94 + (random() - 0.5) * 0.16,
+      radius: minViewport * (0.34 + random() * 0.62),
+      driftX: (random() - 0.5) * 0.01,
+      driftY: (random() - 0.5) * 0.006,
+      phase: random() * Math.PI * 2,
+      phaseSpeed: 0.000055 + random() * 0.000085,
+      alpha: isDark ? 0.44 + random() * 0.22 : 0.72 + random() * 0.28,
+      scaleVariation: 0.025 + random() * 0.02,
+      squashX: 1.15 + random() * 1.2,
+      squashY: 0.62 + random() * 0.55,
+    };
+  });
+}
+
 export default function HeavenCanvas() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const rafRef = useRef(0);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
+    if (!canvas) return;
 
-    if (!canvas) {
-      return undefined;
-    }
+    const context = canvas.getContext("2d", {
+      alpha: true,
+      desynchronized: true,
+    });
+    if (!context) return;
 
-    const context = canvas.getContext("2d");
-
-    if (!context) {
-      return undefined;
-    }
-
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let frame = 0;
     let width = 0;
     let height = 0;
-    let elapsed = 0;
-    let previousFrameTime = 0;
-    const random = createSeededRandom(0xc4a50f);
-    const fields: CloudField[] = Array.from({ length: 18 }, () => ({
-      x: random(),
-      y: random(),
-      radiusScale: 0.28 + random() * 0.47,
-      opacity: 0.82 + random() * 0.18,
-      driftX: (random() < 0.5 ? -1 : 1) * (0.003 + random() * 0.009),
-      driftY: (random() < 0.5 ? -1 : 1) * (0.0015 + random() * 0.004),
-      phase: random() * Math.PI * 2,
-      scaleVariation: 0.025 + random() * 0.035,
-      stretchX: 0.94 + random() * 0.46,
-      stretchY: 0.72 + random() * 0.32,
-    }));
+    let dpr = 1;
+    let isDark = getThemeIsDark();
+    let fields: CloudField[] = [];
 
     const resize = () => {
-      width = canvas.offsetWidth;
-      height = canvas.offsetHeight;
-      const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
-
-      canvas.width = Math.round(width * pixelRatio);
-      canvas.height = Math.round(height * pixelRatio);
-      context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+      width = window.innerWidth;
+      height = window.innerHeight;
+      dpr = Math.min(window.devicePixelRatio || 1, 1.75);
+      canvas.width = Math.round(width * dpr);
+      canvas.height = Math.round(height * dpr);
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
+      context.setTransform(dpr, 0, 0, dpr, 0, 0);
+      fields = buildFields(width, height, isDark);
     };
 
-    const draw = () => {
+    const drawBaseAtmosphere = () => {
       context.clearRect(0, 0, width, height);
-      const isDark = document.documentElement.dataset.theme === "dark";
-      const time = prefersReducedMotion ? 0 : elapsed;
 
-      context.globalAlpha = isDark ? 0.5 : 1;
-
-      for (const field of fields) {
-        const x = wrapNormalized(field.x + time * field.driftX) * width;
-        const y = wrapNormalized(field.y + time * field.driftY) * height;
-        const radius = clamp(
-          Math.min(width, height) * field.radiusScale,
-          260,
-          980,
-        ) * (Math.sin(time * 0.08 + field.phase) * field.scaleVariation + 1);
-        const alpha = field.opacity * (0.96 + Math.sin(time * 0.06 + field.phase) * 0.04);
-
-        context.save();
-        context.translate(x, y);
-        context.scale(field.stretchX, field.stretchY);
-
-        const gradient = context.createRadialGradient(
-          0,
-          0,
-          0,
-          0,
-          0,
-          radius,
-        );
-
-        if (isDark) {
-          gradient.addColorStop(0, `rgba(255,255,255,${(alpha * 0.14).toFixed(3)})`);
-          gradient.addColorStop(0.28, `rgba(235,240,248,${(alpha * 0.1).toFixed(3)})`);
-          gradient.addColorStop(0.52, `rgba(200,210,222,${(alpha * 0.065).toFixed(3)})`);
-          gradient.addColorStop(0.76, `rgba(160,170,185,${(alpha * 0.035).toFixed(3)})`);
-          gradient.addColorStop(1, "rgba(160,170,185,0)");
-        } else {
-          gradient.addColorStop(0, `rgba(255,255,255,${(alpha * 0.78).toFixed(3)})`);
-          gradient.addColorStop(0.22, `rgba(255,255,255,${(alpha * 0.58).toFixed(3)})`);
-          gradient.addColorStop(0.45, `rgba(232,238,244,${(alpha * 0.34).toFixed(3)})`);
-          gradient.addColorStop(0.66, `rgba(205,216,226,${(alpha * 0.18).toFixed(3)})`);
-          gradient.addColorStop(0.84, `rgba(180,194,208,${(alpha * 0.08).toFixed(3)})`);
-          gradient.addColorStop(1, "rgba(180,194,208,0)");
-        }
-
-        context.beginPath();
-        context.arc(0, 0, radius, 0, Math.PI * 2);
-        context.fillStyle = gradient;
-        context.fill();
-        context.restore();
+      const base = context.createLinearGradient(0, 0, width, height);
+      if (isDark) {
+        base.addColorStop(0, "rgba(255,255,255,0.025)");
+        base.addColorStop(0.5, "rgba(255,255,255,0.010)");
+        base.addColorStop(1, "rgba(255,255,255,0.018)");
+      } else {
+        base.addColorStop(0, "rgba(219,231,240,0.30)");
+        base.addColorStop(0.45, "rgba(255,255,255,0.20)");
+        base.addColorStop(1, "rgba(215,228,238,0.24)");
       }
 
-      context.globalAlpha = isDark ? 0.44 : 0.92;
-      const topGlow = context.createRadialGradient(width * 0.5, 0, 0, width * 0.5, 0, width * 0.55);
-
-      topGlow.addColorStop(0, `rgba(255,255,255,${isDark ? "0.09" : "0.36"})`);
-      topGlow.addColorStop(1, "rgba(255,255,255,0)");
-      context.fillStyle = topGlow;
-      context.fillRect(0, 0, width, height * 0.5);
       context.globalAlpha = 1;
+      context.fillStyle = base;
+      context.fillRect(0, 0, width, height);
     };
 
-    const loop = (frameTime: number) => {
-      if (previousFrameTime) {
-        elapsed += Math.min((frameTime - previousFrameTime) / 1000, 0.1);
+    const drawField = (field: CloudField, time: number) => {
+      const breathe = 1 + Math.sin(time * field.phaseSpeed + field.phase) * field.scaleVariation;
+      const x =
+        wrapNormalized(
+          field.x +
+            Math.sin(time * 0.000045 + field.phase) * 0.045 +
+            time * field.driftX * 0.000018,
+        ) * width;
+      const y =
+        wrapNormalized(
+          field.y +
+            Math.cos(time * 0.000038 + field.phase) * 0.035 +
+            time * field.driftY * 0.000018,
+        ) * height;
+      const radius = field.radius * breathe;
+
+      context.save();
+      context.translate(x, y);
+      context.scale(field.squashX, field.squashY);
+
+      const gradient = context.createRadialGradient(0, 0, 0, 0, 0, radius);
+      if (isDark) {
+        gradient.addColorStop(0, "rgba(255,255,255,0.16)");
+        gradient.addColorStop(0.25, "rgba(238,242,248,0.115)");
+        gradient.addColorStop(0.52, "rgba(206,216,226,0.072)");
+        gradient.addColorStop(0.74, "rgba(165,176,190,0.038)");
+        gradient.addColorStop(1, "rgba(165,176,190,0)");
+      } else {
+        gradient.addColorStop(0, "rgba(255,255,255,0.92)");
+        gradient.addColorStop(0.24, "rgba(255,255,255,0.68)");
+        gradient.addColorStop(0.48, "rgba(229,236,242,0.44)");
+        gradient.addColorStop(0.68, "rgba(202,214,225,0.24)");
+        gradient.addColorStop(0.84, "rgba(170,188,204,0.105)");
+        gradient.addColorStop(1, "rgba(170,188,204,0)");
       }
-      previousFrameTime = frameTime;
-      draw();
-      rafRef.current = window.requestAnimationFrame(loop);
+
+      context.globalAlpha = field.alpha;
+      context.fillStyle = gradient;
+      context.beginPath();
+      context.arc(0, 0, radius, 0, Math.PI * 2);
+      context.fill();
+      context.restore();
     };
 
-    const resizeObserver = new ResizeObserver(resize);
+    const render = (time = 0) => {
+      const nextIsDark = getThemeIsDark();
+      if (nextIsDark !== isDark) {
+        isDark = nextIsDark;
+        fields = buildFields(width, height, isDark);
+      }
 
-    resizeObserver.observe(canvas.parentElement ?? document.body);
+      drawBaseAtmosphere();
+
+      context.save();
+      context.globalCompositeOperation = isDark ? "screen" : "multiply";
+      fields.forEach((field) => drawField(field, reducedMotion ? 0 : time));
+      context.restore();
+
+      context.globalAlpha = 1;
+      context.globalCompositeOperation = "source-over";
+    };
+
+    const loop = (time: number) => {
+      render(time);
+      frame = window.requestAnimationFrame(loop);
+    };
+
     resize();
-
-    if (prefersReducedMotion) {
-      draw();
-    } else {
-      rafRef.current = window.requestAnimationFrame(loop);
-    }
+    render(0);
+    window.addEventListener("resize", resize, { passive: true });
+    if (!reducedMotion) frame = window.requestAnimationFrame(loop);
 
     return () => {
-      window.cancelAnimationFrame(rafRef.current);
-      resizeObserver.disconnect();
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener("resize", resize);
     };
   }, []);
 
@@ -174,17 +195,8 @@ export default function HeavenCanvas() {
     <canvas
       ref={canvasRef}
       aria-hidden="true"
-      className="heaven-canvas"
-      style={{
-        position: "fixed",
-        inset: 0,
-        width: "100%",
-        height: "100%",
-        pointerEvents: "none",
-        zIndex: "var(--z-atmosphere, 0)",
-        opacity: 1,
-        mixBlendMode: "normal",
-      }}
+      className="heaven-canvas capsoul-heaven-canvas"
+      data-heaven-canvas
     />
   );
 }

@@ -148,6 +148,7 @@ body {
 
 .public-visual-scope {
   --z-atmosphere: 0;
+  --z-atmosphere-support: 1;
   --z-page-content: 2;
   --z-header: 20;
   background: transparent !important;
@@ -173,25 +174,16 @@ html[data-theme="dark"] .admin-visual-scope,
 .public-visual-scope .atmosphere-backdrop {
   position: fixed !important;
   inset: 0 !important;
-  z-index: var(--z-atmosphere);
+  z-index: var(--z-atmosphere-support);
   overflow: hidden;
   pointer-events: none;
   opacity: 1 !important;
-  background:
-    radial-gradient(ellipse at 50% 18%, rgba(255, 255, 255, 0.72), transparent 52%),
-    radial-gradient(ellipse at 50% 42%, rgba(218, 228, 238, 0.26), transparent 58%),
-    radial-gradient(ellipse at 50% 80%, rgba(205, 215, 225, 0.18), transparent 62%),
-    radial-gradient(ellipse at 10% 28%, rgba(214, 224, 234, 0.18), transparent 48vmax),
-    radial-gradient(ellipse at 92% 34%, rgba(228, 234, 240, 0.16), transparent 46vmax) !important;
+  background: transparent !important;
   transform: translate3d(0, 0, 0);
 }
 
 html[data-theme="dark"] .public-visual-scope .atmosphere-backdrop {
-  background:
-    radial-gradient(ellipse at 50% 20%, rgba(255, 255, 255, 0.075), transparent 55%),
-    radial-gradient(ellipse at 50% 58%, rgba(180, 190, 205, 0.055), transparent 62%),
-    radial-gradient(ellipse at 10% 28%, rgba(255, 255, 255, 0.038), transparent 48vmax),
-    radial-gradient(ellipse at 92% 34%, rgba(230, 234, 240, 0.032), transparent 46vmax) !important;
+  background: transparent !important;
 }
 
 .public-visual-scope .atmosphere-backdrop::before,
@@ -209,32 +201,46 @@ html[data-theme="dark"] .public-visual-scope .atmosphere-backdrop {
 }
 
 .public-visual-scope .atmosphere-backdrop::before {
+  inset: -18vh -18vw;
   background:
-    radial-gradient(ellipse at 50% 8%, rgba(255, 255, 255, 0.58), transparent 58%),
-    radial-gradient(ellipse at 50% 46%, rgba(228, 234, 240, 0.2), transparent 68%);
+    radial-gradient(ellipse at 50% 12%, rgba(255, 255, 255, 0.82), transparent 34%),
+    radial-gradient(ellipse at 28% 28%, rgba(214, 228, 240, 0.42), transparent 38%),
+    radial-gradient(ellipse at 72% 34%, rgba(224, 234, 242, 0.36), transparent 42%),
+    radial-gradient(ellipse at 45% 58%, rgba(200, 216, 229, 0.3), transparent 44%),
+    radial-gradient(ellipse at 62% 84%, rgba(220, 232, 240, 0.34), transparent 40%);
+  filter: blur(42px);
+  opacity: 0.88;
 }
 
 .public-visual-scope .atmosphere-backdrop::after {
   background:
-    radial-gradient(ellipse at 50% 108%, rgba(205, 215, 225, 0.2), transparent 66%);
+    linear-gradient(90deg, rgba(0, 0, 0, 0.045), transparent 18%, transparent 82%, rgba(0, 0, 0, 0.045)),
+    radial-gradient(ellipse at 50% 50%, transparent 46%, rgba(0, 0, 0, 0.05) 100%);
+  opacity: 0.42;
 }
 
 html[data-theme="dark"] .public-visual-scope .atmosphere-backdrop::before {
   background:
-    radial-gradient(ellipse at 50% 8%, rgba(255, 255, 255, 0.075), transparent 58%),
-    radial-gradient(ellipse at 50% 46%, rgba(230, 234, 240, 0.045), transparent 68%);
+    radial-gradient(ellipse at 50% 14%, rgba(255, 255, 255, 0.105), transparent 36%),
+    radial-gradient(ellipse at 24% 28%, rgba(215, 224, 236, 0.075), transparent 40%),
+    radial-gradient(ellipse at 78% 36%, rgba(225, 232, 242, 0.065), transparent 43%),
+    radial-gradient(ellipse at 48% 62%, rgba(190, 204, 220, 0.06), transparent 46%),
+    radial-gradient(ellipse at 62% 84%, rgba(230, 235, 242, 0.065), transparent 42%);
+  filter: blur(48px);
+  opacity: 0.92;
 }
 
 html[data-theme="dark"] .public-visual-scope .atmosphere-backdrop::after {
   background:
-    radial-gradient(ellipse at 50% 108%, rgba(255, 255, 255, 0.05), transparent 66%);
+    radial-gradient(ellipse at 50% 50%, transparent 42%, rgba(0, 0, 0, 0.42) 100%);
+  opacity: 0.82;
 }
 
 .public-visual-scope .atmosphere-layer-frost {
-  opacity: 0.54 !important;
+  opacity: 0.46 !important;
   background:
-    radial-gradient(ellipse at 50% 22%, rgba(255, 255, 255, 0.46), transparent 68%),
-    radial-gradient(ellipse at 50% 86%, rgba(228, 234, 240, 0.16), transparent 70%);
+    radial-gradient(ellipse at 50% 20%, rgba(255, 255, 255, 0.58), transparent 64%),
+    radial-gradient(ellipse at 50% 88%, rgba(228, 234, 240, 0.18), transparent 72%);
 }
 
 html[data-theme="dark"] .public-visual-scope .atmosphere-layer-frost {
@@ -245,10 +251,9 @@ html[data-theme="dark"] .public-visual-scope .atmosphere-layer-frost {
 }
 
 .public-visual-scope .atmosphere-layer-vignette {
-  opacity: 0.16;
+  opacity: 0.2;
   background:
-    radial-gradient(ellipse at center, transparent 58%, rgba(0, 0, 0, 0.045) 100%),
-    linear-gradient(180deg, transparent, transparent 74%, rgba(0, 0, 0, 0.025));
+    radial-gradient(ellipse at center, transparent 58%, rgba(0, 0, 0, 0.045) 100%);
 }
 
 .public-visual-scope .atmosphere-layer-ambient {
@@ -262,14 +267,32 @@ html[data-theme="dark"] .public-visual-scope .atmosphere-layer-frost {
 html[data-theme="dark"] .public-visual-scope .atmosphere-layer-vignette {
   opacity: 0.28;
   background:
-    radial-gradient(ellipse at center, transparent 54%, rgba(0, 0, 0, 0.44) 100%),
-    linear-gradient(180deg, transparent, transparent 74%, rgba(0, 0, 0, 0.18));
+    radial-gradient(ellipse at center, transparent 54%, rgba(0, 0, 0, 0.44) 100%);
 }
 
-.public-visual-scope .heaven-canvas {
-  filter: blur(18px) saturate(1.02);
-  transform: scale(1.035);
+.public-visual-scope #main-content {
+  position: relative;
+  z-index: var(--z-page-content);
+  background: transparent !important;
+}
+
+.public-visual-scope :is(.heaven-canvas, .capsoul-heaven-canvas, [data-heaven-canvas]) {
+  position: fixed;
+  inset: -3vh -3vw;
+  width: 106vw;
+  height: 106vh;
+  pointer-events: none;
+  z-index: var(--z-atmosphere);
+  opacity: 1;
+  filter: blur(18px) saturate(1.06) contrast(1.04);
+  transform: translateZ(0);
   transform-origin: center;
+  will-change: transform;
+}
+
+html[data-theme="dark"] .public-visual-scope :is(.heaven-canvas, .capsoul-heaven-canvas, [data-heaven-canvas]) {
+  opacity: 0.88;
+  filter: blur(20px) saturate(1.02) contrast(1.08);
 }
 
 .public-visual-scope::before,
@@ -2246,16 +2269,18 @@ html[data-theme="dark"] .public-visual-scope .apple-inquiry-layout::before {
   --radius-card: clamp(22px, 2vw, 32px);
   --radius-panel: clamp(32px, 3vw, 52px);
   --radius-pill: 999px;
-  --surface-light: rgba(255, 255, 255, 0.92);
-  --surface-dark: rgba(8, 8, 8, 0.9);
-  --border-light: rgba(0, 0, 0, 0.085);
-  --border-dark: rgba(255, 255, 255, 0.12);
+  --surface-light: rgba(255, 255, 255, 0.86);
+  --surface-dark: rgba(6, 6, 6, 0.86);
+  --border-light: rgba(0, 0, 0, 0.095);
+  --border-dark: rgba(255, 255, 255, 0.14);
   --shadow-light:
-    0 24px 70px rgba(0, 0, 0, 0.1),
-    0 6px 18px rgba(0, 0, 0, 0.055);
+    0 34px 90px rgba(0, 0, 0, 0.14),
+    0 10px 28px rgba(0, 0, 0, 0.075),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85);
   --shadow-dark:
-    0 24px 70px rgba(0, 0, 0, 0.65),
-    inset 0 1px 0 rgba(255, 255, 255, 0.055);
+    0 36px 100px rgba(0, 0, 0, 0.82),
+    0 10px 30px rgba(0, 0, 0, 0.62),
+    inset 0 1px 0 rgba(255, 255, 255, 0.065);
   --composition-plane-light: rgba(0, 0, 0, 0.025);
   --composition-plane-dark: rgba(255, 255, 255, 0.035);
   background: transparent !important;
@@ -3269,7 +3294,33 @@ html[data-theme="dark"] .public-visual-scope .apple-inquiry-layout::before {
 }
 
 .public-visual-scope .apple-hero-title-word-wrap:not(:last-child) {
-  margin-inline-end: 0.18em;
+  margin-inline-end: 0;
+}
+
+.public-visual-scope .apple-hero-title[data-hero-title] {
+  display: flex !important;
+  justify-content: center;
+  align-items: baseline;
+  flex-wrap: nowrap;
+  gap: clamp(10px, 1.55vw, 26px);
+  width: 100% !important;
+  max-width: min(96vw, 1320px) !important;
+  margin-inline: auto !important;
+  text-align: center !important;
+  white-space: nowrap !important;
+  line-height: 0.88 !important;
+  letter-spacing: -0.045em !important;
+  word-spacing: normal !important;
+  overflow: visible !important;
+}
+
+@media (max-width: 767px) {
+  .public-visual-scope .apple-hero-title[data-hero-title] {
+    flex-wrap: wrap;
+    gap: clamp(6px, 1.7vw, 12px);
+    max-width: calc(100vw - 28px) !important;
+    font-size: clamp(34px, 10vw, 56px) !important;
+  }
 }
 
 .public-visual-scope .apple-cta-magnetic-wrap {
