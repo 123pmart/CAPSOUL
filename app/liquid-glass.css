@@ -148,9 +148,18 @@ body {
 
 .public-visual-scope {
   --z-atmosphere: 0;
+  --z-section-field: 1;
   --z-atmosphere-support: 1;
   --z-page-content: 2;
-  --z-header: 20;
+  --z-header: 40;
+  --capsoul-white: 255 255 255;
+  --capsoul-ink: 0 0 0;
+  --capsoul-graphite: 18 18 18;
+  --capsoul-grey-100: 246 246 246;
+  --capsoul-grey-200: 232 232 232;
+  --capsoul-grey-300: 212 212 212;
+  --capsoul-grey-700: 74 74 74;
+  --capsoul-grey-900: 10 10 10;
   background: transparent !important;
   background-color: transparent !important;
 }
@@ -187,87 +196,131 @@ html[data-theme="dark"] .public-visual-scope .atmosphere-backdrop {
 }
 
 .public-visual-scope .atmosphere-backdrop::before,
-.public-visual-scope .atmosphere-backdrop::after,
-.public-visual-scope .atmosphere-layer {
+.public-visual-scope .atmosphere-backdrop::after {
+  content: none !important;
+  display: none !important;
+}
+
+.public-visual-scope .capsoul-atmosphere-backdrop__field,
+.public-visual-scope .capsoul-atmosphere-backdrop__vignette {
   position: absolute;
-  inset: 0;
   pointer-events: none;
   transform: translate3d(0, 0, 0);
 }
 
-.public-visual-scope .atmosphere-backdrop::before,
-.public-visual-scope .atmosphere-backdrop::after {
-  content: "";
+.public-visual-scope .capsoul-atmosphere-backdrop__field {
+  border-radius: 999px;
+  background: rgba(235, 235, 235, 0.42);
+  filter: blur(70px);
+  opacity: 0.55;
+  animation: capsoulAtmosphereDrift 42s ease-in-out infinite alternate;
 }
 
-.public-visual-scope .atmosphere-backdrop::before {
-  inset: -18vh -18vw;
-  background:
-    radial-gradient(ellipse at 50% 12%, rgba(255, 255, 255, 0.82), transparent 34%),
-    radial-gradient(ellipse at 28% 28%, rgba(214, 228, 240, 0.42), transparent 38%),
-    radial-gradient(ellipse at 72% 34%, rgba(224, 234, 242, 0.36), transparent 42%),
-    radial-gradient(ellipse at 45% 58%, rgba(200, 216, 229, 0.3), transparent 44%),
-    radial-gradient(ellipse at 62% 84%, rgba(220, 232, 240, 0.34), transparent 40%);
-  filter: blur(42px);
-  opacity: 0.88;
+.public-visual-scope .capsoul-atmosphere-backdrop__field--one {
+  width: 70vw;
+  height: 42vh;
+  left: -12vw;
+  top: 4vh;
 }
 
-.public-visual-scope .atmosphere-backdrop::after {
+.public-visual-scope .capsoul-atmosphere-backdrop__field--two {
+  width: 64vw;
+  height: 48vh;
+  right: -18vw;
+  top: 32vh;
+  animation-duration: 56s;
+}
+
+.public-visual-scope .capsoul-atmosphere-backdrop__field--three {
+  width: 72vw;
+  height: 46vh;
+  left: 18vw;
+  bottom: -12vh;
+  animation-duration: 68s;
+}
+
+.public-visual-scope .capsoul-atmosphere-backdrop__vignette {
+  inset: 0;
   background:
     linear-gradient(90deg, rgba(0, 0, 0, 0.045), transparent 18%, transparent 82%, rgba(0, 0, 0, 0.045)),
     radial-gradient(ellipse at 50% 50%, transparent 46%, rgba(0, 0, 0, 0.05) 100%);
   opacity: 0.42;
 }
 
-html[data-theme="dark"] .public-visual-scope .atmosphere-backdrop::before {
-  background:
-    radial-gradient(ellipse at 50% 14%, rgba(255, 255, 255, 0.105), transparent 36%),
-    radial-gradient(ellipse at 24% 28%, rgba(215, 224, 236, 0.075), transparent 40%),
-    radial-gradient(ellipse at 78% 36%, rgba(225, 232, 242, 0.065), transparent 43%),
-    radial-gradient(ellipse at 48% 62%, rgba(190, 204, 220, 0.06), transparent 46%),
-    radial-gradient(ellipse at 62% 84%, rgba(230, 235, 242, 0.065), transparent 42%);
-  filter: blur(48px);
-  opacity: 0.92;
+html[data-theme="dark"] .public-visual-scope .capsoul-atmosphere-backdrop__field {
+  background: rgba(170, 170, 170, 0.18);
+  filter: blur(76px);
+  opacity: 0.34;
 }
 
-html[data-theme="dark"] .public-visual-scope .atmosphere-backdrop::after {
+html[data-theme="dark"] .public-visual-scope .capsoul-atmosphere-backdrop__vignette {
   background:
     radial-gradient(ellipse at 50% 50%, transparent 42%, rgba(0, 0, 0, 0.42) 100%);
   opacity: 0.82;
 }
 
-.public-visual-scope .atmosphere-layer-frost {
-  opacity: 0.46 !important;
+@keyframes capsoulAtmosphereDrift {
+  from {
+    transform: translate3d(-1.5vw, -1vh, 0) scale(1);
+  }
+
+  to {
+    transform: translate3d(1.5vw, 1vh, 0) scale(1.04);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .public-visual-scope .capsoul-atmosphere-backdrop__field {
+    animation: none;
+  }
+}
+
+.public-visual-scope .capsoul-section-field {
+  position: relative;
+  isolation: isolate;
+}
+
+.public-visual-scope .capsoul-section-field__aura {
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+  inset: clamp(-96px, -6vw, -48px) clamp(-120px, -7vw, -56px);
+  border-radius: clamp(44px, 6vw, 96px);
   background:
-    radial-gradient(ellipse at 50% 20%, rgba(255, 255, 255, 0.58), transparent 64%),
-    radial-gradient(ellipse at 50% 88%, rgba(228, 234, 240, 0.18), transparent 72%);
+    radial-gradient(ellipse at 50% 35%, rgba(255, 255, 255, 0.88), transparent 42%),
+    radial-gradient(ellipse at 34% 46%, rgba(232, 232, 232, 0.54), transparent 48%),
+    radial-gradient(ellipse at 72% 58%, rgba(214, 214, 214, 0.38), transparent 54%),
+    radial-gradient(ellipse at 50% 85%, rgba(190, 190, 190, 0.2), transparent 60%);
+  filter: blur(34px);
+  opacity: 0.95;
+  transform: translateZ(0);
 }
 
-html[data-theme="dark"] .public-visual-scope .atmosphere-layer-frost {
-  opacity: 0.34 !important;
+.public-visual-scope [data-section-field="hero"] > .capsoul-section-field__aura {
+  inset: clamp(-130px, -7vw, -72px) clamp(-150px, -8vw, -80px);
+  opacity: 1;
+}
+
+.public-visual-scope [data-section-field="how-it-works"] > .capsoul-section-field__aura {
+  opacity: 0.88;
+}
+
+.public-visual-scope [data-section-field="what-we-preserve"] > .capsoul-section-field__aura {
+  opacity: 0.92;
+}
+
+.public-visual-scope [data-section-field="inquire"] > .capsoul-section-field__aura {
+  opacity: 0.9;
+}
+
+html[data-theme="dark"] .public-visual-scope .capsoul-section-field__aura {
   background:
-    radial-gradient(ellipse at 50% 22%, rgba(255, 255, 255, 0.07), transparent 68%),
-    radial-gradient(ellipse at 50% 86%, rgba(230, 234, 240, 0.04), transparent 70%);
-}
-
-.public-visual-scope .atmosphere-layer-vignette {
-  opacity: 0.2;
-  background:
-    radial-gradient(ellipse at center, transparent 58%, rgba(0, 0, 0, 0.045) 100%);
-}
-
-.public-visual-scope .atmosphere-layer-ambient {
-  transform: translate3d(0, var(--atmosphere-drift-soft, 0px), 0);
-}
-
-.public-visual-scope .atmosphere-layer-frost {
-  transform: translate3d(0, var(--atmosphere-drift-frost, 0px), 0);
-}
-
-html[data-theme="dark"] .public-visual-scope .atmosphere-layer-vignette {
-  opacity: 0.28;
-  background:
-    radial-gradient(ellipse at center, transparent 54%, rgba(0, 0, 0, 0.44) 100%);
+    radial-gradient(ellipse at 50% 35%, rgba(255, 255, 255, 0.095), transparent 42%),
+    radial-gradient(ellipse at 34% 46%, rgba(210, 210, 210, 0.07), transparent 48%),
+    radial-gradient(ellipse at 72% 58%, rgba(170, 170, 170, 0.056), transparent 54%),
+    radial-gradient(ellipse at 50% 85%, rgba(120, 120, 120, 0.05), transparent 60%);
+  filter: blur(38px);
+  opacity: 0.95;
 }
 
 .public-visual-scope #main-content {
@@ -278,21 +331,21 @@ html[data-theme="dark"] .public-visual-scope .atmosphere-layer-vignette {
 
 .public-visual-scope :is(.heaven-canvas, .capsoul-heaven-canvas, [data-heaven-canvas]) {
   position: fixed;
-  inset: -3vh -3vw;
-  width: 106vw;
-  height: 106vh;
+  inset: -4vh -4vw;
+  width: 108vw;
+  height: 108vh;
   pointer-events: none;
   z-index: var(--z-atmosphere);
   opacity: 1;
-  filter: blur(18px) saturate(1.06) contrast(1.04);
+  filter: blur(24px) saturate(0.92) contrast(1.08);
   transform: translateZ(0);
   transform-origin: center;
   will-change: transform;
 }
 
 html[data-theme="dark"] .public-visual-scope :is(.heaven-canvas, .capsoul-heaven-canvas, [data-heaven-canvas]) {
-  opacity: 0.88;
-  filter: blur(20px) saturate(1.02) contrast(1.08);
+  opacity: 0.92;
+  filter: blur(26px) saturate(0.82) contrast(1.12);
 }
 
 .public-visual-scope::before,
@@ -2269,17 +2322,17 @@ html[data-theme="dark"] .public-visual-scope .apple-inquiry-layout::before {
   --radius-card: clamp(22px, 2vw, 32px);
   --radius-panel: clamp(32px, 3vw, 52px);
   --radius-pill: 999px;
-  --surface-light: rgba(255, 255, 255, 0.86);
-  --surface-dark: rgba(6, 6, 6, 0.86);
+  --surface-light: rgba(255, 255, 255, 0.88);
+  --surface-dark: rgba(7, 7, 7, 0.88);
   --border-light: rgba(0, 0, 0, 0.095);
   --border-dark: rgba(255, 255, 255, 0.14);
   --shadow-light:
-    0 34px 90px rgba(0, 0, 0, 0.14),
-    0 10px 28px rgba(0, 0, 0, 0.075),
-    inset 0 1px 0 rgba(255, 255, 255, 0.85);
+    0 36px 90px rgba(0, 0, 0, 0.14),
+    0 12px 32px rgba(0, 0, 0, 0.075),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
   --shadow-dark:
-    0 36px 100px rgba(0, 0, 0, 0.82),
-    0 10px 30px rgba(0, 0, 0, 0.62),
+    0 38px 100px rgba(0, 0, 0, 0.86),
+    0 14px 34px rgba(0, 0, 0, 0.64),
     inset 0 1px 0 rgba(255, 255, 255, 0.065);
   --composition-plane-light: rgba(0, 0, 0, 0.025);
   --composition-plane-dark: rgba(255, 255, 255, 0.035);
@@ -2332,6 +2385,16 @@ html[data-theme="dark"] .public-visual-scope #main-content {
   border-radius: var(--radius-panel) !important;
 }
 
+.public-visual-scope .apple-preserve-card {
+  isolation: isolate;
+  overflow: hidden;
+  background-clip: padding-box !important;
+  box-shadow:
+    0 18px 46px rgba(0, 0, 0, 0.12),
+    0 5px 14px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+}
+
 html[data-theme="dark"] .public-visual-scope :is(
   .liquid-glass-panel,
   .apple-liquid-surface,
@@ -2353,10 +2416,22 @@ html[data-theme="dark"] .public-visual-scope :is(
   box-shadow: var(--shadow-dark) !important;
 }
 
+html[data-theme="dark"] .public-visual-scope .apple-preserve-card {
+  background-clip: padding-box !important;
+  box-shadow:
+    0 20px 54px rgba(0, 0, 0, 0.68),
+    0 6px 16px rgba(0, 0, 0, 0.52),
+    inset 0 1px 0 rgba(255, 255, 255, 0.065) !important;
+}
+
 .public-visual-scope :is(.liquid-glass-panel, .apple-liquid-surface)::before,
 .public-visual-scope :is(.liquid-glass-panel, .apple-liquid-surface)::after,
 .public-visual-scope .apple-liquid-layer {
   content: none !important;
+  display: none !important;
+}
+
+.public-visual-scope .apple-preserve-card > .apple-liquid-layer {
   display: none !important;
 }
 
@@ -3333,7 +3408,7 @@ html[data-theme="dark"] .public-visual-scope .apple-inquiry-layout::before {
   width: 100%;
 }
 
-.public-visual-scope :is(.apple-liquid-surface, .apple-hero-record) > .apple-liquid-layer {
+.public-visual-scope :is(.apple-liquid-surface:not(.apple-preserve-card), .apple-hero-record) > .apple-liquid-layer {
   display: block !important;
   opacity: 0;
   transition: opacity 180ms cubic-bezier(0.22, 1, 0.36, 1);
@@ -3343,7 +3418,7 @@ html[data-theme="dark"] .public-visual-scope .apple-inquiry-layout::before {
   transform: rotateX(var(--liquid-tilt-x, 0deg)) rotateY(var(--liquid-tilt-y, 0deg)) translateZ(0) !important;
 }
 
-.public-visual-scope :is(.apple-liquid-surface, .apple-hero-record).is-liquid-active > .apple-liquid-layer {
+.public-visual-scope :is(.apple-liquid-surface:not(.apple-preserve-card), .apple-hero-record).is-liquid-active > .apple-liquid-layer {
   opacity: 1;
 }
 

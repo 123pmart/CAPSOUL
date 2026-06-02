@@ -9,11 +9,10 @@ type CloudField = {
   driftX: number;
   driftY: number;
   phase: number;
-  phaseSpeed: number;
+  speed: number;
   alpha: number;
-  scaleVariation: number;
-  squashX: number;
-  squashY: number;
+  scaleX: number;
+  scaleY: number;
 };
 
 function createSeededRandom(seed: number) {
@@ -33,30 +32,32 @@ function getThemeIsDark() {
   return theme.includes("dark");
 }
 
-function wrapNormalized(value: number) {
-  return ((value % 1) + 1) % 1;
+function wrapRange(value: number, min: number, max: number) {
+  const range = max - min;
+
+  return ((((value - min) % range) + range) % range) + min;
 }
 
 function buildFields(width: number, height: number, isDark: boolean): CloudField[] {
-  const random = createSeededRandom(isDark ? 94421 : 38291);
+  const random = createSeededRandom(isDark ? 77113 : 44191);
   const minViewport = Math.min(width, height);
-  const count = isDark ? 16 : 22;
+  const maxViewport = Math.max(width, height);
+  const count = isDark ? 18 : 26;
 
   return Array.from({ length: count }, (_, index) => {
     const band = index / Math.max(1, count - 1);
 
     return {
-      x: random(),
-      y: 0.04 + band * 0.94 + (random() - 0.5) * 0.16,
-      radius: minViewport * (0.34 + random() * 0.62),
-      driftX: (random() - 0.5) * 0.01,
-      driftY: (random() - 0.5) * 0.006,
+      x: -0.12 + random() * 1.24,
+      y: -0.08 + band * 1.16 + (random() - 0.5) * 0.2,
+      radius: minViewport * (0.34 + random() * 0.74) + maxViewport * 0.04,
+      driftX: (random() - 0.5) * 0.000018,
+      driftY: (random() - 0.5) * 0.000012,
       phase: random() * Math.PI * 2,
-      phaseSpeed: 0.000055 + random() * 0.000085,
-      alpha: isDark ? 0.44 + random() * 0.22 : 0.72 + random() * 0.28,
-      scaleVariation: 0.025 + random() * 0.02,
-      squashX: 1.15 + random() * 1.2,
-      squashY: 0.62 + random() * 0.55,
+      speed: 0.000035 + random() * 0.000055,
+      alpha: isDark ? 0.42 + random() * 0.22 : 0.7 + random() * 0.3,
+      scaleX: 1.25 + random() * 1.35,
+      scaleY: 0.54 + random() * 0.64,
     };
   });
 }
@@ -99,13 +100,13 @@ export default function HeavenCanvas() {
 
       const base = context.createLinearGradient(0, 0, width, height);
       if (isDark) {
-        base.addColorStop(0, "rgba(255,255,255,0.025)");
-        base.addColorStop(0.5, "rgba(255,255,255,0.010)");
-        base.addColorStop(1, "rgba(255,255,255,0.018)");
+        base.addColorStop(0, "rgba(255,255,255,0.032)");
+        base.addColorStop(0.46, "rgba(255,255,255,0.014)");
+        base.addColorStop(1, "rgba(255,255,255,0.026)");
       } else {
-        base.addColorStop(0, "rgba(219,231,240,0.30)");
-        base.addColorStop(0.45, "rgba(255,255,255,0.20)");
-        base.addColorStop(1, "rgba(215,228,238,0.24)");
+        base.addColorStop(0, "rgba(245,245,245,0.34)");
+        base.addColorStop(0.44, "rgba(255,255,255,0.26)");
+        base.addColorStop(1, "rgba(232,232,232,0.30)");
       }
 
       context.globalAlpha = 1;
@@ -114,39 +115,44 @@ export default function HeavenCanvas() {
     };
 
     const drawField = (field: CloudField, time: number) => {
-      const breathe = 1 + Math.sin(time * field.phaseSpeed + field.phase) * field.scaleVariation;
+      const breathe = 1 + Math.sin(time * field.speed + field.phase) * 0.045;
       const x =
-        wrapNormalized(
+        wrapRange(
           field.x +
-            Math.sin(time * 0.000045 + field.phase) * 0.045 +
-            time * field.driftX * 0.000018,
+            Math.sin(time * 0.000036 + field.phase) * 0.035 +
+            time * field.driftX,
+          -0.12,
+          1.12,
         ) * width;
       const y =
-        wrapNormalized(
+        wrapRange(
           field.y +
-            Math.cos(time * 0.000038 + field.phase) * 0.035 +
-            time * field.driftY * 0.000018,
+            Math.cos(time * 0.000028 + field.phase) * 0.032 +
+            time * field.driftY,
+          -0.08,
+          1.08,
         ) * height;
       const radius = field.radius * breathe;
 
       context.save();
       context.translate(x, y);
-      context.scale(field.squashX, field.squashY);
+      context.scale(field.scaleX, field.scaleY);
 
       const gradient = context.createRadialGradient(0, 0, 0, 0, 0, radius);
       if (isDark) {
-        gradient.addColorStop(0, "rgba(255,255,255,0.16)");
-        gradient.addColorStop(0.25, "rgba(238,242,248,0.115)");
-        gradient.addColorStop(0.52, "rgba(206,216,226,0.072)");
-        gradient.addColorStop(0.74, "rgba(165,176,190,0.038)");
-        gradient.addColorStop(1, "rgba(165,176,190,0)");
+        gradient.addColorStop(0, "rgba(255,255,255,0.155)");
+        gradient.addColorStop(0.22, "rgba(235,235,235,0.105)");
+        gradient.addColorStop(0.46, "rgba(190,190,190,0.070)");
+        gradient.addColorStop(0.68, "rgba(130,130,130,0.045)");
+        gradient.addColorStop(0.86, "rgba(90,90,90,0.022)");
+        gradient.addColorStop(1, "rgba(90,90,90,0)");
       } else {
-        gradient.addColorStop(0, "rgba(255,255,255,0.92)");
-        gradient.addColorStop(0.24, "rgba(255,255,255,0.68)");
-        gradient.addColorStop(0.48, "rgba(229,236,242,0.44)");
-        gradient.addColorStop(0.68, "rgba(202,214,225,0.24)");
-        gradient.addColorStop(0.84, "rgba(170,188,204,0.105)");
-        gradient.addColorStop(1, "rgba(170,188,204,0)");
+        gradient.addColorStop(0, "rgba(255,255,255,0.96)");
+        gradient.addColorStop(0.2, "rgba(255,255,255,0.74)");
+        gradient.addColorStop(0.42, "rgba(238,238,238,0.52)");
+        gradient.addColorStop(0.62, "rgba(220,220,220,0.34)");
+        gradient.addColorStop(0.8, "rgba(196,196,196,0.17)");
+        gradient.addColorStop(1, "rgba(196,196,196,0)");
       }
 
       context.globalAlpha = field.alpha;

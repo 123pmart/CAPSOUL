@@ -372,10 +372,9 @@ const processCardVariants = {
 } as const;
 
 const preserveCardVariants = {
-  hidden: { opacity: 0, clipPath: "inset(100% 0% 0% 0%)", y: 12 },
+  hidden: { opacity: 0, y: 12 },
   visible: (index: number) => ({
     opacity: 1,
-    clipPath: "inset(0% 0% 0% 0%)",
     y: 0,
     transition: {
       delay: index * 0.07,
@@ -857,7 +856,8 @@ function ArchiveSection({
       <p className="apple-section-copy motion-copy" data-reveal style={revealDelay(2)}>
         {description}
       </p>
-      <div className="apple-section-body motion-card">
+      <div className="apple-section-body motion-card capsoul-section-field" data-section-field={id}>
+        <span className="capsoul-section-field__aura" aria-hidden="true" />
         {children}
       </div>
     </>
@@ -1053,7 +1053,8 @@ function ArchiveHero({
               </MagneticSecondaryAnchor>
             ) : null}
           </div>
-          <div className="apple-hero-stage">
+          <div className="apple-hero-stage capsoul-section-field" data-section-field="hero">
+            <span className="capsoul-section-field__aura" aria-hidden="true" />
             <div className="apple-hero-record-parallax">
               <motion.div
                 className="apple-hero-record apple-liquid-surface liquid-glass-panel capsoul-glass"

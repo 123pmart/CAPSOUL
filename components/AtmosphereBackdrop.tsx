@@ -7,8 +7,10 @@ export function AtmosphereBackdrop() {
       className="atmosphere-backdrop capsoul-atmosphere-backdrop"
       data-atmosphere-backdrop
     >
-      <span className="atmosphere-layer atmosphere-layer-frost" />
-      <span className="atmosphere-layer atmosphere-layer-vignette" />
+      <span className="capsoul-atmosphere-backdrop__field capsoul-atmosphere-backdrop__field--one" />
+      <span className="capsoul-atmosphere-backdrop__field capsoul-atmosphere-backdrop__field--two" />
+      <span className="capsoul-atmosphere-backdrop__field capsoul-atmosphere-backdrop__field--three" />
+      <span className="capsoul-atmosphere-backdrop__vignette" />
     </div>
   );
 }
