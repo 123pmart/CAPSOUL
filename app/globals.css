@@ -11998,6 +11998,12 @@ body::after {
   background: transparent;
 }
 
+html[data-theme="light"] body {
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(210, 210, 210, 0.35), transparent 38%),
+    linear-gradient(180deg, #f2f2ef 0%, #fbfbfa 18%, #f5f5f2 52%, #eeeeea 100%) !important;
+}
+
 main,
 .site-main {
   position: relative;
@@ -12110,6 +12116,100 @@ html[data-theme="dark"] .public-visual-scope .atmosphere-backdrop {
   content: "" !important;
   display: block !important;
   opacity: 1 !important;
+}
+
+.site-main {
+  position: relative;
+  z-index: 2;
+}
+
+.site-section {
+  position: relative;
+  z-index: 2;
+  padding-block: clamp(72px, 9vw, 140px);
+}
+
+.site-section::before {
+  content: "";
+  position: absolute;
+  inset: -80px -8vw;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.8;
+  filter: blur(34px);
+  background:
+    radial-gradient(ellipse at 22% 18%, rgba(255, 255, 255, 0.9), transparent 42%),
+    radial-gradient(ellipse at 72% 60%, rgba(190, 190, 190, 0.18), transparent 46%),
+    radial-gradient(ellipse at 50% 92%, rgba(255, 255, 255, 0.7), transparent 42%);
+}
+
+.site-section:nth-of-type(even)::before {
+  opacity: 0.7;
+  background:
+    radial-gradient(ellipse at 78% 20%, rgba(255, 255, 255, 0.86), transparent 44%),
+    radial-gradient(ellipse at 24% 68%, rgba(185, 185, 185, 0.16), transparent 48%);
+}
+
+.cloud-break {
+  position: relative;
+  z-index: 1;
+  height: clamp(40px, 7vw, 90px);
+  margin-block: clamp(-56px, -4vw, -32px);
+  pointer-events: none;
+}
+
+.cloud-break::before {
+  content: "";
+  position: absolute;
+  inset: -60px -10vw;
+  filter: blur(28px);
+  opacity: 0.75;
+  background:
+    radial-gradient(ellipse at 30% 50%, rgba(255, 255, 255, 0.95), transparent 42%),
+    radial-gradient(ellipse at 70% 60%, rgba(185, 185, 185, 0.18), transparent 48%);
+}
+
+.depth-stage {
+  position: relative;
+  z-index: 3;
+}
+
+.depth-stage::before {
+  content: "";
+  position: absolute;
+  inset: -36px -48px;
+  z-index: -2;
+  border-radius: 42px;
+  background:
+    radial-gradient(ellipse at 50% 20%, rgba(255, 255, 255, 0.95), transparent 52%),
+    radial-gradient(ellipse at 50% 100%, rgba(0, 0, 0, 0.09), transparent 56%);
+  filter: blur(24px);
+  opacity: 0.9;
+}
+
+.depth-stage::after {
+  content: "";
+  position: absolute;
+  inset: 18px -60px -48px;
+  z-index: -3;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.075);
+  filter: blur(36px);
+  opacity: 0.55;
+}
+
+.card,
+.glass-card,
+.process-card,
+.story-card,
+.contact-card {
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow:
+    0 18px 42px rgba(0, 0, 0, 0.08),
+    0 56px 120px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(18px);
 }
 
 .site-footer {

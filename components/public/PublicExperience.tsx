@@ -868,7 +868,7 @@ function ArchiveSection({
       data-archive-section
       data-atmosphere-section={getAtmosphereSectionForId(id)}
       data-motion-section
-      className={`apple-section motion-section ${className}`.trim()}
+      className={`apple-section site-section motion-section ${className}`.trim()}
       data-reveal
     >
       {motion ? (
@@ -1052,7 +1052,7 @@ function ArchiveHero({
               </MagneticSecondaryAnchor>
             ) : null}
           </div>
-          <div className="apple-hero-stage section-cloud-field" data-section-field="hero">
+          <div className="apple-hero-stage section-cloud-field depth-stage" data-section-field="hero">
             <div className="apple-hero-record-parallax">
               <motion.div
                 className="apple-hero-record apple-liquid-surface liquid-glass-panel capsoul-glass"
@@ -1241,7 +1241,7 @@ function ArchiveSceneModule({
   }
 
   return (
-    <div className="apple-scene-module motion-stagger">
+    <div className="apple-scene-module motion-stagger depth-stage">
       <div className="apple-record-feature liquid-glass-panel capsoul-glass motion-media" data-reveal style={revealDelay(1)}>
         <div className="experience-content-container">
           <AnimatePresence initial={false} custom={direction} mode="wait">
@@ -1401,7 +1401,7 @@ function ProcessTimeline({
         ref={(node) => {
           scrollerRef.current = node;
         }}
-        className="apple-process-grid motion-stagger"
+        className="apple-process-grid motion-stagger depth-stage"
         data-scroll-ready={isScrollReady ? "true" : "false"}
         animate="visible"
         initial={false}
@@ -1464,7 +1464,7 @@ function PreserveEditorial({ preserve }: { preserve: ResolvedSceneContent }) {
   useLiquidSurface(featuredRef);
 
   return (
-    <div className="apple-preserve-layout motion-stagger">
+    <div className="apple-preserve-layout motion-stagger depth-stage">
       {featured ? (
         <article
           className="apple-preserve-feature apple-liquid-surface liquid-glass-panel capsoul-glass motion-media"
@@ -1687,7 +1687,7 @@ function InquiryArchiveForm({
   }
 
   return (
-    <div className="apple-inquiry-layout motion-stagger">
+    <div className="apple-inquiry-layout motion-stagger depth-stage">
       <form
         className="apple-inquiry-form liquid-glass-panel capsoul-glass"
         onSubmit={handleSubmit}
@@ -1888,6 +1888,7 @@ export function PublicExperience({
       </nav>
 
       <ArchiveHero home={home} stepLabelPrefix={processStepLabelPrefix} />
+      <div className="cloud-break" aria-hidden="true" />
 
       <ArchiveSection
         id="the-experience"
@@ -1898,6 +1899,7 @@ export function PublicExperience({
       >
         <ArchiveSceneModule scene={experience} sectionLabel={experience.stageLabel} />
       </ArchiveSection>
+      <div className="cloud-break" aria-hidden="true" />
 
       <ArchiveSection
         id="how-it-works"
@@ -1907,6 +1909,7 @@ export function PublicExperience({
       >
         <ProcessTimeline process={process} />
       </ArchiveSection>
+      <div className="cloud-break" aria-hidden="true" />
 
       <ArchiveSection
         id="what-we-preserve"
@@ -1917,6 +1920,7 @@ export function PublicExperience({
       >
         <PreserveEditorial preserve={preserve} />
       </ArchiveSection>
+      <div className="cloud-break" aria-hidden="true" />
 
       <ArchiveSection
         id="inquire"

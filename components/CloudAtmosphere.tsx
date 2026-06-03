@@ -33,14 +33,14 @@ export default function CloudAtmosphere() {
       lastW = w;
       lastH = h;
 
-      const slowX = Math.sin(progress * Math.PI * 2) * 90;
-      const mediumX = Math.cos(progress * Math.PI * 2.5) * 130;
-      const fastX = Math.sin(progress * Math.PI * 3.25) * 180;
+      const slowX = Math.sin(progress * Math.PI * 2) * 160;
+      const mediumX = Math.cos(progress * Math.PI * 2.5) * 220;
+      const fastX = Math.sin(progress * Math.PI * 3.25) * 280;
 
       setVar("--cloud-scroll", progress.toFixed(5));
-      setVar("--cloud-y", `${(-y * 0.065).toFixed(2)}px`);
-      setVar("--cloud-y-soft", `${(-y * 0.032).toFixed(2)}px`);
-      setVar("--cloud-y-deep", `${(-y * 0.11).toFixed(2)}px`);
+      setVar("--cloud-y", `${(-y * 0.11).toFixed(2)}px`);
+      setVar("--cloud-y-soft", `${(-y * 0.055).toFixed(2)}px`);
+      setVar("--cloud-y-deep", `${(-y * 0.16).toFixed(2)}px`);
       setVar("--cloud-x-slow", `${slowX.toFixed(2)}px`);
       setVar("--cloud-x-medium", `${mediumX.toFixed(2)}px`);
       setVar("--cloud-x-fast", `${fastX.toFixed(2)}px`);
