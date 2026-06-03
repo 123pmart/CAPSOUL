@@ -1,0 +1,232 @@
+.root {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  isolation: isolate;
+  contain: layout paint style;
+}
+
+.baseMist,
+.cloudPlane,
+.documentClouds,
+.grain {
+  position: absolute;
+  pointer-events: none;
+  user-select: none;
+}
+
+.baseMist {
+  inset: -15vh -12vw;
+  opacity: 0.62;
+  filter: blur(30px);
+  background:
+    radial-gradient(ellipse at 18% 12%, rgba(255, 255, 255, 0.82) 0%, rgba(255, 255, 255, 0.46) 24%, rgba(255, 255, 255, 0) 56%),
+    radial-gradient(ellipse at 78% 18%, rgba(235, 235, 235, 0.48) 0%, rgba(235, 235, 235, 0.28) 28%, rgba(235, 235, 235, 0) 60%),
+    radial-gradient(ellipse at 50% 88%, rgba(255, 255, 255, 0.62) 0%, rgba(255, 255, 255, 0.28) 26%, rgba(255, 255, 255, 0) 58%);
+  transform: translate3d(var(--cloud-x-slow, 0px), var(--cloud-y-soft, 0px), 0) scale(1.08);
+  will-change: transform;
+}
+
+.cloudPlane {
+  inset: -35vh -30vw;
+  filter: blur(30px);
+  will-change: transform;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+}
+
+.planeA {
+  opacity: 0.72;
+  background:
+    radial-gradient(ellipse at 12% 22%, rgba(255, 255, 255, 0.82) 0%, rgba(255, 255, 255, 0.48) 23%, rgba(255, 255, 255, 0) 52%),
+    radial-gradient(ellipse at 42% 8%, rgba(242, 242, 242, 0.48) 0%, rgba(242, 242, 242, 0.28) 28%, rgba(242, 242, 242, 0) 60%),
+    radial-gradient(ellipse at 84% 28%, rgba(255, 255, 255, 0.68) 0%, rgba(255, 255, 255, 0.34) 25%, rgba(255, 255, 255, 0) 56%),
+    radial-gradient(ellipse at 58% 72%, rgba(230, 230, 230, 0.34) 0%, rgba(230, 230, 230, 0.18) 28%, rgba(230, 230, 230, 0) 62%);
+  transform:
+    translate3d(
+      calc(var(--cloud-x-slow, 0px) * 0.42),
+      calc(var(--cloud-y-soft, 0px) * 0.72),
+      0
+    )
+    scale(1.12);
+}
+
+.planeB {
+  opacity: 0.54;
+  filter: blur(38px);
+  background:
+    radial-gradient(ellipse at 72% 8%, rgba(255, 255, 255, 0.74) 0%, rgba(255, 255, 255, 0.36) 20%, rgba(255, 255, 255, 0) 52%),
+    radial-gradient(ellipse at 24% 48%, rgba(225, 225, 225, 0.42) 0%, rgba(225, 225, 225, 0.22) 30%, rgba(225, 225, 225, 0) 64%),
+    radial-gradient(ellipse at 92% 72%, rgba(248, 248, 248, 0.58) 0%, rgba(248, 248, 248, 0.28) 24%, rgba(248, 248, 248, 0) 58%);
+  transform:
+    translate3d(
+      calc(var(--cloud-x-medium, 0px) * -0.3),
+      calc(var(--cloud-y, 0px) * 0.42),
+      0
+    )
+    scale(1.24);
+}
+
+.planeC {
+  opacity: 0.42;
+  filter: blur(46px);
+  background:
+    radial-gradient(ellipse at 8% 76%, rgba(238, 238, 238, 0.48) 0%, rgba(238, 238, 238, 0.28) 26%, rgba(238, 238, 238, 0) 58%),
+    radial-gradient(ellipse at 46% 42%, rgba(255, 255, 255, 0.54) 0%, rgba(255, 255, 255, 0.25) 20%, rgba(255, 255, 255, 0) 52%),
+    radial-gradient(ellipse at 78% 86%, rgba(210, 210, 210, 0.3) 0%, rgba(210, 210, 210, 0.16) 28%, rgba(210, 210, 210, 0) 62%);
+  transform:
+    translate3d(
+      calc(var(--cloud-x-fast, 0px) * 0.18),
+      calc(var(--cloud-y-deep, 0px) * 0.26),
+      0
+    )
+    scale(1.34);
+}
+
+.planeD {
+  opacity: 0.36;
+  filter: blur(34px);
+  background:
+    radial-gradient(ellipse at 36% 16%, rgba(255, 255, 255, 0.52) 0%, rgba(255, 255, 255, 0.26) 18%, rgba(255, 255, 255, 0) 48%),
+    radial-gradient(ellipse at 64% 58%, rgba(228, 228, 228, 0.4) 0%, rgba(228, 228, 228, 0.18) 24%, rgba(228, 228, 228, 0) 56%),
+    radial-gradient(ellipse at 18% 92%, rgba(250, 250, 250, 0.44) 0%, rgba(250, 250, 250, 0.22) 24%, rgba(250, 250, 250, 0) 58%);
+  transform:
+    translate3d(
+      calc(var(--cloud-x-medium, 0px) * 0.24),
+      calc(var(--cloud-y-soft, 0px) * -0.16),
+      0
+    )
+    scale(1.18);
+}
+
+.planeE {
+  opacity: 0.28;
+  filter: blur(54px);
+  background:
+    radial-gradient(ellipse at 50% 18%, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.22) 26%, rgba(255, 255, 255, 0) 62%),
+    radial-gradient(ellipse at 72% 48%, rgba(222, 222, 222, 0.38) 0%, rgba(222, 222, 222, 0.18) 30%, rgba(222, 222, 222, 0) 66%),
+    radial-gradient(ellipse at 28% 70%, rgba(255, 255, 255, 0.46) 0%, rgba(255, 255, 255, 0.2) 22%, rgba(255, 255, 255, 0) 58%);
+  transform:
+    translate3d(
+      calc(var(--cloud-x-fast, 0px) * -0.14),
+      calc(var(--cloud-y-deep, 0px) * 0.18),
+      0
+    )
+    scale(1.45);
+}
+
+.documentClouds {
+  inset: 0;
+  min-height: 100vh;
+  opacity: 0.46;
+  filter: blur(30px);
+  background:
+    radial-gradient(ellipse at 16% 14%, rgba(255, 255, 255, 0.58) 0%, rgba(255, 255, 255, 0.24) 18%, rgba(255, 255, 255, 0) 44%),
+    radial-gradient(ellipse at 78% 32%, rgba(225, 225, 225, 0.28) 0%, rgba(225, 225, 225, 0.15) 24%, rgba(225, 225, 225, 0) 52%),
+    radial-gradient(ellipse at 36% 58%, rgba(250, 250, 250, 0.36) 0%, rgba(250, 250, 250, 0.18) 28%, rgba(250, 250, 250, 0) 58%),
+    radial-gradient(ellipse at 82% 82%, rgba(215, 215, 215, 0.22) 0%, rgba(215, 215, 215, 0.12) 25%, rgba(215, 215, 215, 0) 56%);
+  transform:
+    translate3d(
+      calc(var(--cloud-x-slow, 0px) * 0.12),
+      calc(var(--cloud-y-soft, 0px) * 0.28),
+      0
+    )
+    scale(1.18);
+  will-change: transform;
+}
+
+.grain {
+  inset: 0;
+  opacity: 0.055;
+  mix-blend-mode: multiply;
+  background-image:
+    repeating-radial-gradient(circle at 17% 19%, rgba(0, 0, 0, 0.12) 0 1px, transparent 1px 4px);
+}
+
+:global(html[data-theme="dark"]) .baseMist {
+  opacity: 0.34;
+  background:
+    radial-gradient(ellipse at 18% 12%, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.08) 24%, rgba(255, 255, 255, 0) 56%),
+    radial-gradient(ellipse at 78% 18%, rgba(190, 190, 190, 0.12) 0%, rgba(190, 190, 190, 0.07) 28%, rgba(190, 190, 190, 0) 60%),
+    radial-gradient(ellipse at 50% 88%, rgba(245, 245, 245, 0.11) 0%, rgba(245, 245, 245, 0.06) 26%, rgba(245, 245, 245, 0) 58%);
+}
+
+:global(html[data-theme="dark"]) .cloudPlane {
+  filter: blur(34px);
+}
+
+:global(html[data-theme="dark"]) .planeA {
+  opacity: 0.42;
+  background:
+    radial-gradient(ellipse at 12% 22%, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.08) 23%, rgba(255, 255, 255, 0) 52%),
+    radial-gradient(ellipse at 42% 8%, rgba(210, 210, 210, 0.1) 0%, rgba(210, 210, 210, 0.06) 28%, rgba(210, 210, 210, 0) 60%),
+    radial-gradient(ellipse at 84% 28%, rgba(245, 245, 245, 0.13) 0%, rgba(245, 245, 245, 0.07) 25%, rgba(245, 245, 245, 0) 56%),
+    radial-gradient(ellipse at 58% 72%, rgba(180, 180, 180, 0.09) 0%, rgba(180, 180, 180, 0.05) 28%, rgba(180, 180, 180, 0) 62%);
+}
+
+:global(html[data-theme="dark"]) .planeB {
+  opacity: 0.34;
+  background:
+    radial-gradient(ellipse at 72% 8%, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.07) 20%, rgba(255, 255, 255, 0) 52%),
+    radial-gradient(ellipse at 24% 48%, rgba(180, 180, 180, 0.09) 0%, rgba(180, 180, 180, 0.05) 30%, rgba(180, 180, 180, 0) 64%),
+    radial-gradient(ellipse at 92% 72%, rgba(235, 235, 235, 0.11) 0%, rgba(235, 235, 235, 0.06) 24%, rgba(235, 235, 235, 0) 58%);
+}
+
+:global(html[data-theme="dark"]) .planeC,
+:global(html[data-theme="dark"]) .planeD,
+:global(html[data-theme="dark"]) .planeE {
+  opacity: 0.24;
+}
+
+:global(html[data-theme="dark"]) .documentClouds {
+  opacity: 0.28;
+  mix-blend-mode: screen;
+  background:
+    radial-gradient(ellipse at 16% 14%, rgba(255, 255, 255, 0.11) 0%, rgba(255, 255, 255, 0.06) 18%, rgba(255, 255, 255, 0) 44%),
+    radial-gradient(ellipse at 78% 32%, rgba(190, 190, 190, 0.08) 0%, rgba(190, 190, 190, 0.04) 24%, rgba(190, 190, 190, 0) 52%),
+    radial-gradient(ellipse at 36% 58%, rgba(245, 245, 245, 0.1) 0%, rgba(245, 245, 245, 0.05) 28%, rgba(245, 245, 245, 0) 58%),
+    radial-gradient(ellipse at 82% 82%, rgba(175, 175, 175, 0.07) 0%, rgba(175, 175, 175, 0.035) 25%, rgba(175, 175, 175, 0) 56%);
+}
+
+:global(html[data-theme="dark"]) .grain {
+  opacity: 0.035;
+  mix-blend-mode: screen;
+  background-image:
+    repeating-radial-gradient(circle at 17% 19%, rgba(255, 255, 255, 0.14) 0 1px, transparent 1px 4px);
+}
+
+@media (max-width: 768px) {
+  .baseMist {
+    opacity: 0.52;
+    filter: blur(28px);
+  }
+
+  .cloudPlane {
+    inset: -24vh -36vw;
+  }
+
+  .planeA {
+    opacity: 0.58;
+  }
+
+  .planeB {
+    opacity: 0.44;
+  }
+
+  .planeC,
+  .planeD,
+  .planeE {
+    opacity: 0.26;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .baseMist,
+  .cloudPlane,
+  .documentClouds {
+    transform: translate3d(0, 0, 0) scale(1.16);
+    will-change: auto;
+  }
+}

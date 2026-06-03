@@ -3444,3 +3444,123 @@ html[data-theme="dark"] .public-visual-scope .apple-inquiry-layout::before {
 html[data-theme="dark"] .public-visual-scope .atmosphere-layer-frost {
   opacity: 0.34 !important;
 }
+
+/* Root cloud atmosphere ownership: keep page shells transparent and retire old section-bound atmospheres. */
+html {
+  overflow-x: clip;
+}
+
+body {
+  overflow-x: clip;
+  position: relative;
+  isolation: isolate;
+}
+
+html[data-theme="light"] {
+  background: #f7f7f5 !important;
+}
+
+html[data-theme="light"] body {
+  background:
+    linear-gradient(180deg, #efefec 0%, #fafafa 22%, #f7f7f5 58%, #f2f2ef 100%) !important;
+}
+
+html[data-theme="dark"] {
+  background: #000000 !important;
+}
+
+html[data-theme="dark"] body {
+  background: #000000 !important;
+}
+
+body::before,
+body::after {
+  content: none !important;
+}
+
+.site-root,
+.site-main,
+.page-root,
+.app-root,
+.public-visual-scope,
+.public-visual-scope #main-content {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+.site-root {
+  position: relative;
+  z-index: 1;
+  isolation: isolate;
+}
+
+.site-main,
+.public-visual-scope main {
+  position: relative;
+  z-index: 2;
+}
+
+.site-header,
+.public-header,
+[data-public-header],
+[data-nav] {
+  position: relative;
+  z-index: 50;
+}
+
+.public-visual-scope .section-cloud-field {
+  position: relative !important;
+  z-index: 2 !important;
+  isolation: isolate !important;
+}
+
+.public-visual-scope .section-cloud-field::before {
+  content: "" !important;
+  position: absolute !important;
+  inset: -120px -8vw !important;
+  z-index: -1 !important;
+  pointer-events: none !important;
+  border-radius: clamp(44px, 6vw, 96px) !important;
+  filter: blur(30px) !important;
+  opacity: 0.48 !important;
+  background:
+    radial-gradient(ellipse at 20% 20%, rgba(255, 255, 255, 0.62), transparent 48%),
+    radial-gradient(ellipse at 80% 70%, rgba(220, 220, 220, 0.22), transparent 52%) !important;
+  transform: translate3d(0, 0, 0) !important;
+}
+
+html[data-theme="dark"] .public-visual-scope .section-cloud-field::before {
+  opacity: 0.34 !important;
+  background:
+    radial-gradient(ellipse at 20% 20%, rgba(255, 255, 255, 0.075), transparent 48%),
+    radial-gradient(ellipse at 80% 70%, rgba(170, 170, 170, 0.07), transparent 52%) !important;
+}
+
+.public-visual-scope .atmosphere-backdrop,
+.public-visual-scope .heaven-canvas,
+.public-visual-scope .capsoul-heaven-canvas,
+.public-visual-scope [data-heaven-canvas],
+.public-visual-scope [data-atmosphere-backdrop],
+.public-visual-scope .atmosphere-layer,
+.public-visual-scope .atmosphere-layer-ambient,
+.public-visual-scope .atmosphere-layer-frost,
+.public-visual-scope .atmosphere-layer-mineral,
+.public-visual-scope .atmosphere-layer-vignette,
+.public-visual-scope .atmosphere-layer-glass,
+.public-visual-scope .capsoul-atmosphere-backdrop__field,
+.public-visual-scope .capsoul-atmosphere-backdrop__vignette,
+.public-visual-scope .capsoul-section-field__aura {
+  display: none !important;
+}
+
+html[data-theme="light"] .public-visual-scope,
+html[data-theme="light"] body .public-visual-scope,
+html[data-theme="light"] .public-visual-scope #main-content,
+html[data-theme="light"] body .public-visual-scope #main-content,
+html[data-theme="dark"] .public-visual-scope,
+html[data-theme="dark"] body .public-visual-scope,
+html[data-theme="dark"] .public-visual-scope #main-content,
+html[data-theme="dark"] body .public-visual-scope #main-content {
+  background: transparent !important;
+  background-color: transparent !important;
+}

@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { cookies } from "next/headers";
 
 import { AdminEntry } from "@/components/admin/admin-entry";
+import CloudAtmosphere from "@/components/CloudAtmosphere";
 import { ScrollProgress } from "@/components/ScrollProgress";
 import { SceneTransitionProvider } from "@/components/scene-transition-provider";
 import { SiteLocaleProvider } from "@/components/site-locale-provider";
@@ -79,13 +80,14 @@ export default async function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: siteThemeInitScript }} />
       </head>
       <body>
+        <CloudAtmosphere />
         <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-white focus:px-4 focus:py-2 focus:text-sm focus:font-semibold"
         >
           Skip to content
         </a>
-        <div className="relative isolate min-h-[100svh]">
+        <div className="site-root relative isolate min-h-[100svh]">
           <SiteThemeProvider initialTheme={initialTheme}>
             <SiteLocaleProvider locale={locale} globalContent={siteContent.global}>
               <SmoothScroll>
@@ -95,7 +97,7 @@ export default async function RootLayout({
                     <SiteHeader />
                     <main
                       id="main-content"
-                      className="relative min-h-[100svh] w-full max-w-full pt-[var(--header-offset-mobile)] sm:pt-[var(--header-offset-desktop)]"
+                      className="site-main relative min-h-[100svh] w-full max-w-full pt-[var(--header-offset-mobile)] sm:pt-[var(--header-offset-desktop)]"
                     >
                       {children}
                       <div className="md:hidden">

@@ -856,8 +856,7 @@ function ArchiveSection({
       <p className="apple-section-copy motion-copy" data-reveal style={revealDelay(2)}>
         {description}
       </p>
-      <div className="apple-section-body motion-card capsoul-section-field" data-section-field={id}>
-        <span className="capsoul-section-field__aura" aria-hidden="true" />
+      <div className="apple-section-body motion-card section-cloud-field" data-section-field={id}>
         {children}
       </div>
     </>
@@ -1053,8 +1052,7 @@ function ArchiveHero({
               </MagneticSecondaryAnchor>
             ) : null}
           </div>
-          <div className="apple-hero-stage capsoul-section-field" data-section-field="hero">
-            <span className="capsoul-section-field__aura" aria-hidden="true" />
+          <div className="apple-hero-stage section-cloud-field" data-section-field="hero">
             <div className="apple-hero-record-parallax">
               <motion.div
                 className="apple-hero-record apple-liquid-surface liquid-glass-panel capsoul-glass"
